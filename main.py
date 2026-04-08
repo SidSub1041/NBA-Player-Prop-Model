@@ -25,9 +25,13 @@ Run in --fast mode (skips playtypes to reduce API calls):
 
 import argparse
 import logging
+import os
 import sys
 import time
 from datetime import datetime
+
+# ── ensure logs directory exists before logging setup ────────────────────────
+os.makedirs("logs", exist_ok=True)
 
 # ── logging setup ────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -44,10 +48,6 @@ logging.basicConfig(
     ],
 )
 logger = logging.getLogger(__name__)
-
-# ── imports (after logging) ───────────────────────────────────────────────────
-import os
-os.makedirs("logs", exist_ok=True)
 
 from src.games_today import get_teams_playing_today, get_matchups_today
 from src.dvp_scraper import scrape_dvp_data
