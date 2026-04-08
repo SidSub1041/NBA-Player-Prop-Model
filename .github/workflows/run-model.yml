@@ -26,6 +26,10 @@ jobs:
         working-directory: NBA-Player-Prop-Model
         run: pip install -r requirements.txt
 
+      - name: Grade yesterday's picks
+        working-directory: NBA-Player-Prop-Model
+        run: python grade.py || echo "No picks to grade (expected on first run)"
+
       - name: Run model
         working-directory: NBA-Player-Prop-Model
         run: python main.py --fast
@@ -35,6 +39,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add NBA-Player-Prop-Model/web/public/data/latest.json
+          git add NBA-Player-Prop-Model/web/public/data/results_history.json
           git add NBA-Player-Prop-Model/logs/
           git diff --cached --quiet || git commit -m "chore: update props data $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push

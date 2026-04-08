@@ -142,6 +142,7 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
   const totalPicks = results.reduce((s, r) => s + r.total_picks, 0);
   const totalHits = results.reduce((s, r) => s + r.hits, 0);
   const totalMisses = results.reduce((s, r) => s + r.misses, 0);
+  const totalVoided = results.reduce((s, r) => s + (r.voided ?? 0), 0);
   const overallRate = totalPicks > 0 ? totalHits / totalPicks : 0;
 
   return (
@@ -165,7 +166,7 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
       ) : (
         <div className="p-6 space-y-6">
           {/* Summary stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-emerald-400">
                 {(overallRate * 100).toFixed(1)}%
@@ -186,6 +187,14 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
               </div>
               <div className="text-xs text-[var(--text-muted)] mt-1">
                 Misses
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-400">
+                {totalVoided}
+              </div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">
+                Voided
               </div>
             </div>
             <div className="text-center">
@@ -221,6 +230,7 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
               {results.map((r) => {
                 const dayRate =
                   r.total_picks > 0 ? r.hits / r.total_picks : 0;
+                const dayVoided = r.voided ?? 0;
                 return (
                   <div
                     key={r.date}
@@ -252,6 +262,11 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
                     >
                       {r.hits}/{r.total_picks} ({(dayRate * 100).toFixed(0)}%)
                     </span>
+                    {dayVoided > 0 && (
+                      <span className="text-xs font-mono text-gray-500 w-12 text-right">
+                        {dayVoided}V
+                      </span>
+                    )}
                   </div>
                 );
               })}

@@ -40,6 +40,7 @@ export interface DayResult {
   total_picks: number;
   hits: number;
   misses: number;
+  voided?: number;
 }
 
 export interface PropsData {
