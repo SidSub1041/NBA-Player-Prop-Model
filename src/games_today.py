@@ -25,14 +25,19 @@ def get_todays_games(date: str | None = None) -> list[dict]:
     logger.info(f"Fetching scoreboard for {date}")
     time.sleep(0.6)
     sb = scoreboardv3.ScoreboardV3(game_date=date)
-    data = sb.get_normalized_dict()
+    data = sb.get_dict()
+
+    scoreboard = data.get("scoreboard", {})
+    raw_games = scoreboard.get("games", [])
 
     games = []
-    for game in data.get("GameHeader", []):
-        home_id = game["HOME_TEAM_ID"]
-        away_id = game["VISITOR_TEAM_ID"]
-        home_abbrev = TEAM_ID_TO_ABBREV.get(home_id, "")
-        away_abbrev = TEAM_ID_TO_ABBREV.get(away_id, "")
+    for game in raw_games:
+        home = game.get("homeTeam", {})
+        away = game.get("awayTeam", {})
+        home_id = home.get("teamId")
+        away_id = away.get("teamId")
+        home_abbrev = home.get("teamTricode", "") or TEAM_ID_TO_ABBREV.get(home_id, "")
+        away_abbrev = away.get("teamTricode", "") or TEAM_ID_TO_ABBREV.get(away_id, "")
 
         if home_abbrev and away_abbrev:
             games.append({

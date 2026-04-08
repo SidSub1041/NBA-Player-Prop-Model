@@ -1,0 +1,40 @@
+name: Run NBA Prop Model
+
+on:
+  schedule:
+    # Run every hour from 9 AM to 11 PM ET (13:00–03:00 UTC)
+    - cron: "0 13-23,0-3 * * *"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  run-model:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        working-directory: NBA-Player-Prop-Model
+        run: pip install -r requirements.txt
+
+      - name: Run model
+        working-directory: NBA-Player-Prop-Model
+        run: python main.py --fast
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add NBA-Player-Prop-Model/web/public/data/latest.json
+          git add NBA-Player-Prop-Model/logs/
+          git diff --cached --quiet || git commit -m "chore: update props data $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push

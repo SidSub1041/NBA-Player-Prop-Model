@@ -54,6 +54,11 @@ class PropScore:
         self.is_valid = False
         self.final_grade = "F"
 
+        # Underdog Fantasy line/odds
+        self.ud_line = None       # e.g. 20.5
+        self.ud_over_odds = ""    # e.g. "-112"
+        self.ud_under_odds = ""   # e.g. "-110"
+
     @property
     def total_score_pct(self) -> float:
         if self.total_conditions == 0:
@@ -82,9 +87,13 @@ class PropScore:
 
     def summary(self) -> str:
         """One-line summary."""
+        ud = ""
+        if self.ud_line is not None:
+            odds = self.ud_over_odds if self.edge == "over" else self.ud_under_odds
+            ud = f" | Line: {self.ud_line} ({odds})"
         return (
             f"{self.player_name} ({self.team} vs {self.opponent}) | "
-            f"{self.stat.upper()} {self.edge.upper()} | "
+            f"{self.stat.upper()} {self.edge.upper()}{ud} | "
             f"Score: {self.total_points}/{self.total_conditions} "
             f"({self.total_score_pct:.0%}) | "
             f"Hit Rate: {self.hitrate_data.get('hitrate', -1):.0%} | "
@@ -134,6 +143,12 @@ class PropScore:
         if "season_avg" in self.hitrate_data:
             lines.append(f"  Season average: {self.hitrate_data['season_avg']}")
         lines.append(f"  Threshold: {HITRATE_THRESHOLD:.0%} needed")
+
+        if self.ud_line is not None:
+            lines.append(f"\n--- Underdog Fantasy ---")
+            lines.append(f"  Line: {self.ud_line}")
+            lines.append(f"  Over odds:  {self.ud_over_odds}")
+            lines.append(f"  Under odds: {self.ud_under_odds}")
 
         lines.append(f"\n--- FINAL GRADE: {self.final_grade} ---")
         lines.append(f"  {'✅ VALID PICK' if self.is_valid else '❌ DOES NOT QUALIFY'}")

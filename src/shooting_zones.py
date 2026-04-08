@@ -183,6 +183,11 @@ def get_team_zone_rankings() -> dict[str, dict[str, dict]]:
     Returns: {zone_name: {team_abbrev: {"fg_pct": float, "rank": int}}}
     Rank 1 = allows highest FG% (worst defense / best for over).
     Rank 30 = allows lowest FG% (best defense / best for under).
+
+    NOTE: The methodology specifies filtering by position group
+    (Guard / Forward / Center) when evaluating team zone defense.
+    The nba_api LeagueDashTeamShotLocations endpoint does not expose
+    a position filter, so overall team zone defense is used as a proxy.
     """
     logger.info("Fetching team shooting zone defense rankings...")
     time.sleep(0.6)

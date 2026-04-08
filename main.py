@@ -30,7 +30,7 @@ import sys
 import time
 from datetime import datetime
 
-# ── ensure logs directory exists before logging setup ────────────────────────
+# ── ensure logs dir exists before logging setup ──────────────────────────────
 os.makedirs("logs", exist_ok=True)
 
 # ── logging setup ────────────────────────────────────────────────────────────
@@ -49,12 +49,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ── imports (after logging) ───────────────────────────────────────────────────
+
 from src.games_today import get_teams_playing_today, get_matchups_today
 from src.dvp_scraper import scrape_dvp_data
 from src.depth_charts import get_depth_charts, find_player_for_matchup
 from src.scoring_engine import evaluate_prop
-from src.output import format_report, save_report, print_report
+from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
+from src.underdog import fetch_underdog_lines, get_line_for_prop
 
 
 def run(date: str | None = None, fast: bool = False):
@@ -97,6 +100,28 @@ def run(date: str | None = None, fast: bool = False):
     # ── Step 3: Depth charts ─────────────────────────────────────────
     logger.info("Step 3: Fetching depth charts...")
     depth_charts = get_depth_charts()
+
+    # ── Step 3b: Fetch player minutes for filtering ──────────────────
+    logger.info("Step 3b: Fetching player minutes (MPG filter)...")
+    player_mpg = {}
+    try:
+        from nba_api.stats.endpoints import leaguedashplayerstats
+        from src.config import SEASON_NBA_API, SEASON_TYPE
+        import time as _t; _t.sleep(0.6)
+        _stats = leaguedashplayerstats.LeagueDashPlayerStats(
+            season=SEASON_NBA_API, season_type_all_star=SEASON_TYPE,
+            per_mode_detailed="PerGame"
+        )
+        _df = _stats.get_data_frames()[0]
+        for _, row in _df.iterrows():
+            player_mpg[row["PLAYER_NAME"]] = float(row["MIN"])
+        logger.info(f"  Loaded MPG data for {len(player_mpg)} players")
+    except Exception as e:
+        logger.warning(f"Could not fetch MPG data: {e}")
+
+    # ── Step 3c: Fetch Underdog Fantasy lines ────────────────────────
+    logger.info("Step 3c: Fetching Underdog Fantasy lines...")
+    ud_lines = fetch_underdog_lines()
 
     # ── Step 4: Pre-fetch shared data (zone/playtype rankings) ───────
     logger.info("Step 4: Pre-fetching team-level defensive rankings...")
@@ -156,6 +181,12 @@ def run(date: str | None = None, fast: bool = False):
             continue
         seen.add(key)
 
+        # ── MPG filter: skip players averaging <= 10 minutes ─────────
+        mpg = player_mpg.get(player_name)
+        if mpg is not None and mpg <= 10:
+            logger.info(f"  Skipping {player_name} — only {mpg:.1f} MPG")
+            continue
+
         logger.info(
             f"\n  Evaluating: {player_name} ({offensive_team}) "
             f"| {stat.upper()} {edge.upper()} vs {defensive_team}"
@@ -173,6 +204,14 @@ def run(date: str | None = None, fast: bool = False):
         )
 
         prop_scores.append(prop)
+
+        # Attach Underdog line/odds if available
+        ud = get_line_for_prop(ud_lines, player_name, stat)
+        if ud:
+            prop.ud_line = ud["line"]
+            prop.ud_over_odds = ud["over_odds"]
+            prop.ud_under_odds = ud["under_odds"]
+
         logger.info(f"  → {prop.summary()}")
 
         # Throttle API calls
@@ -182,6 +221,7 @@ def run(date: str | None = None, fast: bool = False):
     logger.info(f"\nStep 6: Generating report ({len(prop_scores)} props evaluated)...")
     report = format_report(prop_scores, date)
     save_report(report, date)
+    save_json_report(prop_scores, date)
     print_report(report)
 
     valid_count = sum(1 for p in prop_scores if p.is_valid)
