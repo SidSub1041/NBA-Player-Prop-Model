@@ -58,14 +58,30 @@ python main.py --fast
 
 ## Automated Daily Run
 
-### Option A — System cron (recommended)
+### Mac (recommended) — LaunchAgent
+Uses macOS's native LaunchAgent system (survives reboots, no terminal needed):
+```bash
+chmod +x setup_mac.sh
+./setup_mac.sh
+```
+This installs everything, verifies imports, and registers a LaunchAgent that runs at **9:00 AM daily**. To trigger manually anytime:
+```bash
+launchctl start com.nba.prop.model
+```
+To remove:
+```bash
+launchctl unload ~/Library/LaunchAgents/com.nba.prop.model.plist
+rm ~/Library/LaunchAgents/com.nba.prop.model.plist
+```
+
+### Linux — cron
 ```bash
 chmod +x setup_cron.sh
 ./setup_cron.sh          # Installs a 9:00 AM cron job
 ./setup_cron.sh --remove # Removes it
 ```
 
-### Option B — Python scheduler (keep process alive)
+### Any OS — Python scheduler (keep terminal open)
 ```bash
 python scheduler.py                  # Runs at 9:00 AM daily
 python scheduler.py --time 08:30     # Custom time
@@ -102,7 +118,8 @@ Reports are saved to `logs/props_YYYY-MM-DD.txt` and printed to stdout. Example:
 NBA-Player-Prop-Model/
 ├── main.py              # Main pipeline orchestrator
 ├── scheduler.py         # Python-based daily scheduler
-├── setup_cron.sh        # System cron installer
+├── setup_mac.sh         # One-command Mac setup + LaunchAgent installer
+├── setup_cron.sh        # Linux cron installer
 ├── requirements.txt
 ├── src/
 │   ├── config.py        # Constants and thresholds
