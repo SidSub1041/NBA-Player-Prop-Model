@@ -47,7 +47,7 @@ def scrape_dvp_data(teams_playing: set[str]) -> list[dict]:
     logger.info("Scraping FantasyPros Defense vs Position data...")
 
     try:
-        resp = requests.get(DVP_URL, headers=FANTASYPROS_HEADERS, timeout=30)
+        resp = requests.get(DVP_URL, headers=FANTASYPROS_HEADERS, timeout=15)
         resp.raise_for_status()
     except requests.RequestException as e:
         logger.error(f"Failed to fetch DvP page: {e}")
@@ -56,45 +56,50 @@ def scrape_dvp_data(teams_playing: set[str]) -> list[dict]:
     soup = BeautifulSoup(resp.text, "lxml")
     matchups = []
 
-    # FantasyPros renders the DvP data in tables, one per position tab.
-    # Each table has rows per team, columns per stat, with color coding.
-    tables = soup.select("table.table-dvp, table.dvp-table, div.dvp-table table")
-
-    if not tables:
-        # Try alternative selectors
-        tables = soup.select("table")
-        tables = [t for t in tables if _is_dvp_table(t)]
-
-    if not tables:
-        logger.warning("Could not find DvP tables, using NBA API fallback")
+    # FantasyPros uses a single table with all positions/time-windows.
+    # Rows have CSS classes: position (PG/SG/SF/PF/C/ALL) and time window
+    # (GC-0=season, GC-7=last7, etc.).  Cells use class "easy" (over) or
+    # "hard" (under) to flag matchup edges.
+    table = soup.select_one("table")
+    if table is None:
+        logger.warning("Could not find DvP table, using NBA API fallback")
         return _fallback_dvp_data(teams_playing)
 
-    for pos_idx, position in enumerate(POSITION_TABS):
-        if pos_idx >= len(tables):
-            break
+    # Build header-index → stat mapping from <thead>
+    headers = [th.get_text(strip=True).upper() for th in table.select("thead th")]
+    col_to_stat = {}
+    for idx, hdr in enumerate(headers):
+        for key, stat_name in STAT_COLUMNS.items():
+            if key in hdr:
+                col_to_stat[idx] = stat_name
 
-        table = tables[pos_idx]
-        rows = table.select("tbody tr")
+    if not col_to_stat:
+        logger.warning("Could not map DvP column headers, using fallback")
+        return _fallback_dvp_data(teams_playing)
 
+    rows = table.select("tbody tr")
+
+    for position in POSITION_TABS:
         for row in rows:
+            row_classes = row.get("class", [])
+            # Only full-season rows (GC-0) for the specific position
+            if position not in row_classes or "GC-0" not in row_classes:
+                continue
+
             cells = row.select("td")
-            # First cell is typically the team name
             if not cells:
                 continue
 
-            team_cell = cells[0]
-            team_name = team_cell.get_text(strip=True)
+            team_name = cells[0].get_text(strip=True)
             team_abbrev = _normalize_team_name(team_name)
 
             if not team_abbrev or team_abbrev not in teams_playing:
                 continue
 
-            # Check stat columns for color highlighting
-            for cell_idx, cell in enumerate(cells[1:], start=1):
-                stat_name = _get_stat_for_column(cell_idx, table)
-                if not stat_name:
+            for col_idx, stat_name in col_to_stat.items():
+                if col_idx >= len(cells):
                     continue
-
+                cell = cells[col_idx]
                 edge = _detect_edge(cell)
                 if edge:
                     matchups.append({
@@ -123,45 +128,14 @@ def _is_dvp_table(table) -> bool:
 
 def _detect_edge(cell) -> str | None:
     """
-    Detect if a cell is highlighted green (over) or gold (under).
-    FantasyPros uses various methods: CSS classes, inline styles, or data attributes.
+    Detect if a cell is highlighted as an easy or hard matchup.
+    FantasyPros uses CSS class 'easy' (over) or 'hard' (under) on <td> elements.
     """
-    # Check for CSS classes
-    classes = " ".join(cell.get("class", []))
-    style = cell.get("style", "")
-    data_color = cell.get("data-color", "")
+    classes = cell.get("class", [])
 
-    # Green indicators (easy matchup -> over)
-    green_indicators = [
-        "green" in classes.lower(),
-        "success" in classes.lower(),
-        "positive" in classes.lower(),
-        "#00" in style and "ff" in style.lower(),
-        "green" in style.lower(),
-        "green" in data_color.lower(),
-        "background-color: #d4edda" in style.lower(),
-        "background: #c3e6cb" in style.lower(),
-        "dvp-high" in classes.lower(),
-    ]
-
-    # Gold/yellow indicators (tough matchup -> under)
-    gold_indicators = [
-        "gold" in classes.lower(),
-        "warning" in classes.lower(),
-        "negative" in classes.lower(),
-        "yellow" in style.lower(),
-        "gold" in style.lower(),
-        "gold" in data_color.lower(),
-        "background-color: #fff3cd" in style.lower(),
-        "background: #ffeeba" in style.lower(),
-        "dvp-low" in classes.lower(),
-        "red" in classes.lower(),
-        "danger" in classes.lower(),
-    ]
-
-    if any(green_indicators):
+    if "easy" in classes:
         return "over"
-    if any(gold_indicators):
+    if "hard" in classes:
         return "under"
     return None
 
@@ -216,7 +190,7 @@ def _fallback_dvp_data(teams_playing: set[str]) -> list[dict]:
         stats = leaguedashteamstats.LeagueDashTeamStats(
             season=SEASON_NBA_API,
             season_type_all_star=SEASON_TYPE,
-            measure_type_detailed_response="Opponent",
+            measure_type_detailed_defense="Opponent",
         )
         df = stats.get_data_frames()[0]
 
