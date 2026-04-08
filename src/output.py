@@ -216,6 +216,17 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "hitrate_summary": hitrate_summary,
     }
 
+    # Load existing model results history if available
+    web_data_dir = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "web", "public", "data"
+    )
+    results_history_path = os.path.join(web_data_dir, "results_history.json")
+    if os.path.exists(results_history_path):
+        with open(results_history_path) as f:
+            payload["model_results"] = json.load(f)
+    else:
+        payload["model_results"] = []
+
     # Save to logs/
     os.makedirs(LOGS_DIR, exist_ok=True)
     path = os.path.join(LOGS_DIR, f"props_{date}.json")
@@ -224,9 +235,6 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
     logger.info(f"JSON report saved to {path}")
 
     # Also save as latest.json for the web dashboard
-    web_data_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "web", "public", "data"
-    )
     os.makedirs(web_data_dir, exist_ok=True)
     latest_path = os.path.join(web_data_dir, "latest.json")
     with open(latest_path, "w") as f:
