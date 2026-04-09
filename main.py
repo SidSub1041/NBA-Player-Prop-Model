@@ -58,6 +58,7 @@ from src.scoring_engine import evaluate_prop
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
 from src.underdog import fetch_underdog_lines, get_line_for_prop
+from src.adaptive import compute_adaptive_weights
 
 
 def run(date: str | None = None, fast: bool = False):
@@ -122,6 +123,10 @@ def run(date: str | None = None, fast: bool = False):
     # ── Step 3c: Fetch Underdog Fantasy lines ────────────────────────
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = fetch_underdog_lines()
+
+    # ── Step 3d: Compute adaptive weights from past results ──────────
+    logger.info("Step 3d: Computing adaptive weights from graded history...")
+    adaptive_weights = compute_adaptive_weights()
 
     # ── Step 4: Pre-fetch shared data (zone/playtype rankings) ───────
     logger.info("Step 4: Pre-fetching team-level defensive rankings...")
@@ -201,6 +206,7 @@ def run(date: str | None = None, fast: bool = False):
             edge=edge,
             team_zone_rankings=team_zone_rankings,
             team_playtype_rankings=team_playtype_rankings,
+            adaptive_weights=adaptive_weights,
         )
 
         prop_scores.append(prop)
