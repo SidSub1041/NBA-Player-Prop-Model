@@ -501,7 +501,7 @@ export default function Home() {
       </header>
 
       {/* Quick stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         {[
           {
             label: "Valid Picks",
@@ -512,6 +512,11 @@ export default function Home() {
             label: "Watchlist",
             value: data.watchlist_count,
             color: "text-yellow-400",
+          },
+          {
+            label: "Combo Picks",
+            value: (data.combo_valid_count ?? 0) + (data.combo_watchlist_count ?? 0),
+            color: "text-cyan-400",
           },
           {
             label: "Analyzed",
@@ -555,6 +560,24 @@ export default function Home() {
         title="Watchlist"
         icon="👀"
       />
+
+      {/* Combo valid picks */}
+      {(data.valid_combos?.length ?? 0) > 0 && (
+        <PicksTable
+          picks={data.valid_combos!}
+          title="Combo Picks"
+          icon="🔗"
+        />
+      )}
+
+      {/* Combo watchlist */}
+      {(data.watchlist_combos?.length ?? 0) > 0 && (
+        <PicksTable
+          picks={data.watchlist_combos!}
+          title="Combo Watchlist"
+          icon="🔗"
+        />
+      )}
 
       {/* Model track record */}
       <ModelTrackRecord data={data} />

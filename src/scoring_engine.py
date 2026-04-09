@@ -301,3 +301,132 @@ def evaluate_prop(
             prop.compute_grade()
 
     return prop
+
+
+# ── Combo prop definitions ───────────────────────────────────────────────────
+
+COMBO_DEFS = {
+    "pts+ast": {"components": ["points", "assists"], "label": "PTS+AST"},
+    "pts+reb": {"components": ["points", "rebounds"], "label": "PTS+REB"},
+    "reb+ast": {"components": ["rebounds", "assists"], "label": "REB+AST"},
+    "pra":     {"components": ["points", "rebounds", "assists"], "label": "PRA"},
+}
+
+
+def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict) -> list["PropScore"]:
+    """
+    Build combination prop picks from individually-evaluated props.
+
+    A combo qualifies when a player has edges on multiple stats that combine
+    into a known combo prop. The combo score aggregates the component scores.
+
+    Only generates "over" combos from individual "over" edges, and "under"
+    combos from individual "under" edges.
+
+    Args:
+        prop_scores: All individually evaluated PropScore objects.
+        ud_lines: Underdog lines dict for attaching combo lines/odds.
+
+    Returns:
+        List of new PropScore objects for combo props.
+    """
+    from src.underdog import get_line_for_prop
+
+    # Group by (player_name, edge) → {stat: PropScore}
+    player_edges: dict[tuple[str, str], dict[str, "PropScore"]] = {}
+    for p in prop_scores:
+        key = (p.player_name, p.edge)
+        if key not in player_edges:
+            player_edges[key] = {}
+        player_edges[key][p.stat] = p
+
+    combos = []
+
+    for (player_name, edge), stat_props in player_edges.items():
+        for combo_stat, combo_def in COMBO_DEFS.items():
+            components = combo_def["components"]
+
+            # Check if player has ALL component stats evaluated for this edge
+            component_props = [stat_props.get(s) for s in components]
+            if not all(component_props):
+                continue
+
+            # All components must be at least B-grade (60%+ conditions)
+            if not all(p.total_score_pct >= 0.60 for p in component_props):
+                continue
+
+            # Build combo PropScore
+            first = component_props[0]
+            combo = PropScore(
+                player_name=first.player_name,
+                team=first.team,
+                opponent=first.opponent,
+                position=first.position,
+                stat=combo_stat,
+                edge=edge,
+            )
+
+            # Aggregate scores across components
+            combo.total_points = sum(p.total_points for p in component_props)
+            combo.total_conditions = sum(p.total_conditions for p in component_props)
+
+            # Average the hit rates of components
+            hr_vals = [p.hitrate_data.get("hitrate", -1) for p in component_props]
+            valid_hrs = [h for h in hr_vals if h >= 0]
+            avg_hr = sum(valid_hrs) / len(valid_hrs) if valid_hrs else -1
+            avg_games = None
+            combo_avg = 0.0
+            for p in component_props:
+                gp = p.hitrate_data.get("games_played")
+                if gp and gp > 0:
+                    avg_games = gp
+                sa = p.hitrate_data.get("season_avg")
+                if sa is not None:
+                    combo_avg += sa
+
+            combo.hitrate_data = {
+                "hitrate": round(avg_hr, 3) if avg_hr >= 0 else -1,
+                "games_played": avg_games,
+                "season_avg": round(combo_avg, 1) if combo_avg else None,
+                "source": "combo_average",
+            }
+
+            # Average adaptive multiplier from components
+            combo.adaptive_multiplier = sum(
+                p.adaptive_multiplier for p in component_props
+            ) / len(component_props)
+
+            combo.compute_grade()
+
+            # Attach Underdog combo line
+            ud = get_line_for_prop(ud_lines, player_name, combo_stat)
+            if ud:
+                combo.ud_line = ud["line"]
+                combo.ud_over_odds = ud["over_odds"]
+                combo.ud_under_odds = ud["under_odds"]
+
+            # Store which component stats contributed
+            combo.zone_score = {
+                "points": combo.total_points,
+                "total": combo.total_conditions,
+                "details": [
+                    f"  Combo: {combo_def['label']} = "
+                    + " + ".join(
+                        f"{p.stat.upper()} ({p.total_points}/{p.total_conditions})"
+                        for p in component_props
+                    )
+                ],
+            }
+
+            logger.info(
+                f"  Combo: {player_name} {combo_def['label']} {edge.upper()} "
+                f"| {combo.total_points}/{combo.total_conditions} "
+                f"({combo.total_score_pct:.0%}) "
+                f"| HR {avg_hr:.0%} | {combo.final_grade}"
+                f"{' ✅' if combo.is_valid else ''}"
+            )
+
+            combos.append(combo)
+
+    logger.info(f"Generated {len(combos)} combo props ({sum(1 for c in combos if c.is_valid)} valid)")
+    return combos

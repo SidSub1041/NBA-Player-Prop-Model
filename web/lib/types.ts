@@ -58,6 +58,10 @@ export interface PropsData {
   valid_picks: PropPick[];
   watchlist: PropPick[];
   all_props: PropPick[];
+  valid_combos?: PropPick[];
+  watchlist_combos?: PropPick[];
+  combo_valid_count?: number;
+  combo_watchlist_count?: number;
   hitrate_summary?: HitrateSummary;
   model_results?: DayResult[];
 }

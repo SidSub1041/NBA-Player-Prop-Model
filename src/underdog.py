@@ -21,6 +21,10 @@ STAT_MAP = {
     "steals": "Steals",
     "blocks": "Blocks",
     "turnovers": "Turnovers",
+    "pts+ast": "Points + Assists",
+    "pts+reb": "Points + Rebounds",
+    "reb+ast": "Rebounds + Assists",
+    "pra": "Pts + Rebs + Asts",
 }
 
 

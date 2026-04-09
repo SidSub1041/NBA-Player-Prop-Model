@@ -54,7 +54,7 @@ logger = logging.getLogger(__name__)
 from src.games_today import get_teams_playing_today, get_matchups_today
 from src.dvp_scraper import scrape_dvp_data
 from src.depth_charts import get_depth_charts, find_player_for_matchup
-from src.scoring_engine import evaluate_prop
+from src.scoring_engine import evaluate_prop, build_combo_props
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
 from src.underdog import fetch_underdog_lines, get_line_for_prop
@@ -223,8 +223,13 @@ def run(date: str | None = None, fast: bool = False):
         # Throttle API calls
         time.sleep(0.3)
 
-    # ── Step 6: Output ───────────────────────────────────────────────
-    logger.info(f"\nStep 6: Generating report ({len(prop_scores)} props evaluated)...")
+    # ── Step 6: Combo props ────────────────────────────────────────
+    logger.info(f"\nStep 6: Building combo props...")
+    combo_scores = build_combo_props(prop_scores, ud_lines)
+    prop_scores.extend(combo_scores)
+
+    # ── Step 7: Output ───────────────────────────────────────────────
+    logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")
     report = format_report(prop_scores, date)
     save_report(report, date)
     save_json_report(prop_scores, date)
