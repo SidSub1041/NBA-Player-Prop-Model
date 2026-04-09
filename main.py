@@ -59,6 +59,7 @@ from src.output import format_report, save_report, print_report, save_json_repor
 from src.config import POSITION_MAP
 from src.underdog import fetch_underdog_lines, get_line_for_prop
 from src.adaptive import compute_adaptive_weights
+from src.injuries import fetch_injury_report, is_player_out, find_backup_player
 
 
 def run(date: str | None = None, fast: bool = False):
@@ -105,6 +106,7 @@ def run(date: str | None = None, fast: bool = False):
     # ── Step 3b: Fetch player minutes for filtering ──────────────────
     logger.info("Step 3b: Fetching player minutes (MPG filter)...")
     player_mpg = {}
+    player_stats_df = None
     try:
         from nba_api.stats.endpoints import leaguedashplayerstats
         from src.config import SEASON_NBA_API, SEASON_TYPE
@@ -113,8 +115,8 @@ def run(date: str | None = None, fast: bool = False):
             season=SEASON_NBA_API, season_type_all_star=SEASON_TYPE,
             per_mode_detailed="PerGame"
         )
-        _df = _stats.get_data_frames()[0]
-        for _, row in _df.iterrows():
+        player_stats_df = _stats.get_data_frames()[0]
+        for _, row in player_stats_df.iterrows():
             player_mpg[row["PLAYER_NAME"]] = float(row["MIN"])
         logger.info(f"  Loaded MPG data for {len(player_mpg)} players")
     except Exception as e:
@@ -123,6 +125,10 @@ def run(date: str | None = None, fast: bool = False):
     # ── Step 3c: Fetch Underdog Fantasy lines ────────────────────────
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = fetch_underdog_lines()
+
+    # ── Step 3e: Fetch injury report ─────────────────────────────────
+    logger.info("Step 3e: Fetching injury report...")
+    injuries = fetch_injury_report()
 
     # ── Step 3d: Compute adaptive weights from past results ──────────
     logger.info("Step 3d: Computing adaptive weights from graded history...")
@@ -181,6 +187,24 @@ def run(date: str | None = None, fast: bool = False):
             continue
 
         player_name = player_info["name"]
+
+        # ── Injury check: swap in backup if starter is OUT ───────────
+        if is_player_out(injuries, player_name):
+            inj = injuries[player_name]
+            logger.info(
+                f"  {player_name} is OUT ({inj['injury']}) — "
+                f"looking for backup at {position} on {offensive_team}"
+            )
+            backup = find_backup_player(
+                player_stats_df, offensive_team, position, injuries
+            )
+            if backup:
+                logger.info(f"  → Replacement: {backup}")
+                player_name = backup
+            else:
+                logger.info(f"  → No valid backup found, skipping")
+                continue
+
         key = (player_name, stat)
         if key in seen:
             continue
