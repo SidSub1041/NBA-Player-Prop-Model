@@ -169,6 +169,7 @@ def _prop_to_dict(p) -> dict:
         "ud_under_odds": p.ud_under_odds or None,
         "grade": p.final_grade,
         "is_valid": p.is_valid,
+        "adaptive_multiplier": round(p.adaptive_multiplier, 4),
         "zone_details": p.zone_score.get("details", []),
         "playtype_details": p.playtype_score.get("details", []),
     }

@@ -28,6 +28,7 @@ from src.playtypes import (
     score_playtypes,
 )
 from src.hitrate import get_player_hitrate
+from src.adaptive import get_adaptive_score
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ class PropScore:
         self.hitrate_data = {}
         self.is_valid = False
         self.final_grade = "F"
+        self.adaptive_multiplier = 1.0  # set by adaptive module
 
         # Underdog Fantasy line/odds
         self.ud_line = None       # e.g. 20.5
@@ -63,7 +65,8 @@ class PropScore:
     def total_score_pct(self) -> float:
         if self.total_conditions == 0:
             return 0.0
-        return self.total_points / self.total_conditions
+        raw = self.total_points / self.total_conditions
+        return min(1.0, raw * self.adaptive_multiplier)
 
     def compute_grade(self):
         """Compute final letter grade based on score percentage and hit rate."""
@@ -201,9 +204,9 @@ def evaluate_points_prop(
     prop.total_conditions = prop.zone_score["total"] + prop.playtype_score["total"]
 
     # Step 6: Hit rate check (only if >= 80% conditions met OR for reporting)
+    prop.hitrate_data = get_player_hitrate(player_name, "points")
     if prop.total_conditions > 0:
         prop.pass_rate = prop.total_score_pct
-    prop.hitrate_data = get_player_hitrate(player_name, "points")
 
     prop.compute_grade()
     return prop
@@ -266,20 +269,35 @@ def evaluate_prop(
     edge: str,
     team_zone_rankings: dict | None = None,
     team_playtype_rankings: dict | None = None,
+    adaptive_weights: dict | None = None,
 ) -> PropScore:
     """Route to the correct evaluation function based on stat category."""
     if stat == "points":
-        return evaluate_points_prop(
+        prop = evaluate_points_prop(
             player_name, team, opponent, position, edge,
             team_zone_rankings or {},
             team_playtype_rankings or {},
         )
     elif stat == "rebounds":
-        return evaluate_rebound_prop(player_name, team, opponent, position, edge)
+        prop = evaluate_rebound_prop(player_name, team, opponent, position, edge)
     elif stat == "assists":
-        return evaluate_assist_prop(player_name, team, opponent, position, edge)
+        prop = evaluate_assist_prop(player_name, team, opponent, position, edge)
     else:
-        logger.warning(f"Unknown stat category: {stat}")
-        prop = PropScore(player_name, team, opponent, position, stat, edge)
-        prop.compute_grade()
-        return prop
+        return PropScore(player_name, team, opponent, position, stat, edge)
+
+    # Apply adaptive learning multiplier
+    if adaptive_weights:
+        hr = prop.hitrate_data.get("hitrate", -1)
+        hr_val = hr if hr >= 0 else None
+        prop.adaptive_multiplier = get_adaptive_score(
+            stat, edge, hr_val, adaptive_weights
+        )
+        if prop.adaptive_multiplier != 1.0:
+            logger.info(
+                f"    Adaptive adjustment: {prop.adaptive_multiplier:.3f}x "
+                f"(raw {prop.total_points}/{prop.total_conditions})"
+            )
+            # Recompute grade after adjustment
+            prop.compute_grade()
+
+    return prop
