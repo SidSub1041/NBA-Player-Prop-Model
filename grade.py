@@ -47,11 +47,13 @@ def main():
     total = result["total_picks"]
     hits = result["hits"]
     voided = result.get("voided", 0)
+    units = result.get("units", 0.0)
     rate = f"{hits/total*100:.1f}%" if total > 0 else "N/A"
     print(f"\n{'='*50}")
     print(f"  Results for {date}")
     print(f"  Hits: {hits}  |  Misses: {result['misses']}  |  Voided: {voided}")
     print(f"  Success Rate: {rate} ({hits}/{total})")
+    print(f"  Units: {units:+.2f}u")
     print(f"{'='*50}\n")
 
 

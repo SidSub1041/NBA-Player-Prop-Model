@@ -145,6 +145,33 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
   const totalVoided = results.reduce((s, r) => s + (r.voided ?? 0), 0);
   const overallRate = totalPicks > 0 ? totalHits / totalPicks : 0;
 
+  // Units calculations
+  const allTimeUnits = results.reduce((s, r) => s + (r.units ?? 0), 0);
+
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-indexed
+
+  const ytdResults = results.filter((r) => {
+    const d = new Date(r.date + "T00:00:00");
+    return d.getFullYear() === currentYear;
+  });
+  const ytdUnits = ytdResults.reduce((s, r) => s + (r.units ?? 0), 0);
+
+  const monthResults = results.filter((r) => {
+    const d = new Date(r.date + "T00:00:00");
+    return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+  });
+  const monthUnits = monthResults.reduce((s, r) => s + (r.units ?? 0), 0);
+
+  const formatUnits = (u: number) => {
+    const sign = u >= 0 ? "+" : "";
+    return `${sign}${u.toFixed(2)}u`;
+  };
+
+  const unitsColor = (u: number) =>
+    u > 0 ? "text-emerald-400" : u < 0 ? "text-red-400" : "text-gray-400";
+
   return (
     <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
       <div className="px-6 py-4 border-b border-[var(--border)] flex items-center gap-2">
@@ -207,6 +234,34 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
             </div>
           </div>
 
+          {/* Units P&L */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+              <div className={`text-xl font-bold font-mono ${unitsColor(allTimeUnits)}`}>
+                {formatUnits(allTimeUnits)}
+              </div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">
+                All-Time
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+              <div className={`text-xl font-bold font-mono ${unitsColor(monthUnits)}`}>
+                {formatUnits(monthUnits)}
+              </div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">
+                This Month
+              </div>
+            </div>
+            <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+              <div className={`text-xl font-bold font-mono ${unitsColor(ytdUnits)}`}>
+                {formatUnits(ytdUnits)}
+              </div>
+              <div className="text-xs text-[var(--text-muted)] mt-1">
+                YTD
+              </div>
+            </div>
+          </div>
+
           {/* Overall bar */}
           <div>
             <div className="flex justify-between text-xs text-[var(--text-muted)] mb-1">
@@ -231,6 +286,7 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
                 const dayRate =
                   r.total_picks > 0 ? r.hits / r.total_picks : 0;
                 const dayVoided = r.voided ?? 0;
+                const dayUnits = r.units ?? 0;
                 return (
                   <div
                     key={r.date}
@@ -262,8 +318,13 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
                     >
                       {r.hits}/{r.total_picks} ({(dayRate * 100).toFixed(0)}%)
                     </span>
+                    <span
+                      className={`text-xs font-mono w-16 text-right ${unitsColor(dayUnits)}`}
+                    >
+                      {formatUnits(dayUnits)}
+                    </span>
                     {dayVoided > 0 && (
-                      <span className="text-xs font-mono text-gray-500 w-12 text-right">
+                      <span className="text-xs font-mono text-gray-500 w-8 text-right">
                         {dayVoided}V
                       </span>
                     )}

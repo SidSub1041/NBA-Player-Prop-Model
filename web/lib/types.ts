@@ -41,6 +41,7 @@ export interface DayResult {
   hits: number;
   misses: number;
   voided?: number;
+  units?: number;
 }
 
 export interface PropsData {
