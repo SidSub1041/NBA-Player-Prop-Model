@@ -147,6 +147,9 @@ def print_report(report: str):
     print(report)
 
 
+COMBO_STATS = {"pts+ast", "pts+reb", "reb+ast", "pra"}
+
+
 def _prop_to_dict(p) -> dict:
     """Convert a PropScore object to a JSON-serializable dict."""
     hr = p.hitrate_data.get("hitrate", -1)
@@ -169,6 +172,7 @@ def _prop_to_dict(p) -> dict:
         "ud_under_odds": p.ud_under_odds or None,
         "grade": p.final_grade,
         "is_valid": p.is_valid,
+        "is_combo": p.stat in COMBO_STATS,
         "adaptive_multiplier": round(p.adaptive_multiplier, 4),
         "zone_details": p.zone_score.get("details", []),
         "playtype_details": p.playtype_score.get("details", []),
@@ -180,11 +184,17 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
     if date is None:
         date = datetime.today().strftime("%Y-%m-%d")
 
-    valid = [p for p in prop_scores if p.is_valid]
-    watchlist = [p for p in prop_scores if not p.is_valid and p.total_score_pct >= 0.60]
+    # Separate individual and combo props
+    individual = [p for p in prop_scores if p.stat not in COMBO_STATS]
+    combos = [p for p in prop_scores if p.stat in COMBO_STATS]
 
-    # Hitrate summary across all evaluated props
-    all_hr = [p.hitrate_data.get("hitrate", -1) for p in prop_scores]
+    valid = [p for p in individual if p.is_valid]
+    watchlist = [p for p in individual if not p.is_valid and p.total_score_pct >= 0.60]
+    valid_combos = [p for p in combos if p.is_valid]
+    watchlist_combos = [p for p in combos if not p.is_valid and p.total_score_pct >= 0.60]
+
+    # Hitrate summary across all evaluated individual props
+    all_hr = [p.hitrate_data.get("hitrate", -1) for p in individual]
     valid_hr = [h for h in all_hr if h >= 0]
     hitrate_summary = {
         "avg": round(sum(valid_hr) / len(valid_hr), 3) if valid_hr else None,
@@ -204,15 +214,19 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "date": date,
         "run_at": datetime.now().strftime("%I:%M %p"),
         "run_at_iso": datetime.now().isoformat(),
-        "candidates_analyzed": len(prop_scores),
+        "candidates_analyzed": len(individual),
         "valid_count": len(valid),
         "watchlist_count": len(watchlist),
+        "combo_valid_count": len(valid_combos),
+        "combo_watchlist_count": len(watchlist_combos),
         "thresholds": {
             "condition_pass_rate": CONDITION_PASS_RATE,
             "hitrate": HITRATE_THRESHOLD,
         },
         "valid_picks": [_prop_to_dict(p) for p in valid],
         "watchlist": [_prop_to_dict(p) for p in watchlist],
+        "valid_combos": [_prop_to_dict(p) for p in valid_combos],
+        "watchlist_combos": [_prop_to_dict(p) for p in watchlist_combos],
         "all_props": [_prop_to_dict(p) for p in prop_scores],
         "hitrate_summary": hitrate_summary,
     }

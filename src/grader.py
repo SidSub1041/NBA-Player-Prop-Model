@@ -30,6 +30,14 @@ RESULTS_FILE = os.path.join(WEB_DATA_DIR, "results_history.json")
 
 STAT_COL = {"points": "pts", "rebounds": "reb", "assists": "ast"}
 
+# Combo stat → list of component stat keys
+COMBO_STAT_COLS = {
+    "pts+ast": ["pts", "ast"],
+    "pts+reb": ["pts", "reb"],
+    "reb+ast": ["reb", "ast"],
+    "pra": ["pts", "reb", "ast"],
+}
+
 
 def _american_odds_to_profit(odds_str: str | None) -> float:
     """
@@ -261,14 +269,23 @@ def grade_picks(date: str) -> dict:
             continue
 
         # Get actual stat value
-        stat_key = STAT_COL.get(stat)
-        if not stat_key or stat_key not in actual:
-            result_entry["result"] = "void"
-            voided_count += 1
-            graded.append(result_entry)
-            continue
-
-        actual_value = actual[stat_key]
+        if stat in COMBO_STAT_COLS:
+            # Combo prop — sum component stats
+            combo_cols = COMBO_STAT_COLS[stat]
+            if not all(c in actual for c in combo_cols):
+                result_entry["result"] = "void"
+                voided_count += 1
+                graded.append(result_entry)
+                continue
+            actual_value = sum(actual[c] for c in combo_cols)
+        else:
+            stat_key = STAT_COL.get(stat)
+            if not stat_key or stat_key not in actual:
+                result_entry["result"] = "void"
+                voided_count += 1
+                graded.append(result_entry)
+                continue
+            actual_value = actual[stat_key]
         result_entry["actual_value"] = actual_value
 
         # Determine if pick hit
