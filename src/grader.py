@@ -31,6 +31,26 @@ RESULTS_FILE = os.path.join(WEB_DATA_DIR, "results_history.json")
 STAT_COL = {"points": "pts", "rebounds": "reb", "assists": "ast"}
 
 
+def _american_odds_to_profit(odds_str: str | None) -> float:
+    """
+    Convert American odds string to profit in units on a 1-unit stake.
+    +126  → 1.26u profit
+    -157  → 0.637u profit
+    Returns 1.0 (even money) if odds are unavailable.
+    """
+    if not odds_str:
+        return 1.0
+    try:
+        odds = int(odds_str.replace("+", ""))
+    except (ValueError, AttributeError):
+        return 1.0
+    if odds > 0:
+        return odds / 100.0
+    elif odds < 0:
+        return 100.0 / abs(odds)
+    return 1.0
+
+
 # ── Fetch actual stats ───────────────────────────────────────────────────────
 
 def _fetch_game_ids(date: str) -> list[str]:
@@ -195,6 +215,7 @@ def grade_picks(date: str) -> dict:
     hits = 0
     misses = 0
     voided_count = 0
+    units = 0.0
     graded = []
 
     for pick in valid_picks:
@@ -206,10 +227,14 @@ def grade_picks(date: str) -> dict:
         name_lower = name.lower()
         actual = actual_stats.get(name_lower)
 
+        # Determine which odds apply to this pick's edge
+        pick_odds = pick.get("ud_over_odds") if edge == "over" else pick.get("ud_under_odds")
+
         result_entry = {
             **pick,
             "actual_value": None,
             "result": "pending",
+            "units": 0.0,
         }
 
         # Check if voided (Underdog suspended or player DNP)
@@ -267,18 +292,23 @@ def grade_picks(date: str) -> dict:
                 continue
 
         if hit:
+            profit = round(_american_odds_to_profit(pick_odds), 3)
             result_entry["result"] = "hit"
+            result_entry["units"] = profit
+            units += profit
             hits += 1
             logger.info(
                 f"  ✅ {name} | {stat} {edge} {line or 'avg'} → "
-                f"Actual: {actual_value} — HIT"
+                f"Actual: {actual_value} — HIT (+{profit}u)"
             )
         else:
             result_entry["result"] = "miss"
+            result_entry["units"] = -1.0
+            units -= 1.0
             misses += 1
             logger.info(
                 f"  ❌ {name} | {stat} {edge} {line or 'avg'} → "
-                f"Actual: {actual_value} — MISS"
+                f"Actual: {actual_value} — MISS (-1u)"
             )
 
         graded.append(result_entry)
@@ -289,12 +319,13 @@ def grade_picks(date: str) -> dict:
         "hits": hits,
         "misses": misses,
         "voided": voided_count,
+        "units": round(units, 3),
         "graded_picks": graded,
     }
 
     logger.info(
         f"Grading complete: {hits} hits, {misses} misses, "
-        f"{voided_count} voided out of {len(valid_picks)} picks"
+        f"{voided_count} voided, {units:+.2f}u out of {len(valid_picks)} picks"
     )
 
     return day_result
@@ -334,6 +365,8 @@ def save_graded_results(day_result: dict):
         "total_picks": day_result["total_picks"],
         "hits": day_result["hits"],
         "misses": day_result["misses"],
+        "voided": day_result.get("voided", 0),
+        "units": day_result.get("units", 0.0),
     }
 
     # Replace existing entry for this date if re-grading
