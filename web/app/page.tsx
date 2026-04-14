@@ -339,108 +339,186 @@ function ModelTrackRecord({ data }: { data: PropsData }) {
   );
 }
 
+/* ── Grade ranking for deduplication ──────────────────────────────── */
+const GRADE_RANK: Record<string, number> = {
+  "A+": 6, A: 5, "B+": 4, B: 3, C: 2, D: 1, F: 0,
+};
+
+function deduplicatePicks(picks: PropPick[]): PropPick[] {
+  const best = new Map<string, PropPick>();
+  for (const p of picks) {
+    const key = `${p.player_name}::${p.stat}::${p.edge}`;
+    const existing = best.get(key);
+    if (!existing || (GRADE_RANK[p.grade] ?? 0) > (GRADE_RANK[existing.grade] ?? 0)) {
+      best.set(key, p);
+    }
+  }
+  return Array.from(best.values());
+}
+
+/* ── Format date for display ─────────────────────────────────────── */
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 /* ── About / Methodology section ──────────────────────────────────── */
 function AboutSection() {
+  const [open, setOpen] = useState(false);
   return (
     <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
-      <div className="px-6 py-4 border-b border-[var(--border)] flex items-center gap-2">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full px-6 py-4 border-b border-[var(--border)] flex items-center gap-2 text-left hover:bg-[var(--card-hover)] transition-colors"
+      >
         <span className="text-xl">🏀</span>
-        <h2 className="text-lg font-bold">About the Model</h2>
-      </div>
-      <div className="p-6 space-y-4 text-sm leading-relaxed text-[var(--text-muted)]">
-        <p>
-          This model identifies NBA player prop edges by combining{" "}
-          <strong className="text-[var(--text)]">Defense vs. Position</strong>{" "}
-          matchup analysis with advanced shooting and playtype metrics.
-        </p>
+        <h2 className="text-lg font-bold">How the Model Works</h2>
+        <span className="ml-auto text-[var(--text-muted)]">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <div className="p-6 space-y-6 text-sm leading-relaxed text-[var(--text-muted)]">
+          <p>
+            This model identifies NBA player prop edges by combining{" "}
+            <strong className="text-[var(--text)]">Defense vs. Position</strong>{" "}
+            matchup analysis with advanced shooting zones, playtype metrics,
+            adaptive weighting, and hit-rate verification.
+          </p>
 
-        <div className="space-y-3">
-          <h3 className="text-[var(--text)] font-semibold">Methodology</h3>
-          <ol className="list-decimal list-inside space-y-2 pl-2">
-            <li>
-              <strong className="text-[var(--text)]">DvP Matchup Scan</strong> — Identify
-              highlighted matchups from FantasyPros Defense vs. Position (FanDuel).
-              Green cells indicate easy matchups (over), gold cells indicate tough matchups
-              (under) across PTS, REB, and AST for all 5 positions.
-            </li>
-            <li>
-              <strong className="text-[var(--text)]">Player Identification</strong> — For
-              each highlighted defensive team, find the starter at that position on the
-              opposing team using ESPN depth charts.
-            </li>
-            <li>
-              <strong className="text-[var(--text)]">Shooting Zone Analysis</strong>{" "}
-              (Points only) — Find the player&apos;s primary shooting zones (≥20% of FGA).
-              Check if the opponent ranks in the top/bottom 10 in FG% allowed per zone.
-            </li>
-            <li>
-              <strong className="text-[var(--text)]">Playtype Analysis</strong> (Points
-              only) — Identify player playtypes with ≥15% frequency. Check if the
-              opponent ranks in the top/bottom 10 in PPP allowed per playtype.
-            </li>
-            <li>
-              <strong className="text-[var(--text)]">Condition Scoring</strong> — Each
-              favorable zone/playtype match = 1 point. If ≥80% of conditions are met,
-              the prop passes.
-            </li>
-            <li>
-              <strong className="text-[var(--text)]">Hit Rate Verification</strong> —
-              Check the player&apos;s season hit rate (via game logs). A ≥56% hit rate
-              combined with ≥80% conditions = valid pick (A/A+).
-            </li>
-          </ol>
-        </div>
+          <div className="space-y-3">
+            <h3 className="text-[var(--text)] font-semibold">Methodology (10 Steps)</h3>
+            <ol className="list-decimal list-inside space-y-2 pl-2">
+              <li>
+                <strong className="text-[var(--text)]">Game Schedule</strong> — Fetch
+                today&apos;s NBA games via the official NBA API and identify all teams playing.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">DvP Matchup Scan</strong> — Scrape
+                FantasyPros Defense vs. Position rankings (FanDuel). Green cells = easy
+                matchups (over signal), gold cells = tough matchups (under signal) across
+                PTS, REB, AST for all 5 positions.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Player Identification</strong> — For
+                each highlighted matchup, find the starter at that position on the opposing
+                team using ESPN depth charts.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Injury Adjustments</strong> — Check
+                the NBA injury report. If the starter is out, find the backup from the depth
+                chart and evaluate them instead.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Minutes Filter</strong> — Pull
+                per-game minutes from NBA Stats. Players averaging fewer than 20 MPG are
+                excluded as unreliable prop candidates.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Shooting Zone Analysis</strong>{" "}
+                (Points only) — Identify the player&apos;s primary shooting zones
+                (≥20% of FGA). Check if the opponent ranks in the top/bottom 10 in FG%
+                allowed in each zone.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Playtype Analysis</strong> (Points
+                only) — Identify player playtypes with ≥15% frequency (isolation,
+                pick &amp; roll, spot-up, etc.). Check if the opponent ranks in the
+                top/bottom 10 in PPP allowed per playtype.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Adaptive Weighting</strong> — The
+                model dynamically weights shooting zones vs. playtypes based on which
+                signal has historically predicted outcomes better for each stat type.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Condition Scoring</strong> — Each
+                favorable zone/playtype match = 1 point. If ≥80% of weighted conditions
+                are met, the prop passes the primary filter.
+              </li>
+              <li>
+                <strong className="text-[var(--text)]">Hit Rate Verification</strong> —
+                Check the player&apos;s season hit rate on the specific line. ≥56% hit rate
+                combined with ≥80% conditions = valid pick (A/A+). Lower thresholds
+                produce B-tier picks.
+              </li>
+            </ol>
+          </div>
 
-        <div className="space-y-2">
-          <h3 className="text-[var(--text)] font-semibold">Grading Scale</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="A+" /> ≥80% conditions + ≥56% HR
-            </div>
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="A" /> ≥80% conditions + ≥50% HR
-            </div>
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="B+" /> ≥60% conditions + ≥56% HR
-            </div>
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="B" /> ≥60% conditions
-            </div>
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="C" /> ≥40% conditions
-            </div>
-            <div className="flex items-center gap-2">
-              <GradeBadge grade="D" /> &lt;40% conditions
+          <div className="space-y-2">
+            <h3 className="text-[var(--text)] font-semibold">Grading Scale</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="A+" /> ≥80% conditions + ≥56% HR
+              </div>
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="A" /> ≥80% conditions + ≥50% HR
+              </div>
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="B+" /> ≥60% conditions + ≥56% HR
+              </div>
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="B" /> ≥60% conditions
+              </div>
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="C" /> ≥40% conditions
+              </div>
+              <div className="flex items-center gap-2">
+                <GradeBadge grade="D" /> &lt;40% conditions
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="pt-4 border-t border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <a
-            href="https://github.com/SidSub1041/NBA-Player-Prop-Model"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-sm font-medium"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+          <div className="space-y-2">
+            <h3 className="text-[var(--text)] font-semibold">How Results Are Graded</h3>
+            <p>
+              After all games finish each night, the model automatically pulls box-score
+              stats from the NBA API and checks whether each pick hit or missed. A pick
+              is a <strong className="text-emerald-400">hit</strong> if the player went
+              over/under their line as predicted, a <strong className="text-red-400">miss</strong>{" "}
+              if they didn&apos;t, or <strong className="text-gray-400">voided</strong> if the
+              player didn&apos;t play. Unit tracking assumes a flat 1u bet at the Underdog
+              payout odds for each pick.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-[var(--text)] font-semibold">Data Sources</h3>
+            <ul className="list-disc list-inside space-y-1 pl-2">
+              <li>NBA.com Stats API — game schedules, player stats, box scores, shooting zones</li>
+              <li>FantasyPros — Defense vs. Position matchup rankings</li>
+              <li>ESPN — Depth charts for starter identification</li>
+              <li>Underdog Fantasy — Lines and payout odds</li>
+            </ul>
+          </div>
+
+          <div className="pt-4 border-t border-[var(--border)]">
+            <a
+              href="https://github.com/SidSub1041/NBA-Player-Prop-Model"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-sm font-medium"
             >
-              <path
-                fillRule="evenodd"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                clipRule="evenodd"
-              />
-            </svg>
-            View on GitHub
-          </a>
-          <span className="text-xs text-[var(--text-muted)]">
-            Data sources: NBA.com Stats API, FantasyPros, ESPN, Underdog Fantasy
-          </span>
+              <svg
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              View on GitHub
+            </a>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -495,33 +573,35 @@ export default function Home() {
           🏀 NBA Player Prop Model
         </h1>
         <p className="text-[var(--text-muted)] text-sm">
-          {data.date} — Last updated {data.run_at} — {data.candidates_analyzed}{" "}
+          Last updated {data.run_at} — {data.candidates_analyzed}{" "}
           props analyzed
         </p>
       </header>
 
+      {/* Date banner */}
+      <div className="text-center">
+        <div className="inline-block bg-[var(--card)] rounded-xl border border-[var(--border)] px-8 py-3">
+          <div className="text-lg font-bold">{formatDate(data.date)}</div>
+        </div>
+      </div>
+
       {/* Quick stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           {
             label: "Valid Picks",
-            value: data.valid_count,
+            value: data.valid_count + (data.combo_valid_count ?? 0),
             color: "text-emerald-400",
-          },
-          {
-            label: "Watchlist",
-            value: data.watchlist_count,
-            color: "text-yellow-400",
-          },
-          {
-            label: "Combo Picks",
-            value: (data.combo_valid_count ?? 0) + (data.combo_watchlist_count ?? 0),
-            color: "text-cyan-400",
           },
           {
             label: "Analyzed",
             value: data.candidates_analyzed,
             color: "text-blue-400",
+          },
+          {
+            label: "Days Tracked",
+            value: (data.model_results ?? []).length || "—",
+            color: "text-cyan-400",
           },
           {
             label: "Model Success",
@@ -547,37 +627,15 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Valid picks */}
+      {/* All picks (deduplicated, best grade per player+stat+edge) */}
       <PicksTable
-        picks={data.valid_picks}
-        title="Valid Picks"
+        picks={deduplicatePicks([
+          ...data.valid_picks,
+          ...(data.valid_combos ?? []),
+        ])}
+        title="Today's Picks"
         icon="✅"
       />
-
-      {/* Watchlist */}
-      <PicksTable
-        picks={data.watchlist}
-        title="Watchlist"
-        icon="👀"
-      />
-
-      {/* Combo valid picks */}
-      {(data.valid_combos?.length ?? 0) > 0 && (
-        <PicksTable
-          picks={data.valid_combos!}
-          title="Combo Picks"
-          icon="🔗"
-        />
-      )}
-
-      {/* Combo watchlist */}
-      {(data.watchlist_combos?.length ?? 0) > 0 && (
-        <PicksTable
-          picks={data.watchlist_combos!}
-          title="Combo Watchlist"
-          icon="🔗"
-        />
-      )}
 
       {/* Model track record */}
       <ModelTrackRecord data={data} />

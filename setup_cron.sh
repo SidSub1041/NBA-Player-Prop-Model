@@ -24,6 +24,7 @@ CRON_LOG="$LOG_DIR/cron.log"
 mkdir -p "$LOG_DIR"
 
 CRON_CMD="$MINUTE $HOUR * * * cd \"$SCRIPT_DIR\" && $PYTHON main.py >> \"$CRON_LOG\" 2>&1"
+GRADE_CMD="0 23 * * * cd \"$SCRIPT_DIR\" && $PYTHON grade.py >> \"$CRON_LOG\" 2>&1"
 MARKER="# NBA-Player-Prop-Model"
 
 remove_cron() {
@@ -44,6 +45,7 @@ install_cron() {
         echo ""
         echo "$MARKER"
         echo "$CRON_CMD"
+        echo "$GRADE_CMD"
     ) | crontab -
 
     echo ""

@@ -2,8 +2,10 @@ name: Run NBA Prop Model
 
 on:
   schedule:
-    # Run every hour from 9 AM to 11 PM ET (13:00–03:00 UTC)
-    - cron: "0 13-23,0-3 * * *"
+    # Run model: 9:15 AM ET (13:15 UTC) — after NBA schedule is published
+    - cron: "15 13 * * *"
+    # Grade picks: 12:30 AM ET (04:30 UTC) — after all games finish
+    - cron: "30 4 * * *"
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -15,6 +17,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Pull latest changes
+        run: git pull --rebase origin main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,11 +32,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Determine task (model vs grading)
+        id: task
+        run: |
+          HOUR=$(date -u +%H)
+          if [ "$HOUR" -ge 10 ] && [ "$HOUR" -le 18 ]; then
+            echo "run_model=true" >> "$GITHUB_OUTPUT"
+            echo "run_grade=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_model=false" >> "$GITHUB_OUTPUT"
+            echo "run_grade=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Grade yesterday's picks
-        run: python grade.py || echo "No picks to grade (expected on first run)"
+        if: steps.task.outputs.run_grade == 'true'
+        run: python grade.py || echo "No picks to grade"
 
       - name: Run model
-        run: python main.py --fast
+        if: steps.task.outputs.run_model == 'true'
+        run: python main.py --fast || echo "Model run failed (no games today or API issue)"
 
       - name: Commit updated data
         run: |
@@ -39,4 +60,5 @@ jobs:
           git add web/public/data/results_history.json
           git add logs/
           git diff --cached --quiet || git commit -m "chore: update props data $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin main
           git push

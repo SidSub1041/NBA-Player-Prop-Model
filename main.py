@@ -281,7 +281,11 @@ def main():
         help="Skip per-playtype team rankings (fewer API calls, less detail).",
     )
     args = parser.parse_args()
-    run(date=args.date, fast=args.fast)
+    try:
+        run(date=args.date, fast=args.fast)
+    except Exception as e:
+        logger.error(f"Model run failed: {e}", exc_info=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
