@@ -41,6 +41,16 @@ def run_model(fast: bool = False):
         logger.error(f"Model run failed: {e}", exc_info=True)
 
 
+def run_grader():
+    """Import and run the grading pipeline."""
+    logger.info("Triggering grading run...")
+    try:
+        from grade import main as grade_main
+        grade_main()
+    except Exception as e:
+        logger.error(f"Grading run failed: {e}", exc_info=True)
+
+
 def next_run_at(target_time_str: str) -> datetime:
     """
     Compute the next datetime when we should run, given a HH:MM target time.
@@ -54,19 +64,28 @@ def next_run_at(target_time_str: str) -> datetime:
     return candidate
 
 
-def loop(target_time: str = "09:00", fast: bool = False, run_now: bool = False):
-    """Main scheduler loop."""
-    logger.info(f"Scheduler started. Daily run scheduled at {target_time}.")
+def loop(target_time: str = "09:00", grade_time: str = "23:00", fast: bool = False, run_now: bool = False):
+    """Main scheduler loop — runs model at target_time and grader at grade_time."""
+    logger.info(f"Scheduler started. Model at {target_time}, Grading at {grade_time}.")
 
     if run_now:
         logger.info("--run-now flag set: running model immediately.")
         run_model(fast=fast)
 
     while True:
-        next_run = next_run_at(target_time)
+        next_model = next_run_at(target_time)
+        next_grade = next_run_at(grade_time)
+
+        if next_model <= next_grade:
+            next_run = next_model
+            task = "model"
+        else:
+            next_run = next_grade
+            task = "grader"
+
         wait_secs = (next_run - datetime.now()).total_seconds()
         logger.info(
-            f"Next run at {next_run.strftime('%Y-%m-%d %H:%M')} "
+            f"Next task: {task} at {next_run.strftime('%Y-%m-%d %H:%M')} "
             f"({wait_secs/3600:.1f} hours from now)"
         )
 
@@ -74,7 +93,10 @@ def loop(target_time: str = "09:00", fast: bool = False, run_now: bool = False):
         while (remaining := (next_run - datetime.now()).total_seconds()) > 0:
             time.sleep(min(remaining, 60))
 
-        run_model(fast=fast)
+        if task == "model":
+            run_model(fast=fast)
+        else:
+            run_grader()
 
 
 def main():
@@ -96,10 +118,15 @@ def main():
         action="store_true",
         help="Run the model immediately on startup, then continue on schedule.",
     )
+    parser.add_argument(
+        "--grade-time",
+        default="23:00",
+        help="Daily grading time in HH:MM (24-hour). Default: 23:00",
+    )
     args = parser.parse_args()
 
     try:
-        loop(target_time=args.time, fast=args.fast, run_now=args.run_now)
+        loop(target_time=args.time, grade_time=args.grade_time, fast=args.fast, run_now=args.run_now)
     except KeyboardInterrupt:
         logger.info("Scheduler stopped by user.")
 

@@ -12,8 +12,12 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLIST_LABEL="com.nba.prop.model"
 PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
+GRADE_LABEL="com.nba.prop.grader"
+GRADE_PLIST_PATH="$HOME/Library/LaunchAgents/${GRADE_LABEL}.plist"
 RUN_HOUR=9    # 9 AM — change this to adjust the daily run time
 RUN_MINUTE=0
+GRADE_HOUR=23  # 11 PM — grading time (after games finish)
+GRADE_MINUTE=0
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -111,6 +115,58 @@ PLIST
 
 launchctl load "$PLIST_PATH"
 echo "  LaunchAgent installed: $PLIST_PATH"
+
+# ── 5b. Install macOS LaunchAgent for grading (runs at 11 PM daily) ──
+echo ""
+echo "▶ Installing macOS LaunchAgent for daily 11 PM grading..."
+
+if launchctl list | grep -q "$GRADE_LABEL" 2>/dev/null; then
+    launchctl unload "$GRADE_PLIST_PATH" 2>/dev/null || true
+fi
+
+cat > "$GRADE_PLIST_PATH" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>${GRADE_LABEL}</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>${PYTHON}</string>
+        <string>${REPO_DIR}/grade.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>${REPO_DIR}</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>${GRADE_HOUR}</integer>
+        <key>Minute</key>
+        <integer>${GRADE_MINUTE}</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>${REPO_DIR}/logs/launchd_grader_stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>${REPO_DIR}/logs/launchd_grader_stderr.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>
+PLIST
+
+launchctl load "$GRADE_PLIST_PATH"
+echo "  LaunchAgent installed: $GRADE_PLIST_PATH"
 
 # ── 6. Summary ───────────────────────────────────────────────────────
 echo ""
