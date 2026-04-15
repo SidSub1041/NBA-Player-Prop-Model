@@ -530,7 +530,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/data/latest.json")
+    const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+    fetch(`${base}/data/latest.json`)
       .then((res) => {
         if (!res.ok) throw new Error("No data available yet");
         return res.json();
