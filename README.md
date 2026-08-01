@@ -133,3 +133,15 @@ NBA-Player-Prop-Model/
 │   └── output.py        # Report formatting
 └── logs/                # Daily reports and run logs
 ```
+
+---
+
+## Acknowledgments
+
+Built by **Sid Subramanian**. Initial codebase and architecture developed with the assistance of [Claude](https://claude.ai) (Anthropic).
+
+---
+
+## Acknowledgments
+
+Built by **Sid Subramanian**. Initial codebase and architecture developed with the assistance of [Claude](https://claude.ai) (Anthropic).
