@@ -136,12 +136,6 @@ NBA-Player-Prop-Model/
 
 ---
 
-## Acknowledgments
+## Credits
 
-Built by **Sid Subramanian**. Initial codebase and architecture developed with the assistance of [Claude](https://claude.ai) (Anthropic).
-
----
-
-## Acknowledgments
-
-Built by **Sid Subramanian**. Initial codebase and architecture developed with the assistance of [Claude](https://claude.ai) (Anthropic).
+Built by **Sid Subramanian**.
