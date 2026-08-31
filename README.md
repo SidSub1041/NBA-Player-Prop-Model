@@ -136,6 +136,14 @@ NBA-Player-Prop-Model/
 
 ---
 
+## Live Dashboard
+
+- **Tableau Public** — interactive results dashboard (cumulative units, daily win rate, splits, pick explorer): [View on Tableau](https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1)
+- **Site** — daily picks and graded results: https://sidsub1041.github.io/NBA-Player-Prop-Model/
+- **Data feeds** — CSV fact tables in `web/public/data/` (`picks.csv`, `graded_picks.csv`, `daily_results.csv`), refreshed automatically by GitHub Actions.
+
+---
+
 ## Credits
 
 Built by **Sid Subramanian**.

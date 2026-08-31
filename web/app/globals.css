@@ -3,21 +3,56 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0a0e1a;
-  --card: #111827;
-  --card-hover: #1a2236;
-  --border: #1e293b;
-  --text: #e2e8f0;
-  --text-muted: #94a3b8;
-  --accent-green: #22c55e;
-  --accent-red: #ef4444;
-  --accent-gold: #eab308;
-  --accent-blue: #3b82f6;
+  --bg: #171009;
+  --bg-deep: #130d07;
+  --card: #211812;
+  --card-hover: #2a1f15;
+  --card-inset: #171009;
+  --border: #3a2c1d;
+  --border-soft: #2e2215;
+  --border-strong: #4e3319;
+  --text: #f2e8d8;
+  --text-bright: #f9f2e4;
+  --text-muted: #a8967e;
+  --text-faint: #6e5e4a;
+  --wood: #c08a52;
+  --wood-deep: #a87441;
+  --accent: #e8622d;
+  --accent-bright: #f07438;
+  --over: #4caf6e;
+  --over-ink: #10240f;
+  --under: #d9a441;
+  --under-ink: #2a1d06;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-barlow), "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-bebas), "Arial Narrow", Impact, sans-serif;
+}
+
+.hardwood {
+  background: repeating-linear-gradient(
+    90deg,
+    #c08a52 0px,
+    #b88049 118px,
+    #a87441 119px,
+    #c08a52 120px
+  );
+}
+
+.court-rule {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--wood) 0px,
+    var(--wood) 24px,
+    transparent 24px,
+    transparent 32px
+  );
 }
 
 @layer utilities {
