@@ -5,6 +5,70 @@ import type { PropsData, PropPick, DayResult } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
+const GITHUB_URL = "https://github.com/SidSub1041/NBA-Player-Prop-Model";
+
+/* ── Shared helpers ───────────────────────────────────────────────── */
+
+const STAT_LABELS: Record<string, string> = {
+  points: "PTS",
+  rebounds: "REB",
+  assists: "AST",
+  "pts+ast": "PTS+AST",
+  "pts+reb": "PTS+REB",
+  "reb+ast": "REB+AST",
+  pra: "PRA",
+};
+
+function statLabel(stat: string): string {
+  return STAT_LABELS[stat] ?? stat.toUpperCase();
+}
+
+function fmtDate(d: string): string {
+  return new Date(d + "T00:00:00")
+    .toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    .toUpperCase();
+}
+
+function fmtUnits(u: number): string {
+  return `${u >= 0 ? "+" : ""}${u.toFixed(2)}u`;
+}
+
+function unitsColor(u: number): string {
+  return u > 0 ? "var(--over)" : u < 0 ? "#f87171" : "var(--text)";
+}
+
+function hitrateColor(hrPct: number): string {
+  return hrPct >= 56 ? "var(--over)" : hrPct >= 50 ? "var(--under)" : "#f87171";
+}
+
+interface ResultsSummary {
+  graded: DayResult[];
+  totalPicks: number;
+  hits: number;
+  misses: number;
+  voided: number;
+  rate: number;
+  allUnits: number;
+  lastGraded: DayResult | null;
+}
+
+function aggregateResults(results: DayResult[]): ResultsSummary {
+  const graded = results.filter((r) => r.total_picks > 0);
+  const totalPicks = graded.reduce((s, r) => s + r.total_picks, 0);
+  const hits = graded.reduce((s, r) => s + r.hits, 0);
+  const misses = graded.reduce((s, r) => s + r.misses, 0);
+  const voided = results.reduce((s, r) => s + (r.voided ?? 0), 0);
+  return {
+    graded,
+    totalPicks,
+    hits,
+    misses,
+    voided,
+    rate: totalPicks > 0 ? Math.round((hits / totalPicks) * 100) : 0,
+    allUnits: results.reduce((s, r) => s + (r.units ?? 0), 0),
+    lastGraded: graded.length > 0 ? graded[graded.length - 1] : null,
+  };
+}
 
 /* ── Shared bits ──────────────────────────────────────────────────── */
 
@@ -31,6 +95,24 @@ function PlayerSilhouette({ size }: { size: number }) {
   );
 }
 
+function ArrowIcon({ size }: { size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--accent)"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
 function GradeBadge({ grade }: { grade: string }) {
   const cls: Record<string, string> = {
     "A+": "grade-a-plus",
@@ -49,29 +131,33 @@ function GradeBadge({ grade }: { grade: string }) {
 }
 
 function EdgeTag({ edge }: { edge: string }) {
-  const over = edge === "over";
+  const e = edge.toLowerCase();
+  const known = e === "over" || e === "under";
+  const over = e === "over";
   return (
     <span
       className="font-display inline-flex items-center gap-1.5 px-4 py-2 text-xl tracking-widest"
       style={{
-        background: over ? "var(--over)" : "var(--under)",
-        color: over ? "var(--over-ink)" : "var(--under-ink)",
+        background: known ? (over ? "var(--over)" : "var(--under)") : "var(--card-hover)",
+        color: known ? (over ? "var(--over-ink)" : "var(--under-ink)") : "var(--text)",
       }}
     >
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {over ? <path d="M12 20V5M6 11l6-6 6 6" /> : <path d="M12 4v15M6 13l6 6 6-6" />}
-      </svg>
-      {over ? "OVER" : "UNDER"}
+      {known && (
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          {over ? <path d="M12 20V5M6 11l6-6 6 6" /> : <path d="M12 4v15M6 13l6 6 6-6" />}
+        </svg>
+      )}
+      {known ? (over ? "OVER" : "UNDER") : edge.toUpperCase()}
     </span>
   );
 }
@@ -93,7 +179,6 @@ function SectionHead({ title, tag }: { title: string; tag: string }) {
 function PickCard({ pick }: { pick: PropPick }) {
   const hr = pick.hitrate !== null ? Math.round(pick.hitrate * 100) : null;
   const odds = pick.edge === "over" ? pick.ud_over_odds : pick.ud_under_odds;
-  const statLabel = pick.stat.replace("points", "PTS").replace("rebounds", "REB").replace("assists", "AST").toUpperCase();
   return (
     <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
       <div className="flex items-center gap-4">
@@ -119,24 +204,32 @@ function PickCard({ pick }: { pick: PropPick }) {
       </div>
       <div className="flex items-center gap-4 bg-[var(--card-inset)] px-5 py-4">
         <div className="font-display text-4xl tracking-wide leading-none">
-          {statLabel} {pick.ud_line ?? "—"}
+          {statLabel(pick.stat)} {pick.ud_line ?? "—"}
         </div>
         <EdgeTag edge={pick.edge} />
-        {odds && (
-          <div className="ml-auto flex flex-col items-end">
-            <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds}</div>
-            <div className="text-[11px] text-[var(--text-faint)]">payout</div>
+        <div className="ml-auto flex flex-col items-end">
+          <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds ?? "—"}</div>
+          <div className="text-[11px] text-[var(--text-faint)]">
+            {odds ? "payout" : "no line"}
           </div>
-        )}
+        </div>
       </div>
       <div className="flex items-center gap-3">
         <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">
           HIT RATE
         </div>
-        <div className="flex-grow h-2 bg-[var(--card-hover)] overflow-hidden">
-          <div className="h-2 bg-[var(--accent)]" style={{ width: `${hr ?? 0}%` }} />
-        </div>
-        <div className="text-sm font-bold">{hr !== null ? `${hr}%` : "N/A"}</div>
+        {hr !== null ? (
+          <>
+            <div className="flex-grow h-2 bg-[var(--card-hover)] overflow-hidden">
+              <div className="h-2 bg-[var(--accent)]" style={{ width: `${hr}%` }} />
+            </div>
+            <div className="text-sm font-bold" style={{ color: hitrateColor(hr) }}>
+              {hr}%
+            </div>
+          </>
+        ) : (
+          <div className="flex-grow text-sm font-bold text-[var(--text-faint)]">N/A</div>
+        )}
         {pick.season_avg !== null && (
           <div className="text-xs text-[var(--text-faint)]">· avg {pick.season_avg}</div>
         )}
@@ -151,7 +244,7 @@ function UnitsChart({ results }: { results: DayResult[] }) {
   const W = 840;
   const H = 240;
   const PAD_L = 56;
-  const PAD_R = 48;
+  const PAD_R = 64;
   const PAD_T = 24;
   const PAD_B = 28;
 
@@ -174,17 +267,8 @@ function UnitsChart({ results }: { results: DayResult[] }) {
   const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(p.cum)}`).join(" ");
   const area = `${line} L${x(pts.length - 1)} ${y(0)} L${x(0)} ${y(0)} Z`;
   const last = pts[pts.length - 1];
-  const fmtDate = (d: string) => {
-    const dt = new Date(d + "T00:00:00");
-    return dt
-      .toLocaleDateString("en-US", { month: "short", day: "numeric" })
-      .toUpperCase();
-  };
-  const fmtU = (u: number) => `${u >= 0 ? "+" : ""}${u.toFixed(2)}u`;
   const midIdx = Math.floor((pts.length - 1) / 2);
-  const gridVals = [hi, (hi + lo) / 2, lo].filter(
-    (v, i, a) => a.indexOf(v) === i,
-  );
+  const gridVals = hi === lo ? [hi] : [hi, (hi + lo) / 2, lo];
 
   return (
     <svg
@@ -196,7 +280,7 @@ function UnitsChart({ results }: { results: DayResult[] }) {
         <g key={v}>
           <path d={`M${PAD_L} ${y(v)} H${W - PAD_R}`} stroke="var(--border-soft)" strokeWidth="1" />
           <text x={PAD_L - 8} y={y(v) + 4} fill="var(--text-faint)" fontSize="11" textAnchor="end">
-            {fmtU(v)}
+            {fmtUnits(v)}
           </text>
         </g>
       ))}
@@ -206,8 +290,15 @@ function UnitsChart({ results }: { results: DayResult[] }) {
       {pts.map((p, i) => (
         <circle key={p.date} cx={x(i)} cy={y(p.cum)} r={i === pts.length - 1 ? 5 : 4} fill="var(--accent)" stroke="var(--card)" strokeWidth="2" />
       ))}
-      <text x={W - PAD_R + 4} y={y(last.cum) - 10} fill="var(--text)" fontSize="13" fontWeight="700" textAnchor="end">
-        {fmtU(last.cum)}
+      <text
+        x={W - PAD_R + 8}
+        y={y(last.cum) + 4}
+        fill="var(--text)"
+        fontSize="13"
+        fontWeight="700"
+        textAnchor="start"
+      >
+        {fmtUnits(last.cum)}
       </text>
       <text x={x(0)} y={H - 6} fill="var(--text-faint)" fontSize="11" textAnchor="middle">
         {fmtDate(pts[0].date)}
@@ -228,21 +319,20 @@ function UnitsChart({ results }: { results: DayResult[] }) {
 
 /* ── Shot chart: one ball per graded pick ─────────────────────────── */
 
+const SHOT_CHART_DAYS = 20;
+
 function ShotChart({ results }: { results: DayResult[] }) {
-  const days = results.filter((r) => r.total_picks > 0).slice(-20);
+  const allDays = results.filter((r) => r.total_picks > 0 || (r.voided ?? 0) > 0);
+  const days = allDays.slice(-SHOT_CHART_DAYS);
+  const truncated = allDays.length > days.length;
   if (days.length === 0) return null;
-  const fmtDate = (d: string) => {
-    const dt = new Date(d + "T00:00:00");
-    return dt
-      .toLocaleDateString("en-US", { month: "short", day: "numeric" })
-      .toUpperCase();
-  };
   return (
     <div className="bg-[var(--card)] border border-[var(--border)] p-7 flex flex-col gap-4">
       <div className="flex flex-wrap items-baseline gap-3">
         <div className="text-[15px] font-bold">Shot chart</div>
         <div className="text-xs text-[var(--text-faint)]">
           one ball per graded pick, by day
+          {truncated ? ` · last ${SHOT_CHART_DAYS} days` : ""}
         </div>
         <div className="ml-auto flex items-center gap-4 text-xs text-[var(--text-muted)]">
           <span className="inline-flex items-center gap-1.5">
@@ -252,6 +342,10 @@ function ShotChart({ results }: { results: DayResult[] }) {
           <span className="inline-flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full border-2 border-[var(--text-faint)] box-border inline-block" />
             Miss
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[var(--border)] inline-block" />
+            Void
           </span>
         </div>
       </div>
@@ -267,6 +361,9 @@ function ShotChart({ results }: { results: DayResult[] }) {
             {Array.from({ length: d.misses }).map((_, i) => (
               <div key={`m${i}`} className="w-[18px] h-[18px] rounded-full border-2 border-[var(--text-faint)] box-border" />
             ))}
+            {Array.from({ length: d.voided ?? 0 }).map((_, i) => (
+              <div key={`v${i}`} className="w-[18px] h-[18px] rounded-full bg-[var(--border)]" />
+            ))}
           </div>
         ))}
       </div>
@@ -276,23 +373,15 @@ function ShotChart({ results }: { results: DayResult[] }) {
 
 /* ── The Receipts ─────────────────────────────────────────────────── */
 
-function Receipts({ results }: { results: DayResult[] }) {
-  const graded = results.filter((r) => r.total_picks > 0);
-  const totalPicks = graded.reduce((s, r) => s + r.total_picks, 0);
-  const hits = graded.reduce((s, r) => s + r.hits, 0);
-  const misses = graded.reduce((s, r) => s + r.misses, 0);
-  const voided = results.reduce((s, r) => s + (r.voided ?? 0), 0);
-  const rate = totalPicks > 0 ? Math.round((hits / totalPicks) * 100) : 0;
-  const allUnits = results.reduce((s, r) => s + (r.units ?? 0), 0);
-  const lastUnits = graded.length > 0 ? (graded[graded.length - 1].units ?? 0) : 0;
-  const fmtU = (u: number) => `${u >= 0 ? "+" : ""}${u.toFixed(2)}u`;
-  const uColor = (u: number) =>
-    u > 0 ? "text-[var(--over)]" : u < 0 ? "text-red-400" : "text-[var(--text)]";
+function Receipts({ summary, results }: { summary: ResultsSummary; results: DayResult[] }) {
+  const { totalPicks, hits, misses, voided, rate, allUnits, lastGraded } = summary;
 
   if (totalPicks === 0) {
     return (
       <div className="bg-[var(--card)] border border-[var(--border)] p-10 text-center text-sm text-[var(--text-muted)]">
-        No graded results yet. Picks are graded automatically after games finish.
+        {voided > 0
+          ? `No decided picks yet — ${voided} graded pick${voided === 1 ? "" : "s"} voided (players sat or lines pulled).`
+          : "No graded results yet. Picks are graded automatically after games finish."}
       </div>
     );
   }
@@ -313,18 +402,26 @@ function Receipts({ results }: { results: DayResult[] }) {
               <span>
                 {hits} makes · {misses} misses
               </span>
-              <span>{totalPicks} graded</span>
+              <span>{totalPicks} decided · {voided} voided</span>
             </div>
           </div>
           <div className="border-t border-[var(--border)] pt-4 flex gap-6">
             <div className="flex flex-col gap-0.5">
-              <div className={`text-xl font-bold ${uColor(allUnits)}`}>{fmtU(allUnits)}</div>
+              <div className="text-xl font-bold" style={{ color: unitsColor(allUnits) }}>
+                {fmtUnits(allUnits)}
+              </div>
               <div className="text-[11px] tracking-wider text-[var(--text-faint)]">ALL-TIME</div>
             </div>
-            <div className="flex flex-col gap-0.5">
-              <div className={`text-xl font-bold ${uColor(lastUnits)}`}>{fmtU(lastUnits)}</div>
-              <div className="text-[11px] tracking-wider text-[var(--text-faint)]">LAST DAY</div>
-            </div>
+            {lastGraded && (
+              <div className="flex flex-col gap-0.5">
+                <div className="text-xl font-bold" style={{ color: unitsColor(lastGraded.units ?? 0) }}>
+                  {fmtUnits(lastGraded.units ?? 0)}
+                </div>
+                <div className="text-[11px] tracking-wider text-[var(--text-faint)]">
+                  {fmtDate(lastGraded.date)}
+                </div>
+              </div>
+            )}
             <div className="flex flex-col gap-0.5">
               <div className="text-xl font-bold">{voided}</div>
               <div className="text-[11px] tracking-wider text-[var(--text-faint)]">VOIDED</div>
@@ -416,6 +513,7 @@ export default function Home() {
 
   const picks = deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]);
   const results = data.model_results ?? [];
+  const summary = aggregateResults(results);
   const dateLabel = new Date(data.date + "T00:00:00")
     .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
     .toUpperCase()
@@ -425,10 +523,10 @@ export default function Home() {
     <main className="flex flex-col">
       {/* Nav */}
       <div className="flex items-center gap-4 px-6 lg:px-16 py-5 border-b border-[var(--border-soft)]">
-        <BallLogo size={30} ink="#171009" />
-        <div className="font-display text-2xl tracking-widest">PROP MODEL</div>
-        <div className="ml-auto flex items-center gap-7">
-          <div className="hidden sm:block text-[13px] font-semibold tracking-wider text-[var(--text-muted)]">
+        <BallLogo size={30} ink="var(--bg)" />
+        <div className="font-display text-2xl tracking-widest hidden sm:block">PROP MODEL</div>
+        <div className="ml-auto flex items-center gap-4 sm:gap-7">
+          <div className="text-[13px] font-semibold tracking-wider text-[var(--text-muted)]">
             {dateLabel}
           </div>
           <div className="hidden md:block text-[13px] font-semibold tracking-wider text-[var(--text-muted)]">
@@ -443,7 +541,7 @@ export default function Home() {
             DASHBOARD
           </a>
           <a
-            href="https://github.com/SidSub1041/NBA-Player-Prop-Model"
+            href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[13px] font-semibold tracking-wider text-[var(--accent)]"
@@ -493,7 +591,7 @@ export default function Home() {
             className="text-lg sm:text-xl font-semibold"
             style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}
           >
-            {data.candidates_analyzed} props scanned. {picks.length} made the cut.
+            {data.candidates_analyzed} props scanned. {picks.length} on the board.
           </div>
           <div className="flex items-center gap-4 mt-2">
             <a
@@ -501,19 +599,7 @@ export default function Home() {
               className="font-display inline-flex items-center gap-2.5 bg-[var(--bg)] text-[var(--text)] text-xl tracking-widest px-7 py-3.5"
             >
               SEE THE BOARD
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--accent)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
+              <ArrowIcon size={18} />
             </a>
             <div className="hidden sm:block text-[13px] font-semibold tracking-wider opacity-85">
               FREE. EVERY MORNING.
@@ -524,32 +610,45 @@ export default function Home() {
 
       {/* KPI row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 px-6 lg:px-16 pt-10 pb-2">
-        {(() => {
-          const graded = results.filter((r) => r.total_picks > 0);
-          const tot = graded.reduce((s, r) => s + r.total_picks, 0);
-          const hits = graded.reduce((s, r) => s + r.hits, 0);
-          const units = results.reduce((s, r) => s + (r.units ?? 0), 0);
-          const tiles = [
-            { label: "PLAYS", value: String(picks.length), sub: "graded A or better", color: "var(--text)" },
-            { label: "HIT RATE", value: tot > 0 ? `${Math.round((hits / tot) * 100)}%` : "—", sub: "all graded picks", color: "var(--text)" },
-            { label: "UNITS", value: `${units >= 0 ? "+" : ""}${units.toFixed(2)}u`, sub: "flat 1u, all-time", color: units >= 0 ? "var(--over)" : "#f87171" },
-            { label: "DAYS", value: String(results.length || "—"), sub: "tracked & graded", color: "var(--text)" },
-          ];
-          return tiles.map((t) => (
-            <div
-              key={t.label}
-              className="bg-[var(--card)] border border-[var(--border)] border-t-[3px] border-t-[var(--accent)] px-6 py-5 flex flex-col gap-1.5"
-            >
-              <div className="text-xs font-bold tracking-[3px] text-[var(--text-muted)]">
-                {t.label}
-              </div>
-              <div className="text-4xl font-bold leading-none" style={{ color: t.color }}>
-                {t.value}
-              </div>
-              <div className="text-xs text-[var(--text-faint)]">{t.sub}</div>
+        {[
+          {
+            label: "PLAYS",
+            value: String(picks.length),
+            sub: "graded A or better",
+            color: "var(--text)",
+          },
+          {
+            label: "HIT RATE",
+            value: summary.totalPicks > 0 ? `${summary.rate}%` : "—",
+            sub: "all decided picks",
+            color: "var(--text)",
+          },
+          {
+            label: "UNITS",
+            value: fmtUnits(summary.allUnits),
+            sub: "flat 1u, all-time",
+            color: unitsColor(summary.allUnits),
+          },
+          {
+            label: "DAYS",
+            value: results.length > 0 ? String(results.length) : "—",
+            sub: "tracked & graded",
+            color: "var(--text)",
+          },
+        ].map((t) => (
+          <div
+            key={t.label}
+            className="bg-[var(--card)] border border-[var(--border)] border-t-[3px] border-t-[var(--accent)] px-6 py-5 flex flex-col gap-1.5"
+          >
+            <div className="text-xs font-bold tracking-[3px] text-[var(--text-muted)]">
+              {t.label}
             </div>
-          ));
-        })()}
+            <div className="text-4xl font-bold leading-none" style={{ color: t.color }}>
+              {t.value}
+            </div>
+            <div className="text-xs text-[var(--text-faint)]">{t.sub}</div>
+          </div>
+        ))}
       </div>
 
       {/* The Board */}
@@ -574,7 +673,7 @@ export default function Home() {
       {/* The Receipts */}
       <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
         <SectionHead title="THE RECEIPTS" tag="EVERY PICK. GRADED." />
-        <Receipts results={results} />
+        <Receipts summary={summary} results={results} />
         <a
           href={DASHBOARD_URL}
           target="_blank"
@@ -582,19 +681,7 @@ export default function Home() {
           className="self-start font-display inline-flex items-center gap-2.5 bg-[var(--card)] border border-[var(--border)] text-[var(--text)] text-lg tracking-widest px-6 py-3"
         >
           FULL DASHBOARD ON TABLEAU
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--accent)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
+          <ArrowIcon size={16} />
         </a>
       </div>
 
@@ -617,12 +704,12 @@ export default function Home() {
 
       {/* Footer */}
       <div className="flex items-center gap-4 px-6 lg:px-16 py-7 border-t border-[var(--border-soft)] bg-[var(--bg-deep)]">
-        <BallLogo size={20} ink="#130d07" />
+        <BallLogo size={20} ink="var(--bg-deep)" />
         <div className="text-xs text-[var(--text-faint)]">
-          Updates hourly · Lines via Underdog Fantasy · Not financial advice
+          Updates several times daily · Lines via Underdog Fantasy · Not financial advice
         </div>
         <a
-          href="https://github.com/SidSub1041/NBA-Player-Prop-Model"
+          href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="ml-auto text-xs font-semibold tracking-wider text-[var(--text-muted)]"

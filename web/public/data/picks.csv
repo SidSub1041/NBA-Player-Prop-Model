@@ -1,4 +1,4 @@
-date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo,total_points,total_conditions,pass_rate,hitrate,hitrate_source,season_avg,games_played,ud_line,ud_over_odds,ud_under_odds,adaptive_multiplier,n_zone_conditions,n_playtype_conditions,details
+﻿date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo,total_points,total_conditions,pass_rate,hitrate,hitrate_source,season_avg,games_played,ud_line,ud_over_odds,ud_under_odds,adaptive_multiplier,n_zone_conditions,n_playtype_conditions,details
 2026-04-08,Kawhi Leonard,LAC,OKC,SG,assists,under,A,valid,True,False,1,1,1.0,0.508,nba_api_gamelog,3.6,,3.5,+126,-157,,0,0,
 2026-04-08,Cooper Flagg,DAL,PHX,SG,assists,under,A,valid,True,False,1,1,1.0,0.507,nba_api_gamelog,4.5,,5.5,+123,-152,,0,0,
 2026-04-08,Devin Booker,PHX,DAL,SF,assists,over,A,valid,True,False,1,1,1.0,0.556,nba_api_gamelog,6.0,,6.5,+112,-134,,0,0,
@@ -53,12 +53,12 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-09,Derrick White,BOS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.52,nba_api_gamelog,4.5,75,3.5,-162,+130,1.0467,0,0,
 2026-04-09,Amen Thompson,HOU,PHI,PF,rebounds,over,A,valid,True,False,1,1,1.0,0.532,nba_api_gamelog,7.8,77,8.5,+108,-134,1.0633,0,0,
 2026-04-09,Bam Adebayo,MIA,TOR,PF,assists,under,B,watchlist,False,False,1,1,1.0,0.371,nba_api_gamelog,3.0,70,3.5,+133,-170,1.0333,0,0,
-2026-04-09,Julian Reese,WAS,CHI,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,15.5,-104,-120,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-09,Tyrese Maxey,PHI,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.455,combo_average,10.8,67,10.5,+113,-139,1.04,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-09,Amen Thompson,HOU,PHI,PF,reb+ast,over,A,valid_combo,True,True,2,2,1.0,0.5,combo_average,13.1,77,13.5,-112,-112,1.08,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-09,Bam Adebayo,MIA,TOR,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.378,combo_average,13.0,70,14.5,+108,-134,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-09,Tre Jones,CHI,WAS,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.395,combo_average,8.6,62,9.5,-137,+111,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-09,Derrick White,BOS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.466,combo_average,9.9,75,9.5,+114,-139,1.04,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Julian Reese,WAS,CHI,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,15.5,-104,-120,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Tyrese Maxey,PHI,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.455,combo_average,10.8,67,10.5,+113,-139,1.04,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Amen Thompson,HOU,PHI,PF,reb+ast,over,A,valid_combo,True,True,2,2,1.0,0.5,combo_average,13.1,77,13.5,-112,-112,1.08,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Bam Adebayo,MIA,TOR,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.378,combo_average,13.0,70,14.5,+108,-134,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Tre Jones,CHI,WAS,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.395,combo_average,8.6,62,9.5,-137,+111,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-09,Derrick White,BOS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.466,combo_average,9.9,75,9.5,+114,-139,1.04,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-12,Bam Adebayo,MIA,ATL,SG,assists,under,B,watchlist,False,False,1,1,1.0,0.371,nba_api_gamelog,3.0,70,3.5,-130,+106,1.0333,0,0,
 2026-04-12,Paolo Banchero,ORL,BOS,SG,points,under,D,other,False,False,0,0,0.0,0.521,nba_api_gamelog,22.2,71,20.5,-103,-121,1.0467,0,0,
 2026-04-12,Brandon Ingram,TOR,BKN,SG,points,under,D,other,False,False,0,0,0.0,0.487,nba_api_gamelog,21.4,76,19.5,-154,+126,1.0233,0,0,
@@ -133,19 +133,19 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-12,Kevin Porter Jr.,MIL,PHI,PF,rebounds,over,B,watchlist,False,False,1,1,1.0,0.474,nba_api_gamelog,5.2,38,,,,1.04,0,0,
 2026-04-12,Nikola Jokić,DEN,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,,unavailable,,0,,,,1.0233,0,0,
 2026-04-12,Trevon Scott,BKN,TOR,PF,assists,under,A+,valid,True,False,1,1,1.0,0.6,nba_api_gamelog,1.8,5,,,,1.0333,0,0,
-2026-04-12,Cooper Flagg,DAL,CHI,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,15.5,-103,,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Tre Jones,CHI,DAL,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.395,combo_average,8.6,62,10.5,+107,,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Jalen Slawson,IND,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,,,,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Toby Okani,MEM,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,,,,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Jabari Smith Jr.,HOU,MEM,SF,reb+ast,over,A+,valid_combo,True,True,2,2,1.0,0.578,combo_average,8.8,77,,,,1.08,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Donte DiVincenzo,MIN,NOP,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.476,combo_average,7.9,81,,,,1.08,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Nikola Vučević,BOS,ORL,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.469,combo_average,3.3,64,,,,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Kevin Porter Jr.,MIL,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.448,combo_average,12.6,38,,,,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Trevon Scott,BKN,TOR,SG,reb+ast,under,A+,valid_combo,True,True,2,2,1.0,0.6,combo_average,1.8,5,,,,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Luka Dončić,LAL,UTA,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.453,combo_average,16.0,64,,,,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Jaylon Tyson,CLE,WAS,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.369,combo_average,5.1,65,7.5,-121,-102,1.0684,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Tyrese Maxey,PHI,MIL,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.455,combo_average,10.8,67,11.5,+114,,1.08,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-12,Kon Knueppel,CHA,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.425,combo_average,8.7,80,8.5,-118,,1.0283,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Cooper Flagg,DAL,CHI,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,15.5,-103,,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Tre Jones,CHI,DAL,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.395,combo_average,8.6,62,10.5,+107,,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Jalen Slawson,IND,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,,,,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Toby Okani,MEM,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,,combo_average,,,,,,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Jabari Smith Jr.,HOU,MEM,SF,reb+ast,over,A+,valid_combo,True,True,2,2,1.0,0.578,combo_average,8.8,77,,,,1.08,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Donte DiVincenzo,MIN,NOP,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.476,combo_average,7.9,81,,,,1.08,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Nikola Vučević,BOS,ORL,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.469,combo_average,3.3,64,,,,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Kevin Porter Jr.,MIL,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.448,combo_average,12.6,38,,,,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Trevon Scott,BKN,TOR,SG,reb+ast,under,A+,valid_combo,True,True,2,2,1.0,0.6,combo_average,1.8,5,,,,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Luka Dončić,LAL,UTA,SG,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.453,combo_average,16.0,64,,,,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Jaylon Tyson,CLE,WAS,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.369,combo_average,5.1,65,7.5,-121,-102,1.0684,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Tyrese Maxey,PHI,MIL,SF,reb+ast,over,B,watchlist_combo,False,True,2,2,1.0,0.455,combo_average,10.8,67,11.5,+114,,1.08,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-12,Kon Knueppel,CHA,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.425,combo_average,8.7,80,8.5,-118,,1.0283,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-14,Kon Knueppel,CHA,MIA,SG,rebounds,over,B,watchlist,False,False,1,1,1.0,0.432,nba_api_gamelog,5.3,81,5.5,+117,-143,1.11,0,0,
 2026-04-14,Deni Avdija,POR,PHX,SG,assists,under,A,valid,True,False,1,1,0.995,0.53,nba_api_gamelog,6.7,66,6.5,+102,-125,0.9954,0,0,
 2026-04-14,Deni Avdija,POR,PHX,SG,points,under,D,other,False,False,0,0,0.0,0.545,nba_api_gamelog,24.2,66,24.5,-117,-106,1.0111,0,0,
@@ -172,8 +172,8 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-19,Cade Cunningham,DET,ORL,PF,assists,under,A+,valid,True,False,1,1,0.973,0.578,nba_api_gamelog,9.9,64,9.5,-127,+104,0.9734,0,0,
 2026-04-19,Jaylen Brown,BOS,PHI,PF,rebounds,over,A+,valid,True,False,1,1,1.0,0.563,nba_api_gamelog,6.9,71,6.5,+100,-122,1.07,0,0,
 2026-04-19,Deni Avdija,POR,SAS,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,6.9,66,6.5,-127,+104,1.0611,0,0,
-2026-04-19,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.472,combo_average,13.6,72,12.5,-112,-112,1.0172,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-19,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.997,0.464,combo_average,12.0,71,10.5,-125,+102,0.9969,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-19,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.472,combo_average,13.6,72,12.5,-112,-112,1.0172,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-19,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.997,0.464,combo_average,12.0,71,10.5,-125,+102,0.9969,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-20,Jalen Brunson,NYK,ATL,SG,assists,under,A,valid,True,False,1,1,0.953,0.541,nba_api_gamelog,6.8,74,7.5,+116,-141,0.9534,0,0,
 2026-04-20,Jamal Murray,DEN,MIN,SG,points,under,D,other,False,False,0,0,0.0,0.427,nba_api_gamelog,25.4,75,25.5,-122,+100,1.0011,0,0,
 2026-04-20,James Harden,CLE,TOR,SG,rebounds,under,A,valid,True,False,1,1,1.0,0.543,nba_api_gamelog,4.8,70,4.5,-112,-112,1.0611,0,0,
@@ -190,9 +190,9 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-20,Jalen Johnson,ATL,NYK,PF,points,under,D,other,False,False,0,0,0.0,0.5,nba_api_gamelog,22.5,72,21.5,-122,+100,0.9911,0,0,
 2026-04-20,Jalen Johnson,ATL,NYK,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.472,nba_api_gamelog,10.3,72,10.5,+104,-127,1.0711,0,0,
 2026-04-20,James Harden,CLE,TOR,PF,assists,under,A,valid,True,False,1,1,0.953,0.514,nba_api_gamelog,8.0,70,7.5,+103,-125,0.9534,0,0,
-2026-04-20,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.44,combo_average,11.5,75,10.5,-137,+112,1.0172,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-20,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,1.0,0.528,combo_average,12.8,70,12.5,+108,-134,1.0072,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-20,Jalen Johnson,ATL,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,1.0,0.5,combo_average,18.2,72,17.5,+104,-127,1.0122,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-20,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.44,combo_average,11.5,75,10.5,-137,+112,1.0172,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-20,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,1.0,0.528,combo_average,12.8,70,12.5,+108,-134,1.0072,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-20,Jalen Johnson,ATL,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,1.0,0.5,combo_average,18.2,72,17.5,+104,-127,1.0122,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-21,Tyrese Maxey,PHI,BOS,SG,points,under,D,other,False,False,0,0,0.0,0.457,nba_api_gamelog,28.3,70,25.5,-127,+104,1.0011,0,0,
 2026-04-21,Luka Dončić,LAL,HOU,SG,points,under,D,other,False,False,0,0,0.0,0.516,nba_api_gamelog,33.5,64,,,,0.9911,0,0,
 2026-04-21,Luka Dončić,LAL,HOU,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.484,nba_api_gamelog,7.7,64,,,,1.0711,0,0,
@@ -207,8 +207,8 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-21,De'Aaron Fox,SAS,POR,SF,rebounds,over,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,-112,-112,1.05,0,0,
 2026-04-21,Jaylen Brown,BOS,PHI,PF,rebounds,over,A+,valid,True,False,1,1,1.0,0.563,nba_api_gamelog,6.9,71,6.5,+104,-127,1.07,0,0,
 2026-04-21,Deni Avdija,POR,SAS,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,6.9,66,7.5,+118,-145,1.0611,0,0,
-2026-04-21,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.453,combo_average,16.0,64,,,,1.0172,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-21,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.997,0.464,combo_average,12.0,71,10.5,-145,+119,0.9969,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-21,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.453,combo_average,16.0,64,,,,1.0172,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-21,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.997,0.464,combo_average,12.0,71,10.5,-145,+119,0.9969,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-22,Paolo Banchero,ORL,DET,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.486,nba_api_gamelog,8.4,72,7.5,-129,+105,1.0711,0,0,
 2026-04-22,Paolo Banchero,ORL,DET,SG,assists,under,B,watchlist,False,False,1,1,0.963,0.458,nba_api_gamelog,5.2,72,4.5,-103,-118,0.9634,0,0,
 2026-04-22,Paolo Banchero,ORL,DET,SG,points,under,D,other,False,False,0,0,0.0,0.528,nba_api_gamelog,22.2,72,20.5,-113,-109,0.9911,0,0,
@@ -220,7 +220,7 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-22,Cade Cunningham,DET,ORL,SF,points,over,D,other,False,False,0,0,0.0,0.562,nba_api_gamelog,23.9,64,28.5,-108,-114,1.0,0,0,
 2026-04-22,Cade Cunningham,DET,ORL,SF,rebounds,over,B,watchlist,False,False,1,1,1.0,0.469,nba_api_gamelog,5.5,64,5.5,-136,+111,1.06,0,0,
 2026-04-22,Cade Cunningham,DET,ORL,PF,assists,under,A+,valid,True,False,1,1,0.973,0.578,nba_api_gamelog,9.9,64,9.5,-132,+107,0.9734,0,0,
-2026-04-22,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.472,combo_average,13.6,72,12.5,-113,-109,1.0172,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-22,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,1.0,0.472,combo_average,13.6,72,12.5,-113,-109,1.0172,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-25,Jalen Brunson,NYK,ATL,SG,assists,under,B,watchlist,False,False,1,1,0.917,,unavailable,,0,,,,0.9171,0,0,
 2026-04-25,Jalen Brunson,NYK,ATL,SG,points,under,D,other,False,False,0,0,0.0,,unavailable,,0,,,,0.99,0,0,
 2026-04-25,Paolo Banchero,ORL,DET,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.486,nba_api_gamelog,8.4,72,8.5,-107,-115,1.06,0,0,
@@ -242,9 +242,9 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-25,Anthony Edwards,MIN,DEN,PF,assists,over,A,valid,True,False,1,1,0.907,0.508,nba_api_gamelog,3.7,61,4.5,+122,-150,0.9071,0,0,
 2026-04-25,Jalen Johnson,ATL,NYK,PF,points,under,D,other,False,False,0,0,0.0,0.5,nba_api_gamelog,22.5,72,,,,0.98,0,0,
 2026-04-25,Jalen Johnson,ATL,NYK,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.472,nba_api_gamelog,10.3,72,,,,1.06,0,0,
-2026-04-25,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-134,+110,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-25,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.493,combo_average,4.4,75,11.5,-112,-112,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-25,Jalen Johnson,ATL,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,10.3,72,,,,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-25,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-134,+110,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-25,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.493,combo_average,4.4,75,11.5,-112,-112,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-25,Jalen Johnson,ATL,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,10.3,72,,,,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-26,Tyrese Maxey,PHI,BOS,SG,points,under,D,other,False,False,0,0,0.0,0.457,nba_api_gamelog,28.3,70,27.5,-118,-105,0.99,0,0,
 2026-04-26,Luka Dončić,LAL,HOU,SG,points,under,D,other,False,False,0,0,0.0,0.516,nba_api_gamelog,33.5,64,,,,0.98,0,0,
 2026-04-26,Luka Dončić,LAL,HOU,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.484,nba_api_gamelog,7.7,64,,,,1.06,0,0,
@@ -267,11 +267,11 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-26,Jaylen Brown,BOS,PHI,PF,rebounds,over,A+,valid,True,False,1,1,1.0,0.563,nba_api_gamelog,6.9,71,5.5,-157,+126,1.05,0,0,
 2026-04-26,Deni Avdija,POR,SAS,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,6.9,66,6.5,-136,+110,1.05,0,0,
 2026-04-26,Deni Avdija,POR,SAS,PF,assists,under,A,valid,True,False,1,1,0.907,0.53,nba_api_gamelog,6.7,66,6.5,+113,-139,0.9071,0,0,
-2026-04-26,Tyrese Maxey,PHI,BOS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,10.5,+108,-134,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-26,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.453,combo_average,16.0,64,,,,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-26,Amen Thompson,HOU,LAL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.5,combo_average,13.1,79,12.5,-125,+103,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-26,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.464,combo_average,12.0,71,10.5,-125,+103,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-26,Deni Avdija,POR,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.515,combo_average,13.6,66,13.5,-102,-122,0.9786,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-26,Tyrese Maxey,PHI,BOS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,10.5,+108,-134,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-26,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.453,combo_average,16.0,64,,,,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-26,Amen Thompson,HOU,LAL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.5,combo_average,13.1,79,12.5,-125,+103,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-26,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.464,combo_average,12.0,71,10.5,-125,+103,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-26,Deni Avdija,POR,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.515,combo_average,13.6,66,13.5,-102,-122,0.9786,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-04-27,Paolo Banchero,ORL,DET,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.486,nba_api_gamelog,8.4,72,8.5,+105,-129,1.06,0,0,
 2026-04-27,Paolo Banchero,ORL,DET,SG,assists,under,B,watchlist,False,False,1,1,0.917,0.458,nba_api_gamelog,5.2,72,5.5,+112,-137,0.9171,0,0,
 2026-04-27,Paolo Banchero,ORL,DET,SG,points,under,D,other,False,False,0,0,0.0,0.528,nba_api_gamelog,22.2,72,21.5,-112,-112,0.98,0,0,
@@ -287,9 +287,9 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-04-27,Cade Cunningham,DET,ORL,SF,points,over,D,other,False,False,0,0,0.0,0.562,nba_api_gamelog,23.9,64,28.5,-103,-121,0.98,0,0,
 2026-04-27,Cade Cunningham,DET,ORL,SF,assists,under,A+,valid,True,False,1,1,0.907,0.578,nba_api_gamelog,9.9,64,9.5,-114,-108,0.9071,0,0,
 2026-04-27,Julius Randle,MIN,DEN,PF,assists,over,B,watchlist,False,False,1,1,0.917,0.418,nba_api_gamelog,5.0,79,5.5,+128,-159,0.9171,0,0,
-2026-04-27,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-112,-112,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-27,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.44,combo_average,11.5,75,11.5,-112,-112,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-04-27,Cade Cunningham,DET,ORL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.524,combo_average,15.4,64,15.5,-112,-112,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-27,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-112,-112,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-27,Jamal Murray,DEN,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.44,combo_average,11.5,75,11.5,-112,-112,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-04-27,Cade Cunningham,DET,ORL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.524,combo_average,15.4,64,15.5,-112,-112,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-01,Paolo Banchero,ORL,DET,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.486,nba_api_gamelog,8.4,72,8.5,+122,-150,1.06,0,0,
 2026-05-01,Paolo Banchero,ORL,DET,SG,assists,under,B,watchlist,False,False,1,1,0.917,0.458,nba_api_gamelog,5.2,72,5.5,+108,-134,0.9171,0,0,
 2026-05-01,Paolo Banchero,ORL,DET,SG,points,under,D,other,False,False,0,0,0.0,0.528,nba_api_gamelog,22.2,72,23.5,-112,-112,0.98,0,0,
@@ -308,18 +308,18 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-05-01,Amen Thompson,HOU,LAL,PF,assists,under,B,watchlist,False,False,1,1,0.917,0.468,nba_api_gamelog,5.3,79,5.5,-112,-112,0.9171,0,0,
 2026-05-01,Cade Cunningham,DET,ORL,PF,assists,under,A+,valid,True,False,1,1,0.907,0.578,nba_api_gamelog,9.9,64,9.5,+104,-127,0.9071,0,0,
 2026-05-01,James Harden,CLE,TOR,PF,assists,under,A,valid,True,False,1,1,0.907,0.514,nba_api_gamelog,8.0,70,6.5,-134,+109,0.9071,0,0,
-2026-05-01,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,14.5,+102,-125,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-01,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.453,combo_average,16.0,64,,,,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-01,Amen Thompson,HOU,LAL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.5,combo_average,13.1,79,12.5,-136,+110,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-01,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.528,combo_average,12.8,70,11.5,-118,-105,0.9786,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-01,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,14.5,+102,-125,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-01,Luka Dončić,LAL,HOU,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.453,combo_average,16.0,64,,,,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-01,Amen Thompson,HOU,LAL,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.984,0.5,combo_average,13.1,79,12.5,-136,+110,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-01,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.528,combo_average,12.8,70,11.5,-118,-105,0.9786,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-02,Tyrese Maxey,PHI,BOS,SG,points,under,D,other,False,False,0,0,0.0,0.457,nba_api_gamelog,28.3,70,24.5,-102,-121,0.99,0,0,
 2026-05-02,Jaylen Brown,BOS,PHI,SG,points,over,D,other,False,False,0,0,0.0,0.563,nba_api_gamelog,28.7,71,25.5,-105,-118,0.98,0,0,
 2026-05-02,Jaylen Brown,BOS,PHI,SG,assists,over,B,watchlist,False,False,1,1,0.917,0.366,nba_api_gamelog,5.1,71,3.5,-154,+123,0.9171,0,0,
 2026-05-02,Tyrese Maxey,PHI,BOS,SF,assists,under,A,valid,True,False,1,1,0.907,0.529,nba_api_gamelog,6.6,70,6.5,+103,-125,0.9071,0,0,
 2026-05-02,Tyrese Maxey,PHI,BOS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.357,nba_api_gamelog,4.1,70,3.5,-148,+120,1.06,0,0,
 2026-05-02,Jaylen Brown,BOS,PHI,PF,rebounds,over,A+,valid,True,False,1,1,1.0,0.563,nba_api_gamelog,6.9,71,6.5,+114,-139,1.05,0,0,
-2026-05-02,Tyrese Maxey,PHI,BOS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,10.5,+103,-127,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-02,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.464,combo_average,12.0,71,10.5,+110,-136,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-02,Tyrese Maxey,PHI,BOS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,10.5,+103,-127,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-02,Jaylen Brown,BOS,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.464,combo_average,12.0,71,10.5,+110,-136,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-03,Paolo Banchero,ORL,DET,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.486,nba_api_gamelog,8.4,72,8.5,-112,-112,1.06,0,0,
 2026-05-03,Paolo Banchero,ORL,DET,SG,assists,under,B,watchlist,False,False,1,1,0.917,0.458,nba_api_gamelog,5.2,72,5.5,+107,-132,0.9171,0,0,
 2026-05-03,Paolo Banchero,ORL,DET,SG,points,under,D,other,False,False,0,0,0.0,0.528,nba_api_gamelog,22.2,72,20.5,-286,+224,0.98,0,0,
@@ -332,8 +332,8 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-05-03,Scottie Barnes,TOR,CLE,PF,assists,over,A,valid,True,False,1,1,0.907,0.5,nba_api_gamelog,5.9,80,8.5,+108,-132,0.9071,0,0,
 2026-05-03,Cade Cunningham,DET,ORL,PF,assists,under,A+,valid,True,False,1,1,0.907,0.578,nba_api_gamelog,9.9,64,8.5,-117,-106,0.9071,0,0,
 2026-05-03,James Harden,CLE,TOR,PF,assists,under,A,valid,True,False,1,1,0.907,0.514,nba_api_gamelog,8.0,70,6.5,-139,+114,0.9071,0,0,
-2026-05-03,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-132,+107,0.9886,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-03,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.528,combo_average,12.8,70,11.5,-112,-110,0.9786,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-03,Paolo Banchero,ORL,DET,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.989,0.472,combo_average,13.6,72,13.5,-132,+107,0.9886,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-03,James Harden,CLE,TOR,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.528,combo_average,12.8,70,11.5,-112,-110,0.9786,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-08,De'Aaron Fox,SAS,MIN,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,17.5,+103,-127,0.99,0,0,
 2026-05-08,De'Aaron Fox,SAS,MIN,SG,assists,under,B,watchlist,False,False,1,1,0.917,0.417,nba_api_gamelog,6.2,72,5.5,-112,-112,0.9171,0,0,
 2026-05-08,Jalen Brunson,NYK,PHI,SG,points,over,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,26.5,-103,-120,0.98,0,0,
@@ -346,10 +346,10 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-05-08,Jalen Brunson,NYK,PHI,PF,rebounds,over,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,2.5,-157,+128,1.06,0,0,
 2026-05-08,Anthony Edwards,MIN,SAS,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.541,nba_api_gamelog,5.0,61,4.5,-127,+104,1.05,0,0,
 2026-05-08,Anthony Edwards,MIN,SAS,PF,assists,under,A,valid,True,False,1,1,0.907,0.508,nba_api_gamelog,3.7,61,4.5,+125,-154,0.9071,0,0,
-2026-05-08,De'Aaron Fox,SAS,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.458,combo_average,10.0,72,8.5,-137,+112,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-08,Jalen Brunson,NYK,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.48,combo_average,10.1,74,9.5,+103,-127,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-08,Anthony Edwards,MIN,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.524,combo_average,8.7,61,8.5,-130,+106,0.9786,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-08,Tyrese Maxey,PHI,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,9.5,-136,+113,0.9836,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-08,De'Aaron Fox,SAS,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.458,combo_average,10.0,72,8.5,-137,+112,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-08,Jalen Brunson,NYK,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.984,0.48,combo_average,10.1,74,9.5,+103,-127,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-08,Anthony Edwards,MIN,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.979,0.524,combo_average,8.7,61,8.5,-130,+106,0.9786,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-08,Tyrese Maxey,PHI,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.984,0.443,combo_average,10.7,70,9.5,-136,+113,0.9836,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-10,De'Aaron Fox,SAS,MIN,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,17.5,-112,-112,0.9757,0,0,
 2026-05-10,De'Aaron Fox,SAS,MIN,SG,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,-103,-121,0.8681,0,0,
 2026-05-10,Jalen Brunson,NYK,PHI,SG,points,over,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,27.5,-121,-102,0.9838,0,0,
@@ -362,10 +362,10 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-05-10,Jalen Brunson,NYK,PHI,PF,rebounds,over,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,3.5,+122,-150,1.0608,0,0,
 2026-05-10,Anthony Edwards,MIN,SAS,PF,rebounds,under,A,valid,True,False,1,1,0.996,0.541,nba_api_gamelog,5.0,61,5.5,-141,+114,0.9955,0,0,
 2026-05-10,Anthony Edwards,MIN,SAS,PF,assists,under,A,valid,True,False,1,1,0.853,0.508,nba_api_gamelog,3.7,61,4.5,+103,-127,0.8528,0,0,
-2026-05-10,De'Aaron Fox,SAS,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.458,combo_average,10.0,72,8.5,-143,+117,0.9318,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-10,Jalen Brunson,NYK,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.998,0.48,combo_average,10.1,74,9.5,-112,-112,0.9985,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-10,Anthony Edwards,MIN,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.524,combo_average,8.7,61,10.5,-112,-112,0.9242,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-10,Tyrese Maxey,PHI,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.443,combo_average,10.7,70,10.5,+100,-122,0.9317,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-10,De'Aaron Fox,SAS,MIN,SF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.458,combo_average,10.0,72,8.5,-143,+117,0.9318,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-10,Jalen Brunson,NYK,PHI,PF,reb+ast,over,B,watchlist_combo,False,True,2,2,0.998,0.48,combo_average,10.1,74,9.5,-112,-112,0.9985,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-10,Anthony Edwards,MIN,SAS,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.524,combo_average,8.7,61,10.5,-112,-112,0.9242,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-10,Tyrese Maxey,PHI,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.443,combo_average,10.7,70,10.5,+100,-122,0.9317,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-11,Cade Cunningham,DET,CLE,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.469,nba_api_gamelog,5.5,64,5.5,+103,-127,1.0107,0,0,
 2026-05-11,James Harden,CLE,DET,SG,rebounds,under,A,valid,True,False,1,1,0.996,0.543,nba_api_gamelog,4.8,70,4.5,-145,+118,0.9955,0,0,
 2026-05-11,James Harden,CLE,DET,SG,assists,under,A,valid,True,False,1,1,0.853,0.514,nba_api_gamelog,8.0,70,6.5,-134,+108,0.8528,0,0,
@@ -378,84 +378,84 @@ date,player_name,team,opponent,position,stat,edge,grade,bucket,is_valid,is_combo
 2026-05-11,Cade Cunningham,DET,CLE,PF,points,over,D,other,False,False,0,0,0.0,0.562,nba_api_gamelog,23.9,64,26.5,-127,+103,0.9891,0,0,
 2026-05-11,Cade Cunningham,DET,CLE,PF,assists,over,A+,valid,True,False,1,1,0.941,0.578,nba_api_gamelog,9.9,64,9.5,+109,-134,0.9414,0,0,
 2026-05-11,Shai Gilgeous-Alexander,OKC,LAL,PF,assists,under,B,watchlist,False,False,1,1,0.868,0.471,nba_api_gamelog,6.6,68,6.5,-137,+111,0.8681,0,0,
-2026-05-11,James Harden,CLE,DET,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,-125,+102,0.9242,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-11,Shai Gilgeous-Alexander,OKC,LAL,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,11.5,+107,-134,0.9394,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-11,James Harden,CLE,DET,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,-125,+102,0.9242,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-11,Shai Gilgeous-Alexander,OKC,LAL,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,11.5,+107,-134,0.9394,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-17,Cade Cunningham,DET,CLE,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.469,nba_api_gamelog,5.5,64,5.5,+125,-154,1.0107,0,0,
 2026-05-17,James Harden,CLE,DET,SG,rebounds,under,A,valid,True,False,1,1,0.996,0.543,nba_api_gamelog,4.8,70,4.5,-112,-112,0.9955,0,0,
 2026-05-17,James Harden,CLE,DET,SG,assists,under,A,valid,True,False,1,1,0.853,0.514,nba_api_gamelog,8.0,70,6.5,+106,-130,0.8528,0,0,
 2026-05-17,James Harden,CLE,DET,SG,points,under,D,other,False,False,0,0,0.0,0.4,nba_api_gamelog,23.6,70,18.5,-117,-105,0.9757,0,0,
 2026-05-17,Cade Cunningham,DET,CLE,PF,points,over,D,other,False,False,0,0,0.0,0.562,nba_api_gamelog,23.9,64,26.5,-127,+103,0.9891,0,0,
 2026-05-17,Cade Cunningham,DET,CLE,PF,assists,over,A+,valid,True,False,1,1,0.941,0.578,nba_api_gamelog,9.9,64,8.5,-109,-113,0.9414,0,0,
-2026-05-17,James Harden,CLE,DET,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,+110,-134,0.9242,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-17,James Harden,CLE,DET,SG,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,+110,-134,0.9242,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-19,Jalen Brunson,NYK,CLE,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,3.5,+134,-164,1.0107,0,0,
 2026-05-19,James Harden,CLE,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.4,nba_api_gamelog,23.6,70,,,,0.9757,0,0,
 2026-05-19,James Harden,CLE,NYK,SF,assists,under,A,valid,True,False,1,1,0.853,0.514,nba_api_gamelog,8.0,70,,,,0.8528,0,0,
 2026-05-19,Jalen Brunson,NYK,CLE,PF,points,over,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,27.5,-122,-102,0.9838,0,0,
 2026-05-19,Jalen Brunson,NYK,CLE,PF,assists,over,A,valid,True,False,1,1,0.936,0.541,nba_api_gamelog,6.8,74,5.5,-148,+119,0.9362,0,0,
 2026-05-19,James Harden,CLE,NYK,PF,rebounds,under,A,valid,True,False,1,1,0.996,0.543,nba_api_gamelog,4.8,70,4.5,-125,+102,0.9955,0,0,
-2026-05-19,James Harden,CLE,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,-102,-122,0.9242,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-19,James Harden,CLE,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,-102,-122,0.9242,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-24,De'Aaron Fox,SAS,OKC,SG,rebounds,over,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,+108,-134,1.0455,0,0,
 2026-05-24,Shai Gilgeous-Alexander,OKC,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.412,nba_api_gamelog,31.1,68,29.5,+100,-122,0.9757,0,0,
 2026-05-24,De'Aaron Fox,SAS,OKC,SF,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,14.5,-117,-106,0.9757,0,0,
 2026-05-24,De'Aaron Fox,SAS,OKC,SF,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,+103,-125,0.8681,0,0,
 2026-05-24,Shai Gilgeous-Alexander,OKC,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.471,nba_api_gamelog,4.3,68,3.5,-162,+131,1.0107,0,0,
 2026-05-24,Shai Gilgeous-Alexander,OKC,SAS,PF,assists,under,B,watchlist,False,False,1,1,0.868,0.471,nba_api_gamelog,6.6,68,7.5,-103,-121,0.8681,0,0,
-2026-05-24,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,11.5,-127,+104,0.9394,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-24,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,11.5,-127,+104,0.9394,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-25,Jalen Brunson,NYK,CLE,SG,rebounds,under,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,3.5,+135,-167,1.0107,0,0,
 2026-05-25,Jalen Brunson,NYK,CLE,SG,assists,under,A,valid,True,False,1,1,0.853,0.541,nba_api_gamelog,6.8,74,6.5,-145,+115,0.8528,0,0,
 2026-05-25,James Harden,CLE,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.4,nba_api_gamelog,23.6,70,24.5,+344,-477,0.9757,0,0,
 2026-05-25,James Harden,CLE,NYK,SF,assists,under,A,valid,True,False,1,1,0.853,0.514,nba_api_gamelog,8.0,70,6.5,+112,-137,0.8528,0,0,
 2026-05-25,Jalen Brunson,NYK,CLE,PF,points,over,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,26.5,-110,-112,0.9838,0,0,
 2026-05-25,James Harden,CLE,NYK,PF,rebounds,under,A,valid,True,False,1,1,0.996,0.543,nba_api_gamelog,4.8,70,4.5,-122,+100,0.9955,0,0,
-2026-05-25,Jalen Brunson,NYK,CLE,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.48,combo_average,10.1,74,10.5,+110,-132,0.9317,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-05-25,James Harden,CLE,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,+108,-136,0.9242,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-25,Jalen Brunson,NYK,CLE,SG,reb+ast,under,B,watchlist_combo,False,True,2,2,0.932,0.48,combo_average,10.1,74,10.5,+110,-132,0.9317,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-25,James Harden,CLE,NYK,PF,reb+ast,under,A,valid_combo,True,True,2,2,0.924,0.528,combo_average,12.8,70,11.5,+108,-136,0.9242,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-26,De'Aaron Fox,SAS,OKC,SG,rebounds,over,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,-159,+129,1.0455,0,0,
 2026-05-26,Shai Gilgeous-Alexander,OKC,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.412,nba_api_gamelog,31.1,68,29.5,-127,+104,0.9757,0,0,
 2026-05-26,Shai Gilgeous-Alexander,OKC,SAS,SG,assists,under,B,watchlist,False,False,1,1,0.868,0.471,nba_api_gamelog,6.6,68,7.5,-137,+111,0.8681,0,0,
 2026-05-26,De'Aaron Fox,SAS,OKC,SF,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,13.5,-125,+103,0.9757,0,0,
 2026-05-26,De'Aaron Fox,SAS,OKC,SF,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,+109,-134,0.8681,0,0,
 2026-05-26,Shai Gilgeous-Alexander,OKC,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.471,nba_api_gamelog,4.3,68,3.5,-145,+120,1.0107,0,0,
-2026-05-26,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,12.5,+106,-130,0.9394,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-26,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.471,combo_average,10.9,68,12.5,+106,-130,0.9394,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-05-28,De'Aaron Fox,SAS,OKC,SG,rebounds,over,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,-125,+103,1.1,0,0,
 2026-05-28,Shai Gilgeous-Alexander,OKC,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.412,nba_api_gamelog,31.1,68,30.5,+103,-127,0.9757,0,0,
 2026-05-28,Shai Gilgeous-Alexander,OKC,SAS,SG,assists,under,B,watchlist,False,False,1,1,0.868,0.471,nba_api_gamelog,6.6,68,8.5,+116,-141,0.8681,0,0,
 2026-05-28,De'Aaron Fox,SAS,OKC,SF,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,15.5,-112,-112,0.9757,0,0,
 2026-05-28,De'Aaron Fox,SAS,OKC,SF,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,-130,+108,0.8681,0,0,
 2026-05-28,Shai Gilgeous-Alexander,OKC,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.471,nba_api_gamelog,4.3,68,3.5,-167,+136,1.019,0,0,
-2026-05-28,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.944,0.471,combo_average,10.9,68,11.5,-137,+111,0.9435,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-05-28,Shai Gilgeous-Alexander,OKC,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.944,0.471,combo_average,10.9,68,11.5,-137,+111,0.9435,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-06-03,De'Aaron Fox,SAS,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,15.5,-112,-112,0.9757,0,0,
 2026-06-03,Jalen Brunson,NYK,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,25.5,-110,-113,0.9657,0,0,
 2026-06-03,Jalen Brunson,NYK,SAS,SG,assists,under,A,valid,True,False,1,1,0.858,0.541,nba_api_gamelog,6.8,74,6.5,-112,-112,0.8581,0,0,
 2026-06-03,De'Aaron Fox,SAS,NYK,SF,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,-127,+103,0.8681,0,0,
 2026-06-03,De'Aaron Fox,SAS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,-112,-112,1.009,0,0,
-2026-06-03,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.458,combo_average,10.0,72,9.5,-115,-107,0.9385,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-03,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.458,combo_average,10.0,72,9.5,-115,-107,0.9385,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-06-05,De'Aaron Fox,SAS,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,15.5,-106,-117,0.9757,0,0,
 2026-06-05,Jalen Brunson,NYK,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,25.5,-103,-121,0.9657,0,0,
 2026-06-05,Jalen Brunson,NYK,SAS,SG,assists,under,A,valid,True,False,1,1,0.858,0.541,nba_api_gamelog,6.8,74,6.5,+116,-139,0.8581,0,0,
 2026-06-05,De'Aaron Fox,SAS,NYK,SF,assists,under,B,watchlist,False,False,1,1,0.868,0.417,nba_api_gamelog,6.2,72,5.5,-125,+102,0.8681,0,0,
 2026-06-05,De'Aaron Fox,SAS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,+125,-154,1.009,0,0,
 2026-06-05,Jalen Brunson,NYK,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,2.5,-150,+122,1.019,0,0,
-2026-06-05,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.458,combo_average,10.0,72,9.5,+108,-134,0.9385,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-06-05,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.48,combo_average,10.1,74,8.5,-136,+111,0.9385,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-05,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.458,combo_average,10.0,72,9.5,+108,-134,0.9385,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-05,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.939,0.48,combo_average,10.1,74,8.5,-136,+111,0.9385,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-06-08,De'Aaron Fox,SAS,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,14.5,-107,-115,0.99,0,0,
 2026-06-08,Jalen Brunson,NYK,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,26.5,-103,-120,0.9891,0,0,
 2026-06-08,Jalen Brunson,NYK,SAS,SG,assists,under,A,valid,True,False,1,1,0.908,0.541,nba_api_gamelog,6.8,74,6.5,+126,-154,0.908,0,0,
 2026-06-08,De'Aaron Fox,SAS,NYK,SF,assists,under,B,watchlist,False,False,1,1,0.909,0.417,nba_api_gamelog,6.2,72,5.5,-114,-108,0.9089,0,0,
 2026-06-08,De'Aaron Fox,SAS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,+118,-145,1.0658,0,0,
 2026-06-08,Jalen Brunson,NYK,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,3.5,+135,-170,1.0667,0,0,
-2026-06-08,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,8.5,-127,+104,0.9874,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-06-08,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.48,combo_average,10.1,74,8.5,-143,+117,0.9873,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-08,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,8.5,-127,+104,0.9874,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-08,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.48,combo_average,10.1,74,8.5,-143,+117,0.9873,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-06-10,De'Aaron Fox,SAS,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,14.5,-103,-121,0.99,0,0,
 2026-06-10,Jalen Brunson,NYK,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,27.5,-106,-117,0.9891,0,0,
 2026-06-10,Jalen Brunson,NYK,SAS,SG,assists,under,A,valid,True,False,1,1,0.908,0.541,nba_api_gamelog,6.8,74,5.5,-145,+117,0.908,0,0,
 2026-06-10,De'Aaron Fox,SAS,NYK,SF,assists,under,B,watchlist,False,False,1,1,0.909,0.417,nba_api_gamelog,6.2,72,5.5,-137,+111,0.9089,0,0,
 2026-06-10,De'Aaron Fox,SAS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,+123,-152,1.0658,0,0,
 2026-06-10,Jalen Brunson,NYK,SAS,PF,rebounds,under,B,watchlist,False,False,1,1,1.0,0.419,nba_api_gamelog,3.3,74,3.5,+123,-148,1.0667,0,0,
-2026-06-10,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,9.5,+103,-125,0.9874,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
-2026-06-10,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.48,combo_average,10.1,74,9.5,+103,-127,0.9873,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-10,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,9.5,+103,-125,0.9874,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-10,Jalen Brunson,NYK,SAS,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.48,combo_average,10.1,74,9.5,+103,-127,0.9873,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
 2026-06-13,De'Aaron Fox,SAS,NYK,SG,points,under,D,other,False,False,0,0,0.0,0.458,nba_api_gamelog,18.6,72,14.5,-127,+103,0.99,0,0,
 2026-06-13,Jalen Brunson,NYK,SAS,SG,points,under,D,other,False,False,0,0,0.0,0.514,nba_api_gamelog,26.0,74,27.5,-121,-103,0.9891,0,0,
 2026-06-13,Jalen Brunson,NYK,SAS,SG,assists,under,A,valid,True,False,1,1,0.908,0.541,nba_api_gamelog,6.8,74,5.5,-143,+117,0.908,0,0,
 2026-06-13,De'Aaron Fox,SAS,NYK,SF,assists,under,B,watchlist,False,False,1,1,0.909,0.417,nba_api_gamelog,6.2,72,5.5,-143,+116,0.9089,0,0,
 2026-06-13,De'Aaron Fox,SAS,NYK,PF,rebounds,under,A,valid,True,False,1,1,1.0,0.5,nba_api_gamelog,3.8,72,3.5,+117,-143,1.0658,0,0,
-2026-06-13,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,9.5,-112,-112,0.9874,1,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)
+2026-06-13,De'Aaron Fox,SAS,NYK,PF,reb+ast,under,B,watchlist_combo,False,True,2,2,0.987,0.458,combo_average,10.0,72,9.5,-112,-112,0.9874,0,0,Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)

@@ -18,7 +18,6 @@
   --wood: #c08a52;
   --wood-deep: #a87441;
   --accent: #e8622d;
-  --accent-bright: #f07438;
   --over: #4caf6e;
   --over-ink: #10240f;
   --under: #d9a441;
@@ -38,10 +37,10 @@ body {
 .hardwood {
   background: repeating-linear-gradient(
     90deg,
-    #c08a52 0px,
+    var(--wood) 0px,
     #b88049 118px,
-    #a87441 119px,
-    #c08a52 120px
+    var(--wood-deep) 119px,
+    var(--wood) 120px
   );
 }
 

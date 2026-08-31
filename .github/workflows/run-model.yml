@@ -65,7 +65,7 @@ jobs:
         run: python main.py --fast || echo "Model run failed (no games today or API issue)"
 
       - name: Export CSV fact tables (for BI dashboards)
-        run: python export_csv.py
+        run: python export_csv.py || echo "CSV export failed (non-blocking)"
 
       - name: Commit updated data
         run: |
