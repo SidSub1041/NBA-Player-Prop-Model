@@ -37,6 +37,7 @@ export interface HitrateSummary {
 
 export interface DayResult {
   date: string;
+  season?: string;
   total_picks: number;
   hits: number;
   misses: number;
@@ -46,6 +47,7 @@ export interface DayResult {
 
 export interface PropsData {
   date: string;
+  season?: string;
   run_at: string;
   run_at_iso: string;
   candidates_analyzed: number;

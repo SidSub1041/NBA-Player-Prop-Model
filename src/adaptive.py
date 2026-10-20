@@ -42,6 +42,8 @@ def _load_all_graded() -> list[dict]:
             with open(fpath) as f:
                 data = json.load(f)
             for pick in data.get("graded_picks", []):
+                if pick.get("is_combo"):
+                    continue  # combos re-count their components' outcomes
                 if pick.get("result") in ("hit", "miss"):
                     pick["_date"] = data.get("date", "")
                     all_picks.append(pick)

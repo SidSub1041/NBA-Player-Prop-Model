@@ -2,14 +2,28 @@ name: Run NBA Prop Model
 
 on:
   schedule:
-    # Run model 4x/day: 9 AM, 12 PM, 3 PM, 6 PM ET
-    - cron: "15 13 * * *"   # 9:15 AM ET
-    - cron: "0 16 * * *"    # 12:00 PM ET
-    - cron: "0 19 * * *"    # 3:00 PM ET
-    - cron: "0 22 * * *"    # 6:00 PM ET
-    # Grade picks: 12:30 AM ET (after all games finish)
-    - cron: "30 4 * * *"
-  workflow_dispatch: # Allow manual trigger
+    # Crons are UTC and do not track daylight saving: the ET labels below are
+    # summer (EDT) times; from November to mid-March everything is an hour earlier.
+    # Run model 4x/day: ~9:15 AM, 12 PM, 3 PM, 6 PM ET
+    - cron: "15 13 * * *"
+    - cron: "0 16 * * *"
+    - cron: "0 19 * * *"
+    - cron: "0 22 * * *"
+    # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
+    - cron: "30 9 * * *"
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to run"
+        type: choice
+        options:
+          - model
+          - grade
+        default: model
+      date:
+        description: "Date to grade (YYYY-MM-DD); blank = yesterday. Grade only."
+        required: false
+        default: ""
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -46,26 +60,45 @@ jobs:
 
       - name: Determine task (model vs grading)
         id: task
+        # Routed by which cron fired (or the manual input), never by the wall
+        # clock, so a delayed scheduled run can't turn a grading run into a
+        # model run.
         run: |
-          HOUR=$(date -u +%H)
-          if [ "$HOUR" -ge 10 ] && [ "$HOUR" -le 23 ]; then
-            echo "run_model=true" >> "$GITHUB_OUTPUT"
-            echo "run_grade=false" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TASK="${{ github.event.inputs.task }}"
+          elif [ "${{ github.event.schedule }}" = "30 9 * * *" ]; then
+            TASK="grade"
           else
+            TASK="model"
+          fi
+          echo "Task: $TASK"
+          if [ "$TASK" = "grade" ]; then
             echo "run_model=false" >> "$GITHUB_OUTPUT"
             echo "run_grade=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_model=true" >> "$GITHUB_OUTPUT"
+            echo "run_grade=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Grade yesterday's picks
+      - name: Grade picks (yesterday, or the requested date)
         if: steps.task.outputs.run_grade == 'true'
-        run: python grade.py || echo "No picks to grade"
+        env:
+          GRADE_DATE: ${{ github.event.inputs.date }}
+        run: |
+          if [ -n "$GRADE_DATE" ]; then
+            python grade.py --date "$GRADE_DATE" || echo "No picks to grade"
+          else
+            python grade.py || echo "No picks to grade"
+          fi
 
       - name: Run model
         if: steps.task.outputs.run_model == 'true'
         run: python main.py --fast || echo "Model run failed (no games today or API issue)"
 
       - name: Export CSV fact tables (for BI dashboards)
-        run: python export_csv.py || echo "CSV export failed (non-blocking)"
+        # Never blocks the data commit/deploy, but a failure is shown on the run
+        continue-on-error: true
+        run: python export_csv.py
 
       - name: Commit updated data
         run: |

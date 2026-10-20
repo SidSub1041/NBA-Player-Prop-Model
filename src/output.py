@@ -7,10 +7,10 @@ Also produces a JSON file consumed by the Vercel web dashboard.
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from tabulate import tabulate
 
-from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD
+from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD, season_for_date
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +147,16 @@ def print_report(report: str):
     print(report)
 
 
+
+def _eastern_label(now_utc: datetime) -> str:
+    """Human label for the run time in US Eastern, e.g. '09:15 AM ET'."""
+    try:
+        from zoneinfo import ZoneInfo
+        return now_utc.astimezone(ZoneInfo("America/New_York")).strftime("%I:%M %p ET")
+    except Exception:
+        return now_utc.strftime("%I:%M %p UTC")
+
+
 COMBO_STATS = {"pts+ast", "pts+reb", "reb+ast", "pra"}
 
 
@@ -210,10 +220,12 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         },
     }
 
+    now_utc = datetime.now(timezone.utc)
     payload = {
         "date": date,
-        "run_at": datetime.now().strftime("%I:%M %p"),
-        "run_at_iso": datetime.now().isoformat(),
+        "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
+        "run_at": _eastern_label(now_utc),
+        "run_at_iso": now_utc.isoformat(timespec="seconds"),
         "candidates_analyzed": len(individual),
         "valid_count": len(valid),
         "watchlist_count": len(watchlist),
@@ -236,11 +248,13 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         os.path.dirname(os.path.dirname(__file__)), "web", "public", "data"
     )
     results_history_path = os.path.join(web_data_dir, "results_history.json")
+    payload["model_results"] = []
     if os.path.exists(results_history_path):
-        with open(results_history_path) as f:
-            payload["model_results"] = json.load(f)
-    else:
-        payload["model_results"] = []
+        try:
+            with open(results_history_path) as f:
+                payload["model_results"] = json.load(f)
+        except (OSError, ValueError) as e:
+            logger.warning(f"Could not read results history ({e}); embedding none")
 
     # Save to logs/
     os.makedirs(LOGS_DIR, exist_ok=True)

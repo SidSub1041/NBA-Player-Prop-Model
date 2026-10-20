@@ -18,7 +18,7 @@ from datetime import datetime
 from nba_api.stats.endpoints import boxscoretraditionalv3, scoreboardv3
 from nba_api.stats.static import players as nba_players
 
-from src.config import NBA_TEAM_IDS
+from src.config import NBA_TEAM_IDS, season_for_date
 
 logger = logging.getLogger(__name__)
 
@@ -207,10 +207,17 @@ def grade_picks(date: str) -> dict:
     with open(json_path) as f:
         props_data = json.load(f)
 
-    valid_picks = props_data.get("valid_picks", [])
+    # Combo plays appear on the board, so they are graded with everything
+    # else (COMBO_STAT_COLS below sums their component stats).
+    valid_picks = props_data.get("valid_picks", []) + props_data.get("valid_combos", [])
     if not valid_picks:
         logger.info(f"No valid picks to grade for {date}")
-        return {"date": date, "total_picks": 0, "hits": 0, "misses": 0, "voided": 0, "graded_picks": []}
+        return {
+            "date": date,
+            "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
+            "total_picks": 0, "hits": 0, "misses": 0, "voided": 0, "units": 0.0,
+            "graded_picks": [],
+        }
 
     # Fetch actual stats
     logger.info(f"Fetching box-score data for {date}...")
@@ -332,6 +339,7 @@ def grade_picks(date: str) -> dict:
 
     day_result = {
         "date": date,
+        "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
         "total_picks": hits + misses,  # excludes voided
         "hits": hits,
         "misses": misses,
@@ -379,6 +387,7 @@ def save_graded_results(day_result: dict):
     # Summary entry (no per-pick details)
     summary = {
         "date": date,
+        "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
         "total_picks": day_result["total_picks"],
         "hits": day_result["hits"],
         "misses": day_result["misses"],

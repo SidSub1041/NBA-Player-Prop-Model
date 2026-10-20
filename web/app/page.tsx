@@ -6,8 +6,60 @@ import type { PropsData, PropPick, DayResult } from "@/lib/types";
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
 const GITHUB_URL = "https://github.com/SidSub1041/NBA-Player-Prop-Model";
+const DEFAULT_HITRATE_THRESHOLD = 0.56;
 
-/* ── Shared helpers ───────────────────────────────────────────────── */
+/* ── Season + date helpers ────────────────────────────────────────── */
+
+/** 2026-10-20 -> "2026-27". Seasons start in October (same rule as src/config.py). */
+function seasonForDate(iso: string): string {
+  const [y, m] = iso.split("-").map(Number);
+  const start = m >= 10 ? y : y - 1;
+  return `${start}-${String((start + 1) % 100).padStart(2, "0")}`;
+}
+
+function previousSeason(season: string): string {
+  const start = parseInt(season.slice(0, 4), 10) - 1;
+  return `${start}-${String((start + 1) % 100).padStart(2, "0")}`;
+}
+
+function localISODate(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function fmtDate(iso: string): string {
+  return new Date(iso + "T00:00:00")
+    .toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    .toUpperCase();
+}
+
+function fmtDayDate(iso: string): string {
+  return new Date(iso + "T00:00:00")
+    .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
+    .toUpperCase()
+    .replace(",", " ·");
+}
+
+function fmtLongDate(iso: string): string {
+  return new Date(iso + "T00:00:00")
+    .toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+    .toUpperCase();
+}
+
+/** Run timestamp in the viewer's own timezone; null if the payload's ISO string is unusable. */
+function fmtRunTime(iso: string | undefined): string | null {
+  if (!iso) return null;
+  // Payloads from before the timezone fix carried a naive timestamp that was
+  // actually UTC (the CI runner's clock); pin it so it isn't read as local time.
+  const hasOffset = /(Z|[+-]\d{2}:?\d{2})$/.test(iso);
+  const d = new Date(hasOffset ? iso : iso + "Z");
+  if (Number.isNaN(d.getTime())) return null;
+  return d
+    .toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" })
+    .toUpperCase();
+}
+
+/* ── Formatting helpers ───────────────────────────────────────────── */
 
 const STAT_LABELS: Record<string, string> = {
   points: "PTS",
@@ -23,12 +75,6 @@ function statLabel(stat: string): string {
   return STAT_LABELS[stat] ?? stat.toUpperCase();
 }
 
-function fmtDate(d: string): string {
-  return new Date(d + "T00:00:00")
-    .toLocaleDateString("en-US", { month: "short", day: "numeric" })
-    .toUpperCase();
-}
-
 function fmtUnits(u: number): string {
   return `${u >= 0 ? "+" : ""}${u.toFixed(2)}u`;
 }
@@ -37,36 +83,37 @@ function unitsColor(u: number): string {
   return u > 0 ? "var(--over)" : u < 0 ? "#f87171" : "var(--text)";
 }
 
-function hitrateColor(hrPct: number): string {
-  return hrPct >= 56 ? "var(--over)" : hrPct >= 50 ? "var(--under)" : "#f87171";
+/** Colors the raw hit rate against the model's own A+ threshold (never the rounded display value). */
+function hitrateColor(hitrate: number, threshold: number): string {
+  return hitrate >= threshold ? "var(--over)" : hitrate >= 0.5 ? "var(--under)" : "#f87171";
 }
 
 interface ResultsSummary {
-  graded: DayResult[];
   totalPicks: number;
   hits: number;
   misses: number;
   voided: number;
+  gradedDays: number;
   rate: number;
   allUnits: number;
   lastGraded: DayResult | null;
 }
 
 function aggregateResults(results: DayResult[]): ResultsSummary {
-  const graded = results.filter((r) => r.total_picks > 0);
-  const totalPicks = graded.reduce((s, r) => s + r.total_picks, 0);
-  const hits = graded.reduce((s, r) => s + r.hits, 0);
-  const misses = graded.reduce((s, r) => s + r.misses, 0);
+  const decided = results.filter((r) => r.total_picks > 0);
+  const totalPicks = decided.reduce((s, r) => s + r.total_picks, 0);
+  const hits = decided.reduce((s, r) => s + r.hits, 0);
+  const misses = decided.reduce((s, r) => s + r.misses, 0);
   const voided = results.reduce((s, r) => s + (r.voided ?? 0), 0);
   return {
-    graded,
     totalPicks,
     hits,
     misses,
     voided,
+    gradedDays: results.filter((r) => r.total_picks > 0 || (r.voided ?? 0) > 0).length,
     rate: totalPicks > 0 ? Math.round((hits / totalPicks) * 100) : 0,
     allUnits: results.reduce((s, r) => s + (r.units ?? 0), 0),
-    lastGraded: graded.length > 0 ? graded[graded.length - 1] : null,
+    lastGraded: decided.length > 0 ? decided[decided.length - 1] : null,
   };
 }
 
@@ -113,7 +160,7 @@ function ArrowIcon({ size }: { size: number }) {
   );
 }
 
-function GradeBadge({ grade }: { grade: string }) {
+function GradeBadge({ grade, small }: { grade: string; small?: boolean }) {
   const cls: Record<string, string> = {
     "A+": "grade-a-plus",
     A: "grade-a",
@@ -124,16 +171,17 @@ function GradeBadge({ grade }: { grade: string }) {
     F: "grade-d",
   };
   return (
-    <span className={`inline-block px-3 py-1.5 text-sm font-bold ${cls[grade] ?? "grade-d"}`}>
+    <span
+      className={`inline-block font-bold ${small ? "px-2 py-0.5 text-xs" : "px-3 py-1.5 text-sm"} ${cls[grade] ?? "grade-d"}`}
+    >
       {grade}
     </span>
   );
 }
 
 function EdgeTag({ edge }: { edge: string }) {
-  const e = edge.toLowerCase();
-  const known = e === "over" || e === "under";
-  const over = e === "over";
+  const known = edge === "over" || edge === "under";
+  const over = edge === "over";
   return (
     <span
       className="font-display inline-flex items-center gap-1.5 px-4 py-2 text-xl tracking-widest"
@@ -174,11 +222,22 @@ function SectionHead({ title, tag }: { title: string; tag: string }) {
   );
 }
 
+function EmptyState({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="bg-[var(--card)] border border-[var(--border)] p-12 text-center flex flex-col gap-2">
+      <div className="font-display text-4xl tracking-wide">{title}</div>
+      <div className="text-sm text-[var(--text-muted)]">{body}</div>
+    </div>
+  );
+}
+
 /* ── Pick card ────────────────────────────────────────────────────── */
 
-function PickCard({ pick }: { pick: PropPick }) {
+function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }) {
+  const edge = pick.edge.toLowerCase();
   const hr = pick.hitrate !== null ? Math.round(pick.hitrate * 100) : null;
-  const odds = pick.edge === "over" ? pick.ud_over_odds : pick.ud_under_odds;
+  const odds = edge === "over" ? pick.ud_over_odds : edge === "under" ? pick.ud_under_odds : null;
+  const oddsCaption = pick.ud_line === null ? "no line" : odds ? "payout" : "no odds";
   return (
     <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
       <div className="flex items-center gap-4">
@@ -206,24 +265,22 @@ function PickCard({ pick }: { pick: PropPick }) {
         <div className="font-display text-4xl tracking-wide leading-none">
           {statLabel(pick.stat)} {pick.ud_line ?? "—"}
         </div>
-        <EdgeTag edge={pick.edge} />
+        <EdgeTag edge={edge} />
         <div className="ml-auto flex flex-col items-end">
           <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds ?? "—"}</div>
-          <div className="text-[11px] text-[var(--text-faint)]">
-            {odds ? "payout" : "no line"}
-          </div>
+          <div className="text-[11px] text-[var(--text-faint)]">{oddsCaption}</div>
         </div>
       </div>
       <div className="flex items-center gap-3">
         <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">
           HIT RATE
         </div>
-        {hr !== null ? (
+        {hr !== null && pick.hitrate !== null ? (
           <>
             <div className="flex-grow h-2 bg-[var(--card-hover)] overflow-hidden">
               <div className="h-2 bg-[var(--accent)]" style={{ width: `${hr}%` }} />
             </div>
-            <div className="text-sm font-bold" style={{ color: hitrateColor(hr) }}>
+            <div className="text-sm font-bold" style={{ color: hitrateColor(pick.hitrate, hrThreshold) }}>
               {hr}%
             </div>
           </>
@@ -238,7 +295,58 @@ function PickCard({ pick }: { pick: PropPick }) {
   );
 }
 
+/* ── Archived (last season) board — compact, off to the side ──────── */
+
+function ArchivedBoard({ picks, date, season }: { picks: PropPick[]; date: string; season: string }) {
+  return (
+    <aside className="bg-[var(--card)] border border-[var(--border)] p-5 flex flex-col gap-3 opacity-80">
+      <div className="flex items-baseline gap-2">
+        <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">
+          LAST SEASON&apos;S FINAL BOARD
+        </div>
+        <div className="ml-auto text-[11px] text-[var(--text-faint)]">
+          {season} · {fmtDate(date)}
+        </div>
+      </div>
+      {picks.length === 0 ? (
+        <div className="text-sm text-[var(--text-faint)]">No plays on the final slate.</div>
+      ) : (
+        <div className="flex flex-col divide-y divide-[var(--border-soft)]">
+          {picks.map((p) => {
+            const edge = p.edge.toLowerCase();
+            return (
+              <div key={`${p.player_name}-${p.stat}-${edge}`} className="flex items-center gap-3 py-2 text-sm">
+                <div className="font-semibold min-w-0 flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
+                  {p.player_name}
+                </div>
+                <div className="font-display tracking-wide text-base text-[var(--text-muted)]">
+                  {statLabel(p.stat)} {p.ud_line ?? "—"}
+                </div>
+                <div
+                  className="text-[11px] font-bold tracking-widest"
+                  style={{ color: edge === "over" ? "var(--over)" : "var(--under)" }}
+                >
+                  {edge.toUpperCase()}
+                </div>
+                <GradeBadge grade={p.grade} small />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </aside>
+  );
+}
+
 /* ── The run: cumulative units line chart ─────────────────────────── */
+
+function cumulative(results: DayResult[]) {
+  let cum = 0;
+  return results.map((r) => {
+    cum += r.units ?? 0;
+    return { date: r.date, cum };
+  });
+}
 
 function UnitsChart({ results }: { results: DayResult[] }) {
   const W = 840;
@@ -248,11 +356,7 @@ function UnitsChart({ results }: { results: DayResult[] }) {
   const PAD_T = 24;
   const PAD_B = 28;
 
-  let cum = 0;
-  const pts = results.map((r) => {
-    cum += r.units ?? 0;
-    return { date: r.date, cum };
-  });
+  const pts = cumulative(results);
   if (pts.length === 0) return null;
 
   const lo = Math.min(0, ...pts.map((p) => p.cum));
@@ -260,22 +364,17 @@ function UnitsChart({ results }: { results: DayResult[] }) {
   const span = Math.max(hi - lo, 1);
   const y = (v: number) => PAD_T + ((hi - v) / span) * (H - PAD_T - PAD_B);
   const x = (i: number) =>
-    pts.length === 1
-      ? W / 2
-      : PAD_L + (i / (pts.length - 1)) * (W - PAD_L - PAD_R);
+    pts.length === 1 ? W / 2 : PAD_L + (i / (pts.length - 1)) * (W - PAD_L - PAD_R);
 
   const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(p.cum)}`).join(" ");
   const area = `${line} L${x(pts.length - 1)} ${y(0)} L${x(0)} ${y(0)} Z`;
   const last = pts[pts.length - 1];
   const midIdx = Math.floor((pts.length - 1) / 2);
   const gridVals = hi === lo ? [hi] : [hi, (hi + lo) / 2, lo];
+  const labelX = pts.length === 1 ? W / 2 + 10 : W - PAD_R + 8;
 
   return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      className="w-full h-auto"
-      aria-label="Cumulative units by day"
-    >
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" aria-label="Cumulative units by day">
       {gridVals.map((v) => (
         <g key={v}>
           <path d={`M${PAD_L} ${y(v)} H${W - PAD_R}`} stroke="var(--border-soft)" strokeWidth="1" />
@@ -290,14 +389,7 @@ function UnitsChart({ results }: { results: DayResult[] }) {
       {pts.map((p, i) => (
         <circle key={p.date} cx={x(i)} cy={y(p.cum)} r={i === pts.length - 1 ? 5 : 4} fill="var(--accent)" stroke="var(--card)" strokeWidth="2" />
       ))}
-      <text
-        x={W - PAD_R + 8}
-        y={y(last.cum) + 4}
-        fill="var(--text)"
-        fontSize="13"
-        fontWeight="700"
-        textAnchor="start"
-      >
+      <text x={labelX} y={y(last.cum) + 4} fill="var(--text)" fontSize="13" fontWeight="700" textAnchor="start">
         {fmtUnits(last.cum)}
       </text>
       <text x={x(0)} y={H - 6} fill="var(--text-faint)" fontSize="11" textAnchor="middle">
@@ -317,6 +409,26 @@ function UnitsChart({ results }: { results: DayResult[] }) {
   );
 }
 
+function MiniRun({ results }: { results: DayResult[] }) {
+  const W = 300;
+  const H = 64;
+  const pts = cumulative(results);
+  if (pts.length < 2) return null;
+  const lo = Math.min(0, ...pts.map((p) => p.cum));
+  const hi = Math.max(0, ...pts.map((p) => p.cum));
+  const span = Math.max(hi - lo, 1);
+  const y = (v: number) => 6 + ((hi - v) / span) * (H - 12);
+  const x = (i: number) => 6 + (i / (pts.length - 1)) * (W - 12);
+  const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(p.cum)}`).join(" ");
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" aria-label="Last season cumulative units">
+      <path d={`M6 ${y(0)} H${W - 6}`} stroke="var(--border)" strokeWidth="1" />
+      <path d={line} stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+      <circle cx={x(pts.length - 1)} cy={y(pts[pts.length - 1].cum)} r="4" fill="var(--accent)" stroke="var(--card)" strokeWidth="2" />
+    </svg>
+  );
+}
+
 /* ── Shot chart: one ball per graded pick ─────────────────────────── */
 
 const SHOT_CHART_DAYS = 20;
@@ -332,7 +444,7 @@ function ShotChart({ results }: { results: DayResult[] }) {
         <div className="text-[15px] font-bold">Shot chart</div>
         <div className="text-xs text-[var(--text-faint)]">
           one ball per graded pick, by day
-          {truncated ? ` · last ${SHOT_CHART_DAYS} days` : ""}
+          {truncated ? ` · last ${SHOT_CHART_DAYS} graded days` : ""}
         </div>
         <div className="ml-auto flex items-center gap-4 text-xs text-[var(--text-muted)]">
           <span className="inline-flex items-center gap-1.5">
@@ -371,20 +483,10 @@ function ShotChart({ results }: { results: DayResult[] }) {
   );
 }
 
-/* ── The Receipts ─────────────────────────────────────────────────── */
+/* ── The Receipts (this season) ───────────────────────────────────── */
 
 function Receipts({ summary, results }: { summary: ResultsSummary; results: DayResult[] }) {
   const { totalPicks, hits, misses, voided, rate, allUnits, lastGraded } = summary;
-
-  if (totalPicks === 0) {
-    return (
-      <div className="bg-[var(--card)] border border-[var(--border)] p-10 text-center text-sm text-[var(--text-muted)]">
-        {voided > 0
-          ? `No decided picks yet — ${voided} graded pick${voided === 1 ? "" : "s"} voided (players sat or lines pulled).`
-          : "No graded results yet. Picks are graded automatically after games finish."}
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -402,7 +504,9 @@ function Receipts({ summary, results }: { summary: ResultsSummary; results: DayR
               <span>
                 {hits} makes · {misses} misses
               </span>
-              <span>{totalPicks} decided · {voided} voided</span>
+              <span>
+                {totalPicks} decided · {voided} voided
+              </span>
             </div>
           </div>
           <div className="border-t border-[var(--border)] pt-4 flex gap-6">
@@ -410,7 +514,7 @@ function Receipts({ summary, results }: { summary: ResultsSummary; results: DayR
               <div className="text-xl font-bold" style={{ color: unitsColor(allUnits) }}>
                 {fmtUnits(allUnits)}
               </div>
-              <div className="text-[11px] tracking-wider text-[var(--text-faint)]">ALL-TIME</div>
+              <div className="text-[11px] tracking-wider text-[var(--text-faint)]">SEASON</div>
             </div>
             {lastGraded && (
               <div className="flex flex-col gap-0.5">
@@ -431,15 +535,56 @@ function Receipts({ summary, results }: { summary: ResultsSummary; results: DayR
         <div className="bg-[var(--card)] border border-[var(--border)] p-7 flex flex-col gap-3">
           <div className="flex items-baseline gap-3">
             <div className="text-[15px] font-bold">The run</div>
-            <div className="text-xs text-[var(--text-faint)]">
-              cumulative units, flat 1u per pick
-            </div>
+            <div className="text-xs text-[var(--text-faint)]">cumulative units, flat 1u per pick</div>
           </div>
           <UnitsChart results={results} />
         </div>
       </div>
       <ShotChart results={results} />
     </div>
+  );
+}
+
+/* ── Last season — compact side panel, never center stage ─────────── */
+
+function LastSeasonPanel({ season, summary, results }: { season: string; summary: ResultsSummary; results: DayResult[] }) {
+  return (
+    <aside className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4 opacity-80 self-start">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">
+        LAST SEASON · {season}
+      </div>
+      <div className="flex items-baseline gap-3">
+        <div className="text-5xl font-bold leading-none">{summary.rate}%</div>
+        <div className="text-xs text-[var(--text-faint)]">
+          {summary.hits}–{summary.misses} · {summary.totalPicks} decided
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <div className="flex flex-col gap-0.5">
+          <div className="text-lg font-bold" style={{ color: unitsColor(summary.allUnits) }}>
+            {fmtUnits(summary.allUnits)}
+          </div>
+          <div className="text-[10px] tracking-wider text-[var(--text-faint)]">UNITS</div>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <div className="text-lg font-bold">{summary.gradedDays}</div>
+          <div className="text-[10px] tracking-wider text-[var(--text-faint)]">DAYS GRADED</div>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <div className="text-lg font-bold">{summary.voided}</div>
+          <div className="text-[10px] tracking-wider text-[var(--text-faint)]">VOIDED</div>
+        </div>
+      </div>
+      <MiniRun results={results} />
+      <a
+        href={DASHBOARD_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-[11px] font-bold tracking-widest text-[var(--accent)]"
+      >
+        FULL HISTORY ON TABLEAU →
+      </a>
+    </aside>
   );
 }
 
@@ -450,7 +595,7 @@ const SYSTEM_STEPS = [
   { n: "02", title: "FIND STARTERS", body: "Depth charts + injury report, live." },
   { n: "03", title: "MAP ZONES", body: "Shot zones and playtypes vs. the defense." },
   { n: "04", title: "SCORE IT", body: "80% of conditions must pass. No exceptions." },
-  { n: "05", title: "VERIFY HITS", body: "Season hit rate confirms it. 56% seals an A+." },
+  { n: "05", title: "VERIFY HITS", body: "Season hit rate confirms it. __HR__% seals an A+." },
 ];
 
 /* ── Grade ranking for deduplication ──────────────────────────────── */
@@ -462,7 +607,7 @@ const GRADE_RANK: Record<string, number> = {
 function deduplicatePicks(picks: PropPick[]): PropPick[] {
   const best = new Map<string, PropPick>();
   for (const p of picks) {
-    const key = `${p.player_name}::${p.stat}::${p.edge}`;
+    const key = `${p.player_name}::${p.stat}::${p.edge.toLowerCase()}`;
     const existing = best.get(key);
     if (!existing || (GRADE_RANK[p.grade] ?? 0) > (GRADE_RANK[existing.grade] ?? 0)) {
       best.set(key, p);
@@ -473,12 +618,16 @@ function deduplicatePicks(picks: PropPick[]): PropPick[] {
 
 /* ── Main page ────────────────────────────────────────────────────── */
 
+type BoardState = "live" | "stale" | "last-season";
+
 export default function Home() {
   const [data, setData] = useState<PropsData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [today, setToday] = useState<string>("");
 
   useEffect(() => {
+    setToday(localISODate(new Date()));
     const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
     fetch(`${base}/data/latest.json`)
       .then((res) => {
@@ -490,7 +639,7 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
+  if (loading || !today) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-[var(--text-muted)]">Loading model data...</div>
@@ -511,13 +660,61 @@ export default function Home() {
     );
   }
 
-  const picks = deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]);
+  // ── Season framing ─────────────────────────────────────────────────
+  const currentSeason = seasonForDate(today);
+  const lastSeason = previousSeason(currentSeason);
+  const boardSeason = data.season ?? seasonForDate(data.date);
+  const boardState: BoardState =
+    boardSeason !== currentSeason ? "last-season" : data.date === today ? "live" : "stale";
+
+  const allPicks = deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]);
+  const boardPicks = boardState === "last-season" ? [] : allPicks;
+  const archivedPicks = boardState === "last-season" ? allPicks : [];
+
   const results = data.model_results ?? [];
-  const summary = aggregateResults(results);
-  const dateLabel = new Date(data.date + "T00:00:00")
-    .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
-    .toUpperCase()
-    .replace(",", " ·");
+  const seasonOf = (r: DayResult) => r.season ?? seasonForDate(r.date);
+  const thisSeasonResults = results.filter((r) => seasonOf(r) === currentSeason);
+  const lastSeasonResults = results.filter((r) => seasonOf(r) === lastSeason);
+  const summary = aggregateResults(thisSeasonResults);
+  const lastSummary = aggregateResults(lastSeasonResults);
+  const hasThisSeason = summary.totalPicks > 0 || summary.voided > 0;
+  const hasLastSeason = lastSeasonResults.length > 0;
+  const hrThreshold = data.thresholds?.hitrate ?? DEFAULT_HITRATE_THRESHOLD;
+  const runTime = fmtRunTime(data.run_at_iso) ?? data.run_at;
+
+  const heroBadge =
+    boardState === "live"
+      ? { text: "LIVE", bg: "var(--over)", ink: "var(--over-ink)" }
+      : boardState === "stale"
+        ? { text: `LAST RUN · ${fmtDayDate(data.date)}`, bg: "var(--under)", ink: "var(--under-ink)" }
+        : { text: `SEASON ${currentSeason}`, bg: "var(--accent)", ink: "var(--bg)" };
+
+  const kpis = [
+    {
+      label: "PLAYS",
+      value: boardState === "last-season" ? "—" : String(boardPicks.length),
+      sub: boardState === "last-season" ? "no board yet" : "graded A or better",
+      color: "var(--text)",
+    },
+    {
+      label: "HIT RATE",
+      value: summary.totalPicks > 0 ? `${summary.rate}%` : "—",
+      sub: hasThisSeason ? "this season" : "no grades yet",
+      color: "var(--text)",
+    },
+    {
+      label: "UNITS",
+      value: hasThisSeason ? fmtUnits(summary.allUnits) : "—",
+      sub: "this season, flat 1u",
+      color: hasThisSeason ? unitsColor(summary.allUnits) : "var(--text)",
+    },
+    {
+      label: "DAYS",
+      value: summary.gradedDays > 0 ? String(summary.gradedDays) : "—",
+      sub: "graded this season",
+      color: "var(--text)",
+    },
+  ];
 
   return (
     <main className="flex flex-col">
@@ -525,13 +722,10 @@ export default function Home() {
       <div className="flex items-center gap-4 px-6 lg:px-16 py-5 border-b border-[var(--border-soft)]">
         <BallLogo size={30} ink="var(--bg)" />
         <div className="font-display text-2xl tracking-widest hidden sm:block">PROP MODEL</div>
+        <span className="font-display text-base tracking-widest bg-[var(--card)] border border-[var(--border)] px-3 py-1">
+          {currentSeason}
+        </span>
         <div className="ml-auto flex items-center gap-4 sm:gap-7">
-          <div className="text-[13px] font-semibold tracking-wider text-[var(--text-muted)]">
-            {dateLabel}
-          </div>
-          <div className="hidden md:block text-[13px] font-semibold tracking-wider text-[var(--text-muted)]">
-            UPDATED {data.run_at.split(" ").slice(-2).join(" ").toUpperCase()}
-          </div>
           <a
             href={DASHBOARD_URL}
             target="_blank"
@@ -549,6 +743,20 @@ export default function Home() {
             CODE
           </a>
         </div>
+      </div>
+
+      {/* Verification strip: board date, generation time, viewer date */}
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-1 px-6 lg:px-16 py-2 bg-[var(--bg-deep)] border-b border-[var(--border-soft)] font-mono text-[11px] tracking-wider text-[var(--text-faint)]">
+        <span>
+          BOARD <span className="text-[var(--text-muted)]">{fmtLongDate(data.date)}</span> · SEASON{" "}
+          <span className="text-[var(--text-muted)]">{boardSeason}</span>
+        </span>
+        <span>
+          GENERATED <span className="text-[var(--text-muted)]">{runTime}</span>
+        </span>
+        <span>
+          VIEWED <span className="text-[var(--text-muted)]">{fmtLongDate(today)}</span>
+        </span>
       </div>
 
       {/* Hero */}
@@ -577,21 +785,25 @@ export default function Home() {
             <span className="bg-[var(--bg)] text-[var(--text)] text-xs font-bold tracking-[3px] px-3.5 py-1.5">
               DAILY MODEL
             </span>
-            <span className="bg-[var(--over)] text-[var(--over-ink)] text-xs font-bold tracking-[3px] px-3.5 py-1.5">
-              LIVE
+            <span
+              className="text-xs font-bold tracking-[3px] px-3.5 py-1.5"
+              style={{ background: heroBadge.bg, color: heroBadge.ink }}
+            >
+              {heroBadge.text}
             </span>
           </div>
           <h1
             className="font-display text-7xl sm:text-8xl lg:text-9xl leading-[0.9] tracking-wide text-[var(--text-bright)]"
             style={{ textShadow: "0 4px 0 rgba(23,16,9,0.35)" }}
           >
-            DAILY PICKS:
+            {boardState === "last-season" ? "NEW SEASON." : "DAILY PICKS:"}
           </h1>
-          <div
-            className="text-lg sm:text-xl font-semibold"
-            style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}
-          >
-            {data.candidates_analyzed} props scanned. {picks.length} on the board.
+          <div className="text-lg sm:text-xl font-semibold" style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}>
+            {boardState === "live" && `${data.candidates_analyzed} props scanned. ${boardPicks.length} on the board.`}
+            {boardState === "stale" &&
+              `Board from ${fmtDayDate(data.date)}. Today's run posts in the morning (about 9 AM ET) on game days.`}
+            {boardState === "last-season" &&
+              `${currentSeason} picks post the morning of each game day. Last season's record is archived below.`}
           </div>
           <div className="flex items-center gap-4 mt-2">
             <a
@@ -602,7 +814,7 @@ export default function Home() {
               <ArrowIcon size={18} />
             </a>
             <div className="hidden sm:block text-[13px] font-semibold tracking-wider opacity-85">
-              FREE. EVERY MORNING.
+              FREE. EVERY GAME DAY.
             </div>
           </div>
         </div>
@@ -610,39 +822,12 @@ export default function Home() {
 
       {/* KPI row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 px-6 lg:px-16 pt-10 pb-2">
-        {[
-          {
-            label: "PLAYS",
-            value: String(picks.length),
-            sub: "graded A or better",
-            color: "var(--text)",
-          },
-          {
-            label: "HIT RATE",
-            value: summary.totalPicks > 0 ? `${summary.rate}%` : "—",
-            sub: "all decided picks",
-            color: "var(--text)",
-          },
-          {
-            label: "UNITS",
-            value: fmtUnits(summary.allUnits),
-            sub: "flat 1u, all-time",
-            color: unitsColor(summary.allUnits),
-          },
-          {
-            label: "DAYS",
-            value: results.length > 0 ? String(results.length) : "—",
-            sub: "tracked & graded",
-            color: "var(--text)",
-          },
-        ].map((t) => (
+        {kpis.map((t) => (
           <div
             key={t.label}
             className="bg-[var(--card)] border border-[var(--border)] border-t-[3px] border-t-[var(--accent)] px-6 py-5 flex flex-col gap-1.5"
           >
-            <div className="text-xs font-bold tracking-[3px] text-[var(--text-muted)]">
-              {t.label}
-            </div>
+            <div className="text-xs font-bold tracking-[3px] text-[var(--text-muted)]">{t.label}</div>
             <div className="text-4xl font-bold leading-none" style={{ color: t.color }}>
               {t.value}
             </div>
@@ -653,18 +838,31 @@ export default function Home() {
 
       {/* The Board */}
       <div id="board" className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
-        <SectionHead title="THE BOARD" tag="TODAY'S PLAYS" />
-        {picks.length === 0 ? (
-          <div className="bg-[var(--card)] border border-[var(--border)] p-12 text-center flex flex-col gap-2">
-            <div className="font-display text-4xl tracking-wide">NO PLAYS TONIGHT.</div>
-            <div className="text-sm text-[var(--text-muted)]">
-              The model found no A-grade edges today. Passing is a position.
-            </div>
+        <SectionHead
+          title="THE BOARD"
+          tag={
+            boardState === "last-season"
+              ? `SEASON ${currentSeason} · NOT STARTED`
+              : `${fmtDayDate(data.date)} · ${currentSeason}`
+          }
+        />
+        {boardState === "last-season" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6">
+            <EmptyState
+              title="FIRST TIP-OFF PENDING."
+              body={`The ${currentSeason} board fills in the morning of the first game day.`}
+            />
+            <ArchivedBoard picks={archivedPicks} date={data.date} season={boardSeason} />
           </div>
+        ) : boardPicks.length === 0 ? (
+          <EmptyState
+            title="NO PLAYS TONIGHT."
+            body="The model found no A-grade edges today. Passing is a position."
+          />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {picks.map((p) => (
-              <PickCard key={`${p.player_name}-${p.stat}-${p.edge}`} pick={p} />
+            {boardPicks.map((p) => (
+              <PickCard key={`${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`} pick={p} hrThreshold={hrThreshold} />
             ))}
           </div>
         )}
@@ -672,8 +870,22 @@ export default function Home() {
 
       {/* The Receipts */}
       <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
-        <SectionHead title="THE RECEIPTS" tag="EVERY PICK. GRADED." />
-        <Receipts summary={summary} results={results} />
+        <SectionHead title="THE RECEIPTS" tag={`SEASON ${currentSeason} · EVERY PICK. GRADED.`} />
+        <div className={`grid grid-cols-1 gap-6 ${hasLastSeason ? "lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
+          <div className="min-w-0">
+            {hasThisSeason ? (
+              <Receipts summary={summary} results={thisSeasonResults} />
+            ) : (
+              <EmptyState
+                title="NO GRADES YET THIS SEASON."
+                body="Picks are graded the morning after each game day. The first receipts land after opening night."
+              />
+            )}
+          </div>
+          {hasLastSeason && (
+            <LastSeasonPanel season={lastSeason} summary={lastSummary} results={lastSeasonResults} />
+          )}
+        </div>
         <a
           href={DASHBOARD_URL}
           target="_blank"
@@ -690,13 +902,12 @@ export default function Home() {
         <SectionHead title="THE SYSTEM" tag="NO GUESSWORK" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {SYSTEM_STEPS.map((s) => (
-            <div
-              key={s.n}
-              className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-3"
-            >
+            <div key={s.n} className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-3">
               <div className="font-display text-4xl text-[var(--wood)] leading-none">{s.n}</div>
               <div className="font-display text-2xl tracking-wide leading-none">{s.title}</div>
-              <div className="text-[13px] leading-relaxed text-[var(--text-muted)]">{s.body}</div>
+              <div className="text-[13px] leading-relaxed text-[var(--text-muted)]">
+                {s.body.replace("__HR__", String(Math.round(hrThreshold * 100)))}
+              </div>
             </div>
           ))}
         </div>
@@ -706,7 +917,7 @@ export default function Home() {
       <div className="flex items-center gap-4 px-6 lg:px-16 py-7 border-t border-[var(--border-soft)] bg-[var(--bg-deep)]">
         <BallLogo size={20} ink="var(--bg-deep)" />
         <div className="text-xs text-[var(--text-faint)]">
-          Updates several times daily · Lines via Underdog Fantasy · Not financial advice
+          Runs every game day · Lines via Underdog Fantasy · Not financial advice
         </div>
         <a
           href={GITHUB_URL}

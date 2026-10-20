@@ -2,8 +2,31 @@
 Configuration constants for the NBA Player Prop Model.
 """
 
-SEASON = "2025-26"
-SEASON_NBA_API = "2025-26"
+import os
+from datetime import date as _date
+
+
+def season_for_date(d: _date) -> str:
+    """
+    NBA season label for a calendar date, e.g. 2026-10-20 -> "2026-27".
+
+    A season starts in October; July-September map to the season that
+    just ended (whose stats the API still serves).
+    """
+    start = d.year if d.month >= 10 else d.year - 1
+    return f"{start}-{(start + 1) % 100:02d}"
+
+
+def previous_season(season: str) -> str:
+    """"2026-27" -> "2025-26"."""
+    start = int(season[:4]) - 1
+    return f"{start}-{(start + 1) % 100:02d}"
+
+
+# Derived from today's date so the model rolls into each new season on its
+# own. Override with NBA_SEASON=2025-26 for backfills and tests.
+SEASON = os.environ.get("NBA_SEASON") or season_for_date(_date.today())
+SEASON_NBA_API = SEASON
 SEASON_TYPE = "Regular Season"
 
 # NBA.com Stats API headers (required to avoid 403)

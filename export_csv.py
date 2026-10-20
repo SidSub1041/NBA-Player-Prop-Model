@@ -22,6 +22,7 @@ import glob
 import json
 import os
 import re
+from datetime import date as _date
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
@@ -29,18 +30,28 @@ DATA_DIR = os.path.join(BASE_DIR, "web", "public", "data")
 
 DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
 
+
+def _season(date_str):
+    """2026-10-20 -> '2026-27' (seasons start in October)."""
+    try:
+        d = _date.fromisoformat(date_str)
+    except (TypeError, ValueError):
+        return None
+    start = d.year if d.month >= 10 else d.year - 1
+    return f"{start}-{(start + 1) % 100:02d}"
+
 PICK_FIELDS = [
     "date", "player_name", "team", "opponent", "position", "stat", "edge",
     "grade", "bucket", "is_valid", "is_combo", "total_points",
     "total_conditions", "pass_rate", "hitrate", "hitrate_source",
     "season_avg", "games_played", "ud_line", "ud_over_odds", "ud_under_odds",
     "adaptive_multiplier", "n_zone_conditions", "n_playtype_conditions",
-    "details",
+    "details", "season",
 ]
 
 GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
 
-RESULT_FIELDS = ["date", "total_picks", "hits", "misses", "voided", "units"]
+RESULT_FIELDS = ["date", "total_picks", "hits", "misses", "voided", "units", "season"]
 
 
 def _load_days(prefix):
@@ -53,8 +64,15 @@ def _load_days(prefix):
     """
     days = []
     for path in sorted(glob.glob(os.path.join(LOGS_DIR, f"{prefix}_*.json"))):
-        with open(path, encoding="utf-8") as f:
-            day = json.load(f)
+        try:
+            with open(path, encoding="utf-8") as f:
+                day = json.load(f)
+        except (OSError, ValueError) as e:
+            print(f"  Skipping {path} — unreadable JSON ({e})")
+            continue
+        if not isinstance(day, dict):
+            print(f"  Skipping {path} — expected a JSON object")
+            continue
         date = day.get("date")
         if not date:
             m = DATE_RE.search(os.path.basename(path))
@@ -111,16 +129,21 @@ def _flatten_prop(prop, date):
         "n_zone_conditions": n_zones,
         "n_playtype_conditions": n_plays,
         "details": details,
+        "season": _season(date),
     }
 
 
 def _write_csv(path, fieldnames, rows):
     # utf-8-sig: the BOM keeps accented player names (Jokić, Dončić)
     # intact when the CSV is opened in Excel or legacy BI importers.
-    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+    # Write to a temp file and swap it in, so a crash mid-write never leaves a
+    # truncated CSV behind for the workflow to commit.
+    tmp = path + ".tmp"
+    with open(tmp, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
+    os.replace(tmp, path)
     print(f"  Wrote {len(rows):4d} rows -> {path}")
 
 
@@ -147,25 +170,35 @@ def export_graded(graded_days):
 def export_daily_results(graded_days):
     # Build from graded files (complete), then backfill any day that only
     # exists in results_history.json.
-    by_date = {}
-    for date, day in graded_days:
-        row = {k: day.get(k) for k in RESULT_FIELDS}
+    def _daily_row(date, src):
+        row = {k: src.get(k) for k in RESULT_FIELDS}
         row["date"] = date
+        for k in ("total_picks", "hits", "misses", "voided"):
+            if row[k] is None:
+                row[k] = 0
         if row["units"] is None:
             row["units"] = 0.0
-        by_date[date] = row
+        row["season"] = row.get("season") or _season(date)
+        return row
+
+    by_date = {}
+    for date, day in graded_days:
+        by_date[date] = _daily_row(date, day)
 
     history_path = os.path.join(DATA_DIR, "results_history.json")
+    history = []
     if os.path.exists(history_path):
-        with open(history_path, encoding="utf-8") as f:
-            for entry in json.load(f):
-                date = entry.get("date")
-                if not date:
-                    continue
-                row = {k: entry.get(k) for k in RESULT_FIELDS}
-                if row["units"] is None:
-                    row["units"] = 0.0
-                by_date.setdefault(date, row)
+        try:
+            with open(history_path, encoding="utf-8") as f:
+                history = json.load(f)
+        except (OSError, ValueError) as e:
+            print(f"  Skipping {history_path} — unreadable JSON ({e})")
+    if isinstance(history, list):
+        for entry in history:
+            date = entry.get("date")
+            if not date:
+                continue
+            by_date.setdefault(date, _daily_row(date, entry))
 
     rows = [by_date[d] for d in sorted(by_date)]
     _write_csv(os.path.join(DATA_DIR, "daily_results.csv"), RESULT_FIELDS, rows)
