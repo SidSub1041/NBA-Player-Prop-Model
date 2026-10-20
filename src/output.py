@@ -42,6 +42,11 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         "",
     ]
 
+    headers = [
+        "Player", "Team", "Opp", "Pos", "Stat",
+        "Edge", "Line", "Odds", "Score", "Pct", "HR", "Grade"
+    ]
+
     # ── VALID PICKS ──────────────────────────────────────────────────
     if valid:
         lines.append("┌─────────────────────────────────────────────────────────────────────┐")
@@ -70,10 +75,6 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
                 p.final_grade,
             ])
 
-        headers = [
-            "Player", "Team", "Opp", "Pos", "Stat",
-            "Edge", "Line", "Odds", "Score", "Pct", "HR", "Grade"
-        ]
         lines.append(tabulate(table_data, headers=headers, tablefmt="rounded_outline"))
         lines.append("")
     else:

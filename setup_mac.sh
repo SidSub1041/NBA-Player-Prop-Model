@@ -14,10 +14,9 @@ PLIST_LABEL="com.nba.prop.model"
 PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
 GRADE_LABEL="com.nba.prop.grader"
 GRADE_PLIST_PATH="$HOME/Library/LaunchAgents/${GRADE_LABEL}.plist"
-RUN_HOUR=9    # 9 AM — change this to adjust the daily run time
-RUN_MINUTE=0
-GRADE_HOUR=23  # 11 PM — grading time (after games finish)
-GRADE_MINUTE=0
+# run_daily.sh fires at each of these local times: it grades yesterday, builds
+# today's board, exports the CSVs and pushes the data (the site then redeploys).
+RUN_TIMES=("9:15" "12:00" "15:00" "18:00")
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -61,16 +60,26 @@ print(f'  Season: {SEASON}')
 print(f'  Thresholds: conditions>={CONDITION_PASS_RATE:.0%}, hit rate>={HITRATE_THRESHOLD:.0%}')
 "
 
-# ── 5. Install macOS LaunchAgent (runs at 9 AM daily) ────────────────
+# ── 5. Install macOS LaunchAgent (runs run_daily.sh on game days) ───
 echo ""
-echo "▶ Installing macOS LaunchAgent for daily 9 AM run..."
+echo "▶ Installing macOS LaunchAgent (${RUN_TIMES[*]} daily)..."
 
-# Remove existing agent if present
-if launchctl list | grep -q "$PLIST_LABEL" 2>/dev/null; then
-    launchctl unload "$PLIST_PATH" 2>/dev/null || true
-fi
-
+# Remove existing agents (including the old separate grader agent)
+for label in "$PLIST_LABEL" "$GRADE_LABEL"; do
+    if launchctl list | grep -q "$label" 2>/dev/null; then
+        launchctl unload "$HOME/Library/LaunchAgents/${label}.plist" 2>/dev/null || true
+    fi
+done
+rm -f "$GRADE_PLIST_PATH"
+chmod +x "$REPO_DIR/run_daily.sh"
 mkdir -p "$HOME/Library/LaunchAgents"
+
+CALENDAR=""
+for t in "${RUN_TIMES[@]}"; do
+    h="${t%%:*}"; m="${t##*:}"
+    CALENDAR+="        <dict><key>Hour</key><integer>$((10#$h))</integer><key>Minute</key><integer>$((10#$m))</integer></dict>
+"
+done
 
 cat > "$PLIST_PATH" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -83,20 +92,24 @@ cat > "$PLIST_PATH" <<PLIST
 
     <key>ProgramArguments</key>
     <array>
-        <string>${PYTHON}</string>
-        <string>${REPO_DIR}/main.py</string>
+        <string>/bin/bash</string>
+        <string>${REPO_DIR}/run_daily.sh</string>
     </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>PYTHON</key>
+        <string>${PYTHON}</string>
+    </dict>
 
     <key>WorkingDirectory</key>
     <string>${REPO_DIR}</string>
 
     <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>${RUN_HOUR}</integer>
-        <key>Minute</key>
-        <integer>${RUN_MINUTE}</integer>
-    </dict>
+    <array>
+${CALENDAR}    </array>
 
     <key>StandardOutPath</key>
     <string>${REPO_DIR}/logs/launchd_stdout.log</string>
@@ -116,69 +129,21 @@ PLIST
 launchctl load "$PLIST_PATH"
 echo "  LaunchAgent installed: $PLIST_PATH"
 
-# ── 5b. Install macOS LaunchAgent for grading (runs at 11 PM daily) ──
-echo ""
-echo "▶ Installing macOS LaunchAgent for daily 11 PM grading..."
-
-if launchctl list | grep -q "$GRADE_LABEL" 2>/dev/null; then
-    launchctl unload "$GRADE_PLIST_PATH" 2>/dev/null || true
-fi
-
-cat > "$GRADE_PLIST_PATH" <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>${GRADE_LABEL}</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>${PYTHON}</string>
-        <string>${REPO_DIR}/grade.py</string>
-    </array>
-
-    <key>WorkingDirectory</key>
-    <string>${REPO_DIR}</string>
-
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>${GRADE_HOUR}</integer>
-        <key>Minute</key>
-        <integer>${GRADE_MINUTE}</integer>
-    </dict>
-
-    <key>StandardOutPath</key>
-    <string>${REPO_DIR}/logs/launchd_grader_stdout.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>${REPO_DIR}/logs/launchd_grader_stderr.log</string>
-
-    <key>RunAtLoad</key>
-    <false/>
-
-    <key>KeepAlive</key>
-    <false/>
-</dict>
-</plist>
-PLIST
-
-launchctl load "$GRADE_PLIST_PATH"
-echo "  LaunchAgent installed: $GRADE_PLIST_PATH"
-
 # ── 6. Summary ───────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}══════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}   Setup complete!${NC}"
 echo -e "${GREEN}══════════════════════════════════════════════════════${NC}"
 echo ""
-echo "  The model will run automatically every morning at"
-echo "  $(printf '%02d:%02d' $RUN_HOUR $RUN_MINUTE) AM and save results to logs/props_YYYY-MM-DD.txt"
+echo "  run_daily.sh will run at ${RUN_TIMES[*]} every day: it grades yesterday,"
+echo "  builds today's board, and pushes the data so the site redeploys."
+echo "  (If the Mac is asleep at a run time, launchd runs it on wake.)"
 echo ""
 echo "  Useful commands:"
-echo -e "  ${YELLOW}Run now manually:${NC}"
+echo -e "  ${YELLOW}Run the full game-day cycle now:${NC}"
+echo "    cd $REPO_DIR && ./run_daily.sh"
+echo ""
+echo -e "  ${YELLOW}Run just the model manually:${NC}"
 echo "    cd $REPO_DIR && python3 main.py"
 echo ""
 echo -e "  ${YELLOW}Run now (fast mode, skips playtypes):${NC}"

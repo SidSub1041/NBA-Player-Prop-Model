@@ -11,6 +11,12 @@ on:
     - cron: "0 22 * * *"
     # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
     - cron: "30 9 * * *"
+  # Data pushed from a local runner (run_daily.sh) redeploys the site
+  push:
+    branches: [main]
+    paths:
+      - "web/public/data/**"
+      - "logs/**"
   workflow_dispatch:
     inputs:
       task:
@@ -39,6 +45,12 @@ concurrency:
 jobs:
   run-model:
     runs-on: ubuntu-latest
+    env:
+      # stats.nba.com blocks cloud runners, so scheduled model/grade runs only
+      # happen here when an NBA_PROXY secret is configured. Without one, the
+      # data is produced by run_daily.sh on your own machine and this workflow
+      # just exports CSVs and deploys whatever was pushed.
+      HAS_PROXY: ${{ secrets.NBA_PROXY != '' }}
 
     steps:
       - name: Checkout repo
@@ -64,7 +76,9 @@ jobs:
         # clock, so a delayed scheduled run can't turn a grading run into a
         # model run.
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TASK="deploy"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TASK="${{ github.event.inputs.task }}"
           elif [ "${{ github.event.schedule }}" = "30 9 * * *" ]; then
             TASK="grade"
@@ -72,28 +86,32 @@ jobs:
             TASK="model"
           fi
           echo "Task: $TASK"
-          if [ "$TASK" = "grade" ]; then
-            echo "run_model=false" >> "$GITHUB_OUTPUT"
-            echo "run_grade=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run_model=true" >> "$GITHUB_OUTPUT"
-            echo "run_grade=false" >> "$GITHUB_OUTPUT"
-          fi
+          echo "run_model=$([ "$TASK" = "model" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "run_grade=$([ "$TASK" = "grade" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
+      # Both data steps are non-blocking for the deploy, but a failure shows as a
+      # red step on the run and blocks the data commit instead of being swallowed.
       - name: Grade picks (yesterday, or the requested date)
-        if: steps.task.outputs.run_grade == 'true'
+        id: grade
+        if: steps.task.outputs.run_grade == 'true' && (env.HAS_PROXY == 'true' || github.event_name == 'workflow_dispatch')
+        continue-on-error: true
         env:
           GRADE_DATE: ${{ github.event.inputs.date }}
+          NBA_PROXY: ${{ secrets.NBA_PROXY }}
         run: |
           if [ -n "$GRADE_DATE" ]; then
-            python grade.py --date "$GRADE_DATE" || echo "No picks to grade"
+            python grade.py --date "$GRADE_DATE"
           else
-            python grade.py || echo "No picks to grade"
+            python grade.py
           fi
 
       - name: Run model
-        if: steps.task.outputs.run_model == 'true'
-        run: python main.py --fast || echo "Model run failed (no games today or API issue)"
+        id: model
+        if: steps.task.outputs.run_model == 'true' && (env.HAS_PROXY == 'true' || github.event_name == 'workflow_dispatch')
+        continue-on-error: true
+        env:
+          NBA_PROXY: ${{ secrets.NBA_PROXY }}
+        run: python main.py --fast
 
       - name: Export CSV fact tables (for BI dashboards)
         # Never blocks the data commit/deploy, but a failure is shown on the run
@@ -101,6 +119,9 @@ jobs:
         run: python export_csv.py
 
       - name: Commit updated data
+        # Never commit the output of a failed model/grade step (a board built
+        # on fallbacks alone would overwrite real data).
+        if: steps.model.outcome != 'failure' && steps.grade.outcome != 'failure'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

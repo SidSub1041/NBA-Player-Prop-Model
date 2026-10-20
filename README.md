@@ -38,6 +38,17 @@ Only **A+ and A** picks are flagged as valid.
 
 ---
 
+## Where the Model Runs
+
+`stats.nba.com` silently blocks requests from cloud runners (GitHub Actions included): calls hang until they time out. The model and the grader both need it, so GitHub Actions is used for **deploying the site and exporting CSVs**, and the data itself is produced one of two ways:
+
+1. **On your Mac (recommended)** — `./setup_mac.sh` installs a LaunchAgent that runs `run_daily.sh` at 9:15 AM, 12 PM, 3 PM and 6 PM: it grades yesterday, builds today's board, refreshes the CSVs and pushes the data. Any data push to `main` triggers the Actions workflow, which redeploys the site within about two minutes. (`./run_daily.sh` also works by hand.)
+2. **Through a proxy** — add an `NBA_PROXY` repository secret (`http://user:pass@host:port`). Only then do the scheduled Actions runs execute the model and grader, routing every NBA API call through it; "Run workflow" from the Actions tab always tries.
+
+Safety net either way: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
+
+---
+
 ## Season Handling
 
 The season is derived from the run date (October starts a new season), so the model rolls over on its own each fall — no constants to bump. Override for backfills or tests with `NBA_SEASON=2025-26 python main.py`. The site splits results by season and shows the previous season's record in a side panel.

@@ -11,6 +11,7 @@ import argparse
 import logging
 from datetime import datetime, timedelta
 
+import src.nba_http  # noqa: F401  — timeouts, retries, proxy, circuit breaker
 from src.grader import grade_picks, save_graded_results
 
 logging.basicConfig(

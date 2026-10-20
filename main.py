@@ -51,6 +51,7 @@ logger = logging.getLogger(__name__)
 
 # ── imports (after logging) ───────────────────────────────────────────────────
 
+import src.nba_http  # noqa: F401  — timeouts, retries, proxy, circuit breaker
 from src.games_today import get_teams_playing_today, get_matchups_today
 from src.dvp_scraper import scrape_dvp_data
 from src.depth_charts import get_depth_charts, find_player_for_matchup
@@ -60,6 +61,20 @@ from src.config import POSITION_MAP
 from src.underdog import fetch_underdog_lines, get_line_for_prop
 from src.adaptive import compute_adaptive_weights
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player
+
+
+def _assert_stats_reachable(stage: str):
+    """
+    Abort before anything is written if stats.nba.com has stopped answering.
+    A board assembled from fallbacks alone (no minutes, zones or hit rates)
+    would overwrite real data with junk and feed the grader empty picks.
+    """
+    from src.nba_http import breaker_open
+    if breaker_open():
+        raise RuntimeError(
+            f"stats.nba.com is unreachable from this machine (failed during {stage}); "
+            "not writing a board. Run the model from a non-cloud network or set NBA_PROXY."
+        )
 
 
 def run(date: str | None = None, fast: bool = False):
@@ -123,6 +138,8 @@ def run(date: str | None = None, fast: bool = False):
         logger.warning(f"Could not fetch MPG data: {e}")
 
     # ── Step 3c: Fetch Underdog Fantasy lines ────────────────────────
+    _assert_stats_reachable("player minutes")
+
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = fetch_underdog_lines()
 
@@ -159,6 +176,13 @@ def run(date: str | None = None, fast: bool = False):
             )
         else:
             logger.info("  [Fast mode] Skipping playtype rankings")
+
+    _assert_stats_reachable("team defensive rankings")
+    if has_points and not team_zone_rankings:
+        raise RuntimeError(
+            "No shooting-zone rankings came back from stats.nba.com — "
+            "refusing to publish a board built without them"
+        )
 
     # ── Step 5: Evaluate each matchup ───────────────────────────────
     logger.info("Step 5: Evaluating player props...")
@@ -251,6 +275,8 @@ def run(date: str | None = None, fast: bool = False):
     logger.info(f"\nStep 6: Building combo props...")
     combo_scores = build_combo_props(prop_scores, ud_lines)
     prop_scores.extend(combo_scores)
+
+    _assert_stats_reachable("player evaluation")
 
     # ── Step 7: Output ───────────────────────────────────────────────
     logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")

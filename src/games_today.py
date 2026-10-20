@@ -5,10 +5,24 @@ Fetch today's NBA games and the teams playing.
 import time
 import logging
 from datetime import datetime
+import requests
 from nba_api.stats.endpoints import scoreboardv3
 from nba_api.stats.static import teams as nba_teams
 
-from src.config import NBA_TEAM_IDS
+from src.config import NBA_TEAM_IDS, NBA_STATS_HEADERS
+
+CDN_SCOREBOARD_URL = "https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json"
+
+
+def _fetch_cdn_scoreboard() -> dict:
+    """Today's games from the NBA CDN (public, not geo/cloud blocked)."""
+    resp = requests.get(
+        CDN_SCOREBOARD_URL,
+        headers={"User-Agent": NBA_STATS_HEADERS["User-Agent"], "Accept": "application/json"},
+        timeout=20,
+    )
+    resp.raise_for_status()
+    return resp.json()
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +38,21 @@ def get_todays_games(date: str | None = None) -> list[dict]:
 
     logger.info(f"Fetching scoreboard for {date}")
     time.sleep(0.6)
-    sb = scoreboardv3.ScoreboardV3(game_date=date)
-    data = sb.get_dict()
+    try:
+        sb = scoreboardv3.ScoreboardV3(game_date=date)
+        data = sb.get_dict()
+    except Exception as e:
+        # stats.nba.com is often unreachable from cloud networks. The NBA's
+        # public CDN serves today's scoreboard in the same shape, so fall back
+        # to it when we're asking about today.
+        if date != datetime.today().strftime("%Y-%m-%d"):
+            raise
+        logger.warning(f"stats.nba.com scoreboard failed ({type(e).__name__}); trying the NBA CDN")
+        data = _fetch_cdn_scoreboard()
+        cdn_date = data.get("scoreboard", {}).get("gameDate")
+        if cdn_date and cdn_date != date:
+            logger.warning(f"CDN scoreboard is for {cdn_date}, not {date}; treating as no games")
+            data = {"scoreboard": {"games": []}}
 
     scoreboard = data.get("scoreboard", {})
     raw_games = scoreboard.get("games", [])
