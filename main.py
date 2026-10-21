@@ -147,7 +147,7 @@ def run(date: str | None = None, fast: bool = False):
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = load_cached_lines(date)
     if date == datetime.today().strftime("%Y-%m-%d"):
-        ud_lines = merge_lines(ud_lines, fetch_underdog_lines())  # today: fresh lines win
+        ud_lines = merge_lines(ud_lines, fetch_underdog_lines(date))  # today: fresh lines win
     else:
         logger.info("  Past date — using lines recorded on that day only")
 

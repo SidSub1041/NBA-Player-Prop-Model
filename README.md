@@ -54,7 +54,7 @@ Only **A+ and A** picks are flagged as valid.
 
 Safety net on every path: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
 
-**Lines on the board**: Underdog lines are fetched live from whichever of its pick'em endpoints currently answers (directly, then through `NBA_PROXY` if the runner is blocked), matched on normalized names (initials, apostrophes, accents and Jr./III suffixes all match), and lines captured by an earlier run that day are kept when a later run can't see them (Underdog pulls a line at tip-off). If a board shows `—` for every line, run `python3 probe_underdog.py` — also part of the Actions **probe** task — to see exactly what each endpoint returns.
+**Lines on the board**: Underdog lines come from its public `v1/over_under_lines` board (the versioned `beta/v5`/`v6` paths were retired in October 2026 and answer HTTP 426), fetched directly and through `NBA_PROXY` only if Underdog can't be reached. Only pre-game lines for the run date's NBA games are used — tomorrow's back-to-back lines, live, suspended and season-long markets are skipped, and the standard two-sided line wins over promo or alternate lines. Players match on normalized names (initials, apostrophes, accents and Jr./III suffixes all match), and lines captured by an earlier run that day are kept when a later run can't see them (Underdog pulls a line at tip-off). If a board shows `—` for every line, run `python3 probe_underdog.py` — also part of the Actions **probe** task — to see exactly what Underdog returns.
 
 ---
 
