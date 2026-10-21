@@ -25,6 +25,7 @@ on:
         options:
           - model
           - grade
+          - probe
         default: model
       date:
         description: "Date to grade (YYYY-MM-DD); blank = yesterday. Grade only."
@@ -88,6 +89,15 @@ jobs:
           echo "Task: $TASK"
           echo "run_model=$([ "$TASK" = "model" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "run_grade=$([ "$TASK" = "grade" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "run_probe=$([ "$TASK" = "probe" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      # "Run workflow" → task: probe — checks whether the NBA API is reachable
+      # from this runner, through the NBA_PROXY secret if one is set.
+      - name: Probe NBA API reachability
+        if: steps.task.outputs.run_probe == 'true'
+        env:
+          NBA_PROXY: ${{ secrets.NBA_PROXY }}
+        run: python probe_nba.py
 
       # Both data steps are non-blocking for the deploy, but a failure shows as a
       # red step on the run and blocks the data commit instead of being swallowed.
@@ -111,7 +121,7 @@ jobs:
         continue-on-error: true
         env:
           NBA_PROXY: ${{ secrets.NBA_PROXY }}
-        run: python main.py --fast
+        run: python main.py
 
       - name: Export CSV fact tables (for BI dashboards)
         # Never blocks the data commit/deploy, but a failure is shown on the run

@@ -40,12 +40,19 @@ Only **A+ and A** picks are flagged as valid.
 
 ## Where the Model Runs
 
-`stats.nba.com` silently blocks requests from cloud runners (GitHub Actions included): calls hang until they time out. The model and the grader both need it, so GitHub Actions is used for **deploying the site and exporting CSVs**, and the data itself is produced one of two ways:
+`stats.nba.com` silently blocks most cloud datacenter IP ranges (GitHub Actions runners included): requests hang until they time out. The model and the grader both need it, so the pipeline separates **producing the data** from **publishing the site** (GitHub Actions always handles publishing: any data push redeploys within ~2 minutes). Pick one producer:
 
-1. **On your Mac (recommended)** — `./setup_mac.sh` installs a LaunchAgent that runs `run_daily.sh` at 9:15 AM, 12 PM, 3 PM and 6 PM: it grades yesterday, builds today's board, refreshes the CSVs and pushes the data. Any data push to `main` triggers the Actions workflow, which redeploys the site within about two minutes. (`./run_daily.sh` also works by hand.)
-2. **Through a proxy** — add an `NBA_PROXY` repository secret (`http://user:pass@host:port`). Only then do the scheduled Actions runs execute the model and grader, routing every NBA API call through it; "Run workflow" from the Actions tab always tries.
+| Option | What it is | Cost / effort |
+|--------|------------|---------------|
+| **A. GitHub Actions + proxy** (recommended) | The existing schedule becomes the live server: add an `NBA_PROXY` repository secret (`http://user:pass@host:port` from a residential or ISP proxy plan — datacenter proxies are usually blocked too) and the scheduled runs execute the model 4×/day plus the 5:30 AM ET grading run. No machine to maintain. | A proxy plan (typically a few dollars a month); 2 minutes to set up |
+| **B. Any always-on Linux box** | A VPS, Raspberry Pi or home server with an unblocked IP runs `./setup_cron.sh`, which schedules `run_daily.sh` at 9:15, 12:00, 15:00 and 18:00 and pushes the data. | The box; needs non-interactive `git push` (deploy key or token) |
+| **C. Your Mac** | `./setup_mac.sh` installs a LaunchAgent for `run_daily.sh` at the same times. Works only while the Mac is awake (launchd runs missed jobs on wake). | Free, but tied to the laptop |
 
-Safety net either way: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
+**Test before you trust**: `python3 probe_nba.py` reports PASS/FAIL for the NBA API from any host (or through `NBA_PROXY`). On GitHub, use **Actions → Run workflow → task: probe** to test a proxy secret from the runner itself in about a minute.
+
+**Setting up option A**: repo → Settings → Secrets and variables → Actions → *New repository secret* → name `NBA_PROXY`, value the proxy URL. Run the probe task; once it passes, the next scheduled run produces the board. Retire the Mac runner with `launchctl unload ~/Library/LaunchAgents/com.nba.prop.model.plist` so two producers don't race.
+
+Safety net on every path: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
 
 ---
 
@@ -93,11 +100,12 @@ launchctl unload ~/Library/LaunchAgents/com.nba.prop.model.plist
 rm ~/Library/LaunchAgents/com.nba.prop.model.plist
 ```
 
-### Linux — cron
+### Linux — cron (VPS, Raspberry Pi, home server)
 ```bash
+python3 probe_nba.py     # confirm this host can reach the NBA API first
 chmod +x setup_cron.sh
-./setup_cron.sh          # Installs a 9:00 AM cron job
-./setup_cron.sh --remove # Removes it
+./setup_cron.sh          # schedules run_daily.sh at 9:15, 12:00, 15:00, 18:00
+./setup_cron.sh --remove # removes the jobs
 ```
 
 ### Any OS — Python scheduler (keep terminal open)
@@ -139,6 +147,7 @@ NBA-Player-Prop-Model/
 ├── grade.py             # Grades yesterday's picks against box scores
 ├── export_csv.py        # Flattens JSON output to CSV for BI dashboards
 ├── run_daily.sh         # Game-day runner: grade → model → export → push
+├── probe_nba.py         # Can this host / proxy reach stats.nba.com?
 ├── scheduler.py         # Python-based daily scheduler
 ├── setup_mac.sh         # One-command Mac setup + LaunchAgent installer
 ├── setup_cron.sh        # Linux cron installer
