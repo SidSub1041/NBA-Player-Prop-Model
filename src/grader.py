@@ -19,6 +19,7 @@ from nba_api.stats.endpoints import boxscoretraditionalv3, scoreboardv3
 from nba_api.stats.static import players as nba_players
 
 from src.config import NBA_TEAM_IDS, season_for_date
+from src.underdog import norm_name, norm_name_base
 
 logger = logging.getLogger(__name__)
 
@@ -141,49 +142,6 @@ def _parse_minutes(minutes_val) -> float:
 
 # ── Check for voided Underdog lines ──────────────────────────────────────────
 
-def _fetch_voided_players() -> set[str]:
-    """
-    Check Underdog Fantasy API for voided/suspended lines.
-    Returns set of lowercased player names whose lines are voided.
-    """
-    import requests
-
-    try:
-        resp = requests.get(
-            "https://api.underdogfantasy.com/beta/v5/over_under_lines",
-            timeout=15,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-    except Exception as e:
-        logger.warning(f"Could not check Underdog for voided lines: {e}")
-        return set()
-
-    players_map = {p["id"]: p for p in data.get("players", [])}
-    appearances = {a["id"]: a for a in data.get("appearances", [])}
-    voided = set()
-
-    for line in data.get("over_under_lines", []):
-        status = line.get("status", "")
-        if status in ("voided", "suspended", "cancelled"):
-            ou = line.get("over_under", {})
-            app_stat = ou.get("appearance_stat", {})
-            app_id = app_stat.get("appearance_id")
-            appearance = appearances.get(app_id, {})
-            player_id = appearance.get("player_id")
-            player = players_map.get(player_id, {})
-            first = player.get("first_name", "")
-            last = player.get("last_name", "")
-            name = f"{first} {last}".strip()
-            if name:
-                voided.add(name.lower())
-
-    logger.info(f"Found {len(voided)} voided Underdog lines")
-    return voided
-
-
-# ── Grade picks ──────────────────────────────────────────────────────────────
-
 def grade_picks(date: str) -> dict:
     """
     Grade a day's picks against actual results.
@@ -223,8 +181,12 @@ def grade_picks(date: str) -> dict:
     logger.info(f"Fetching box-score data for {date}...")
     actual_stats = _fetch_box_scores(date)
 
-    # Fetch voided lines
-    voided_players = _fetch_voided_players()
+    # Normalized index so 'Nikola Jokic' / 'P.J. Washington' / 'Jimmy Butler'
+    # still find their box-score rows ('Nikola Jokić', 'PJ Washington', 'Jimmy Butler III').
+    stats_by_norm: dict[str, dict] = {}
+    for box_name, row in actual_stats.items():
+        stats_by_norm.setdefault(norm_name(box_name), row)
+        stats_by_norm.setdefault(norm_name_base(box_name), row)
 
     # Grade each pick
     hits = 0
@@ -240,7 +202,11 @@ def grade_picks(date: str) -> dict:
         line = pick.get("ud_line")
 
         name_lower = name.lower()
-        actual = actual_stats.get(name_lower)
+        actual = (
+            actual_stats.get(name_lower)
+            or stats_by_norm.get(norm_name(name))
+            or stats_by_norm.get(norm_name_base(name))
+        )
 
         # Determine which odds apply to this pick's edge
         pick_odds = pick.get("ud_over_odds") if edge == "over" else pick.get("ud_under_odds")
@@ -252,14 +218,7 @@ def grade_picks(date: str) -> dict:
             "units": 0.0,
         }
 
-        # Check if voided (Underdog suspended or player DNP)
-        if name_lower in voided_players:
-            result_entry["result"] = "void"
-            voided_count += 1
-            graded.append(result_entry)
-            logger.info(f"  {name} | {stat} {edge} → VOID (Underdog voided)")
-            continue
-
+        # Voids follow Underdog's settlement rule: a player who didn't play.
         if actual is None:
             # Player not in box scores at all (DNP / inactive)
             result_entry["result"] = "void"

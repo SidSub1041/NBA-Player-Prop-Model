@@ -59,7 +59,7 @@ from src.scoring_engine import evaluate_prop, build_combo_props
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
 from src.season import stats_season
-from src.underdog import fetch_underdog_lines, get_line_for_prop
+from src.underdog import fetch_underdog_lines, get_line_for_prop, load_cached_lines, merge_lines
 from src.adaptive import compute_adaptive_weights
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player
 
@@ -145,7 +145,11 @@ def run(date: str | None = None, fast: bool = False):
     _assert_stats_reachable("player minutes")
 
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
-    ud_lines = fetch_underdog_lines()
+    ud_lines = load_cached_lines(date)
+    if date == datetime.today().strftime("%Y-%m-%d"):
+        ud_lines = merge_lines(ud_lines, fetch_underdog_lines())  # today: fresh lines win
+    else:
+        logger.info("  Past date — using lines recorded on that day only")
 
     # ── Step 3e: Fetch injury report ─────────────────────────────────
     logger.info("Step 3e: Fetching injury report...")

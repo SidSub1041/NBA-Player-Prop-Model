@@ -54,6 +54,8 @@ Only **A+ and A** picks are flagged as valid.
 
 Safety net on every path: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
 
+**Lines on the board**: Underdog lines are fetched live from whichever of its pick'em endpoints currently answers (directly, then through `NBA_PROXY` if the runner is blocked), matched on normalized names (initials, apostrophes, accents and Jr./III suffixes all match), and lines captured by an earlier run that day are kept when a later run can't see them (Underdog pulls a line at tip-off). If a board shows `—` for every line, run `python3 probe_underdog.py` — also part of the Actions **probe** task — to see exactly what each endpoint returns.
+
 ---
 
 ## Season Handling
@@ -148,6 +150,7 @@ NBA-Player-Prop-Model/
 ├── export_csv.py        # Flattens JSON output to CSV for BI dashboards
 ├── run_daily.sh         # Game-day runner: grade → model → export → push
 ├── probe_nba.py         # Can this host / proxy reach stats.nba.com?
+├── probe_underdog.py    # What does Underdog's lines feed return from here?
 ├── scheduler.py         # Python-based daily scheduler
 ├── setup_mac.sh         # One-command Mac setup + LaunchAgent installer
 ├── setup_cron.sh        # Linux cron installer

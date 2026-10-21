@@ -99,6 +99,13 @@ jobs:
           NBA_PROXY: ${{ secrets.NBA_PROXY }}
         run: python probe_nba.py
 
+      # Runs even when the NBA probe failed, so one probe task reports both.
+      - name: Probe Underdog lines feed
+        if: ${{ !cancelled() && steps.task.outputs.run_probe == 'true' }}
+        env:
+          NBA_PROXY: ${{ secrets.NBA_PROXY }}
+        run: python probe_underdog.py
+
       # Both data steps are non-blocking for the deploy, but a failure shows as a
       # red step on the run and blocks the data commit instead of being swallowed.
       - name: Grade picks (yesterday, or the requested date)
