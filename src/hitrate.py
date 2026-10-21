@@ -5,7 +5,9 @@ Checks if a player's season hit rate for a given stat exceeds 56%.
 
 import logging
 
-from src.config import SEASON_NBA_API, SEASON_TYPE
+from src.config import SEASON_TYPE
+
+from src.season import stats_season
 import requests
 from bs4 import BeautifulSoup
 
@@ -108,7 +110,7 @@ def _estimate_hitrate_from_gamelogs(player_name: str, stat: str) -> dict:
         time.sleep(0.6)
         gamelog = playergamelog.PlayerGameLog(
             player_id=player_id,
-            season=SEASON_NBA_API,
+            season=stats_season(),
             season_type_all_star=SEASON_TYPE,
         )
         df = gamelog.get_data_frames()[0]

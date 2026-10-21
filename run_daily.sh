@@ -18,6 +18,7 @@ set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 PYTHON="${PYTHON:-python3}"
+MODEL_ARGS="${MODEL_ARGS:-}"      # e.g. MODEL_ARGS=--fast to skip playtype analysis
 STAMP="$(date -u +'%Y-%m-%d %H:%M UTC')"
 echo "── run_daily.sh $STAMP ──"
 
@@ -31,7 +32,7 @@ git pull --rebase --autostash --quiet origin main \
 
 # ── 2-4. Produce the data (each step is independent; failures are logged).
 "$PYTHON" grade.py        || echo "grade.py: nothing to grade / failed"
-"$PYTHON" main.py --fast  || echo "main.py: no games today / stats.nba.com unreachable / failed"
+"$PYTHON" main.py ${MODEL_ARGS:-}  || echo "main.py: no games today / stats.nba.com unreachable / failed"
 "$PYTHON" export_csv.py   || echo "export_csv.py: failed"
 
 # ── 5. Commit and push. Local data is regenerated from source every run, so

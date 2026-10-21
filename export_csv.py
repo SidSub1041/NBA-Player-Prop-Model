@@ -99,10 +99,12 @@ def _flatten_prop(prop, date):
     zones = prop.get("zone_details") or []
     plays = prop.get("playtype_details") or []
     details = " | ".join(s.strip() for s in (zones + plays) if s and s.strip())
-    # Combo props carry a single "Combo: ..." summary line in zone_details;
-    # it is not a scored condition, so keep it out of the condition counts.
-    n_zones = sum(1 for s in zones if s and "Combo:" not in s)
-    n_plays = sum(1 for s in plays if s and "Combo:" not in s)
+    # Only scored conditions count: detail lines carry a ✓/✗ marker. Combo
+    # summary lines ("Combo: ...") and "No data ... (not counted)" rows don't.
+    def _scored(lines):
+        return sum(1 for s in lines if s and ("✓" in s or "✗" in s))
+    n_zones = _scored(zones)
+    n_plays = _scored(plays)
     return {
         "date": date,
         "player_name": prop.get("player_name"),

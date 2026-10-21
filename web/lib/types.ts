@@ -48,6 +48,8 @@ export interface DayResult {
 export interface PropsData {
   date: string;
   season?: string;
+  stats_season?: string;
+  stats_season_reason?: string;
   run_at: string;
   run_at_iso: string;
   candidates_analyzed: number;

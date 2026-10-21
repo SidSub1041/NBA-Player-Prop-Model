@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from tabulate import tabulate
 
 from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD, season_for_date
+from src.season import stats_season, stats_season_reason
 
 logger = logging.getLogger(__name__)
 
@@ -225,6 +226,8 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
     payload = {
         "date": date,
         "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
+        "stats_season": stats_season(),
+        "stats_season_reason": stats_season_reason(),
         "run_at": _eastern_label(now_utc),
         "run_at_iso": now_utc.isoformat(timespec="seconds"),
         "candidates_analyzed": len(individual),

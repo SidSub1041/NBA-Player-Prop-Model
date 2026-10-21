@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 
 from src.config import FANTASYPROS_HEADERS
 
+from src.season import stats_season
+
 logger = logging.getLogger(__name__)
 
 DVP_URL = "https://www.fantasypros.com/daily-fantasy/nba/fanduel-defense-vs-position.php"
@@ -180,7 +182,7 @@ def _fallback_dvp_data(teams_playing: set[str]) -> list[dict]:
     """
     import time
     from nba_api.stats.endpoints import leaguedashteamstats
-    from src.config import SEASON_NBA_API, SEASON_TYPE
+    from src.config import SEASON_TYPE
 
     logger.info("Using NBA API fallback for DvP data...")
     matchups = []
@@ -188,7 +190,7 @@ def _fallback_dvp_data(teams_playing: set[str]) -> list[dict]:
     try:
         time.sleep(0.6)
         stats = leaguedashteamstats.LeagueDashTeamStats(
-            season=SEASON_NBA_API,
+            season=stats_season(),
             season_type_all_star=SEASON_TYPE,
             measure_type_detailed_defense="Opponent",
         )

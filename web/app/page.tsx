@@ -751,6 +751,11 @@ export default function Home() {
           BOARD <span className="text-[var(--text-muted)]">{fmtLongDate(data.date)}</span> · SEASON{" "}
           <span className="text-[var(--text-muted)]">{boardSeason}</span>
         </span>
+        {data.stats_season && data.stats_season !== boardSeason && (
+          <span title={data.stats_season_reason ?? ""}>
+            STATS <span className="text-[var(--text-muted)]">{data.stats_season}</span> · EARLY SEASON
+          </span>
+        )}
         <span>
           GENERATED <span className="text-[var(--text-muted)]">{runTime}</span>
         </span>

@@ -53,6 +53,8 @@ Safety net either way: if `stats.nba.com` stops answering mid-run, the model abo
 
 The season is derived from the run date (October starts a new season), so the model rolls over on its own each fall — no constants to bump. Override for backfills or tests with `NBA_SEASON=2025-26 python main.py`. The site splits results by season and shows the previous season's record in a side panel.
 
+**Early season:** until every team has played 5 games (`NBA_MIN_GAMES`), the new season has no usable statistics, so the model builds its boards from the previous season's stats and says so in the site's verification strip (`STATS 2025-26 · EARLY SEASON`). Rosters always come from the current season. Force a statistics season with `NBA_STATS_SEASON=2025-26`.
+
 ---
 
 ## Setup
@@ -81,7 +83,7 @@ Uses macOS's native LaunchAgent system (survives reboots, no terminal needed):
 chmod +x setup_mac.sh
 ./setup_mac.sh
 ```
-This installs everything, verifies imports, and registers a LaunchAgent that runs at **9:00 AM daily**. To trigger manually anytime:
+This installs everything, verifies imports, and registers a LaunchAgent that runs `run_daily.sh` at **9:15 AM, 12 PM, 3 PM and 6 PM daily** (set `MODEL_ARGS=--fast` to skip playtype analysis). To trigger manually anytime:
 ```bash
 launchctl start com.nba.prop.model
 ```
@@ -134,12 +136,17 @@ Reports are saved to `logs/props_YYYY-MM-DD.txt` and printed to stdout. Example:
 ```
 NBA-Player-Prop-Model/
 ├── main.py              # Main pipeline orchestrator
+├── grade.py             # Grades yesterday's picks against box scores
+├── export_csv.py        # Flattens JSON output to CSV for BI dashboards
+├── run_daily.sh         # Game-day runner: grade → model → export → push
 ├── scheduler.py         # Python-based daily scheduler
 ├── setup_mac.sh         # One-command Mac setup + LaunchAgent installer
 ├── setup_cron.sh        # Linux cron installer
 ├── requirements.txt
 ├── src/
-│   ├── config.py        # Constants and thresholds
+│   ├── config.py        # Constants, thresholds, season derivation
+│   ├── season.py        # Which season's stats to use (early-season fallback)
+│   ├── nba_http.py      # Timeouts, retries, proxy, circuit breaker for the NBA API
 │   ├── games_today.py   # Today's NBA schedule (NBA API)
 │   ├── dvp_scraper.py   # FantasyPros DvP scraper
 │   ├── depth_charts.py  # ESPN depth chart scraper

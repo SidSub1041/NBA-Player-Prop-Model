@@ -58,6 +58,7 @@ from src.depth_charts import get_depth_charts, find_player_for_matchup
 from src.scoring_engine import evaluate_prop, build_combo_props
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
+from src.season import stats_season
 from src.underdog import fetch_underdog_lines, get_line_for_prop
 from src.adaptive import compute_adaptive_weights
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player
@@ -88,6 +89,9 @@ def run(date: str | None = None, fast: bool = False):
     if date is None:
         date = datetime.today().strftime("%Y-%m-%d")
 
+    from src.season import reset as reset_stats_season
+    reset_stats_season()
+
     logger.info(f"{'='*60}")
     logger.info(f"NBA Player Prop Model starting for {date}")
     logger.info(f"{'='*60}")
@@ -116,7 +120,7 @@ def run(date: str | None = None, fast: bool = False):
 
     # ── Step 3: Depth charts ─────────────────────────────────────────
     logger.info("Step 3: Fetching depth charts...")
-    depth_charts = get_depth_charts()
+    depth_charts = get_depth_charts(teams_playing)
 
     # ── Step 3b: Fetch player minutes for filtering ──────────────────
     logger.info("Step 3b: Fetching player minutes (MPG filter)...")
@@ -124,10 +128,10 @@ def run(date: str | None = None, fast: bool = False):
     player_stats_df = None
     try:
         from nba_api.stats.endpoints import leaguedashplayerstats
-        from src.config import SEASON_NBA_API, SEASON_TYPE
+        from src.config import SEASON_TYPE
         import time as _t; _t.sleep(0.6)
         _stats = leaguedashplayerstats.LeagueDashPlayerStats(
-            season=SEASON_NBA_API, season_type_all_star=SEASON_TYPE,
+            season=stats_season(), season_type_all_star=SEASON_TYPE,
             per_mode_detailed="PerGame"
         )
         player_stats_df = _stats.get_data_frames()[0]

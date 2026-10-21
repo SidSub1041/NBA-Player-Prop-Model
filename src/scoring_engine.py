@@ -190,14 +190,18 @@ def evaluate_points_prop(
     else:
         logger.warning(f"No shooting zone data for {player_name}")
 
-    # Step 3-4: Playtypes
-    player_playtypes = get_player_playtypes(player_name)
-    if player_playtypes:
-        prop.playtype_score = score_playtypes(
-            player_playtypes, team_playtype_rankings, opponent, edge
-        )
+    # Step 3-4: Playtypes (skipped in --fast mode, when no team rankings were
+    # fetched: a playtype with nothing to rank against can never be met)
+    if not team_playtype_rankings:
+        logger.info(f"  Playtype analysis skipped for {player_name} (no team rankings / fast mode)")
     else:
-        logger.warning(f"No playtype data for {player_name}")
+        player_playtypes = get_player_playtypes(player_name)
+        if player_playtypes:
+            prop.playtype_score = score_playtypes(
+                player_playtypes, team_playtype_rankings, opponent, edge
+            )
+        else:
+            logger.warning(f"No playtype data for {player_name}")
 
     # Step 5: Total score
     prop.total_points = prop.zone_score["points"] + prop.playtype_score["points"]

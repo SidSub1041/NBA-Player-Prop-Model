@@ -3,10 +3,16 @@ Fetch player and team shooting zone data from NBA.com Stats API.
 
 Player shooting zones: identifies zones where a player takes >= 20% of their FGA.
 Team shooting zones (defense): ranks teams by FG% allowed in each zone.
+
+The ShotLocations endpoints return a two-level header (a zone row over a
+FGM/FGA/FG_PCT row). nba_api exposes that as a pandas MultiIndex, which we
+flatten to "<Zone>_FGA"-style column names before reading.
 """
 
 import logging
 import time
+from datetime import date
+
 import pandas as pd
 from nba_api.stats.endpoints import (
     leaguedashplayershotlocations,
@@ -14,11 +20,69 @@ from nba_api.stats.endpoints import (
 )
 
 from src.config import (
-    SEASON_NBA_API, SEASON_TYPE, SHOOTING_ZONES,
-    FGA_ZONE_THRESHOLD, TOP_BOTTOM_RANK, POSITION_MAP, NBA_TEAM_IDS,
+    SEASON_TYPE, SHOOTING_ZONES, FGA_ZONE_THRESHOLD, TOP_BOTTOM_RANK, NBA_TEAM_IDS,
 )
+from src.season import stats_season
 
 logger = logging.getLogger(__name__)
+
+# Backcourt heaves are noise for this analysis
+SCORING_ZONES = [z for z in SHOOTING_ZONES if z != "Backcourt"]
+
+
+def _flatten_shot_frame(endpoint) -> pd.DataFrame:
+    """DataFrame with single-level columns like 'Restricted Area_FGA'."""
+    df = endpoint.get_data_frames()[0]
+    if isinstance(df.columns, pd.MultiIndex):
+        flat = []
+        for col in df.columns:
+            parts = [str(p) for p in col if p not in (None, "") and not str(p).startswith("Unnamed")]
+            flat.append("_".join(parts))
+        df = df.copy()
+        df.columns = flat
+    return df
+
+
+def _zone_cols(df: pd.DataFrame, zone: str) -> tuple[str, str, str] | None:
+    fga, fgm, pct = f"{zone}_FGA", f"{zone}_FGM", f"{zone}_FG_PCT"
+    if fga in df.columns and pct in df.columns:
+        return fga, fgm, pct
+    return None
+
+
+_player_frame_cache: dict[tuple, pd.DataFrame] = {}
+
+
+def _num(x) -> float:
+    """float() that treats None/NaN/blank as 0."""
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return 0.0
+    return 0.0 if v != v else v  # NaN check
+
+
+def _league_player_shot_frame() -> pd.DataFrame:
+    """
+    League-wide player shot-location frame for the stats season, fetched once
+    per run (no team filter: during the early-season window the stats come
+    from last season, so a filter on this season's team would drop every
+    player who changed teams).
+    """
+    key = (stats_season(), date.today().isoformat())
+    if key in _player_frame_cache:
+        return _player_frame_cache[key]
+    time.sleep(0.6)
+    shot_data = leaguedashplayershotlocations.LeagueDashPlayerShotLocations(
+        season=stats_season(),
+        season_type_all_star=SEASON_TYPE,
+        distance_range="By Zone",
+    )
+    df = _flatten_shot_frame(shot_data)
+    _player_frame_cache.clear()
+    _player_frame_cache[key] = df
+    logger.info(f"Loaded shot locations for {len(df)} players ({key[0]})")
+    return df
 
 
 def get_player_shooting_zones(player_name: str, team_abbrev: str) -> list[dict]:
@@ -29,150 +93,58 @@ def get_player_shooting_zones(player_name: str, team_abbrev: str) -> list[dict]:
     [{"zone": "Restricted Area", "fga_pct": 0.35, "fga": 150, "fgm": 90, "fg_pct": 0.60}, ...]
     """
     logger.info(f"Fetching shooting zones for {player_name} ({team_abbrev})")
-    time.sleep(0.6)
-
     try:
-        team_id = NBA_TEAM_IDS.get(team_abbrev, 0)
-        shot_data = leaguedashplayershotlocations.LeagueDashPlayerShotLocations(
-            season=SEASON_NBA_API,
-            season_type_all_star=SEASON_TYPE,
-            distance_range="By Zone",
-            team_id_nullable=team_id,
-        )
-
-        # This endpoint returns a complex multi-header structure
-        result_sets = shot_data.get_normalized_dict()
-
-        # Parse the shot locations data
-        player_zones = _parse_player_shot_locations(result_sets, player_name)
-        return player_zones
-
+        df = _league_player_shot_frame()
+        return _parse_player_shot_locations(df, player_name)
     except Exception as e:
         logger.error(f"Failed to fetch player shooting zones: {e}")
         return []
 
 
-def _parse_player_shot_locations(result_sets: dict, player_name: str) -> list[dict]:
-    """
-    Parse the complex shot locations response to extract zone data for a player.
-    The endpoint returns multi-level headers with zone-specific FGA/FGM/FG% columns.
-    """
-    zones = []
+def _parse_player_shot_locations(df: pd.DataFrame, player_name: str) -> list[dict]:
+    """Extract a player's primary zones from the flattened shot-location frame."""
+    zones: list[dict] = []
+    if df.empty or "PLAYER_NAME" not in df.columns:
+        return zones
 
-    # The shot locations endpoint has a specific structure
-    # Headers contain zone names, and each row is a player
-    try:
-        # Get the data frames directly
-        headers_key = list(result_sets.keys())[0] if result_sets else None
-        if not headers_key:
-            return zones
+    names = df["PLAYER_NAME"].astype(str)
+    exact = df[names.str.strip().str.lower() == player_name.strip().lower()]
+    match = exact if not exact.empty else df[names.apply(lambda n: _names_match(n, player_name))]
+    if match.empty:
+        logger.warning(f"Player {player_name} not found in shot locations data")
+        return zones
+    row = match.iloc[0]
 
-        rows = result_sets[headers_key]
-        if not rows:
-            return zones
-
-        # Find the player row (case-insensitive partial match)
-        player_row = None
-        for row in rows:
-            name = row.get("PLAYER_NAME", row.get("Player", ""))
-            if _names_match(name, player_name):
-                player_row = row
-                break
-
-        if not player_row:
-            logger.warning(f"Player {player_name} not found in shot locations data")
-            return zones
-
-        # Extract zone data from the row
-        # Column naming pattern: {ZONE}_FGA, {ZONE}_FGM, {ZONE}_FG_PCT
-        total_fga = 0
-        zone_data = {}
-
-        zone_key_patterns = {
-            "Restricted Area": ["RESTRICTED_AREA", "RA", "Restricted Area"],
-            "In The Paint (Non-RA)": ["IN_THE_PAINT", "ITP", "In The Paint"],
-            "Mid-Range": ["MID_RANGE", "MR", "Mid-Range", "Mid Range"],
-            "Left Corner 3": ["LEFT_CORNER_3", "LC3", "Left Corner 3"],
-            "Right Corner 3": ["RIGHT_CORNER_3", "RC3", "Right Corner 3"],
-            "Above the Break 3": ["ABOVE_THE_BREAK_3", "AB3", "Above the Break 3"],
+    zone_data = {}
+    total_fga = 0.0
+    for zone in SCORING_ZONES:
+        cols = _zone_cols(df, zone)
+        if not cols:
+            continue
+        fga_col, fgm_col, pct_col = cols
+        fga = _num(row[fga_col])
+        total_fga += fga
+        zone_data[zone] = {
+            "fga": fga,
+            "fgm": _num(row[fgm_col]) if fgm_col in df.columns else 0.0,
+            "fg_pct": _num(row[pct_col]),
         }
 
-        # First pass: get total FGA
-        for zone_name, patterns in zone_key_patterns.items():
-            for pattern in patterns:
-                fga_key = f"{pattern}_FGA"
-                if fga_key in player_row:
-                    fga = player_row[fga_key]
-                    total_fga += fga
-                    fgm_key = f"{pattern}_FGM"
-                    pct_key = f"{pattern}_FG_PCT"
-                    zone_data[zone_name] = {
-                        "fga": fga,
-                        "fgm": player_row.get(fgm_key, 0),
-                        "fg_pct": player_row.get(pct_key, 0.0),
-                    }
-                    break
+    if total_fga <= 0:
+        logger.warning(f"No shot attempts on record for {player_name}")
+        return zones
 
-        if total_fga == 0:
-            # Try alternative column structure (numbered columns)
-            return _parse_player_zones_alternative(player_row)
-
-        # Second pass: calculate percentages and filter
-        for zone_name, data in zone_data.items():
-            fga_pct = data["fga"] / total_fga if total_fga > 0 else 0
-            if fga_pct >= FGA_ZONE_THRESHOLD:
-                zones.append({
-                    "zone": zone_name,
-                    "fga_pct": round(fga_pct, 3),
-                    "fga": data["fga"],
-                    "fgm": data["fgm"],
-                    "fg_pct": round(data["fg_pct"], 3),
-                })
-                logger.info(
-                    f"  Primary zone: {zone_name} - "
-                    f"{fga_pct:.1%} FGA, {data['fg_pct']:.1%} FG%"
-                )
-
-    except Exception as e:
-        logger.error(f"Error parsing shot locations: {e}")
-
-    return zones
-
-
-def _parse_player_zones_alternative(player_row: dict) -> list[dict]:
-    """
-    Alternative parser for when column names don't match expected patterns.
-    Maps numbered/positional columns to zones.
-    """
-    zones = []
-    # Try to extract any FGA/FG% columns
-    fga_cols = [k for k in player_row.keys() if "FGA" in str(k).upper()]
-    fgm_cols = [k for k in player_row.keys() if "FGM" in str(k).upper()]
-    pct_cols = [k for k in player_row.keys() if "PCT" in str(k).upper() or "FG%" in str(k).upper()]
-
-    if fga_cols:
-        total_fga = sum(player_row.get(c, 0) for c in fga_cols if isinstance(player_row.get(c, 0), (int, float)))
-
-        zone_names = list(SHOOTING_ZONES[:len(fga_cols)])
-        for i, (fga_col, zone_name) in enumerate(zip(fga_cols, zone_names)):
-            fga = player_row.get(fga_col, 0)
-            if not isinstance(fga, (int, float)):
-                continue
-            fga_pct = fga / total_fga if total_fga > 0 else 0
-
-            fg_pct = 0
-            if i < len(pct_cols):
-                fg_pct = player_row.get(pct_cols[i], 0)
-
-            if fga_pct >= FGA_ZONE_THRESHOLD:
-                zones.append({
-                    "zone": zone_name,
-                    "fga_pct": round(fga_pct, 3),
-                    "fga": fga,
-                    "fgm": player_row.get(fgm_cols[i], 0) if i < len(fgm_cols) else 0,
-                    "fg_pct": round(fg_pct, 3) if isinstance(fg_pct, (int, float)) else 0,
-                })
-
+    for zone, data in zone_data.items():
+        fga_pct = data["fga"] / total_fga
+        if fga_pct >= FGA_ZONE_THRESHOLD:
+            zones.append({
+                "zone": zone,
+                "fga_pct": round(fga_pct, 3),
+                "fga": data["fga"],
+                "fgm": data["fgm"],
+                "fg_pct": round(data["fg_pct"], 3),
+            })
+            logger.info(f"  Primary zone: {zone} - {fga_pct:.1%} FGA, {data['fg_pct']:.1%} FG%")
     return zones
 
 
@@ -194,74 +166,40 @@ def get_team_zone_rankings() -> dict[str, dict[str, dict]]:
 
     try:
         team_data = leaguedashteamshotlocations.LeagueDashTeamShotLocations(
-            season=SEASON_NBA_API,
+            season=stats_season(),
             season_type_all_star=SEASON_TYPE,
             distance_range="By Zone",
         )
-
-        result_sets = team_data.get_normalized_dict()
-        return _parse_team_zone_rankings(result_sets)
-
+        df = _flatten_shot_frame(team_data)
+        return _parse_team_zone_rankings(df)
     except Exception as e:
         logger.error(f"Failed to fetch team zone rankings: {e}")
         return {}
 
 
-def _parse_team_zone_rankings(result_sets: dict) -> dict[str, dict[str, dict]]:
-    """Parse team shot location data into per-zone rankings."""
-    rankings = {}
+def _parse_team_zone_rankings(df: pd.DataFrame) -> dict[str, dict[str, dict]]:
+    """Per-zone rankings of FG% allowed from the flattened team frame."""
+    rankings: dict[str, dict[str, dict]] = {}
+    if df.empty or "TEAM_ID" not in df.columns:
+        return rankings
     id_to_abbrev = {v: k for k, v in NBA_TEAM_IDS.items()}
 
-    try:
-        headers_key = list(result_sets.keys())[0] if result_sets else None
-        if not headers_key:
-            return rankings
-
-        rows = result_sets[headers_key]
-        if not rows:
-            return rankings
-
-        zone_key_patterns = {
-            "Restricted Area": ["RESTRICTED_AREA", "RA"],
-            "In The Paint (Non-RA)": ["IN_THE_PAINT", "ITP"],
-            "Mid-Range": ["MID_RANGE", "MR"],
-            "Left Corner 3": ["LEFT_CORNER_3", "LC3"],
-            "Right Corner 3": ["RIGHT_CORNER_3", "RC3"],
-            "Above the Break 3": ["ABOVE_THE_BREAK_3", "AB3"],
+    for zone in SCORING_ZONES:
+        cols = _zone_cols(df, zone)
+        if not cols:
+            continue
+        pct_col = cols[2]
+        team_pcts = []
+        for _, row in df.iterrows():
+            abbrev = id_to_abbrev.get(int(row["TEAM_ID"]), "")
+            pct = row[pct_col]
+            if abbrev and pd.notna(pct):
+                team_pcts.append((abbrev, float(pct)))
+        team_pcts.sort(key=lambda x: x[1], reverse=True)
+        rankings[zone] = {
+            abbrev: {"fg_pct": round(pct, 3), "rank": rank}
+            for rank, (abbrev, pct) in enumerate(team_pcts, start=1)
         }
-
-        for zone_name, patterns in zone_key_patterns.items():
-            pct_key = None
-            for pattern in patterns:
-                candidate = f"{pattern}_FG_PCT"
-                if rows and candidate in rows[0]:
-                    pct_key = candidate
-                    break
-
-            if not pct_key:
-                continue
-
-            # Build list of (team_abbrev, fg_pct) and sort descending
-            team_pcts = []
-            for row in rows:
-                team_id = row.get("TEAM_ID", 0)
-                team_abbrev = id_to_abbrev.get(team_id, "")
-                fg_pct = row.get(pct_key, 0)
-                if team_abbrev and isinstance(fg_pct, (int, float)):
-                    team_pcts.append((team_abbrev, fg_pct))
-
-            # Sort descending (rank 1 = highest FG% allowed = worst defense)
-            team_pcts.sort(key=lambda x: x[1], reverse=True)
-
-            zone_rankings = {}
-            for rank, (abbrev, pct) in enumerate(team_pcts, start=1):
-                zone_rankings[abbrev] = {"fg_pct": round(pct, 3), "rank": rank}
-
-            rankings[zone_name] = zone_rankings
-
-    except Exception as e:
-        logger.error(f"Error parsing team zone rankings: {e}")
-
     return rankings
 
 
@@ -280,7 +218,7 @@ def score_shooting_zones(
     Returns: {"points": int, "total": int, "details": list[str]}
     """
     points = 0
-    total = len(player_zones)
+    total = 0  # only zones the opponent can actually be ranked in count
     details = []
 
     for zone_info in player_zones:
@@ -289,8 +227,9 @@ def score_shooting_zones(
         opp_data = zone_data.get(opponent_abbrev)
 
         if not opp_data:
-            details.append(f"  {zone_name}: No data for {opponent_abbrev}")
+            details.append(f"  {zone_name}: No data for {opponent_abbrev} (not counted)")
             continue
+        total += 1
 
         rank = opp_data["rank"]
         fg_pct = opp_data["fg_pct"]

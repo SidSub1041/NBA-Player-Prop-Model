@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 
 from src.config import ESPN_HEADERS, NBA_TEAM_IDS, TEAM_ABBREVS
 
+from src.season import stats_season
+
 logger = logging.getLogger(__name__)
 
 ESPN_DEPTH_URL = "https://www.espn.com/nba/depth"
@@ -22,7 +24,7 @@ ESPN_TEAM_MAP = {
 }
 
 
-def get_depth_charts() -> dict[str, dict[str, dict]]:
+def get_depth_charts(teams: set[str] | None = None) -> dict[str, dict[str, dict]]:
     """
     Returns nested dict: {team_abbrev: {position: {"name": str, "player_id": int|None}}}
     Positions: PG, SG, SF, PF, C
@@ -31,9 +33,13 @@ def get_depth_charts() -> dict[str, dict[str, dict]]:
         {"BOS": {"PG": {"name": "Jrue Holiday"}, "SG": {"name": "Derrick White"}, ...}}
     """
     charts = _scrape_espn_depth_charts()
-    if not charts:
-        logger.warning("ESPN scraping failed, using NBA API fallback for depth charts")
-        charts = _fallback_nba_api_depth_charts()
+    missing = [t for t in (teams or NBA_TEAM_IDS) if t not in charts]
+    if missing:
+        logger.warning(
+            f"ESPN depth charts missing for {len(missing)} team(s); "
+            "building them from NBA rosters + minutes"
+        )
+        charts.update(_fallback_nba_api_depth_charts(set(missing)))
     return charts
 
 
@@ -48,16 +54,8 @@ def _scrape_espn_depth_charts() -> dict[str, dict[str, dict]]:
         return {}
 
     soup = BeautifulSoup(resp.text, "lxml")
-    charts = {}
-
-    # ESPN depth chart page has sections per team
-    # Each team section has a table with positions and player names
-    team_sections = soup.select("div.Table__Title, div.headline, h2")
-
-    if not team_sections:
-        # Try parsing tables directly
-        return _parse_espn_tables(soup)
-
+    charts = _parse_espn_tables(soup)
+    logger.info(f"ESPN depth charts parsed for {len(charts)} team(s)")
     return charts
 
 
@@ -103,6 +101,9 @@ def _normalize_espn_team(text: str) -> str | None:
     """Normalize ESPN team name to standard abbreviation."""
     text = text.strip()
 
+    if len(text) < 2:
+        return None
+
     # Check direct abbreviation
     upper = text.upper()
     if upper in NBA_TEAM_IDS:
@@ -110,9 +111,9 @@ def _normalize_espn_team(text: str) -> str | None:
     if upper in ESPN_TEAM_MAP:
         return ESPN_TEAM_MAP[upper]
 
-    # Check full names
+    # Check full names (whole team names only — short fragments match nothing)
     for full_name, abbrev in TEAM_ABBREVS.items():
-        if text.lower() in full_name.lower() or full_name.lower() in text.lower():
+        if len(text) >= 4 and (text.lower() in full_name.lower() or full_name.lower() in text.lower()):
             return abbrev
         # Check city or team name
         parts = full_name.split()
@@ -123,70 +124,90 @@ def _normalize_espn_team(text: str) -> str | None:
     return None
 
 
+_STATUS_CODES = r"(?:OUT|GTD|DTD|IL|IR|INJ|SUSP|TBD|Q|O|P|D)"
+
+
 def _clean_player_name(name: str) -> str:
-    """Clean up player name string."""
-    # Remove suffixes like (IL), (OUT), injury designations
+    """
+    Strip ESPN injury/status decorations ("(IL)", trailing "OUT"/"GTD") while
+    leaving real name parts alone — generational suffixes like "III", "II",
+    "IV" or "Jr." must survive, since every other data source keys on them.
+    """
     import re
-    name = re.sub(r"\s*\([^)]*\)\s*", "", name)
-    name = re.sub(r"\s*[A-Z]{2,3}$", "", name)  # Remove trailing status codes
+    name = re.sub(r"\s*\([^)]*\)\s*", " ", name)
+    name = re.sub(rf"\s+{_STATUS_CODES}$", "", name)
     return name.strip()
 
 
-def _fallback_nba_api_depth_charts() -> dict[str, dict[str, dict]]:
+def _fallback_nba_api_depth_charts(teams: set[str]) -> dict[str, dict[str, dict]]:
     """
-    Use NBA API to build approximate depth charts from common team rosters
-    and player stats (starters by minutes played per position).
+    Build approximate depth charts from NBA data: the CURRENT season's roster
+    (so offseason trades and rookies are reflected) with each roster slot's
+    listed position, ranked by last available minutes per game. The best
+    available player at each of PG/SG/SF/PF/C is treated as the starter.
     """
     from nba_api.stats.endpoints import commonteamroster, leaguedashplayerstats
-    from src.config import SEASON_NBA_API, SEASON_TYPE
+    from src.config import SEASON, SEASON_TYPE
 
-    logger.info("Building depth charts from NBA API (minutes-based)...")
-    charts = {}
+    logger.info(f"Building depth charts from NBA rosters + minutes for {sorted(teams)}...")
+    charts: dict[str, dict[str, dict]] = {}
 
+    mpg: dict[str, float] = {}
     try:
         time.sleep(0.6)
-        player_stats = leaguedashplayerstats.LeagueDashPlayerStats(
-            season=SEASON_NBA_API,
+        df = leaguedashplayerstats.LeagueDashPlayerStats(
+            season=stats_season(),
             season_type_all_star=SEASON_TYPE,
             per_mode_detailed="PerGame",
-        )
-        df = player_stats.get_data_frames()[0]
-
-        if df.empty:
-            return charts
-
-        id_to_abbrev = {v: k for k, v in NBA_TEAM_IDS.items()}
-
-        # Group by team
-        df["TEAM_ABBREV"] = df["TEAM_ID"].map(id_to_abbrev)
-
-        for team_abbrev in NBA_TEAM_IDS:
-            team_df = df[df["TEAM_ABBREV"] == team_abbrev].copy()
-            if team_df.empty:
-                continue
-
-            team_df = team_df.sort_values("MIN", ascending=False)
-            positions = {}
-
-            for _, row in team_df.iterrows():
-                player_name = row["PLAYER_NAME"]
-                # NBA API doesn't always have clean position data,
-                # but we can use what's available
-                pos_raw = str(row.get("PLAYER_POSITION", ""))
-
-                assigned_positions = _map_nba_position(pos_raw)
-                for pos in assigned_positions:
-                    if pos not in positions:
-                        positions[pos] = {"name": player_name}
-
-                if len(positions) >= 5:
-                    break
-
-            if positions:
-                charts[team_abbrev] = positions
-
+        ).get_data_frames()[0]
+        for _, row in df.iterrows():
+            mpg[str(row["PLAYER_NAME"]).lower()] = float(row["MIN"] or 0)
     except Exception as e:
-        logger.error(f"NBA API depth chart fallback failed: {e}")
+        logger.warning(f"Could not load minutes per game ({e}); ranking rosters by listing order")
+
+    for team in sorted(teams):
+        team_id = NBA_TEAM_IDS.get(team)
+        if not team_id:
+            continue
+        try:
+            time.sleep(0.6)
+            roster = commonteamroster.CommonTeamRoster(
+                team_id=team_id, season=SEASON
+            ).common_team_roster.get_data_frame()
+        except Exception as e:
+            logger.warning(f"Roster fetch failed for {team}: {e}")
+            continue
+        if roster.empty:
+            continue
+
+        players = []
+        for order, (_, row) in enumerate(roster.iterrows()):
+            name = str(row.get("PLAYER", "")).strip()
+            if not name:
+                continue
+            slots = _map_nba_position(str(row.get("POSITION", "")))
+            players.append({
+                "name": name,
+                "slots": slots,
+                "mpg": mpg.get(name.lower(), 0.0),
+                "order": order,
+            })
+        # Most minutes first; unknown minutes (rookies, new arrivals) last.
+        # Each player takes the first FREE slot in his own position preference
+        # (a "C-F" big goes to C before PF), so stars land where they play.
+        players.sort(key=lambda p: (-p["mpg"], p["order"]))
+
+        positions: dict[str, dict] = {}
+        for p in players:
+            if len(positions) == 5:
+                break
+            for slot in p["slots"]:
+                if slot not in positions:
+                    positions[slot] = {"name": p["name"]}  # raw NBA name: other sources key on it
+                    break
+        if positions:
+            charts[team] = positions
+            logger.info(f"  {team}: " + ", ".join(f"{k}={v['name']}" for k, v in positions.items()))
 
     return charts
 
@@ -209,8 +230,11 @@ def _map_nba_position(pos_raw: str) -> list[str]:
         "GUARD": ["PG", "SG"],
         "FORWARD": ["SF", "PF"],
         "CENTER": ["C"],
+        "G-C": ["SG", "C"],
+        "C-G": ["C", "SG"],
     }
-    return mapping.get(pos_raw, ["SF"])  # Default to SF if unknown
+    # Unknown/blank position: eligible for any slot (ranked by minutes)
+    return mapping.get(pos_raw, ["PG", "SG", "SF", "PF", "C"])
 
 
 def find_player_for_matchup(

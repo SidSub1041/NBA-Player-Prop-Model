@@ -11,9 +11,10 @@ import pandas as pd
 from nba_api.stats.endpoints import synergyplaytypes
 
 from src.config import (
-    SEASON_NBA_API, PLAYTYPE_CATEGORIES,
+    PLAYTYPE_CATEGORIES,
     PLAYTYPE_FREQ_THRESHOLD, TOP_BOTTOM_RANK, NBA_TEAM_IDS,
 )
+from src.season import stats_season
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +32,8 @@ def get_player_playtypes(player_name: str) -> list[dict]:
     for playtype in PLAYTYPE_CATEGORIES:
         time.sleep(0.6)
         try:
-            data = synergyplaytypes.SynergyPlaytypes(
-                season=SEASON_NBA_API,
+            data = synergyplaytypes.SynergyPlayTypes(
+                season=stats_season(),
                 play_type_nullable=playtype,
                 player_or_team_abbreviation="P",
                 type_grouping_nullable="offensive",
@@ -60,11 +61,15 @@ def get_player_playtypes(player_name: str) -> list[dict]:
                     ppp = row.get("PPP", row.get("POINTS_PER_POSSESSION", 0))
                     poss = row.get("POSS", row.get("GP", 0))
 
+                    try:
+                        poss_val = round(float(poss), 1)
+                    except (TypeError, ValueError):
+                        poss_val = 0.0
                     all_playtypes.append({
                         "playtype": playtype,
                         "freq_pct": round(float(freq), 3),
                         "ppp": round(float(ppp), 3),
-                        "poss": int(poss),
+                        "poss": poss_val,  # per-game possessions (PerGame mode)
                     })
                     break
 
@@ -99,8 +104,8 @@ def get_team_playtype_defense_rankings() -> dict[str, dict[str, dict]]:
     for playtype in PLAYTYPE_CATEGORIES:
         time.sleep(0.6)
         try:
-            data = synergyplaytypes.SynergyPlaytypes(
-                season=SEASON_NBA_API,
+            data = synergyplaytypes.SynergyPlayTypes(
+                season=stats_season(),
                 play_type_nullable=playtype,
                 player_or_team_abbreviation="T",
                 type_grouping_nullable="defensive",
@@ -157,7 +162,7 @@ def score_playtypes(
     Returns: {"points": int, "total": int, "details": list[str]}
     """
     points = 0
-    total = len(player_playtypes)
+    total = 0  # only playtypes the opponent can actually be ranked in count
     details = []
 
     for pt_info in player_playtypes:
@@ -166,8 +171,9 @@ def score_playtypes(
         opp_data = pt_rankings.get(opponent_abbrev)
 
         if not opp_data:
-            details.append(f"  {playtype}: No data for {opponent_abbrev}")
+            details.append(f"  {playtype}: No data for {opponent_abbrev} (not counted)")
             continue
+        total += 1
 
         rank = opp_data["rank"]
         ppp = opp_data["ppp"]
