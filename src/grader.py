@@ -199,7 +199,9 @@ def grade_picks(date: str) -> dict:
         name = pick["player_name"]
         stat = pick["stat"]
         edge = pick["edge"]
-        line = pick.get("ud_line")
+        # The line the pick was made against: sportsbooks first, Underdog backup.
+        # Boards from before Oct 22, 2026 only carry Underdog's line.
+        line = pick.get("line") if "line" in pick else pick.get("ud_line")
 
         name_lower = name.lower()
         actual = (
@@ -209,7 +211,10 @@ def grade_picks(date: str) -> dict:
         )
 
         # Determine which odds apply to this pick's edge
-        pick_odds = pick.get("ud_over_odds") if edge == "over" else pick.get("ud_under_odds")
+        if "line" in pick:
+            pick_odds = pick.get("over_odds") if edge == "over" else pick.get("under_odds")
+        else:
+            pick_odds = pick.get("ud_over_odds") if edge == "over" else pick.get("ud_under_odds")
 
         result_entry = {
             **pick,

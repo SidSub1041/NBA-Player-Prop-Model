@@ -1,20 +1,29 @@
 """
-Sportsbook ("Vegas") odds for the props on the board, from The Odds API
-(https://the-odds-api.com, v4). Display only: picks are still graded against
-Underdog's line, but the board shows what the books are pricing.
+Sportsbook ("Vegas") lines and prices from The Odds API (https://the-odds-api.com, v4)
+— the model's primary line source. Underdog is only the backup (src/lines.py).
 
-Setup: add an ODDS_API_KEY repository secret (free key at the-odds-api.com).
-Without it this module does nothing.
+For each player prop the books hang, the model's line is the one most books
+hang (the consensus), and each side carries the best price any book offers at
+that line and which book has it.
 
-Cost (The Odds API counts "credits"): the events list is free; each event's
-player-prop odds cost (markets returned × regions). To keep usage down, only
-events with a valid or on-hold prop are requested, only for the markets those
-props need, and a run stops when the account's remaining credits fall below
-ODDS_API_MIN_REMAINING or the run has spent ODDS_API_MAX_CREDITS_PER_RUN.
+Setup: an ODDS_API_KEY repository secret. Without it (or once the plan's
+credits run out) props fall back to Underdog's line, except that book lines
+bought earlier the same day are kept until they can be re-priced.
+
+Credits: listing the slate is free; pricing a game costs (markets × regions).
+Each run prices only the markets its candidate props need, and remembers what
+it bought in logs/vegas_{date}.json, so a later run re-buys a market only when
+the stored price is older than ODDS_API_REFRESH_MINUTES (default 150) — or
+ODDS_API_NEAR_TIP_REFRESH_MINUTES (default 45) within 3 hours of tip-off, so
+the last pre-tip run catches late injury pulls and late postings. A run
+stops buying at ODDS_API_MAX_CREDITS_PER_RUN (default 100) or when the plan has
+fewer than ODDS_API_MIN_REMAINING (default 25) credits left.
 """
 
+import json
 import logging
 import os
+import statistics
 from collections import Counter, defaultdict
 from datetime import datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -29,6 +38,7 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://api.the-odds-api.com/v4/sports/basketball_nba"
 EASTERN = ZoneInfo("America/New_York")
 TIMEOUT = 20
+LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 
 # Internal stat -> The Odds API player-prop market key
 MARKETS = {
@@ -86,11 +96,20 @@ def _remaining(headers) -> int | None:
         return None
 
 
+def _now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _parse_ts(value) -> datetime | None:
+    try:
+        ts = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return ts if ts.tzinfo else ts.replace(tzinfo=timezone.utc)
+
+
 def fetch_events(date: str, api_key: str) -> tuple[list[dict], int | None]:
-    """
-    NBA events tipping off on `date` (Eastern) and the plan's remaining credits.
-    The events endpoint costs no credits.
-    """
+    """NBA events tipping off on `date` (Eastern) and the plan's remaining credits. Free."""
     day = datetime.strptime(date, "%Y-%m-%d").date()
     start = datetime.combine(day, time(0, 0), EASTERN).astimezone(timezone.utc)
     end = start + timedelta(days=1)
@@ -106,41 +125,13 @@ def fetch_events(date: str, api_key: str) -> tuple[list[dict], int | None]:
 
 def _started(event: dict) -> bool:
     """Has this game tipped? (Live prices are in-game, not the pre-game market.)"""
-    try:
-        tip = datetime.fromisoformat(str(event.get("commence_time")).replace("Z", "+00:00"))
-    except ValueError:
-        return False
-    return tip <= datetime.now(timezone.utc)
-
-
-def load_cached_vegas(date: str, logs_dir: str | None = None) -> dict:
-    """Vegas prices recorded by an earlier run today: {(norm_name, stat): vegas dict}."""
-    import json
-
-    logs_dir = logs_dir or os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
-    path = os.path.join(logs_dir, f"props_{date}.json")
-    try:
-        with open(path, encoding="utf-8") as f:
-            props = json.load(f).get("all_props", [])
-    except (OSError, ValueError):
-        return {}
-    cached = {}
-    for p in props:
-        if p.get("vegas_line") is None:
-            continue
-        cached[(norm_name(p["player_name"]), p["stat"])] = {
-            "line": p.get("vegas_line"),
-            "over_odds": p.get("vegas_over_odds"),
-            "under_odds": p.get("vegas_under_odds"),
-            "book": p.get("vegas_book"),
-            "books": p.get("vegas_books"),
-        }
-    return cached
+    tip = _parse_ts(event.get("commence_time"))
+    return bool(tip and tip <= _now())
 
 
 def parse_event_odds(data: dict) -> dict:
-    """Event odds payload -> {(norm_name, stat): {(book, point): {"Over": price, "Under": price}}}."""
-    offers: dict = defaultdict(lambda: defaultdict(dict))
+    """Event odds payload -> {(norm_name, stat): {"player": name, "offers": {(book, point): {"Over": p, "Under": p}}}}."""
+    found: dict = {}
     for book in (data or {}).get("bookmakers", []) or []:
         title = book.get("title") or book.get("key") or "?"
         for market in book.get("markets", []) or []:
@@ -155,128 +146,215 @@ def parse_event_odds(data: dict) -> dict:
                     point = float(point)
                 except (TypeError, ValueError):
                     continue
-                offers[(norm_name(player), stat)][(title, point)][side] = o.get("price")
-    return offers
+                entry = found.setdefault((norm_name(player), stat), {"player": player, "offers": defaultdict(dict)})
+                entry["offers"][(title, point)][side] = o.get("price")
+    return found
 
 
-def summarize(offers: dict, ud_line: float | None, edge: str) -> dict:
+def consensus(offers: dict) -> dict:
     """
-    One prop's book offers -> what the board shows.
+    One prop's book offers -> the model's line and prices.
 
-    Uses the books' prices at Underdog's line when any book hangs it; otherwise
-    the line most books hang. Reports the best price on each side (the highest
-    American odds a bettor can get) and which book has it for the pick's side.
+    The line is the one most books hang (ties go to the line nearest the
+    median of all books' lines). Each side gets the best price any book offers
+    at that line — the highest American odds — and the book offering it.
     """
     if not offers:
         return {}
     points = Counter(point for (_, point) in offers)
-    if ud_line is not None and float(ud_line) in points:
-        line = float(ud_line)
-    else:
-        top = max(points.values())
-        tied = [p for p, n in points.items() if n == top]
-        line = min(tied, key=lambda p: (abs(p - float(ud_line)) if ud_line is not None else 0, p))
+    top = max(points.values())
+    tied = sorted(p for p, n in points.items() if n == top)
+    mid = statistics.median(point for (_, point) in offers)
+    line = min(tied, key=lambda p: (abs(p - mid), p))
     at_line = {book: sides for (book, point), sides in offers.items() if point == line}
 
     def best(side):
-        priced = [(float(s[side]), b) for b, s in at_line.items() if s.get(side) is not None]
+        priced = []
+        for book, sides in at_line.items():
+            try:
+                priced.append((float(sides[side]), book))
+            except (KeyError, TypeError, ValueError):
+                continue
         return max(priced) if priced else (None, None)
 
     over, over_book = best("Over")
     under, under_book = best("Under")
-    pick_book = under_book if str(edge).lower() == "under" else over_book
     return {
         "line": line,
         "over_odds": _fmt_american(over),
+        "over_book": over_book,
         "under_odds": _fmt_american(under),
-        "book": pick_book or over_book or under_book,
+        "under_book": under_book,
         "books": len(at_line),
     }
 
 
-def attach_vegas_odds(prop_scores: list, date: str) -> int:
-    """Fetch book odds for valid and on-hold props and attach them as prop.vegas. Returns props priced."""
-    api_key = os.environ.get("ODDS_API_KEY", "").strip()
-    if not api_key:
-        logger.info("  Vegas odds off (no ODDS_API_KEY secret)")
-        return 0
-    wanted = [p for p in prop_scores if (p.is_valid or getattr(p, "on_hold", False)) and p.stat in MARKETS]
-    if not wanted:
-        return 0
+def summarize(offers: dict, ud_line=None, edge: str = "over") -> dict:
+    """Back-compatible summary used by probe_vegas.py: consensus plus the pick side's book."""
+    c = consensus(offers)
+    if c:
+        c["book"] = c["under_book"] if str(edge).lower() == "under" else c["over_book"]
+    return c
 
-    min_remaining = _env_int("ODDS_API_MIN_REMAINING", 25)
-    max_per_run = _env_int("ODDS_API_MAX_CREDITS_PER_RUN", 60)
-    regions = os.environ.get("ODDS_API_REGIONS", "us")
-    n_regions = len([r for r in regions.split(",") if r.strip()]) or 1
 
-    # Last pre-game prices from earlier runs. They are reused only for games
-    # this run could not price (tipped, skipped to save credits, or a failed
-    # request). A pre-tip game that was priced but no longer lists a player's
-    # market gets no Vegas price: the books pulled it.
-    cached = load_cached_vegas(date)
-    keep_teams: set = set()
-    fetch_failed = False
+class VegasLines:
+    """
+    The day's sportsbook lines: what earlier runs bought (logs/vegas_{date}.json)
+    plus whatever this run buys. One instance per model run.
+    """
 
-    try:
-        events, remaining = fetch_events(date, api_key)
-    except Exception as e:
-        logger.warning(f"  Vegas odds unavailable ({type(e).__name__}: {e}); keeping earlier prices")
-        events, remaining, fetch_failed = [], None, True
-
-    offers: dict = {}
-    spent = 0
-    stopped = False
-    for ev in events:
-        teams = {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} - {None}
-        if _started(ev):
-            keep_teams |= teams   # in-game prices aren't the pre-game market
-            continue
-        markets = sorted({MARKETS[p.stat] for p in wanted if p.team in teams})
-        if not markets:
-            continue
-        cost = len(markets) * n_regions
-        if not stopped and (spent + cost > max_per_run or (remaining is not None and remaining - cost < min_remaining)):
-            logger.warning(
-                f"  Vegas odds: stopping to save credits (spent {spent} this run, {remaining} left on the plan)"
-            )
-            stopped = True
-        if stopped:
-            keep_teams |= teams
-            continue
+    def __init__(self, date: str, logs_dir: str | None = None):
+        self.date = date
+        self.path = os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json")
+        self.api_key = os.environ.get("ODDS_API_KEY", "").strip()
+        self.refresh = timedelta(minutes=_env_int("ODDS_API_REFRESH_MINUTES", 150))
+        self.near_tip_refresh = timedelta(minutes=_env_int("ODDS_API_NEAR_TIP_REFRESH_MINUTES", 45))
+        self.near_tip_hours = _env_int("ODDS_API_NEAR_TIP_HOURS", 3)
+        self.max_per_run = _env_int("ODDS_API_MAX_CREDITS_PER_RUN", 100)
+        self.min_remaining = _env_int("ODDS_API_MIN_REMAINING", 25)
+        self.regions = os.environ.get("ODDS_API_REGIONS", "us")
+        self.n_regions = len([r for r in self.regions.split(",") if r.strip()]) or 1
+        self.events: list[dict] = []
+        self.remaining: int | None = None
+        self.spent = 0
+        self.stopped = False
+        self.events_failed = False
+        self.unpriced_teams: set[str] = set()   # games this run wanted but could not price
+        self.pulled: set[tuple] = set()          # props the books took down pre-tip on a re-price
+        self.cache = {"date": date, "events": {}, "lines": {}}
         try:
-            data, headers = _get(f"/events/{ev['id']}/odds", {
-                "apiKey": api_key,
-                "regions": regions,
-                "markets": ",".join(markets),
-                "oddsFormat": "american",
-                "dateFormat": "iso",
-            })
-        except Exception as e:
-            logger.warning(f"  Vegas odds for {ev.get('away_team')} @ {ev.get('home_team')}: {type(e).__name__}: {e}")
-            keep_teams |= teams
-            if "401" in str(e) or "429" in str(e):
-                stopped = True
-            continue
-        spent += cost
-        remaining = _remaining(headers) if _remaining(headers) is not None else remaining
-        for key, by_book in parse_event_odds(data).items():
-            offers.setdefault(key, {}).update(by_book)
+            with open(self.path, encoding="utf-8") as f:
+                loaded = json.load(f)
+            if isinstance(loaded, dict) and loaded.get("date") == date:
+                self.cache["events"] = loaded.get("events") or {}
+                self.cache["lines"] = loaded.get("lines") or {}
+        except (OSError, ValueError):
+            pass
+        if self.api_key:
+            try:
+                self.events, self.remaining = fetch_events(date, self.api_key)
+            except Exception as e:
+                logger.warning(f"  Vegas: slate unavailable ({type(e).__name__}: {e}); using lines bought earlier today")
+                self.events_failed = True
+        else:
+            logger.info("  Vegas lines off (no ODDS_API_KEY secret) — Underdog lines only")
 
-    priced = 0
-    for p in wanted:
-        o = offers.get((norm_name(p.player_name), p.stat)) or offers.get((norm_name_base(p.player_name), p.stat))
-        if not o:
-            # book listings sometimes keep a suffix the model's name lacks (or vice versa)
-            base = norm_name_base(p.player_name)
-            o = next((v for (n, s), v in offers.items() if s == p.stat and norm_name_base(n) == base), None)
-        if o:
-            p.vegas = summarize(o, p.ud_line, p.edge)
-            priced += 1
-        elif (fetch_failed or p.team in keep_teams) and cached.get((norm_name(p.player_name), p.stat)):
-            p.vegas = dict(cached[(norm_name(p.player_name), p.stat)])
-            priced += 1
-    logger.info(
-        f"  Vegas odds: priced {priced}/{len(wanted)} board props from {len(events)} events "
-        f"(~{spent} credits this run{'' if remaining is None else f', {remaining} left'})"
-    )
-    return priced
+    # ── buying ────────────────────────────────────────────────────────────
+    def ensure(self, wants: dict) -> None:
+        """
+        Make sure the day's lines cover `wants` ({team: {stat, ...}}), buying
+        only markets with no price yet or one older than the refresh window.
+        """
+        if not self.api_key:
+            return
+        if self.events_failed:
+            self.unpriced_teams |= set(wants)
+            return
+        now = _now()
+        for ev in sorted(self.events, key=lambda e: str(e.get("commence_time"))):
+            teams = {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} - {None}
+            stats = {s for t in teams for s in wants.get(t, ()) if s in MARKETS}
+            if not stats or _started(ev):
+                continue   # nothing wanted, or tipped: keep the last pre-game prices
+            ev_id = str(ev.get("id"))
+            ev_cache = self.cache["events"].setdefault(ev_id, {"teams": sorted(teams), "markets": {}})
+            ev_cache["commence_time"] = ev.get("commence_time")
+            # Within NEAR_TIP_HOURS of tip-off, prices are re-bought sooner, so the
+            # last pre-tip run sees late injury pulls and late postings.
+            tip = _parse_ts(ev.get("commence_time"))
+            window = self.refresh
+            if tip is not None and tip - now <= timedelta(hours=self.near_tip_hours):
+                window = min(self.refresh, self.near_tip_refresh)
+            due = sorted(
+                MARKETS[s] for s in stats
+                if not (_parse_ts(ev_cache["markets"].get(MARKETS[s])) and now - _parse_ts(ev_cache["markets"][MARKETS[s]]) < window)
+            )
+            if not due:
+                continue
+            cost = len(due) * self.n_regions
+            if not self.stopped and (
+                self.spent + cost > self.max_per_run
+                or (self.remaining is not None and self.remaining - cost < self.min_remaining)
+            ):
+                logger.warning(
+                    f"  Vegas: stopping to save credits (spent {self.spent} this run, {self.remaining} left on the plan)"
+                )
+                self.stopped = True
+            if self.stopped:
+                self.unpriced_teams |= teams
+                continue
+            try:
+                data, headers = _get(f"/events/{ev_id}/odds", {
+                    "apiKey": self.api_key,
+                    "regions": self.regions,
+                    "markets": ",".join(due),
+                    "oddsFormat": "american",
+                    "dateFormat": "iso",
+                })
+            except Exception as e:
+                logger.warning(f"  Vegas: {ev.get('away_team')} @ {ev.get('home_team')} unavailable ({type(e).__name__}: {e})")
+                self.unpriced_teams |= teams
+                if "401" in str(e) or "429" in str(e):
+                    self.stopped = True
+                continue
+            self.spent += cost
+            r = _remaining(headers)
+            self.remaining = r if r is not None else self.remaining
+            self._store(ev_id, due, parse_event_odds(data), now)
+
+    def _store(self, ev_id: str, markets: list[str], found: dict, now: datetime) -> None:
+        stamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        lines = self.cache["lines"]
+        for market in markets:
+            stat = STAT_FOR_MARKET[market]
+            before = {k for k, v in lines.items() if v.get("event_id") == ev_id and v.get("stat") == stat}
+            fresh = {}
+            for (pname, s), entry in found.items():
+                if s != stat:
+                    continue
+                c = consensus(entry["offers"])
+                if c:
+                    fresh[f"{pname}|{stat}"] = {**c, "player": entry["player"], "stat": stat,
+                                                "event_id": ev_id, "fetched_at": stamp}
+            for k in before - set(fresh):
+                self.pulled.add(tuple(k.rsplit("|", 1)))   # was hung earlier today, gone now (pre-tip)
+                del lines[k]
+            lines.update(fresh)
+            self.cache["events"][ev_id]["markets"][market] = stamp
+
+    def save(self) -> None:
+        if not self.cache["lines"] and not self.cache["events"]:
+            return
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        tmp = self.path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(self.cache, f, indent=1, sort_keys=True)
+        os.replace(tmp, self.path)
+
+    # ── reading ───────────────────────────────────────────────────────────
+    def lookup(self, player_name: str, stat: str) -> dict | None:
+        """The books' line for this player+stat (exact name, then suffix-free), or None."""
+        lines = self.cache["lines"]
+        hit = lines.get(f"{norm_name(player_name)}|{stat}")
+        if hit:
+            return hit
+        base = norm_name_base(player_name)
+        for key, v in lines.items():
+            name, s = key.rsplit("|", 1)
+            if s == stat and norm_name_base(name) == base:
+                return v
+        return None
+
+    def issue(self, player_name: str, team: str, stat: str) -> str:
+        """Why the books have no line for this prop: off / pulled / unpriced / not_offered."""
+        if (norm_name(player_name), stat) in self.pulled or (norm_name_base(player_name), stat) in self.pulled:
+            return "pulled"
+        if not self.api_key:
+            return "off"
+        if team in self.unpriced_teams or self.events_failed:
+            return "unpriced"
+        return "not_offered"
+
+    def report(self) -> str:
+        return (f"{len(self.cache['lines'])} book lines on file today; spent ~{self.spent} credits this run"
+                + ("" if self.remaining is None else f", {self.remaining} left on the plan"))

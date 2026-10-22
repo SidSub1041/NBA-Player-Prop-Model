@@ -51,6 +51,8 @@ PICK_FIELDS = [
     # columns keep their positions in BI extracts)
     "games_hit", "on_hold", "hold_reason", "injury",
     "vegas_line", "vegas_over_odds", "vegas_under_odds", "vegas_book", "vegas_books",
+    # the designated line (sportsbooks first, Underdog backup)
+    "line", "line_source", "line_book", "over_odds", "under_odds",
 ]
 
 GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
@@ -147,6 +149,11 @@ def _flatten_prop(prop, date):
         "vegas_under_odds": prop.get("vegas_under_odds"),
         "vegas_book": prop.get("vegas_book"),
         "vegas_books": prop.get("vegas_books"),
+        "line": prop.get("line", prop.get("ud_line")),
+        "line_source": prop.get("line_source") or ("underdog" if prop.get("ud_line") is not None else None),
+        "line_book": prop.get("line_book"),
+        "over_odds": prop.get("over_odds", prop.get("ud_over_odds")),
+        "under_odds": prop.get("under_odds", prop.get("ud_under_odds")),
     }
 
 

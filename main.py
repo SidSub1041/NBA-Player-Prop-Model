@@ -57,11 +57,13 @@ import src.nba_http  # noqa: F401  — timeouts, retries, proxy, circuit breaker
 from src.games_today import get_todays_games, pre_tip_teams
 from src.dvp_scraper import scrape_dvp_data
 from src.depth_charts import get_depth_charts, find_player_for_matchup
-from src.scoring_engine import evaluate_prop, build_combo_props
+from src.scoring_engine import evaluate_prop, build_combo_props, combo_candidates
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
 from src.season import stats_season
-from src.underdog import fetch_underdog_lines, get_line_for_prop, load_cached_lines, merge_lines, norm_name, norm_name_base
+from src.underdog import fetch_underdog_lines, load_cached_lines, merge_lines
+from src.lines import apply as apply_line, hold_reason, resolve
+from src.vegas_odds import VegasLines
 from src.adaptive import compute_adaptive_weights
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player, injury_for, injury_label
 
@@ -78,34 +80,6 @@ def _assert_stats_reachable(stage: str):
             f"stats.nba.com is unreachable from this machine (failed during {stage}); "
             "not writing a board. Run the model from a non-cloud network or set NBA_PROXY."
         )
-
-
-def _usable_line(ud: dict | None, team: str, not_started: set[str]) -> tuple[dict | None, str | None]:
-    """
-    The Underdog line a prop can be graded against, or (None, why not).
-
-    "suspended": Underdog suspended the line (pending news).
-    "pulled": captured earlier today but gone from the live feed while the
-              game hasn't tipped — Underdog took it down, it can't be bet.
-    """
-    if not ud:
-        return None, None
-    if ud.get("suspended"):
-        return None, "suspended"
-    if ud.get("cached") and team in not_started:
-        return None, "pulled"
-    return ud, None
-
-
-def _hold_reason(stat: str, ud: dict | None, issue: str | None, injury: str | None) -> str:
-    """Why a prop that passes the conditions is on hold (no line to measure against)."""
-    if issue == "suspended":
-        reason = f"Underdog suspended its {stat.upper()} {ud['line']} line"
-    elif issue == "pulled":
-        reason = f"Underdog pulled its {stat.upper()} {ud['line']} line before tip"
-    else:
-        reason = f"Awaiting Underdog {stat.upper()} line"
-    return f"{reason} — {injury}" if injury else reason
 
 
 def run(date: str | None = None, fast: bool = False):
@@ -192,14 +166,6 @@ def run(date: str | None = None, fast: bool = False):
     # tipped was pulled (usually injury news): it can't be bet, so it doesn't count.
     not_started = pre_tip_teams(games) if fresh_ok else set()
 
-    # ── Step 3e: Fetch injury report ─────────────────────────────────
-    logger.info("Step 3e: Fetching injury report...")
-    injuries = fetch_injury_report()
-
-    # ── Step 3d: Compute adaptive weights from past results ──────────
-    logger.info("Step 3d: Computing adaptive weights from graded history...")
-    adaptive_weights = compute_adaptive_weights()
-
     # ── Step 4: Pre-fetch shared data (zone/playtype rankings) ───────
     logger.info("Step 4: Pre-fetching team-level defensive rankings...")
 
@@ -232,6 +198,29 @@ def run(date: str | None = None, fast: bool = False):
             "No shooting-zone rankings came back from stats.nba.com — "
             "refusing to publish a board built without them"
         )
+
+    # ── Step 4b: Sportsbook lines (primary line source) ──────────────
+    # Priced before evaluation (each prop's hit rate is measured against its
+    # line) but after the stats checks above, so an aborted run buys nothing.
+    # Only the stats the DvP matchups ask for are bought per game.
+    logger.info("Step 4b: Fetching sportsbook lines (The Odds API)...")
+    vegas = VegasLines(date)
+    wants: dict[str, set] = {}
+    for m in dvp_matchups:
+        off_team = matchups.get(m["team"])
+        if off_team:
+            wants.setdefault(off_team, set()).add(m["stat"])
+    vegas.ensure(wants)
+    vegas.save()
+    logger.info(f"  {vegas.report()}")
+
+    # ── Step 3e: Fetch injury report ─────────────────────────────────
+    logger.info("Step 3e: Fetching injury report...")
+    injuries = fetch_injury_report()
+
+    # ── Step 3d: Compute adaptive weights from past results ──────────
+    logger.info("Step 3d: Computing adaptive weights from graded history...")
+    adaptive_weights = compute_adaptive_weights()
 
     # ── Step 5: Evaluate each matchup ───────────────────────────────
     logger.info("Step 5: Evaluating player props...")
@@ -294,10 +283,9 @@ def run(date: str | None = None, fast: bool = False):
             f"| {stat.upper()} {edge.upper()} vs {defensive_team}"
         )
 
-        # The Underdog line comes first: the hit-rate gate is measured against it.
-        # A line Underdog has suspended (pulled pending news) doesn't count.
-        ud = get_line_for_prop(ud_lines, player_name, stat)
-        live_ud, line_issue = _usable_line(ud, offensive_team, not_started)
+        # The line comes first: the hit-rate gate is measured against it.
+        # Books first; Underdog only when the books have no line for this prop.
+        res = resolve(player_name, offensive_team, stat, vegas, ud_lines, not_started)
 
         prop = evaluate_prop(
             player_name=player_name,
@@ -309,19 +297,16 @@ def run(date: str | None = None, fast: bool = False):
             team_zone_rankings=team_zone_rankings,
             team_playtype_rankings=team_playtype_rankings,
             adaptive_weights=adaptive_weights,
-            line=live_ud["line"] if live_ud else None,
+            line=res.line["line"] if res.line else None,
             before=date,
         )
 
         prop_scores.append(prop)
 
-        if live_ud:
-            prop.ud_line = live_ud["line"]
-            prop.ud_over_odds = live_ud["over_odds"]
-            prop.ud_under_odds = live_ud["under_odds"]
+        apply_line(prop, res)
         prop.injury = injury_label(injuries, player_name)
         if prop.on_hold:
-            prop.hold_reason = _hold_reason(stat, ud, line_issue, prop.injury)
+            prop.hold_reason = hold_reason(stat, res, prop.injury)
 
         logger.info(f"  → {prop.summary()}")
 
@@ -330,36 +315,35 @@ def run(date: str | None = None, fast: bool = False):
 
     # ── Step 6: Combo props ────────────────────────────────────────
     logger.info(f"\nStep 6: Building combo props...")
-    # Combos see only usable lines: pulled (cached but gone pre-tip) lines are dropped
-    pulled_names = {
-        k for p in prop_scores if p.team in not_started
-        for k in (norm_name(p.player_name), norm_name_base(p.player_name))
-    }
-    combo_lines = {
-        k: v for k, v in ud_lines.items() if not (v.get("cached") and k[0] in pulled_names)
-    }
-    combo_scores = build_combo_props(prop_scores, combo_lines, before=date)
+    _assert_stats_reachable("player evaluation")   # before buying combo markets
+
+    # Price the combo markets only for combos that will actually be built
+    combo_wants: dict[str, set] = {}
+    for _player, team, combo_stat, _edge in combo_candidates(prop_scores):
+        combo_wants.setdefault(team, set()).add(combo_stat)
+    if combo_wants:
+        vegas.ensure(combo_wants)
+        vegas.save()
+
+    def _line_for(player: str, team: str, stat: str):
+        return resolve(player, team, stat, vegas, ud_lines, not_started)
+
+    combo_scores = build_combo_props(prop_scores, _line_for, before=date)
     for c in combo_scores:
         c.injury = injury_label(injuries, c.player_name)
         if c.on_hold:
-            ud = get_line_for_prop(ud_lines, c.player_name, c.stat)
-            _, issue = _usable_line(ud, c.team, not_started)
-            c.hold_reason = _hold_reason(c.stat, ud, issue, c.injury)
+            c.hold_reason = hold_reason(c.stat, c.resolution, c.injury)
     prop_scores.extend(combo_scores)
     held = [p for p in prop_scores if p.on_hold]
     if held:
         logger.info(f"  {len(held)} prop(s) ON HOLD awaiting a line — re-checked on the next run")
+    by_source = {}
+    for p in prop_scores:
+        src = (p.line_info or {}).get("source", "none")
+        by_source[src] = by_source.get(src, 0) + 1
+    logger.info(f"  Lines by source: {by_source} | {vegas.report()}")
 
     _assert_stats_reachable("player evaluation")
-
-    # ── Step 6b: Sportsbook (Vegas) odds for the board, display only ──
-    logger.info("Step 6b: Fetching Vegas odds for valid and on-hold props...")
-    from src.vegas_odds import attach_vegas_odds
-    try:
-        attach_vegas_odds(prop_scores, date)
-    except Exception as e:  # odds are display-only: never fail the board over them
-        logger.warning(f"  Vegas odds skipped ({type(e).__name__}: {e})")
-
 
     # ── Step 7: Output ───────────────────────────────────────────────
     logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")

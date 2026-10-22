@@ -231,21 +231,39 @@ function EmptyState({ title, body }: { title: string; body: string }) {
   );
 }
 
-/* ── Vegas (sportsbook) odds — display only ───────────────────────── */
+/* ── The line a pick is measured against: sportsbooks first, Underdog backup ── */
 
-function VegasOdds({ pick, edge }: { pick: PropPick; edge: string }) {
-  const price = edge === "under" ? pick.vegas_under_odds : pick.vegas_over_odds;
-  if (pick.vegas_line == null || !price) return null;
-  const sameLine = pick.ud_line != null && pick.vegas_line === pick.ud_line;
+function pickLine(pick: PropPick): number | null {
+  return pick.line !== undefined ? pick.line ?? null : pick.ud_line;
+}
+
+function pickPrice(pick: PropPick, edge: string): string | null {
+  if (pick.line !== undefined) return (edge === "under" ? pick.under_odds : pick.over_odds) ?? null;
+  return (edge === "under" ? pick.ud_under_odds : pick.ud_over_odds) ?? null;
+}
+
+function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
+  const price = pickPrice(pick, edge);
+  const fromBooks = pick.line_source === "vegas";
+  const book = pick.line_book ?? (pick.line_source === "underdog" || pick.line === undefined ? "Underdog" : null);
+  const udPrice = edge === "under" ? pick.ud_under_odds : pick.ud_over_odds;
   return (
-    <div className="text-right">
-      <div className="text-[13px] font-bold text-[var(--text)]">
-        {sameLine ? "" : `${edge === "under" ? "U" : "O"} ${pick.vegas_line} `}
-        {price}
+    <div className="ml-auto flex flex-col items-end gap-1">
+      <div className="text-right">
+        <div className="text-[13px] font-bold text-[var(--text)]">{price ?? "—"}</div>
+        <div className="text-[11px] text-[var(--text-faint)] whitespace-nowrap">
+          {pickLine(pick) === null ? "no line" : fromBooks ? `best · ${book ?? "books"}` : "underdog backup"}
+        </div>
       </div>
-      <div className="text-[11px] text-[var(--text-faint)] whitespace-nowrap">
-        vegas{pick.vegas_book ? ` · ${pick.vegas_book}` : ""}
-      </div>
+      {fromBooks && pick.ud_line != null && (
+        <div className="text-right">
+          <div className="text-[13px] font-bold text-[var(--text-muted)]">
+            {pick.ud_line === pick.line ? "" : `${edge === "under" ? "U" : "O"} ${pick.ud_line} `}
+            {udPrice ?? "—"}
+          </div>
+          <div className="text-[11px] text-[var(--text-faint)]">underdog</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -275,11 +293,7 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
             <span className="font-display tracking-wide">
               {statLabel(p.stat)} {p.edge.toUpperCase()}
             </span>
-            {p.vegas_line != null && (
-              <span className="text-[var(--text-muted)]">
-                vegas {p.vegas_line} · O {p.vegas_over_odds ?? "—"} / U {p.vegas_under_odds ?? "—"}
-              </span>
-            )}
+
             <span className="sm:ml-auto text-[12px] text-[var(--text-faint)]">{p.hold_reason ?? "Awaiting line"}</span>
           </div>
         ))}
@@ -293,8 +307,6 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
 function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }) {
   const edge = pick.edge.toLowerCase();
   const hr = pick.hitrate !== null ? Math.round(pick.hitrate * 100) : null;
-  const odds = edge === "over" ? pick.ud_over_odds : edge === "under" ? pick.ud_under_odds : null;
-  const oddsCaption = pick.ud_line === null ? "no line" : odds ? "payout" : "no odds";
   return (
     <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
       <div className="flex items-center gap-4">
@@ -325,16 +337,10 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
       </div>
       <div className="flex items-center gap-4 bg-[var(--card-inset)] px-5 py-4">
         <div className="font-display text-4xl tracking-wide leading-none">
-          {statLabel(pick.stat)} {pick.ud_line ?? "—"}
+          {statLabel(pick.stat)} {pickLine(pick) ?? "—"}
         </div>
         <EdgeTag edge={edge} />
-        <div className="ml-auto flex flex-col items-end gap-1">
-          <div className="text-right">
-            <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds ?? "—"}</div>
-            <div className="text-[11px] text-[var(--text-faint)]">underdog {oddsCaption}</div>
-          </div>
-          <VegasOdds pick={pick} edge={edge} />
-        </div>
+        <LineOdds pick={pick} edge={edge} />
       </div>
       <div className="flex items-center gap-3">
         <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">
@@ -393,7 +399,7 @@ function ArchivedBoard({ picks, date, season }: { picks: PropPick[]; date: strin
                   {p.player_name}
                 </div>
                 <div className="font-display tracking-wide text-base text-[var(--text-muted)]">
-                  {statLabel(p.stat)} {p.ud_line ?? "—"}
+                  {statLabel(p.stat)} {pickLine(p) ?? "—"}
                 </div>
                 <div
                   className="text-[11px] font-bold tracking-widest"

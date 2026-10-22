@@ -66,8 +66,24 @@ class PropScore:
         self.hold_reason = ""
         self.injury = None        # injury-report label, e.g. "GTD · Ankle"
 
-        # Sportsbook (Vegas) odds for the same prop, display only
+        # The designated line (books first, Underdog backup) — see src/lines.py
+        self.line_info = {}
+        self.resolution = None
+        # The books' consensus for this prop (display + CSV)
         self.vegas = {}
+
+    # ── designated line helpers ──────────────────────────────────────
+    @property
+    def line(self):
+        return (self.line_info or {}).get("line")
+
+    def side_odds(self) -> str:
+        info = self.line_info or {}
+        return (info.get("under_odds") if self.edge == "under" else info.get("over_odds")) or ""
+
+    def side_book(self) -> str:
+        info = self.line_info or {}
+        return (info.get("under_book") if self.edge == "under" else info.get("over_book")) or ""
 
     @property
     def total_score_pct(self) -> float:
@@ -108,9 +124,8 @@ class PropScore:
     def summary(self) -> str:
         """One-line summary."""
         ud = ""
-        if self.ud_line is not None:
-            odds = self.ud_over_odds if self.edge == "over" else self.ud_under_odds
-            ud = f" | Line: {self.ud_line} ({odds})"
+        if self.line is not None:
+            ud = f" | Line: {self.line} ({self.side_odds()} {self.side_book()})"
         return (
             f"{self.player_name} ({self.team} vs {self.opponent}) | "
             f"{self.stat.upper()} {self.edge.upper()}{ud} | "
@@ -173,11 +188,14 @@ class PropScore:
             lines.append(f"  Season average: {hd['season_avg']}")
         lines.append(f"  Threshold: {HITRATE_THRESHOLD:.0%} needed against the line")
 
-        if self.ud_line is not None:
-            lines.append(f"\n--- Underdog Fantasy ---")
-            lines.append(f"  Line: {self.ud_line}")
-            lines.append(f"  Over odds:  {self.ud_over_odds}")
-            lines.append(f"  Under odds: {self.ud_under_odds}")
+        if self.line is not None:
+            info = self.line_info
+            lines.append(f"\n--- Line ({'sportsbooks' if info.get('source') == 'vegas' else 'Underdog backup'}) ---")
+            lines.append(f"  Line: {self.line}  ({info.get('books') or 1} book(s))")
+            lines.append(f"  Over:  {info.get('over_odds')} @ {info.get('over_book')}")
+            lines.append(f"  Under: {info.get('under_odds')} @ {info.get('under_book')}")
+        if self.ud_line is not None and (self.line_info or {}).get("source") != "underdog":
+            lines.append(f"  Underdog: {self.ud_line} (O {self.ud_over_odds} / U {self.ud_under_odds})")
 
         lines.append(f"\n--- FINAL GRADE: {self.final_grade} ---")
         lines.append(f"  {'✅ VALID PICK' if self.is_valid else '❌ DOES NOT QUALIFY'}")
@@ -353,7 +371,21 @@ COMBO_DEFS = {
 }
 
 
-def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict, before: str | None = None) -> list["PropScore"]:
+def combo_candidates(prop_scores: list["PropScore"]) -> list[tuple]:
+    """(player, team, combo_stat, edge) for every combo build_combo_props would build."""
+    by_player: dict[tuple[str, str], dict[str, "PropScore"]] = {}
+    for p in prop_scores:
+        by_player.setdefault((p.player_name, p.edge), {})[p.stat] = p
+    out = []
+    for (player_name, edge), stat_props in by_player.items():
+        for combo_stat, combo_def in COMBO_DEFS.items():
+            comps = [stat_props.get(s) for s in combo_def["components"]]
+            if all(comps) and all(c.total_score_pct >= 0.60 for c in comps):
+                out.append((player_name, comps[0].team, combo_stat, edge))
+    return out
+
+
+def build_combo_props(prop_scores: list["PropScore"], line_for, before: str | None = None) -> list["PropScore"]:
     """
     Build combination prop picks from individually-evaluated props.
 
@@ -365,12 +397,13 @@ def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict, before: st
 
     Args:
         prop_scores: All individually evaluated PropScore objects.
-        ud_lines: Underdog lines dict for attaching combo lines/odds.
+        line_for: callable(player, team, stat) -> src.lines.Resolution (books
+                  first, Underdog backup) for the combo's line.
 
     Returns:
         List of new PropScore objects for combo props.
     """
-    from src.underdog import get_line_for_prop
+    from src.lines import apply as apply_line
 
     # Group by (player_name, edge) → {stat: PropScore}
     player_edges: dict[tuple[str, str], dict[str, "PropScore"]] = {}
@@ -415,16 +448,10 @@ def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict, before: st
                 p.adaptive_multiplier for p in component_props
             ) / len(component_props)
 
-            # Attach the Underdog combo line, then measure the hit rate of the
-            # summed stats against it (the same gate as single-stat props)
-            ud = get_line_for_prop(ud_lines, player_name, combo_stat)
-            if ud and ud.get("suspended"):
-                ud = None   # pulled pending news: no line to measure against (hold)
-            if ud:
-                combo.ud_line = ud["line"]
-                combo.ud_over_odds = ud["over_odds"]
-                combo.ud_under_odds = ud["under_odds"]
-            combo.hitrate_data = get_player_hitrate(player_name, combo_stat, combo.ud_line, edge, before)
+            # The combo's own line (books first, Underdog backup), then the hit
+            # rate of the summed stats against it — the same gate as single stats
+            apply_line(combo, line_for(player_name, first.team, combo_stat))
+            combo.hitrate_data = get_player_hitrate(player_name, combo_stat, combo.line, edge, before)
 
             combo.compute_grade()
 

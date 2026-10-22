@@ -61,8 +61,8 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         for p in sorted(valid, key=lambda x: x.total_score_pct, reverse=True):
             hr = p.hitrate_data.get("hitrate", -1)
             hr_str = f"{hr:.0%}" if hr >= 0 else "N/A"
-            line_str = str(p.ud_line) if p.ud_line is not None else "-"
-            odds = (p.ud_over_odds if p.edge == "over" else p.ud_under_odds) if p.ud_line is not None else "-"
+            line_str = str(p.line) if p.line is not None else "-"
+            odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
             table_data.append([
                 p.player_name,
                 p.team,
@@ -109,8 +109,8 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         for p in sorted(watchlist, key=lambda x: x.total_score_pct, reverse=True):
             hr = p.hitrate_data.get("hitrate", -1)
             hr_str = f"{hr:.0%}" if hr >= 0 else "N/A"
-            line_str = str(p.ud_line) if p.ud_line is not None else "-"
-            odds = (p.ud_over_odds if p.edge == "over" else p.ud_under_odds) if p.ud_line is not None else "-"
+            line_str = str(p.line) if p.line is not None else "-"
+            odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
             table_data.append([
                 p.player_name,
                 p.team,
@@ -197,13 +197,24 @@ def _prop_to_dict(p) -> dict:
         "season_avg": p.hitrate_data.get("season_avg"),
         "games_played": p.hitrate_data.get("games_played"),
         "games_hit": p.hitrate_data.get("games_hit"),
+        # the designated line: sportsbooks first, Underdog backup (src/lines.py)
+        "line": p.line,
+        "line_source": (p.line_info or {}).get("source"),
+        "line_book": p.side_book() or None,
+        "line_books": (p.line_info or {}).get("books"),
+        "over_odds": (p.line_info or {}).get("over_odds"),
+        "over_book": (p.line_info or {}).get("over_book"),
+        "under_odds": (p.line_info or {}).get("under_odds"),
+        "under_book": (p.line_info or {}).get("under_book"),
+        # Underdog's own line when it has one (backup source; shown for comparison)
         "ud_line": p.ud_line,
         "ud_over_odds": p.ud_over_odds or None,
         "ud_under_odds": p.ud_under_odds or None,
         "vegas_line": (getattr(p, "vegas", None) or {}).get("line"),
         "vegas_over_odds": (getattr(p, "vegas", None) or {}).get("over_odds"),
         "vegas_under_odds": (getattr(p, "vegas", None) or {}).get("under_odds"),
-        "vegas_book": (getattr(p, "vegas", None) or {}).get("book"),
+        "vegas_book": ((getattr(p, "vegas", None) or {}).get("under_book") if p.edge == "under"
+                       else (getattr(p, "vegas", None) or {}).get("over_book")),
         "vegas_books": (getattr(p, "vegas", None) or {}).get("books"),
         "on_hold": bool(getattr(p, "on_hold", False)),
         "hold_reason": getattr(p, "hold_reason", "") or None,

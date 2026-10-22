@@ -14,6 +14,16 @@ export interface PropPick {
   games_played: number | null;
   /** games that cleared the line in the pick's direction (hit rate vs the line) */
   games_hit?: number | null;
+  /** the designated line: sportsbooks first, Underdog backup (boards before Oct 22, 2026: absent) */
+  line?: number | null;
+  line_source?: "vegas" | "underdog" | null;
+  line_book?: string | null;
+  line_books?: number | null;
+  over_odds?: string | null;
+  over_book?: string | null;
+  under_odds?: string | null;
+  under_book?: string | null;
+  /** Underdog's own line, when it has one */
   ud_line: number | null;
   ud_over_odds: string | null;
   ud_under_odds: string | null;
