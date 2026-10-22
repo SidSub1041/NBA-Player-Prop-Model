@@ -1,0 +1,147 @@
+{
+ "date": "2026-10-21",
+ "published": {
+  "total_picks": 34,
+  "hits": 13,
+  "misses": 21,
+  "voided": 2,
+  "units": -7.453
+ },
+ "all_props": {
+  "hits": 37,
+  "misses": 40,
+  "rate": 0.481
+ },
+ "scope": "segments cover every prop with a line that night, not only the published picks",
+ "went_right": [
+  {
+   "segment": "edge: under",
+   "hits": 10,
+   "misses": 4,
+   "rate": 0.714
+  },
+  {
+   "segment": "stat: rebounds",
+   "hits": 17,
+   "misses": 11,
+   "rate": 0.607
+  },
+  {
+   "segment": "season average vs line: average against the pick",
+   "hits": 17,
+   "misses": 14,
+   "rate": 0.548
+  }
+ ],
+ "went_wrong": [
+  {
+   "segment": "stat: pra",
+   "hits": 1,
+   "misses": 3,
+   "rate": 0.25
+  },
+  {
+   "segment": "stat: assists",
+   "hits": 7,
+   "misses": 12,
+   "rate": 0.368
+  },
+  {
+   "segment": "edge: over",
+   "hits": 27,
+   "misses": 36,
+   "rate": 0.429
+  }
+ ],
+ "biggest_misses": [
+  {
+   "player": "Trey Murphy III",
+   "stat": "rebounds",
+   "edge": "over",
+   "line": 5.5,
+   "actual": 4.0
+  },
+  {
+   "player": "Cedric Coward",
+   "stat": "assists",
+   "edge": "over",
+   "line": 3.5,
+   "actual": 2.0
+  },
+  {
+   "player": "Kawhi Leonard",
+   "stat": "assists",
+   "edge": "over",
+   "line": 3.5,
+   "actual": 2.0
+  },
+  {
+   "player": "Keyonte George",
+   "stat": "rebounds",
+   "edge": "over",
+   "line": 3.5,
+   "actual": 3.0
+  },
+  {
+   "player": "Jaren Jackson Jr.",
+   "stat": "rebounds",
+   "edge": "over",
+   "line": 5.5,
+   "actual": 5.0
+  }
+ ],
+ "near_misses": 8,
+ "picks_cut_by_model": 0,
+ "published_segments": {
+  "stat": {
+   "assists": {
+    "hits": 4,
+    "misses": 5,
+    "rate": 0.444
+   },
+   "rebounds": {
+    "hits": 6,
+    "misses": 6,
+    "rate": 0.5
+   }
+  },
+  "edge": {
+   "over": {
+    "hits": 7,
+    "misses": 10,
+    "rate": 0.412
+   },
+   "under": {
+    "hits": 3,
+    "misses": 1,
+    "rate": 0.75
+   }
+  },
+  "line source": {
+   "Underdog": {
+    "hits": 10,
+    "misses": 11,
+    "rate": 0.476
+   }
+  },
+  "hit rate vs line": {
+   "no line-based hit rate": {
+    "hits": 10,
+    "misses": 11,
+    "rate": 0.476
+   }
+  },
+  "season average vs line": {
+   "average against the pick": {
+    "hits": 6,
+    "misses": 1,
+    "rate": 0.857
+   },
+   "average favors the pick": {
+    "hits": 4,
+    "misses": 10,
+    "rate": 0.286
+   }
+  }
+ }
+}

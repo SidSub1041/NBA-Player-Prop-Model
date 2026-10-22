@@ -1,0 +1,289 @@
+{
+ "trained_at": "2026-10-22T14:45:43Z",
+ "anchor_date": "2026-10-22",
+ "labels_fingerprint": "bb41ec046e55cb35",
+ "features": [
+  "hr_line",
+  "hr_line_missing",
+  "cushion",
+  "cushion_missing",
+  "implied",
+  "implied_missing",
+  "pass_rate",
+  "log_conditions",
+  "is_over",
+  "from_books",
+  "log_books",
+  "injured",
+  "log_gp",
+  "stat_rebounds",
+  "stat_assists",
+  "stat_pra",
+  "stat_combo2"
+ ],
+ "n_rows": 446,
+ "n_days": 29,
+ "mode": "shadow",
+ "trusted": false,
+ "pass_streak": 0,
+ "fail_streak": 1,
+ "fill": [
+  0.0,
+  1.0,
+  0.05685755945928828,
+  0.011932171328406753,
+  0.5182564113574919,
+  0.004986757849636917,
+  0.7845758542072119,
+  0.972163633315339,
+  0.6785411738879424,
+  0.0,
+  0.693147180559945,
+  0.0,
+  4.071097677647534,
+  0.34017769885305876,
+  0.2549491992419238,
+  0.03862564638420697,
+  0.043684410827522634
+ ],
+ "mean": [
+  0.0,
+  1.000000000000001,
+  0.0568575594592883,
+  0.011932171328406752,
+  0.5182564113574919,
+  0.004986757849636918,
+  0.7845758542072118,
+  0.9721636333153372,
+  0.678541173887942,
+  0.0,
+  0.6931471805599453,
+  0.0,
+  4.0710976776475345,
+  0.34017769885305854,
+  0.2549491992419236,
+  0.03862564638420697,
+  0.04368441082752265
+ ],
+ "std": [
+  1.0,
+  1.0,
+  0.23902532285892422,
+  0.1085808206627502,
+  0.10004500128362871,
+  0.07044068494688303,
+  0.33942163931630803,
+  0.5560039433268162,
+  0.46703645385206816,
+  1.0,
+  1.0,
+  1.0,
+  0.601747719712965,
+  0.47376875377772265,
+  0.4358326571607795,
+  0.1927010789425144,
+  0.2043919838892291
+ ],
+ "intercept": -0.035762352203987414,
+ "coef": [
+  0.0,
+  0.0,
+  -0.1264904146904785,
+  0.10107942012611192,
+  0.5714506055589799,
+  -0.0714959868995868,
+  -0.2513116334390922,
+  0.012664777246589577,
+  -0.18326471596448235,
+  0.0,
+  0.0,
+  0.0,
+  0.1773718466763585,
+  0.37483474312492115,
+  -0.0003276028064579706,
+  -0.018817591043115225,
+  0.12834595164340337
+ ],
+ "constant": [
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "cv": {
+  "scored_rows": 355,
+  "scored_nights": 26,
+  "logloss": 0.6774,
+  "baseline_logloss": 0.6603,
+  "baseline": "market price",
+  "logloss_vs_average": 0.6983,
+  "logloss_vs_market": 0.6603,
+  "gain": -0.0259,
+  "gain_lower_bound": -0.0283,
+  "effective_rows": 124.2,
+  "effective_nights": 1.6,
+  "calibration": [
+   {
+    "band": "0%\u201345%",
+    "n": 87,
+    "predicted": 0.391,
+    "actual": 0.483
+   },
+   {
+    "band": "45%\u201350%",
+    "n": 70,
+    "predicted": 0.475,
+    "actual": 0.571
+   },
+   {
+    "band": "50%\u201355%",
+    "n": 66,
+    "predicted": 0.523,
+    "actual": 0.545
+   },
+   {
+    "band": "55%\u201360%",
+    "n": 63,
+    "predicted": 0.574,
+    "actual": 0.46
+   },
+   {
+    "band": "60%\u2013100%",
+    "n": 69,
+    "predicted": 0.649,
+    "actual": 0.609
+   }
+  ],
+  "gate_check": {
+   "published_scored": 106,
+   "kept": 48,
+   "demoted": 58,
+   "units_kept": 5.1,
+   "units_demoted": 6.37,
+   "passed": false,
+   "verdict": "cutting -EV picks would have cost units"
+  }
+ },
+ "criteria": {
+  "effective_rows": false,
+  "effective_nights": false,
+  "gain": false,
+  "significant": false,
+  "pick_gate": false
+ },
+ "base_rate": 0.496,
+ "factors": [
+  {
+   "feature": "implied",
+   "label": "the price's implied probability",
+   "weight": 0.571,
+   "effect": "more hits"
+  },
+  {
+   "feature": "stat_rebounds",
+   "label": "rebounds props (vs points)",
+   "weight": 0.375,
+   "effect": "more hits"
+  },
+  {
+   "feature": "pass_rate",
+   "label": "share of matchup conditions met",
+   "weight": -0.251,
+   "effect": "more misses"
+  },
+  {
+   "feature": "is_over",
+   "label": "overs (vs unders)",
+   "weight": -0.183,
+   "effect": "more misses"
+  },
+  {
+   "feature": "log_gp",
+   "label": "games in the hit-rate sample",
+   "weight": 0.177,
+   "effect": "more hits"
+  },
+  {
+   "feature": "stat_combo2",
+   "label": "two-stat combos (vs points)",
+   "weight": 0.128,
+   "effect": "more hits"
+  }
+ ],
+ "segments": {
+  "stat": {
+   "assists": {
+    "hits": 7,
+    "misses": 12,
+    "rate": 0.368
+   },
+   "points": {
+    "hits": 12,
+    "misses": 14,
+    "rate": 0.462
+   },
+   "pra": {
+    "hits": 1,
+    "misses": 3,
+    "rate": 0.25
+   },
+   "rebounds": {
+    "hits": 17,
+    "misses": 11,
+    "rate": 0.607
+   }
+  },
+  "edge": {
+   "over": {
+    "hits": 27,
+    "misses": 36,
+    "rate": 0.429
+   },
+   "under": {
+    "hits": 10,
+    "misses": 4,
+    "rate": 0.714
+   }
+  },
+  "line source": {
+   "Underdog": {
+    "hits": 37,
+    "misses": 40,
+    "rate": 0.481
+   }
+  },
+  "hit rate vs line": {
+   "no line-based hit rate": {
+    "hits": 37,
+    "misses": 40,
+    "rate": 0.481
+   }
+  },
+  "season average vs line": {
+   "average against the pick": {
+    "hits": 17,
+    "misses": 14,
+    "rate": 0.548
+   },
+   "average favors the pick": {
+    "hits": 20,
+    "misses": 26,
+    "rate": 0.435
+   }
+  }
+ },
+ "note": "shadow mode: 124/300 effective labeled props; 1.6/10 effective nights; beats the market price by -2.6% on unseen nights (needs 1%); its EV rule would have cost units on past picks"
+}
