@@ -155,10 +155,10 @@ def run(date: str | None = None, fast: bool = False):
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = load_cached_lines(date)
     fresh_ok = False   # did Underdog answer with tonight's lines on this run?
-    if date == slate_today():
+    if date >= slate_today():   # today, or tomorrow's board built the night before
         fresh = fetch_underdog_lines(date)
         fresh_ok = any(not v.get("suspended") for v in fresh.values())
-        ud_lines = merge_lines(ud_lines, fresh)  # today: fresh lines win
+        ud_lines = merge_lines(ud_lines, fresh)  # fresh lines win
     else:
         logger.info("  Past date — using lines recorded on that day only")
     # A line captured earlier that is gone from a live feed before its game has
@@ -395,13 +395,22 @@ def main():
         help="Date to run model for (YYYY-MM-DD). Defaults to today.",
     )
     parser.add_argument(
+        "--tomorrow",
+        action="store_true",
+        help="Build tomorrow's board (the night-before run: lines as the books post them).",
+    )
+    parser.add_argument(
         "--fast",
         action="store_true",
         help="Skip per-playtype team rankings (fewer API calls, less detail).",
     )
     args = parser.parse_args()
+    date = args.date
+    if args.tomorrow and not date:
+        from datetime import timedelta
+        date = (datetime.strptime(slate_today(), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
     try:
-        run(date=args.date, fast=args.fast)
+        run(date=date, fast=args.fast)
     except Exception as e:
         logger.error(f"Model run failed: {e}", exc_info=True)
         sys.exit(1)

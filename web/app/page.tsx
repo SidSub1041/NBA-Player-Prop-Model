@@ -277,7 +277,7 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <div className="font-display text-2xl tracking-wide whitespace-nowrap">ON HOLD</div>
         <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
-          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED EVERY RUN
+          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED THE MORNING OF
         </div>
       </div>
       <div className="flex flex-col divide-y divide-[var(--border-soft)]">
@@ -848,7 +848,7 @@ const SYSTEM_STEPS = [
   { n: "01", title: "SCAN MATCHUPS", body: "Defense vs. position, every game tonight." },
   { n: "02", title: "FIND STARTERS", body: "Depth charts + injury report, live." },
   { n: "03", title: "MAP ZONES", body: "Shot zones and playtypes vs. the defense." },
-  { n: "04", title: "SCORE IT", body: "80% of conditions must pass. No exceptions." },
+  { n: "04", title: "SCORE IT", body: "80% of conditions must pass. Points props, scored on 3–7 of them, need a 60% majority." },
   { n: "05", title: "VERIFY HITS", body: "Season hit rate confirms it. __HR__% seals an A+." },
 ];
 
@@ -872,7 +872,7 @@ function deduplicatePicks(picks: PropPick[]): PropPick[] {
 
 /* ── Main page ────────────────────────────────────────────────────── */
 
-type BoardState = "live" | "stale" | "last-season";
+type BoardState = "live" | "upcoming" | "stale" | "last-season";
 
 export default function Home() {
   const [data, setData] = useState<PropsData | null>(null);
@@ -919,7 +919,7 @@ export default function Home() {
   const lastSeason = previousSeason(currentSeason);
   const boardSeason = data.season ?? seasonForDate(data.date);
   const boardState: BoardState =
-    boardSeason !== currentSeason ? "last-season" : data.date === today ? "live" : "stale";
+    boardSeason !== currentSeason ? "last-season" : data.date === today ? "live" : data.date > today ? "upcoming" : "stale";
 
   const allPicks = deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]);
   const boardPicks = boardState === "last-season" ? [] : allPicks;
@@ -939,6 +939,8 @@ export default function Home() {
   const heroBadge =
     boardState === "live"
       ? { text: "LIVE", bg: "var(--over)", ink: "var(--over-ink)" }
+      : boardState === "upcoming"
+        ? { text: `TOMORROW · ${fmtDayDate(data.date)}`, bg: "var(--accent)", ink: "var(--bg)" }
       : boardState === "stale"
         ? { text: `LAST RUN · ${fmtDayDate(data.date)}`, bg: "var(--under)", ink: "var(--under-ink)" }
         : { text: `SEASON ${currentSeason}`, bg: "var(--accent)", ink: "var(--bg)" };
@@ -1059,8 +1061,10 @@ export default function Home() {
           </h1>
           <div className="text-lg sm:text-xl font-semibold" style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}>
             {boardState === "live" && `${data.candidates_analyzed} props scanned. ${boardPicks.length} on the board.`}
+            {boardState === "upcoming" &&
+              `Tomorrow's board, posted the night before: ${boardPicks.length} on it. Refreshed about 9 AM ET.`}
             {boardState === "stale" &&
-              `Board from ${fmtDayDate(data.date)}. Today's run posts in the morning (about 9 AM ET) on game days.`}
+              `Board from ${fmtDayDate(data.date)}. The next board posts the night before each game day (about 10:30 PM ET).`}
             {boardState === "last-season" &&
               `${currentSeason} picks post the morning of each game day. Last season's record is archived below.`}
           </div>

@@ -76,7 +76,11 @@ POSITION_MAP = {
 FGA_ZONE_THRESHOLD = 0.20       # >= 20% of total FGA in a zone
 PLAYTYPE_FREQ_THRESHOLD = 0.15  # >= 15% frequency in a playtype
 TOP_BOTTOM_RANK = 10            # Top/bottom 10 for rankings
-CONDITION_PASS_RATE = 0.80      # >= 80% of conditions must be met
+CONDITION_PASS_RATE = 0.80      # >= 80% of conditions must be met (rebounds, assists, REB+AST)
+# Points props are scored on 3-7 matchup conditions (shooting zones + playtypes)
+# while rebounds/assists have one, so points use a majority bar instead.
+CONDITION_PASS_RATE_POINTS = 0.60   # points, and combos that include points
+POINTS_STATS = {"points", "pts+reb", "pts+ast", "pra"}
 HITRATE_THRESHOLD = 0.56        # >= 56% season hit rate against the line
 
 # Shooting zones from NBA.com

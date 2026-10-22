@@ -26,18 +26,20 @@ For each highlighted defensive team, the model finds the **starter at that posit
 If ≥ 80% of all conditions pass, the model checks the player's season hit rate **against tonight's line** (see *Lines and odds*): the share of the player's games (NBA.com game logs for the stats season) that cleared the line in the pick's direction — over 24.5 means 25+, under 24.5 means 24 or fewer. Combos use the summed stats against the combo line. A hit rate ≥ 56% is required for an **A+** pick (≥ 50% for **A**). A prop with no line can't be measured against one: if it passes the conditions it goes **On Hold** (below) until a line appears; otherwise it shows an estimate (games beyond the player's own average) on the watchlist.
 
 ### Grading
-| Grade | Conditions met | Hit rate |
-|-------|---------------|----------|
-| A+    | ≥ 80%         | ≥ 56%    |
-| A     | ≥ 80%         | ≥ 50%    |
-| B+    | ≥ 60%         | ≥ 56%    |
-| B     | ≥ 60%         | any      |
-| C/D   | < 60%         | —        |
+| Grade | Conditions met (REB / AST / REB+AST) | Conditions met (PTS and combos with PTS) | Hit rate |
+|-------|------|------|----------|
+| A+    | ≥ 80% | ≥ 60% | ≥ 56%    |
+| A     | ≥ 80% | ≥ 60% | ≥ 50%    |
+| B+    | ≥ 60% | ≥ 45% | ≥ 56%    |
+| B     | ≥ 60% | ≥ 45% | any      |
+| C/D   | < 60% | < 45% | —        |
+
+Rebounds and assists props carry a single condition (the DvP matchup), so 80% means "the matchup is favorable". Points props are scored on three to seven conditions (shooting zones and playtypes), so they qualify on a **60% majority** of favorable conditions instead; the hit-rate gate against the line is the same for every stat.
 
 Only **A+ and A** picks are flagged as valid.
 
 ### 6 — On Hold: no line, no pick
-A prop that meets ≥ 80% of its conditions but has **no line** — the books don't hang it and Underdog doesn't either — can't be measured, so it goes **On Hold** instead of being graded. Each hold says why, e.g. *No PTS line: books pulled theirs before tip; Underdog suspended its 24.5 — GTD · Ankle* (injury designations come from the CBS injury report). Every scheduled run re-checks the holds — five runs per game day, the last at about 7:30 PM ET to catch lines posted or restored near tip-off — and a hold becomes a pick (or drops) as soon as a line appears. A starter listed **OUT** is replaced by his backup before any of this, and the backup is evaluated against his own line. Holds are never graded.
+A prop that meets ≥ 80% of its conditions but has **no line** — the books don't hang it and Underdog doesn't either — can't be measured, so it goes **On Hold** instead of being graded. Each hold says why, e.g. *No PTS line: books pulled theirs before tip; Underdog suspended its 24.5 — GTD · Ankle* (injury designations come from the CBS injury report). The morning run re-checks the holds, and a hold becomes a pick (or drops) as soon as a line appears. A starter listed **OUT** is replaced by his backup before any of this, and the backup is evaluated against his own line. Holds are never graded.
 
 ### 7 — The learning loop: it learns from its own results
 Every morning, after grading, the model studies the night before:
@@ -57,7 +59,7 @@ Prices are pre-game: once a game tips, the board keeps the last price bought bef
 
 **Setup**: get a key at the-odds-api.com, add it as the `ODDS_API_KEY` repository secret, and run **Actions → Run workflow → task: probe** (its Vegas step prices one game for the seven markets the model uses, 7 credits). Without a key — or once the plan's credits run out — props fall back to Underdog, except that book lines already bought earlier that day are kept until they can be re-priced.
 
-**Credits**: listing the slate is free; pricing a game costs one credit per market. Each run buys only the markets its candidate props need, and saves what it bought in `logs/vegas_{date}.json` so later runs re-buy a market only when its price is more than 2½ hours old (`ODDS_API_REFRESH_MINUTES`) — or 45 minutes old within 3 hours of tip-off, so the last pre-tip run sees late injury pulls and late postings. Expect roughly 150–300 credits on a full 10–12-game night and far fewer on light nights — several thousand a month, so the 500-credit free plan lasts only days; a paid plan covers the season. A run that aborts still keeps what it bought. A run stops buying at `ODDS_API_MAX_CREDITS_PER_RUN` (default 100) or when fewer than `ODDS_API_MIN_REMAINING` (default 25) credits are left.
+**Credits**: listing the slate is free; pricing a game costs one credit per market. Each run buys only the markets its candidate props need, and saves what it bought in `logs/vegas_{date}.json` so a later run re-buys a market only when its price is more than 2½ hours old (`ODDS_API_REFRESH_MINUTES`). With two boards per slate (night before, morning of), expect roughly 60–120 credits on a full 10–12-game night and far fewer on light nights — a couple of thousand a month, so the 500-credit free plan lasts about a week; a paid plan covers the season. A run that aborts still keeps what it bought. A run stops buying at `ODDS_API_MAX_CREDITS_PER_RUN` (default 100) or when fewer than `ODDS_API_MIN_REMAINING` (default 25) credits are left.
 
 ---
 
@@ -67,13 +69,15 @@ Prices are pre-game: once a game tips, the board keeps the last price bought bef
 
 | Option | What it is | Cost / effort |
 |--------|------------|---------------|
-| **A. GitHub Actions + proxy** (recommended) | The existing schedule becomes the live server: add an `NBA_PROXY` repository secret (`http://user:pass@host:port` from a residential or ISP proxy plan — datacenter proxies are usually blocked too) and the scheduled runs execute the model 5×/day plus the 5:30 AM ET grading run. No machine to maintain. | A proxy plan (typically a few dollars a month); 2 minutes to set up |
+| **A. GitHub Actions + proxy** (recommended) | The existing schedule becomes the live server: add an `NBA_PROXY` repository secret (`http://user:pass@host:port` from a residential or ISP proxy plan — datacenter proxies are usually blocked too) and the scheduled runs build each slate's board twice — the night before (~10:30 PM ET) and the morning of (~9:15 AM ET) — plus the 5:30 AM ET grading run. No machine to maintain. | A proxy plan (typically a few dollars a month); 2 minutes to set up |
 | **B. Any always-on Linux box** | A VPS, Raspberry Pi or home server with an unblocked IP runs `./setup_cron.sh`, which schedules `run_daily.sh` at 9:15, 12:00, 15:00 and 18:00 and pushes the data. | The box; needs non-interactive `git push` (deploy key or token) |
 | **C. Your Mac** | `./setup_mac.sh` installs a LaunchAgent for `run_daily.sh` at the same times. Works only while the Mac is awake (launchd runs missed jobs on wake). | Free, but tied to the laptop |
 
 **Test before you trust**: `python3 probe_nba.py` reports PASS/FAIL for the NBA API from any host (or through `NBA_PROXY`). On GitHub, use **Actions → Run workflow → task: probe** to test a proxy secret from the runner itself in about a minute.
 
 **Setting up option A**: repo → Settings → Secrets and variables → Actions → *New repository secret* → name `NBA_PROXY`, value the proxy URL. Run the probe task; once it passes, the next scheduled run produces the board. Retire the Mac runner with `launchctl unload ~/Library/LaunchAgents/com.nba.prop.model.plist` so two producers don't race.
+
+**Schedule (Actions)**: the board for each slate is built **the night before** (~10:30 PM ET, `python main.py --tomorrow`, on the lines the books post for the next day) and **refreshed the morning of** (~9:15 AM ET: books re-priced, holds and injuries re-checked). Picks are then left alone, so what you bet on is what the board showed — no afternoon re-pricing after lines move or get pulled. Grading runs at ~5:30 AM ET. Crons are UTC, so winter times are an hour earlier.
 
 Safety net on every path: if `stats.nba.com` stops answering mid-run, the model aborts **before writing anything** (it never publishes a board built from fallbacks alone), the failing step shows red on the run, and no data is committed.
 

@@ -16,7 +16,7 @@ Each condition met = 1 "point". Final score = points / total conditions.
 
 import logging
 
-from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD
+from src.config import CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, POINTS_STATS
 from src.shooting_zones import (
     get_player_shooting_zones,
     get_team_zone_rankings,
@@ -96,10 +96,18 @@ class PropScore:
         raw = self.total_points / self.total_conditions
         return min(1.0, raw * self.adaptive_multiplier)
 
+    @property
+    def valid_bar(self) -> float:
+        """Share of conditions a prop of this stat must meet to be valid."""
+        return CONDITION_PASS_RATE_POINTS if self.stat in POINTS_STATS else CONDITION_PASS_RATE
+
     def compute_grade(self):
         """Compute final letter grade based on score percentage and hit rate."""
         pct = self.total_score_pct
         hr = self.hitrate_data.get("hitrate", -1)
+        valid_bar = self.valid_bar
+        watch_bar = 0.45 if self.stat in POINTS_STATS else 0.60   # B+/B
+        c_bar = 0.30 if self.stat in POINTS_STATS else 0.40        # C
         # The hit-rate gate is measured against the line. A prop that passes the
         # conditions but has no line yet is put ON HOLD: later runs re-check it
         # once Underdog posts (or restores) the line.
@@ -107,20 +115,20 @@ class PropScore:
         self.is_valid = False
         self.on_hold = False
 
-        if pct >= CONDITION_PASS_RATE and self.hitrate_data.get("line") is None:
+        if pct >= valid_bar and self.hitrate_data.get("line") is None:
             self.on_hold = True
             self.final_grade = "HOLD"
-        elif pct >= CONDITION_PASS_RATE and vs_line and hr >= HITRATE_THRESHOLD:
+        elif pct >= valid_bar and vs_line and hr >= HITRATE_THRESHOLD:
             self.is_valid = True
             self.final_grade = "A+"
-        elif pct >= CONDITION_PASS_RATE and vs_line and hr >= 0.50:
+        elif pct >= valid_bar and vs_line and hr >= 0.50:
             self.is_valid = True
             self.final_grade = "A"
-        elif pct >= 0.60 and hr >= HITRATE_THRESHOLD:
+        elif pct >= watch_bar and hr >= HITRATE_THRESHOLD:
             self.final_grade = "B+"
-        elif pct >= 0.60:
+        elif pct >= watch_bar:
             self.final_grade = "B"
-        elif pct >= 0.40:
+        elif pct >= c_bar:
             self.final_grade = "C"
         else:
             self.final_grade = "D"
@@ -172,7 +180,7 @@ class PropScore:
             f"({self.total_score_pct:.0%})"
         )
         lines.append(
-            f"  Threshold: {CONDITION_PASS_RATE:.0%} needed for validity"
+            f"  Threshold: {self.valid_bar:.0%} needed for validity"
         )
 
         hr = self.hitrate_data.get("hitrate", -1)

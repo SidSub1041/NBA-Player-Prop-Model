@@ -10,7 +10,7 @@ import os
 from datetime import datetime, timezone
 from tabulate import tabulate
 
-from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD, season_for_date, slate_today
+from src.config import CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, season_for_date, slate_today
 from src.season import stats_season, stats_season_reason
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
     on_hold = [p for p in prop_scores if getattr(p, "on_hold", False)]
     watchlist = [
         p for p in prop_scores
-        if not p.is_valid and not getattr(p, "on_hold", False) and p.total_score_pct >= 0.60
+        if not p.is_valid and not getattr(p, "on_hold", False) and p.final_grade in ("B+", "B")
     ]
 
     lines = [
@@ -41,7 +41,7 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         f"  Valid picks (A/A+)  : {len(valid)}",
         f"  On hold (no line)   : {len(on_hold)}",
         f"  Watchlist (B/B+)    : {len(watchlist)}",
-        f"  Thresholds          : >={CONDITION_PASS_RATE:.0%} conditions | >={HITRATE_THRESHOLD:.0%} hit rate",
+        f"  Thresholds          : >={CONDITION_PASS_RATE:.0%} conditions (points {CONDITION_PASS_RATE_POINTS:.0%}) | >={HITRATE_THRESHOLD:.0%} hit rate",
         "",
     ]
 
@@ -252,9 +252,9 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         return sorted(ps, key=key)
 
     valid = _by_ev([p for p in individual if p.is_valid])
-    watchlist = [p for p in individual if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
+    watchlist = [p for p in individual if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")]
     valid_combos = _by_ev([p for p in combos if p.is_valid])
-    watchlist_combos = [p for p in combos if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
+    watchlist_combos = [p for p in combos if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")]
     on_hold = [p for p in prop_scores if _held(p)]
 
     # Hitrate summary across all evaluated individual props
@@ -291,6 +291,7 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "demoted_count": sum(1 for p in prop_scores if getattr(p, "learn_note", "")),
         "thresholds": {
             "condition_pass_rate": CONDITION_PASS_RATE,
+            "condition_pass_rate_points": CONDITION_PASS_RATE_POINTS,
             "hitrate": HITRATE_THRESHOLD,
         },
         "valid_picks": [_prop_to_dict(p) for p in valid],

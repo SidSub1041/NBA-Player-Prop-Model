@@ -4,14 +4,13 @@ on:
   schedule:
     # Crons are UTC and do not track daylight saving: the ET labels below are
     # summer (EDT) times; from November to mid-March everything is an hour earlier.
-    # Run model 5x/day: ~9:15 AM, 12 PM, 3 PM, 6 PM, 7:30 PM ET. Every run
-    # re-checks props ON HOLD for a missing line; the late run catches lines
-    # Underdog posts or restores close to tip-off (injury news).
+    # Two boards per slate, so picks are made on the lines the books post
+    # rather than on lines that have moved or been pulled during the day:
+    #   the NIGHT BEFORE (~10:30 PM ET) — builds tomorrow's board (--tomorrow)
+    #   the MORNING OF   (~9:15 AM ET)  — refreshes today's: re-prices the
+    #                                     books, re-checks holds and injuries
+    - cron: "30 2 * * *"
     - cron: "15 13 * * *"
-    - cron: "0 16 * * *"
-    - cron: "0 19 * * *"
-    - cron: "0 22 * * *"
-    - cron: "30 23 * * *"
     # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
     - cron: "30 9 * * *"
   # Data pushed from a local runner (run_daily.sh) redeploys the site
@@ -30,6 +29,13 @@ on:
           - grade
           - probe
         default: model
+      slate:
+        description: "Model only: build today's board or tomorrow's (the night-before run)"
+        type: choice
+        options:
+          - today
+          - tomorrow
+        default: today
       date:
         description: "Date to grade (YYYY-MM-DD); blank = yesterday. Grade only."
         required: false
@@ -89,7 +95,12 @@ jobs:
           else
             TASK="model"
           fi
-          echo "Task: $TASK"
+          MODEL_ARGS=""
+          if [ "${{ github.event.schedule }}" = "30 2 * * *" ] || [ "${{ github.event.inputs.slate }}" = "tomorrow" ]; then
+            MODEL_ARGS="--tomorrow"
+          fi
+          echo "Task: $TASK $MODEL_ARGS"
+          echo "model_args=$MODEL_ARGS" >> "$GITHUB_OUTPUT"
           echo "run_model=$([ "$TASK" = "model" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "run_grade=$([ "$TASK" = "grade" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "run_probe=$([ "$TASK" = "probe" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
@@ -138,7 +149,7 @@ jobs:
         env:
           NBA_PROXY: ${{ secrets.NBA_PROXY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-        run: python main.py
+        run: python main.py ${{ steps.task.outputs.model_args }}
 
       - name: Export CSV fact tables (for BI dashboards)
         # Never blocks the data commit/deploy, but a failure is shown on the run
