@@ -129,9 +129,41 @@ def _classify_status(status_text: str) -> str:
     return "day-to-day"
 
 
+def injury_for(injuries: dict[str, dict], player_name: str) -> dict | None:
+    """
+    The player's injury-report entry, tolerant of name variants between the
+    depth chart and CBS (accents, initials, Jr./III).
+    """
+    if not injuries:
+        return None
+    info = injuries.get(player_name)
+    if info:
+        return info
+    from src.underdog import norm_name, norm_name_base
+
+    target, target_base = norm_name(player_name), norm_name_base(player_name)
+    for name, entry in injuries.items():
+        if norm_name(name) == target:
+            return entry
+    for name, entry in injuries.items():
+        if norm_name_base(name) == target_base:
+            return entry
+    return None
+
+
+def injury_label(injuries: dict[str, dict], player_name: str) -> str | None:
+    """'GTD · Ankle' / 'Day-to-day · Knee' / 'OUT · Hamstring', or None if not listed."""
+    info = injury_for(injuries, player_name)
+    if not info:
+        return None
+    status = {"out": "OUT", "gtd": "GTD", "day-to-day": "Day-to-day"}.get(info.get("status"), info.get("status") or "")
+    injury = (info.get("injury") or "").strip()
+    return f"{status} · {injury}" if injury else status
+
+
 def is_player_out(injuries: dict[str, dict], player_name: str) -> bool:
     """Check if a player is definitively OUT (not GTD)."""
-    info = injuries.get(player_name)
+    info = injury_for(injuries, player_name)
     if not info:
         return False
     return info["status"] == "out"

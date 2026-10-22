@@ -10,7 +10,7 @@ import os
 from datetime import datetime, timezone
 from tabulate import tabulate
 
-from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD, season_for_date
+from src.config import CONDITION_PASS_RATE, HITRATE_THRESHOLD, season_for_date, slate_today
 from src.season import stats_season, stats_season_reason
 
 logger = logging.getLogger(__name__)
@@ -21,12 +21,13 @@ LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 def format_report(prop_scores: list, date: str | None = None) -> str:
     """Build the full daily report string."""
     if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
+        date = slate_today()
 
     valid = [p for p in prop_scores if p.is_valid]
+    on_hold = [p for p in prop_scores if getattr(p, "on_hold", False)]
     watchlist = [
         p for p in prop_scores
-        if not p.is_valid and p.total_score_pct >= 0.60
+        if not p.is_valid and not getattr(p, "on_hold", False) and p.total_score_pct >= 0.60
     ]
 
     lines = [
@@ -38,6 +39,7 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         "",
         f"  Candidates analyzed : {len(prop_scores)}",
         f"  Valid picks (A/A+)  : {len(valid)}",
+        f"  On hold (no line)   : {len(on_hold)}",
         f"  Watchlist (B/B+)    : {len(watchlist)}",
         f"  Thresholds          : >={CONDITION_PASS_RATE:.0%} conditions | >={HITRATE_THRESHOLD:.0%} hit rate",
         "",
@@ -80,6 +82,21 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         lines.append("")
     else:
         lines.append("  No valid picks today.\n")
+
+    # ── ON HOLD ──────────────────────────────────────────────────────
+    if on_hold:
+        lines.append("┌─────────────────────────────────────────────────────────────────────┐")
+        lines.append("│  ⏸  ON HOLD  (conditions met — waiting on a line; re-checked next run) │")
+        lines.append("└─────────────────────────────────────────────────────────────────────┘")
+        lines.append("")
+        lines.append(tabulate(
+            [[p.player_name, p.team, p.opponent, p.stat.upper(), p.edge.upper(),
+              f"{p.total_points}/{p.total_conditions}", p.hold_reason or "Awaiting line"]
+             for p in sorted(on_hold, key=lambda x: x.total_score_pct, reverse=True)],
+            headers=["Player", "Team", "Opp", "Stat", "Edge", "Score", "Why"],
+            tablefmt="rounded_outline",
+        ))
+        lines.append("")
 
     # ── WATCHLIST ────────────────────────────────────────────────────
     if watchlist:
@@ -132,7 +149,7 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
 def save_report(report: str, date: str | None = None):
     """Save report to logs directory."""
     if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
+        date = slate_today()
 
     os.makedirs(LOGS_DIR, exist_ok=True)
     path = os.path.join(LOGS_DIR, f"props_{date}.txt")
@@ -179,9 +196,18 @@ def _prop_to_dict(p) -> dict:
         "hitrate_source": p.hitrate_data.get("source", "N/A"),
         "season_avg": p.hitrate_data.get("season_avg"),
         "games_played": p.hitrate_data.get("games_played"),
+        "games_hit": p.hitrate_data.get("games_hit"),
         "ud_line": p.ud_line,
         "ud_over_odds": p.ud_over_odds or None,
         "ud_under_odds": p.ud_under_odds or None,
+        "vegas_line": (getattr(p, "vegas", None) or {}).get("line"),
+        "vegas_over_odds": (getattr(p, "vegas", None) or {}).get("over_odds"),
+        "vegas_under_odds": (getattr(p, "vegas", None) or {}).get("under_odds"),
+        "vegas_book": (getattr(p, "vegas", None) or {}).get("book"),
+        "vegas_books": (getattr(p, "vegas", None) or {}).get("books"),
+        "on_hold": bool(getattr(p, "on_hold", False)),
+        "hold_reason": getattr(p, "hold_reason", "") or None,
+        "injury": getattr(p, "injury", None),
         "grade": p.final_grade,
         "is_valid": p.is_valid,
         "is_combo": p.stat in COMBO_STATS,
@@ -194,16 +220,20 @@ def _prop_to_dict(p) -> dict:
 def save_json_report(prop_scores: list, date: str | None = None) -> str:
     """Save model results as JSON for the web dashboard."""
     if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
+        date = slate_today()
 
     # Separate individual and combo props
     individual = [p for p in prop_scores if p.stat not in COMBO_STATS]
     combos = [p for p in prop_scores if p.stat in COMBO_STATS]
 
+    def _held(p):
+        return bool(getattr(p, "on_hold", False))
+
     valid = [p for p in individual if p.is_valid]
-    watchlist = [p for p in individual if not p.is_valid and p.total_score_pct >= 0.60]
+    watchlist = [p for p in individual if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
     valid_combos = [p for p in combos if p.is_valid]
-    watchlist_combos = [p for p in combos if not p.is_valid and p.total_score_pct >= 0.60]
+    watchlist_combos = [p for p in combos if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
+    on_hold = [p for p in prop_scores if _held(p)]
 
     # Hitrate summary across all evaluated individual props
     all_hr = [p.hitrate_data.get("hitrate", -1) for p in individual]
@@ -235,6 +265,7 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "watchlist_count": len(watchlist),
         "combo_valid_count": len(valid_combos),
         "combo_watchlist_count": len(watchlist_combos),
+        "on_hold_count": len(on_hold),
         "thresholds": {
             "condition_pass_rate": CONDITION_PASS_RATE,
             "hitrate": HITRATE_THRESHOLD,
@@ -243,6 +274,7 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "watchlist": [_prop_to_dict(p) for p in watchlist],
         "valid_combos": [_prop_to_dict(p) for p in valid_combos],
         "watchlist_combos": [_prop_to_dict(p) for p in watchlist_combos],
+        "on_hold": [_prop_to_dict(p) for p in on_hold],
         "all_props": [_prop_to_dict(p) for p in prop_scores],
         "hitrate_summary": hitrate_summary,
     }

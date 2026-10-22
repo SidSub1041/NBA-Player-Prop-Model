@@ -47,6 +47,10 @@ PICK_FIELDS = [
     "season_avg", "games_played", "ud_line", "ud_over_odds", "ud_under_odds",
     "adaptive_multiplier", "n_zone_conditions", "n_playtype_conditions",
     "details", "season",
+    # added with hit-rate-vs-line, holds and Vegas odds (appended so existing
+    # columns keep their positions in BI extracts)
+    "games_hit", "on_hold", "hold_reason", "injury",
+    "vegas_line", "vegas_over_odds", "vegas_under_odds", "vegas_book", "vegas_books",
 ]
 
 GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
@@ -89,6 +93,8 @@ def _bucket(prop):
     combo = "_combo" if prop.get("is_combo") else ""
     if prop.get("is_valid"):
         return "valid" + combo
+    if prop.get("on_hold"):
+        return "hold" + combo
     if prop.get("grade") in ("B+", "B"):
         return "watchlist" + combo
     return "other" + combo
@@ -132,6 +138,15 @@ def _flatten_prop(prop, date):
         "n_playtype_conditions": n_plays,
         "details": details,
         "season": _season(date),
+        "games_hit": prop.get("games_hit"),
+        "on_hold": prop.get("on_hold", False),
+        "hold_reason": prop.get("hold_reason"),
+        "injury": prop.get("injury"),
+        "vegas_line": prop.get("vegas_line"),
+        "vegas_over_odds": prop.get("vegas_over_odds"),
+        "vegas_under_odds": prop.get("vegas_under_odds"),
+        "vegas_book": prop.get("vegas_book"),
+        "vegas_books": prop.get("vegas_books"),
     }
 
 

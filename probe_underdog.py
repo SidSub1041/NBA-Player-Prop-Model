@@ -16,7 +16,25 @@ from datetime import datetime
 
 import requests
 
-from src.underdog import EASTERN, ENDPOINTS, HEADERS, TIMEOUT, _game_date_et, _usable, parse_underdog_lines
+from src.underdog import EASTERN, ENDPOINTS, HEADERS, STAT_KEYS, TIMEOUT, _game_date_et, _norm_stat, _usable, parse_underdog_lines
+
+
+def _print_stat_titles(data: dict) -> None:
+    """Every stat title on the NBA board, and which ones the model can't map."""
+    nba_games = {str(g.get("id")) for g in data.get("games") or [] if isinstance(g, dict) and g.get("sport_id") == "NBA"}
+    nba_apps = {a.get("id") for a in data.get("appearances") or [] if isinstance(a, dict) and str(a.get("match_id")) in nba_games}
+    titles = Counter()
+    for line in data.get("over_under_lines") or []:
+        if not isinstance(line, dict):
+            continue
+        st = ((line.get("over_under") or {}).get("appearance_stat") or {})
+        if st.get("appearance_id") in nba_apps:
+            titles[st.get("display_stat") or st.get("stat") or "?"] += 1
+    known = set(STAT_KEYS.values())
+    mapped = {t: n for t, n in titles.items() if _norm_stat(t) in known}
+    other = {t: n for t, n in titles.items() if _norm_stat(t) not in known}
+    print(f"  NBA stat titles used by the model: {dict(sorted(mapped.items(), key=lambda kv: -kv[1]))}")
+    print(f"  NBA stat titles not used: {dict(sorted(other.items(), key=lambda kv: -kv[1])[:25])}")
 
 
 def probe(proxies: dict | None, date: str, stop_on_usable: bool = False) -> tuple[bool, bool]:
@@ -49,6 +67,9 @@ def probe(proxies: dict | None, date: str, stop_on_usable: bool = False) -> tupl
         lines = parse_underdog_lines(data, date)
         distinct = {(v["player"], k[1]): v for k, v in lines.items()}
         print(f"  NBA lines for {date}'s slate (model stats only): {len(distinct)}")
+        _print_stat_titles(data)
+        per_stat = Counter(stat for (_, stat) in distinct)
+        print(f"  by model stat: {dict(per_stat)}")
         for (player, stat), v in list(distinct.items())[:5]:
             print(f"    {player:28s} {stat:16s} {v['line']:>6}  {v['over_odds']}/{v['under_odds']}")
         if not distinct and isinstance(data.get("over_under_lines"), list) and data["over_under_lines"]:

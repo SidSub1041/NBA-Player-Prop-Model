@@ -12,9 +12,22 @@ export interface PropPick {
   hitrate_source: string;
   season_avg: number | null;
   games_played: number | null;
+  /** games that cleared the line in the pick's direction (hit rate vs the line) */
+  games_hit?: number | null;
   ud_line: number | null;
   ud_over_odds: string | null;
   ud_under_odds: string | null;
+  /** sportsbook ("Vegas") odds for the same prop — display only */
+  vegas_line?: number | null;
+  vegas_over_odds?: string | null;
+  vegas_under_odds?: string | null;
+  vegas_book?: string | null;
+  vegas_books?: number | null;
+  /** passes the conditions but has no Underdog line yet (re-checked each run) */
+  on_hold?: boolean;
+  hold_reason?: string | null;
+  /** injury-report label, e.g. "GTD · Ankle" */
+  injury?: string | null;
   grade: string;
   is_valid: boolean;
   zone_details: string[];
@@ -64,6 +77,8 @@ export interface PropsData {
   all_props: PropPick[];
   valid_combos?: PropPick[];
   watchlist_combos?: PropPick[];
+  on_hold?: PropPick[];
+  on_hold_count?: number;
   combo_valid_count?: number;
   combo_watchlist_count?: number;
   hitrate_summary?: HitrateSummary;

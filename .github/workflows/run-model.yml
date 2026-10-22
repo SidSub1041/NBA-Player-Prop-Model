@@ -4,11 +4,14 @@ on:
   schedule:
     # Crons are UTC and do not track daylight saving: the ET labels below are
     # summer (EDT) times; from November to mid-March everything is an hour earlier.
-    # Run model 4x/day: ~9:15 AM, 12 PM, 3 PM, 6 PM ET
+    # Run model 5x/day: ~9:15 AM, 12 PM, 3 PM, 6 PM, 7:30 PM ET. Every run
+    # re-checks props ON HOLD for a missing line; the late run catches lines
+    # Underdog posts or restores close to tip-off (injury news).
     - cron: "15 13 * * *"
     - cron: "0 16 * * *"
     - cron: "0 19 * * *"
     - cron: "0 22 * * *"
+    - cron: "30 23 * * *"
     # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
     - cron: "30 9 * * *"
   # Data pushed from a local runner (run_daily.sh) redeploys the site
@@ -106,6 +109,12 @@ jobs:
           NBA_PROXY: ${{ secrets.NBA_PROXY }}
         run: python probe_underdog.py
 
+      - name: Probe Vegas odds (The Odds API)
+        if: ${{ !cancelled() && steps.task.outputs.run_probe == 'true' }}
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python probe_vegas.py
+
       # Both data steps are non-blocking for the deploy, but a failure shows as a
       # red step on the run and blocks the data commit instead of being swallowed.
       - name: Grade picks (yesterday, or the requested date)
@@ -128,6 +137,7 @@ jobs:
         continue-on-error: true
         env:
           NBA_PROXY: ${{ secrets.NBA_PROXY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python main.py
 
       - name: Export CSV fact tables (for BI dashboards)

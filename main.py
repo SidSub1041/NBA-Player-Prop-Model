@@ -10,7 +10,7 @@ Methodology:
   4. Evaluate each player/prop via the scoring engine:
        - POINTS: shooting zone analysis + playtype analysis
        - REBOUNDS / ASSISTS: DvP signal + hit rate
-  5. Check hit rate on linemate.com (>= 56% required)
+  5. Check season hit rate against the Underdog line (>= 56% required)
   6. Output graded picks: A+/A = valid, B+/B = watchlist
 
 Run manually:
@@ -30,6 +30,8 @@ import sys
 import time
 from datetime import datetime
 
+from src.config import slate_today  # stdlib-only module, safe before logging setup
+
 # ── ensure logs dir exists before logging setup ──────────────────────────────
 os.makedirs("logs", exist_ok=True)
 
@@ -41,7 +43,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(sys.stdout),
         logging.FileHandler(
-            f"logs/model_{datetime.today().strftime('%Y-%m-%d')}.log",
+            f"logs/model_{slate_today()}.log",
             mode="a",
             encoding="utf-8",
         ),
@@ -52,16 +54,16 @@ logger = logging.getLogger(__name__)
 # ── imports (after logging) ───────────────────────────────────────────────────
 
 import src.nba_http  # noqa: F401  — timeouts, retries, proxy, circuit breaker
-from src.games_today import get_teams_playing_today, get_matchups_today
+from src.games_today import get_todays_games, pre_tip_teams
 from src.dvp_scraper import scrape_dvp_data
 from src.depth_charts import get_depth_charts, find_player_for_matchup
 from src.scoring_engine import evaluate_prop, build_combo_props
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import POSITION_MAP
 from src.season import stats_season
-from src.underdog import fetch_underdog_lines, get_line_for_prop, load_cached_lines, merge_lines
+from src.underdog import fetch_underdog_lines, get_line_for_prop, load_cached_lines, merge_lines, norm_name, norm_name_base
 from src.adaptive import compute_adaptive_weights
-from src.injuries import fetch_injury_report, is_player_out, find_backup_player
+from src.injuries import fetch_injury_report, is_player_out, find_backup_player, injury_for, injury_label
 
 
 def _assert_stats_reachable(stage: str):
@@ -78,6 +80,34 @@ def _assert_stats_reachable(stage: str):
         )
 
 
+def _usable_line(ud: dict | None, team: str, not_started: set[str]) -> tuple[dict | None, str | None]:
+    """
+    The Underdog line a prop can be graded against, or (None, why not).
+
+    "suspended": Underdog suspended the line (pending news).
+    "pulled": captured earlier today but gone from the live feed while the
+              game hasn't tipped — Underdog took it down, it can't be bet.
+    """
+    if not ud:
+        return None, None
+    if ud.get("suspended"):
+        return None, "suspended"
+    if ud.get("cached") and team in not_started:
+        return None, "pulled"
+    return ud, None
+
+
+def _hold_reason(stat: str, ud: dict | None, issue: str | None, injury: str | None) -> str:
+    """Why a prop that passes the conditions is on hold (no line to measure against)."""
+    if issue == "suspended":
+        reason = f"Underdog suspended its {stat.upper()} {ud['line']} line"
+    elif issue == "pulled":
+        reason = f"Underdog pulled its {stat.upper()} {ud['line']} line before tip"
+    else:
+        reason = f"Awaiting Underdog {stat.upper()} line"
+    return f"{reason} — {injury}" if injury else reason
+
+
 def run(date: str | None = None, fast: bool = False):
     """
     Main pipeline for a single day.
@@ -87,10 +117,12 @@ def run(date: str | None = None, fast: bool = False):
         fast: Skip per-player playtype fetches (fewer API calls).
     """
     if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
+        date = slate_today()
 
     from src.season import reset as reset_stats_season
     reset_stats_season()
+    from src.hitrate import reset_cache as reset_gamelog_cache
+    reset_gamelog_cache()
 
     logger.info(f"{'='*60}")
     logger.info(f"NBA Player Prop Model starting for {date}")
@@ -98,8 +130,9 @@ def run(date: str | None = None, fast: bool = False):
 
     # ── Step 1: Today's games ────────────────────────────────────────
     logger.info("Step 1: Fetching today's games...")
-    teams_playing = get_teams_playing_today(date)
-    matchups = get_matchups_today(date)
+    games = get_todays_games(date)
+    teams_playing = {t for g in games for t in (g["home"], g["away"])}
+    matchups = {**{g["home"]: g["away"] for g in games}, **{g["away"]: g["home"] for g in games}}
 
     if not teams_playing:
         logger.warning("No NBA games today. Exiting.")
@@ -137,6 +170,8 @@ def run(date: str | None = None, fast: bool = False):
         player_stats_df = _stats.get_data_frames()[0]
         for _, row in player_stats_df.iterrows():
             player_mpg[row["PLAYER_NAME"]] = float(row["MIN"])
+        from src.hitrate import register_live_ids
+        register_live_ids(player_stats_df)   # ids for rookies/new signings missing from nba_api's static list
         logger.info(f"  Loaded MPG data for {len(player_mpg)} players")
     except Exception as e:
         logger.warning(f"Could not fetch MPG data: {e}")
@@ -146,10 +181,16 @@ def run(date: str | None = None, fast: bool = False):
 
     logger.info("Step 3c: Fetching Underdog Fantasy lines...")
     ud_lines = load_cached_lines(date)
-    if date == datetime.today().strftime("%Y-%m-%d"):
-        ud_lines = merge_lines(ud_lines, fetch_underdog_lines(date))  # today: fresh lines win
+    fresh_ok = False   # did Underdog answer with tonight's lines on this run?
+    if date == slate_today():
+        fresh = fetch_underdog_lines(date)
+        fresh_ok = any(not v.get("suspended") for v in fresh.values())
+        ud_lines = merge_lines(ud_lines, fresh)  # today: fresh lines win
     else:
         logger.info("  Past date — using lines recorded on that day only")
+    # A line captured earlier that is gone from a live feed before its game has
+    # tipped was pulled (usually injury news): it can't be bet, so it doesn't count.
+    not_started = pre_tip_teams(games) if fresh_ok else set()
 
     # ── Step 3e: Fetch injury report ─────────────────────────────────
     logger.info("Step 3e: Fetching injury report...")
@@ -222,9 +263,9 @@ def run(date: str | None = None, fast: bool = False):
 
         # ── Injury check: swap in backup if starter is OUT ───────────
         if is_player_out(injuries, player_name):
-            inj = injuries[player_name]
+            inj = injury_for(injuries, player_name) or {}
             logger.info(
-                f"  {player_name} is OUT ({inj['injury']}) — "
+                f"  {player_name} is OUT ({inj.get('injury', '?')}) — "
                 f"looking for backup at {position} on {offensive_team}"
             )
             backup = find_backup_player(
@@ -253,6 +294,11 @@ def run(date: str | None = None, fast: bool = False):
             f"| {stat.upper()} {edge.upper()} vs {defensive_team}"
         )
 
+        # The Underdog line comes first: the hit-rate gate is measured against it.
+        # A line Underdog has suspended (pulled pending news) doesn't count.
+        ud = get_line_for_prop(ud_lines, player_name, stat)
+        live_ud, line_issue = _usable_line(ud, offensive_team, not_started)
+
         prop = evaluate_prop(
             player_name=player_name,
             team=offensive_team,
@@ -263,16 +309,19 @@ def run(date: str | None = None, fast: bool = False):
             team_zone_rankings=team_zone_rankings,
             team_playtype_rankings=team_playtype_rankings,
             adaptive_weights=adaptive_weights,
+            line=live_ud["line"] if live_ud else None,
+            before=date,
         )
 
         prop_scores.append(prop)
 
-        # Attach Underdog line/odds if available
-        ud = get_line_for_prop(ud_lines, player_name, stat)
-        if ud:
-            prop.ud_line = ud["line"]
-            prop.ud_over_odds = ud["over_odds"]
-            prop.ud_under_odds = ud["under_odds"]
+        if live_ud:
+            prop.ud_line = live_ud["line"]
+            prop.ud_over_odds = live_ud["over_odds"]
+            prop.ud_under_odds = live_ud["under_odds"]
+        prop.injury = injury_label(injuries, player_name)
+        if prop.on_hold:
+            prop.hold_reason = _hold_reason(stat, ud, line_issue, prop.injury)
 
         logger.info(f"  → {prop.summary()}")
 
@@ -281,10 +330,36 @@ def run(date: str | None = None, fast: bool = False):
 
     # ── Step 6: Combo props ────────────────────────────────────────
     logger.info(f"\nStep 6: Building combo props...")
-    combo_scores = build_combo_props(prop_scores, ud_lines)
+    # Combos see only usable lines: pulled (cached but gone pre-tip) lines are dropped
+    pulled_names = {
+        k for p in prop_scores if p.team in not_started
+        for k in (norm_name(p.player_name), norm_name_base(p.player_name))
+    }
+    combo_lines = {
+        k: v for k, v in ud_lines.items() if not (v.get("cached") and k[0] in pulled_names)
+    }
+    combo_scores = build_combo_props(prop_scores, combo_lines, before=date)
+    for c in combo_scores:
+        c.injury = injury_label(injuries, c.player_name)
+        if c.on_hold:
+            ud = get_line_for_prop(ud_lines, c.player_name, c.stat)
+            _, issue = _usable_line(ud, c.team, not_started)
+            c.hold_reason = _hold_reason(c.stat, ud, issue, c.injury)
     prop_scores.extend(combo_scores)
+    held = [p for p in prop_scores if p.on_hold]
+    if held:
+        logger.info(f"  {len(held)} prop(s) ON HOLD awaiting a line — re-checked on the next run")
 
     _assert_stats_reachable("player evaluation")
+
+    # ── Step 6b: Sportsbook (Vegas) odds for the board, display only ──
+    logger.info("Step 6b: Fetching Vegas odds for valid and on-hold props...")
+    from src.vegas_odds import attach_vegas_odds
+    try:
+        attach_vegas_odds(prop_scores, date)
+    except Exception as e:  # odds are display-only: never fail the board over them
+        logger.warning(f"  Vegas odds skipped ({type(e).__name__}: {e})")
+
 
     # ── Step 7: Output ───────────────────────────────────────────────
     logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")

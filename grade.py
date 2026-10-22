@@ -12,6 +12,7 @@ import logging
 from datetime import datetime, timedelta
 
 import src.nba_http  # noqa: F401  — timeouts, retries, proxy, circuit breaker
+from src.config import slate_today
 from src.grader import grade_picks, save_graded_results
 
 logging.basicConfig(
@@ -34,7 +35,7 @@ def main():
     if args.date:
         date = args.date
     else:
-        date = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+        date = (datetime.strptime(slate_today(), "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 
     logging.info(f"Grading picks for {date}")
     result = grade_picks(date)

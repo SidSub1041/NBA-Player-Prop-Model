@@ -6,6 +6,15 @@ import os
 from datetime import date as _date
 
 
+def slate_today() -> str:
+    """Today's NBA slate date (YYYY-MM-DD) in US Eastern — the date the league
+    uses for a night's games, whatever the server's clock (UTC on Actions) says."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    return datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+
+
 def season_for_date(d: _date) -> str:
     """
     NBA season label for a calendar date, e.g. 2026-10-20 -> "2026-27".
@@ -68,7 +77,7 @@ FGA_ZONE_THRESHOLD = 0.20       # >= 20% of total FGA in a zone
 PLAYTYPE_FREQ_THRESHOLD = 0.15  # >= 15% frequency in a playtype
 TOP_BOTTOM_RANK = 10            # Top/bottom 10 for rankings
 CONDITION_PASS_RATE = 0.80      # >= 80% of conditions must be met
-HITRATE_THRESHOLD = 0.56        # >= 56% season hit rate on linemate
+HITRATE_THRESHOLD = 0.56        # >= 56% season hit rate against the line
 
 # Shooting zones from NBA.com
 SHOOTING_ZONES = [

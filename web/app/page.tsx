@@ -231,6 +231,63 @@ function EmptyState({ title, body }: { title: string; body: string }) {
   );
 }
 
+/* ── Vegas (sportsbook) odds — display only ───────────────────────── */
+
+function VegasOdds({ pick, edge }: { pick: PropPick; edge: string }) {
+  const price = edge === "under" ? pick.vegas_under_odds : pick.vegas_over_odds;
+  if (pick.vegas_line == null || !price) return null;
+  const sameLine = pick.ud_line != null && pick.vegas_line === pick.ud_line;
+  return (
+    <div className="text-right">
+      <div className="text-[13px] font-bold text-[var(--text)]">
+        {sameLine ? "" : `${edge === "under" ? "U" : "O"} ${pick.vegas_line} `}
+        {price}
+      </div>
+      <div className="text-[11px] text-[var(--text-faint)] whitespace-nowrap">
+        vegas{pick.vegas_book ? ` · ${pick.vegas_book}` : ""}
+      </div>
+    </div>
+  );
+}
+
+/* ── On hold: conditions met, waiting on a line ─────────────────────── */
+
+function OnHoldPanel({ picks }: { picks: PropPick[] }) {
+  if (picks.length === 0) return null;
+  return (
+    <div className="bg-[var(--card)] border border-[var(--border)] p-5 flex flex-col gap-3">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div className="font-display text-2xl tracking-wide whitespace-nowrap">ON HOLD</div>
+        <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED EVERY RUN
+        </div>
+      </div>
+      <div className="flex flex-col divide-y divide-[var(--border-soft)]">
+        {picks.map((p) => (
+          <div
+            key={`hold-${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`}
+            className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2 text-sm"
+          >
+            <span className="font-semibold">{p.player_name}</span>
+            <span className="text-[var(--text-muted)]">
+              {p.team} vs {p.opponent}
+            </span>
+            <span className="font-display tracking-wide">
+              {statLabel(p.stat)} {p.edge.toUpperCase()}
+            </span>
+            {p.vegas_line != null && (
+              <span className="text-[var(--text-muted)]">
+                vegas {p.vegas_line} · O {p.vegas_over_odds ?? "—"} / U {p.vegas_under_odds ?? "—"}
+              </span>
+            )}
+            <span className="sm:ml-auto text-[12px] text-[var(--text-faint)]">{p.hold_reason ?? "Awaiting line"}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Pick card ────────────────────────────────────────────────────── */
 
 function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }) {
@@ -248,7 +305,7 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
           <div className="font-display text-2xl sm:text-3xl tracking-wide leading-none whitespace-nowrap overflow-hidden text-ellipsis">
             {pick.player_name.toUpperCase()}
           </div>
-          <div className="flex items-center gap-2 text-[13px] font-semibold text-[var(--text-muted)]">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-semibold text-[var(--text-muted)]">
             <span className="bg-[var(--card-hover)] border border-[var(--border-strong)] px-2 py-0.5 tracking-wider">
               {pick.team}
             </span>
@@ -256,7 +313,12 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
             <span className="bg-[var(--card-hover)] border border-[var(--border-strong)] px-2 py-0.5 tracking-wider">
               {pick.opponent}
             </span>
-            <span>· {pick.position}</span>
+            <span className="whitespace-nowrap">· {pick.position}</span>
+            {pick.injury && (
+              <span className="text-[11px] font-bold tracking-wider px-1.5 py-0.5 border border-[var(--under)] text-[var(--under)] whitespace-nowrap">
+                {pick.injury.toUpperCase()}
+              </span>
+            )}
           </div>
         </div>
         <GradeBadge grade={pick.grade} />
@@ -266,9 +328,12 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
           {statLabel(pick.stat)} {pick.ud_line ?? "—"}
         </div>
         <EdgeTag edge={edge} />
-        <div className="ml-auto flex flex-col items-end">
-          <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds ?? "—"}</div>
-          <div className="text-[11px] text-[var(--text-faint)]">{oddsCaption}</div>
+        <div className="ml-auto flex flex-col items-end gap-1">
+          <div className="text-right">
+            <div className="text-[13px] font-bold text-[var(--text-muted)]">{odds ?? "—"}</div>
+            <div className="text-[11px] text-[var(--text-faint)]">underdog {oddsCaption}</div>
+          </div>
+          <VegasOdds pick={pick} edge={edge} />
         </div>
       </div>
       <div className="flex items-center gap-3">
@@ -287,8 +352,16 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
         ) : (
           <div className="flex-grow text-sm font-bold text-[var(--text-faint)]">N/A</div>
         )}
-        {pick.season_avg !== null && (
-          <div className="text-xs text-[var(--text-faint)]">· avg {pick.season_avg}</div>
+        {pick.hitrate_source === "gamelog_vs_line" && pick.games_hit != null && pick.games_played ? (
+          <div className="text-xs text-[var(--text-faint)] whitespace-nowrap">
+            · {pick.games_hit}/{pick.games_played} vs line
+          </div>
+        ) : pick.hitrate_source === "season_avg_estimate" ? (
+          <div className="text-xs text-[var(--text-faint)] whitespace-nowrap">· est. (no line)</div>
+        ) : (
+          pick.season_avg !== null && (
+            <div className="text-xs text-[var(--text-faint)]">· avg {pick.season_avg}</div>
+          )
         )}
       </div>
     </div>
@@ -871,6 +944,7 @@ export default function Home() {
             ))}
           </div>
         )}
+        {boardState !== "last-season" && <OnHoldPanel picks={deduplicatePicks(data.on_hold ?? [])} />}
       </div>
 
       {/* The Receipts */}

@@ -27,7 +27,7 @@ from src.playtypes import (
     get_team_playtype_defense_rankings,
     score_playtypes,
 )
-from src.hitrate import get_player_hitrate
+from src.hitrate import SOURCE_LINE, get_player_hitrate
 from src.adaptive import get_adaptive_score
 
 logger = logging.getLogger(__name__)
@@ -61,6 +61,14 @@ class PropScore:
         self.ud_over_odds = ""    # e.g. "-112"
         self.ud_under_odds = ""   # e.g. "-110"
 
+        # On hold: passes the conditions but has no line to measure against yet
+        self.on_hold = False
+        self.hold_reason = ""
+        self.injury = None        # injury-report label, e.g. "GTD · Ankle"
+
+        # Sportsbook (Vegas) odds for the same prop, display only
+        self.vegas = {}
+
     @property
     def total_score_pct(self) -> float:
         if self.total_conditions == 0:
@@ -72,11 +80,20 @@ class PropScore:
         """Compute final letter grade based on score percentage and hit rate."""
         pct = self.total_score_pct
         hr = self.hitrate_data.get("hitrate", -1)
+        # The hit-rate gate is measured against the line. A prop that passes the
+        # conditions but has no line yet is put ON HOLD: later runs re-check it
+        # once Underdog posts (or restores) the line.
+        vs_line = self.hitrate_data.get("source") == SOURCE_LINE
+        self.is_valid = False
+        self.on_hold = False
 
-        if pct >= CONDITION_PASS_RATE and hr >= HITRATE_THRESHOLD:
+        if pct >= CONDITION_PASS_RATE and self.hitrate_data.get("line") is None:
+            self.on_hold = True
+            self.final_grade = "HOLD"
+        elif pct >= CONDITION_PASS_RATE and vs_line and hr >= HITRATE_THRESHOLD:
             self.is_valid = True
             self.final_grade = "A+"
-        elif pct >= CONDITION_PASS_RATE and hr >= 0.50:
+        elif pct >= CONDITION_PASS_RATE and vs_line and hr >= 0.50:
             self.is_valid = True
             self.final_grade = "A"
         elif pct >= 0.60 and hr >= HITRATE_THRESHOLD:
@@ -101,7 +118,7 @@ class PropScore:
             f"({self.total_score_pct:.0%}) | "
             f"Hit Rate: {self.hitrate_data.get('hitrate', -1):.0%} | "
             f"Grade: {self.final_grade} | "
-            f"{'✅ VALID' if self.is_valid else '❌ SKIP'}"
+            f"{'✅ VALID' if self.is_valid else ('⏸ HOLD — ' + (self.hold_reason or 'awaiting line')) if self.on_hold else '❌ SKIP'}"
         )
 
     def detailed_report(self) -> str:
@@ -140,12 +157,21 @@ class PropScore:
         )
 
         hr = self.hitrate_data.get("hitrate", -1)
+        hd = self.hitrate_data
         lines.append(f"\n--- Hit Rate ---")
-        lines.append(f"  Season hit rate: {hr:.1%}")
-        lines.append(f"  Source: {self.hitrate_data.get('source', 'N/A')}")
-        if "season_avg" in self.hitrate_data:
-            lines.append(f"  Season average: {self.hitrate_data['season_avg']}")
-        lines.append(f"  Threshold: {HITRATE_THRESHOLD:.0%} needed")
+        if hd.get("source") == SOURCE_LINE:
+            lines.append(
+                f"  {self.edge.capitalize()} {hd.get('line')}: {hr:.1%} "
+                f"({hd.get('games_hit')}/{hd.get('games_played')} games)"
+            )
+        elif hr >= 0:
+            lines.append(f"  Estimate vs season average (no line — can't validate): {hr:.1%}")
+        else:
+            lines.append("  Unavailable")
+        lines.append(f"  Source: {hd.get('source', 'N/A')}")
+        if "season_avg" in hd:
+            lines.append(f"  Season average: {hd['season_avg']}")
+        lines.append(f"  Threshold: {HITRATE_THRESHOLD:.0%} needed against the line")
 
         if self.ud_line is not None:
             lines.append(f"\n--- Underdog Fantasy ---")
@@ -168,6 +194,8 @@ def evaluate_points_prop(
     edge: str,
     team_zone_rankings: dict,
     team_playtype_rankings: dict,
+    line: float | None = None,
+    before: str | None = None,
 ) -> PropScore:
     """
     Full methodology evaluation for a POINTS prop.
@@ -208,7 +236,7 @@ def evaluate_points_prop(
     prop.total_conditions = prop.zone_score["total"] + prop.playtype_score["total"]
 
     # Step 6: Hit rate check (only if >= 80% conditions met OR for reporting)
-    prop.hitrate_data = get_player_hitrate(player_name, "points")
+    prop.hitrate_data = get_player_hitrate(player_name, "points", line, edge, before)
     if prop.total_conditions > 0:
         prop.pass_rate = prop.total_score_pct
 
@@ -222,6 +250,8 @@ def evaluate_rebound_prop(
     opponent: str,
     position: str,
     edge: str,
+    line: float | None = None,
+    before: str | None = None,
 ) -> PropScore:
     """
     Evaluate REBOUNDS prop.
@@ -236,7 +266,7 @@ def evaluate_rebound_prop(
     prop.total_conditions = 1
 
     # Hit rate check
-    prop.hitrate_data = get_player_hitrate(player_name, "rebounds")
+    prop.hitrate_data = get_player_hitrate(player_name, "rebounds", line, edge, before)
     prop.compute_grade()
     return prop
 
@@ -247,6 +277,8 @@ def evaluate_assist_prop(
     opponent: str,
     position: str,
     edge: str,
+    line: float | None = None,
+    before: str | None = None,
 ) -> PropScore:
     """
     Evaluate ASSISTS prop.
@@ -259,7 +291,7 @@ def evaluate_assist_prop(
     prop.total_conditions = 1
 
     # Hit rate check
-    prop.hitrate_data = get_player_hitrate(player_name, "assists")
+    prop.hitrate_data = get_player_hitrate(player_name, "assists", line, edge, before)
     prop.compute_grade()
     return prop
 
@@ -274,6 +306,8 @@ def evaluate_prop(
     team_zone_rankings: dict | None = None,
     team_playtype_rankings: dict | None = None,
     adaptive_weights: dict | None = None,
+    line: float | None = None,
+    before: str | None = None,
 ) -> PropScore:
     """Route to the correct evaluation function based on stat category."""
     if stat == "points":
@@ -281,11 +315,13 @@ def evaluate_prop(
             player_name, team, opponent, position, edge,
             team_zone_rankings or {},
             team_playtype_rankings or {},
+            line,
+            before,
         )
     elif stat == "rebounds":
-        prop = evaluate_rebound_prop(player_name, team, opponent, position, edge)
+        prop = evaluate_rebound_prop(player_name, team, opponent, position, edge, line, before)
     elif stat == "assists":
-        prop = evaluate_assist_prop(player_name, team, opponent, position, edge)
+        prop = evaluate_assist_prop(player_name, team, opponent, position, edge, line, before)
     else:
         return PropScore(player_name, team, opponent, position, stat, edge)
 
@@ -317,7 +353,7 @@ COMBO_DEFS = {
 }
 
 
-def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict) -> list["PropScore"]:
+def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict, before: str | None = None) -> list["PropScore"]:
     """
     Build combination prop picks from individually-evaluated props.
 
@@ -374,40 +410,23 @@ def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict) -> list["P
             combo.total_points = sum(p.total_points for p in component_props)
             combo.total_conditions = sum(p.total_conditions for p in component_props)
 
-            # Average the hit rates of components
-            hr_vals = [p.hitrate_data.get("hitrate", -1) for p in component_props]
-            valid_hrs = [h for h in hr_vals if h >= 0]
-            avg_hr = sum(valid_hrs) / len(valid_hrs) if valid_hrs else -1
-            avg_games = None
-            combo_avg = 0.0
-            for p in component_props:
-                gp = p.hitrate_data.get("games_played")
-                if gp and gp > 0:
-                    avg_games = gp
-                sa = p.hitrate_data.get("season_avg")
-                if sa is not None:
-                    combo_avg += sa
-
-            combo.hitrate_data = {
-                "hitrate": round(avg_hr, 3) if avg_hr >= 0 else -1,
-                "games_played": avg_games,
-                "season_avg": round(combo_avg, 1) if combo_avg else None,
-                "source": "combo_average",
-            }
-
             # Average adaptive multiplier from components
             combo.adaptive_multiplier = sum(
                 p.adaptive_multiplier for p in component_props
             ) / len(component_props)
 
-            combo.compute_grade()
-
-            # Attach Underdog combo line
+            # Attach the Underdog combo line, then measure the hit rate of the
+            # summed stats against it (the same gate as single-stat props)
             ud = get_line_for_prop(ud_lines, player_name, combo_stat)
+            if ud and ud.get("suspended"):
+                ud = None   # pulled pending news: no line to measure against (hold)
             if ud:
                 combo.ud_line = ud["line"]
                 combo.ud_over_odds = ud["over_odds"]
                 combo.ud_under_odds = ud["under_odds"]
+            combo.hitrate_data = get_player_hitrate(player_name, combo_stat, combo.ud_line, edge, before)
+
+            combo.compute_grade()
 
             # Store which component stats contributed
             combo.zone_score = {
@@ -426,7 +445,7 @@ def build_combo_props(prop_scores: list["PropScore"], ud_lines: dict) -> list["P
                 f"  Combo: {player_name} {combo_def['label']} {edge.upper()} "
                 f"| {combo.total_points}/{combo.total_conditions} "
                 f"({combo.total_score_pct:.0%}) "
-                f"| HR {avg_hr:.0%} | {combo.final_grade}"
+                f"| HR {combo.hitrate_data.get('hitrate', -1):.0%} | {combo.final_grade}"
                 f"{' ✅' if combo.is_valid else ''}"
             )
 

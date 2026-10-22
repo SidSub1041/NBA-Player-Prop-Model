@@ -71,6 +71,7 @@ _STAT_WORDS = {
     "pts": "points", "pt": "points", "point": "points",
     "rebs": "rebounds", "reb": "rebounds", "rebound": "rebounds",
     "asts": "assists", "ast": "assists", "assist": "assists",
+    "points": "points", "rebounds": "rebounds", "assists": "assists",
     "3pt": "3pointers", "threes": "3pointers", "3pointer": "3pointers",
 }
 
@@ -106,17 +107,38 @@ _RAW_STAT_IDS = {
 }
 
 
+_ORDER = ["points", "rebounds", "assists"]
+_ABBREV_COMBOS = {
+    "pra": "points+rebounds+assists", "pr": "points+rebounds", "pa": "points+assists", "ra": "rebounds+assists",
+}
+_SINGLE_LETTERS = {"p": "points", "r": "rebounds", "a": "assists"}
+
+
 def _norm_stat(title: str) -> str:
-    """'Pts + Rebs + Asts' / 'Points + Rebounds + Assists' -> 'points+rebounds+assists'."""
+    """
+    'Pts + Rebs + Asts' / 'Points + Rebounds + Assists' / 'PRA' -> 'points+rebounds+assists'.
+
+    Combo components are put in a fixed order, so 'Asts + Rebs' and
+    'Rebs + Asts' both become 'rebounds+assists'.
+    """
     raw = str(title).strip().lower()
     if raw in _RAW_STAT_IDS:
         return _RAW_STAT_IDS[raw]
+    squashed = re.sub(r"[^a-z0-9]", "", raw)
+    if squashed in _ABBREV_COMBOS:
+        return _ABBREV_COMBOS[squashed]
     raw = raw.replace("&", "+").replace(" and ", "+")
+    if "+" not in raw and "_" in raw:
+        raw = raw.replace("_", "+")          # raw ids such as points_rebounds
     parts = [p for p in re.split(r"[+]", raw) if p.strip()]
     words = []
     for p in parts:
         w = re.sub(r"[^a-z0-9]", "", p)
+        if len(parts) > 1:
+            w = _SINGLE_LETTERS.get(w, w)
         words.append(_STAT_WORDS.get(w, w))
+    if len(words) > 1 and all(w in _ORDER for w in words):
+        words = sorted(set(words), key=_ORDER.index)
     return "+".join(words)
 
 
@@ -218,7 +240,7 @@ def _line_rank(line: dict, two_sided: bool) -> tuple:
     )
 
 
-def parse_underdog_lines(data: dict, date: str | None = None) -> dict:
+def parse_underdog_lines(data: dict, date: str | None = None, include_suspended: bool = False) -> dict:
     """
     Payload -> {(norm_name, internal_stat): {line, over_odds, under_odds, ...}}.
 
@@ -226,6 +248,10 @@ def parse_underdog_lines(data: dict, date: str | None = None) -> dict:
     Eastern) when given — so tomorrow's back-to-back lines, live lines and
     season-long markets never attach to tonight's props. When a player has
     several lines for one stat, the standard two-sided line wins.
+
+    With include_suspended, lines Underdog has suspended (pulled pending news,
+    usually injury) are returned too, flagged "suspended": True and ranked
+    below any active line, so the model can put that prop on hold.
     """
     if not data or not isinstance(data, dict):
         return {}
@@ -257,9 +283,12 @@ def parse_underdog_lines(data: dict, date: str | None = None) -> dict:
     for line in data.get("over_under_lines", []) or []:
         if not isinstance(line, dict):
             continue
-        status = line.get("status")
-        if line.get("live_event") or (status and str(status).lower() != "active"):
-            continue  # in-game or suspended line
+        status = str(line.get("status") or "").lower()
+        if line.get("live_event"):
+            continue  # in-game line
+        suspended = status == "suspended"
+        if status and status != "active" and not (suspended and include_suspended):
+            continue  # suspended (unless asked for) or otherwise not offered
         ou = line.get("over_under", {}) or {}
         app_stat = ou.get("appearance_stat", {}) or {}
         app_id = app_stat.get("appearance_id")
@@ -299,7 +328,9 @@ def parse_underdog_lines(data: dict, date: str | None = None) -> dict:
             "under_multiplier": "" if discounted else str(lo.get("payout_multiplier") or ""),
             "player": player_name,
         }
-        rank = _line_rank(line, two_sided)
+        if suspended:
+            entry["suspended"] = True
+        rank = (not suspended,) + _line_rank(line, two_sided)
         _put(exact, (norm_name(player_name), stat_key), entry, rank)
         _put(base, (norm_name_base(player_name), stat_key), entry, rank)
 
@@ -310,12 +341,13 @@ def parse_underdog_lines(data: dict, date: str | None = None) -> dict:
 def fetch_underdog_lines(date: str | None = None) -> dict:
     """Live Underdog NBA lines for `date`'s slate, keyed by (normalized player, internal stat); {} on any failure."""
     try:
-        lines = parse_underdog_lines(fetch_underdog_payload(date), date)
+        lines = parse_underdog_lines(fetch_underdog_payload(date), date, include_suspended=True)
     except Exception as e:
         logger.warning(f"Underdog lines unavailable ({type(e).__name__}: {e})")
         return {}
-    distinct = len({v["player"] + k[1] for k, v in lines.items()})
-    logger.info(f"Fetched {distinct} Underdog NBA lines")
+    distinct = {v["player"] + k[1] for k, v in lines.items() if not v.get("suspended")}
+    held = {v["player"] + k[1] for k, v in lines.items() if v.get("suspended")}
+    logger.info(f"Fetched {len(distinct)} Underdog NBA lines ({len(held)} suspended)")
     return lines
 
 
@@ -346,6 +378,7 @@ def load_cached_lines(date: str, logs_dir: str | None = None) -> dict:
             "over_multiplier": "",
             "under_multiplier": "",
             "player": p["player_name"],
+            "cached": True,   # captured by an earlier run today, not in the live feed now
         }
         cached[(norm_name(p["player_name"]), p["stat"])] = entry
         cached.setdefault((norm_name_base(p["player_name"]), p["stat"]), entry)

@@ -9,7 +9,7 @@ import requests
 from nba_api.stats.endpoints import scoreboardv3
 from nba_api.stats.static import teams as nba_teams
 
-from src.config import NBA_TEAM_IDS, NBA_STATS_HEADERS
+from src.config import NBA_STATS_HEADERS, NBA_TEAM_IDS, slate_today
 
 CDN_SCOREBOARD_URL = "https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json"
 
@@ -31,10 +31,11 @@ TEAM_ID_TO_ABBREV = {v: k for k, v in NBA_TEAM_IDS.items()}
 
 def get_todays_games(date: str | None = None) -> list[dict]:
     """
-    Returns list of dicts: [{"home": "BOS", "away": "LAL", "home_id": ..., "away_id": ...}, ...]
+    Returns list of dicts: [{"home": "BOS", "away": "LAL", "home_id": ..., "away_id": ...,
+                             "status": 1|2|3|None, "start_utc": "2026-10-21T23:30:00Z"|None}, ...]
     """
     if date is None:
-        date = datetime.today().strftime("%Y-%m-%d")
+        date = slate_today()
 
     logger.info(f"Fetching scoreboard for {date}")
     time.sleep(0.6)
@@ -45,7 +46,7 @@ def get_todays_games(date: str | None = None) -> list[dict]:
         # stats.nba.com is often unreachable from cloud networks. The NBA's
         # public CDN serves today's scoreboard in the same shape, so fall back
         # to it when we're asking about today.
-        if date != datetime.today().strftime("%Y-%m-%d"):
+        if date != slate_today():
             raise
         logger.warning(f"stats.nba.com scoreboard failed ({type(e).__name__}); trying the NBA CDN")
         data = _fetch_cdn_scoreboard()
@@ -72,6 +73,9 @@ def get_todays_games(date: str | None = None) -> list[dict]:
                 "away": away_abbrev,
                 "home_id": home_id,
                 "away_id": away_id,
+                # 1 = not started, 2 = in progress, 3 = final (None if unknown)
+                "status": game.get("gameStatus"),
+                "start_utc": game.get("gameTimeUTC"),
             })
             logger.info(f"  Game: {away_abbrev} @ {home_abbrev}")
 
@@ -99,3 +103,23 @@ def get_matchups_today(date: str | None = None) -> dict[str, str]:
         matchups[g["home"]] = g["away"]
         matchups[g["away"]] = g["home"]
     return matchups
+
+
+def pre_tip_teams(games: list[dict]) -> set[str]:
+    """Teams whose game is known not to have started yet (status 1 and start time still ahead)."""
+    from datetime import timezone
+
+    now = datetime.now(timezone.utc)
+    teams = set()
+    for g in games:
+        if g.get("status") != 1:
+            continue
+        start = g.get("start_utc")
+        if start:
+            try:
+                if datetime.fromisoformat(str(start).replace("Z", "+00:00")) <= now:
+                    continue
+            except ValueError:
+                pass
+        teams.update((g["home"], g["away"]))
+    return teams
