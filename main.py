@@ -64,7 +64,6 @@ from src.season import stats_season
 from src.underdog import fetch_underdog_lines, load_cached_lines, merge_lines
 from src.lines import apply as apply_line, hold_reason, resolve
 from src.vegas_odds import VegasLines
-from src.adaptive import compute_adaptive_weights
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player, injury_for, injury_label
 
 
@@ -218,9 +217,9 @@ def run(date: str | None = None, fast: bool = False):
     logger.info("Step 3e: Fetching injury report...")
     injuries = fetch_injury_report()
 
-    # ── Step 3d: Compute adaptive weights from past results ──────────
-    logger.info("Step 3d: Computing adaptive weights from graded history...")
-    adaptive_weights = compute_adaptive_weights()
+    # ── Step 3d: (retired) adaptive multipliers ──────────────────────
+    # Superseded by the learning loop (src/learner.py), applied after Step 6.
+    adaptive_weights = None
 
     # ── Step 5: Evaluate each matchup ───────────────────────────────
     logger.info("Step 5: Evaluating player props...")
@@ -344,6 +343,33 @@ def run(date: str | None = None, fast: bool = False):
     logger.info(f"  Lines by source: {by_source} | {vegas.report()}")
 
     _assert_stats_reachable("player evaluation")
+
+    # ── Step 6b: The learning loop ───────────────────────────────────
+    # The model trained on every graded prop so far predicts P(hit) for each
+    # prop with a line. In ACTIVE mode a valid pick must also be +EV at its
+    # price. A learner problem never costs a board: it is logged and skipped.
+    logger.info("Step 6b: Applying the learned model...")
+    try:
+        from src.learner import load_model, predict_prop
+        from src.output import _prop_to_dict
+        model = load_model()
+        if model:
+            demoted = 0
+            for p in prop_scores:
+                pred = predict_prop(model, _prop_to_dict(p))
+                p.learned = pred or {}
+                if pred and model.get("trusted") and p.is_valid and pred["ev"] < 0:
+                    p.is_valid = False
+                    p.final_grade = "B+"
+                    p.learn_note = (f"Model says -EV: {pred['p_hit']:.0%} to hit vs "
+                                    f"{pred['breakeven']:.0%} needed at this price")
+                    demoted += 1
+            logger.info(f"  Learner {model.get('mode', 'shadow').upper()} on {model.get('n_rows')} labeled props"
+                        + (f"; {demoted} pick(s) demoted as -EV" if model.get("trusted") else " (predictions shown, nothing gated)"))
+        else:
+            logger.info("  No trained model yet (it trains after the first graded night)")
+    except Exception as e:
+        logger.warning(f"  Learner skipped ({type(e).__name__}: {e})")
 
     # ── Step 7: Output ───────────────────────────────────────────────
     logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")

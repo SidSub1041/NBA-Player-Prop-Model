@@ -216,6 +216,10 @@ def _prop_to_dict(p) -> dict:
         "vegas_book": ((getattr(p, "vegas", None) or {}).get("under_book") if p.edge == "under"
                        else (getattr(p, "vegas", None) or {}).get("over_book")),
         "vegas_books": (getattr(p, "vegas", None) or {}).get("books"),
+        "p_hit": (getattr(p, "learned", None) or {}).get("p_hit"),
+        "ev": (getattr(p, "learned", None) or {}).get("ev"),
+        "breakeven": (getattr(p, "learned", None) or {}).get("breakeven"),
+        "learn_note": getattr(p, "learn_note", "") or None,
         "on_hold": bool(getattr(p, "on_hold", False)),
         "hold_reason": getattr(p, "hold_reason", "") or None,
         "injury": getattr(p, "injury", None),
@@ -240,9 +244,16 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
     def _held(p):
         return bool(getattr(p, "on_hold", False))
 
-    valid = [p for p in individual if p.is_valid]
+    def _by_ev(ps):   # best expected value first — only once the learner is ACTIVE (shadow mode changes nothing)
+        def key(p):
+            l = getattr(p, "learned", None) or {}
+            ev = l.get("ev")
+            return -ev if (l.get("active") and ev is not None) else 9.0
+        return sorted(ps, key=key)
+
+    valid = _by_ev([p for p in individual if p.is_valid])
     watchlist = [p for p in individual if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
-    valid_combos = [p for p in combos if p.is_valid]
+    valid_combos = _by_ev([p for p in combos if p.is_valid])
     watchlist_combos = [p for p in combos if not p.is_valid and not _held(p) and p.total_score_pct >= 0.60]
     on_hold = [p for p in prop_scores if _held(p)]
 
@@ -277,6 +288,7 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "combo_valid_count": len(valid_combos),
         "combo_watchlist_count": len(watchlist_combos),
         "on_hold_count": len(on_hold),
+        "demoted_count": sum(1 for p in prop_scores if getattr(p, "learn_note", "")),
         "thresholds": {
             "condition_pass_rate": CONDITION_PASS_RATE,
             "hitrate": HITRATE_THRESHOLD,
@@ -286,9 +298,15 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "valid_combos": [_prop_to_dict(p) for p in valid_combos],
         "watchlist_combos": [_prop_to_dict(p) for p in watchlist_combos],
         "on_hold": [_prop_to_dict(p) for p in on_hold],
+        "demoted": [_prop_to_dict(p) for p in prop_scores if getattr(p, "learn_note", "")],
         "all_props": [_prop_to_dict(p) for p in prop_scores],
         "hitrate_summary": hitrate_summary,
     }
+    try:
+        from src.learner import summary as learner_summary
+        payload["learning"] = learner_summary()
+    except Exception as e:
+        logger.warning(f"Learning summary unavailable ({e})")
 
     # Load existing model results history if available
     web_data_dir = os.path.join(

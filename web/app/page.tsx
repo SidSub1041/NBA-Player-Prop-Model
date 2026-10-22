@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { PropsData, PropPick, DayResult } from "@/lib/types";
+import type { PropsData, PropPick, DayResult, Learning } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -302,9 +302,60 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
   );
 }
 
+/* ── Cut by the model: passed the matchup, failed the price ────────── */
+
+function DemotedPanel({ picks }: { picks: PropPick[] }) {
+  if (picks.length === 0) return null;
+  return (
+    <div className="bg-[var(--card)] border border-[var(--border)] p-5 flex flex-col gap-3">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div className="font-display text-2xl tracking-wide whitespace-nowrap">CUT BY THE MODEL</div>
+        <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+          PASSED THE MATCHUP · −EV AT THE PRICE
+        </div>
+      </div>
+      <div className="flex flex-col divide-y divide-[var(--border-soft)]">
+        {picks.map((p) => (
+          <div
+            key={`cut-${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`}
+            className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2 text-sm"
+          >
+            <span className="font-semibold">{p.player_name}</span>
+            <span className="text-[var(--text-muted)]">
+              {p.team} vs {p.opponent}
+            </span>
+            <span className="font-display tracking-wide">
+              {statLabel(p.stat)} {pickLine(p) ?? "—"} {p.edge.toUpperCase()}
+            </span>
+            <span className="sm:ml-auto text-[12px] text-[var(--text-faint)]">{p.learn_note ?? ""}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Pick card ────────────────────────────────────────────────────── */
 
-function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }) {
+function ModelRow({ pick, mode }: { pick: PropPick; mode?: string }) {
+  if (pick.p_hit == null) return null;
+  const ev = pick.ev ?? null;
+  return (
+    <div className="flex items-center gap-3 -mt-2">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">MODEL</div>
+      <div className="text-sm font-bold text-[var(--text)]">{Math.round(pick.p_hit * 100)}% to hit</div>
+      {ev !== null && (
+        <div className="text-xs font-bold" style={{ color: ev >= 0 ? "var(--over)" : "#f87171" }}>
+          · EV {ev >= 0 ? "+" : ""}
+          {Math.round(ev * 100)}%
+        </div>
+      )}
+      {mode !== "active" && <div className="text-[11px] text-[var(--text-faint)]">· learning (shadow)</div>}
+    </div>
+  );
+}
+
+function PickCard({ pick, hrThreshold, mode }: { pick: PropPick; hrThreshold: number; mode?: string }) {
   const edge = pick.edge.toLowerCase();
   const hr = pick.hitrate !== null ? Math.round(pick.hitrate * 100) : null;
   return (
@@ -370,6 +421,7 @@ function PickCard({ pick, hrThreshold }: { pick: PropPick; hrThreshold: number }
           )
         )}
       </div>
+      <ModelRow pick={pick} mode={mode} />
     </div>
   );
 }
@@ -563,6 +615,129 @@ function ShotChart({ results }: { results: DayResult[] }) {
 }
 
 /* ── The Receipts (this season) ───────────────────────────────────── */
+
+function SegmentList({ title, items, good }: { title: string; items: { segment: string; hits: number; misses: number }[]; good: boolean }) {
+  if (!items.length) return null;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">{title}</div>
+      {items.map((s) => (
+        <div key={s.segment} className="flex items-baseline justify-between gap-3 text-sm">
+          <span className="text-[var(--text)] min-w-0">{s.segment}</span>
+          <span className="font-bold whitespace-nowrap" style={{ color: good ? "var(--over)" : "#f87171" }}>
+            {s.hits}-{s.misses}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FilmRoom({ learning }: { learning: Learning }) {
+  const pm = learning.postmortem;
+  const gain = learning.cv?.gain ?? null;
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <div className="font-display text-2xl tracking-wide">LAST NIGHT</div>
+          {pm && <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">{fmtDayDate(pm.date)}</div>}
+        </div>
+        {pm ? (
+          <>
+            <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+              <div>
+                <span className="font-bold">
+                  {pm.published.hits ?? 0}-{pm.published.misses ?? 0}
+                </span>{" "}
+                <span className="text-[var(--text-muted)]">picks</span>
+                {pm.published.units != null && (
+                  <span className="font-bold ml-2" style={{ color: unitsColor(pm.published.units) }}>
+                    {fmtUnits(pm.published.units)}
+                  </span>
+                )}
+              </div>
+              <div>
+                <span className="font-bold">
+                  {pm.all_props.hits}-{pm.all_props.misses}
+                </span>{" "}
+                <span className="text-[var(--text-muted)]">every prop with a line</span>
+              </div>
+            </div>
+            <div className="text-[11px] text-[var(--text-faint)]">
+              Segments cover every prop with a line that night, not only the picks. “Went right” means it would beat a −110 price.
+              {pm.picks_cut_by_model ? ` The model cut ${pm.picks_cut_by_model} pick${pm.picks_cut_by_model === 1 ? "" : "s"} as −EV.` : ""}
+            </div>
+            <SegmentList title="WENT RIGHT" items={pm.went_right} good />
+            <SegmentList title="WENT WRONG" items={pm.went_wrong} good={false} />
+            {pm.biggest_misses.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">BIGGEST MISSES</div>
+                {pm.biggest_misses.slice(0, 3).map((m) => (
+                  <div key={`${m.player}-${m.stat}`} className="text-sm text-[var(--text-muted)]">
+                    <span className="text-[var(--text)]">{m.player}</span> · {statLabel(m.stat)} {m.edge} {m.line} → {m.actual}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-sm text-[var(--text-muted)]">The first post-mortem lands the morning after the next game day.</div>
+        )}
+      </div>
+      <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <div className="font-display text-2xl tracking-wide">WHAT IT LEARNED</div>
+          <span
+            className="font-display text-base tracking-widest px-2.5 py-0.5"
+            style={{
+              background: learning.mode === "active" ? "var(--over)" : "var(--card-hover)",
+              color: learning.mode === "active" ? "var(--over-ink)" : "var(--text-muted)",
+            }}
+          >
+            {learning.mode === "active" ? "ACTIVE" : "SHADOW"}
+          </span>
+        </div>
+        <div className="text-sm text-[var(--text-muted)]">
+          Trained on <span className="font-bold text-[var(--text)]">{learning.n_rows}</span> graded props over{" "}
+          <span className="font-bold text-[var(--text)]">{learning.n_days}</span> nights
+          {learning.cv?.effective_rows != null && (
+            <>
+              {" "}(recent nights count most: about {Math.round(learning.cv.effective_rows)} props over{" "}
+              {learning.cv.effective_nights?.toFixed(1)} nights of real evidence)
+            </>
+          )}
+          {gain !== null && (
+            <>
+              {" "}· {gain >= 0 ? `${(gain * 100).toFixed(1)}% better` : `${(-gain * 100).toFixed(1)}% worse`} than the{" "}
+              {learning.cv?.baseline ?? "baseline"} on nights it never saw, predicting forward only
+            </>
+          )}
+          .
+        </div>
+        {learning.mode !== "active" && learning.note && (
+          <div className="text-xs text-[var(--text-faint)]">{learning.note} — until then it only shows its odds.</div>
+        )}
+        {learning.cv?.gate_check?.verdict && (
+          <div className="text-xs text-[var(--text-faint)]">On past published picks: {learning.cv.gate_check.verdict}.</div>
+        )}
+        {learning.factors && learning.factors.length > 0 && (
+          <div className="flex flex-col gap-1.5">
+            <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">WHAT MOVES THE NEEDLE</div>
+            {learning.factors.slice(0, 5).map((f) => (
+              <div key={f.feature} className="flex items-baseline justify-between gap-3 text-sm">
+                <span className="text-[var(--text)] min-w-0">{f.label}</span>
+                <span className="font-bold whitespace-nowrap" style={{ color: f.weight > 0 ? "var(--over)" : "#f87171" }}>
+                  {f.weight > 0 ? "▲" : "▼"} {f.effect}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function Receipts({ summary, results }: { summary: ResultsSummary; results: DayResult[] }) {
   const { totalPicks, hits, misses, voided, rate, allUnits, lastGraded } = summary;
@@ -946,12 +1121,21 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {boardPicks.map((p) => (
-              <PickCard key={`${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`} pick={p} hrThreshold={hrThreshold} />
+              <PickCard key={`${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`} pick={p} hrThreshold={hrThreshold} mode={data.learning?.mode} />
             ))}
           </div>
         )}
         {boardState !== "last-season" && <OnHoldPanel picks={deduplicatePicks(data.on_hold ?? [])} />}
+        {boardState !== "last-season" && <DemotedPanel picks={deduplicatePicks(data.demoted ?? [])} />}
       </div>
+
+      {/* The Film Room: what the model learned from its own results */}
+      {data.learning && (
+        <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
+          <SectionHead title="THE FILM ROOM" tag="LEARNS FROM EVERY PICK" />
+          <FilmRoom learning={data.learning} />
+        </div>
+      )}
 
       {/* The Receipts */}
       <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">

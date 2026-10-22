@@ -53,6 +53,8 @@ PICK_FIELDS = [
     "vegas_line", "vegas_over_odds", "vegas_under_odds", "vegas_book", "vegas_books",
     # the designated line (sportsbooks first, Underdog backup)
     "line", "line_source", "line_book", "over_odds", "under_odds",
+    # the learning loop's prediction at pick time
+    "p_hit", "ev",
 ]
 
 GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
@@ -97,6 +99,8 @@ def _bucket(prop):
         return "valid" + combo
     if prop.get("on_hold"):
         return "hold" + combo
+    if prop.get("learn_note"):
+        return "demoted" + combo
     if prop.get("grade") in ("B+", "B"):
         return "watchlist" + combo
     return "other" + combo
@@ -154,6 +158,8 @@ def _flatten_prop(prop, date):
         "line_book": prop.get("line_book"),
         "over_odds": prop.get("over_odds", prop.get("ud_over_odds")),
         "under_odds": prop.get("under_odds", prop.get("ud_under_odds")),
+        "p_hit": prop.get("p_hit"),
+        "ev": prop.get("ev"),
     }
 
 

@@ -72,6 +72,10 @@ class PropScore:
         # The books' consensus for this prop (display + CSV)
         self.vegas = {}
 
+        # The learning loop's view of this prop (src/learner.py)
+        self.learned = {}
+        self.learn_note = ""
+
     # ── designated line helpers ──────────────────────────────────────
     @property
     def line(self):

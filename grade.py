@@ -38,13 +38,27 @@ def main():
         date = (datetime.strptime(slate_today(), "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 
     logging.info(f"Grading picks for {date}")
+    from src.grader import clear_box_cache
+    clear_box_cache()
     result = grade_picks(date)
 
-    if not result:
+    if result:
+        save_graded_results(result)
+    else:
         logging.error(f"No results to save for {date}")
-        return
 
-    save_graded_results(result)
+    # The learning loop: label every prop on last night's board (and any older
+    # board not yet labeled), retrain, and write the post-mortem. A failure here
+    # never loses the grading above.
+    try:
+        from src.grader import _fetch_box_scores, box_scores_complete
+        from src.learner import nightly_update
+        nightly_update(date, result or None, _fetch_box_scores, fetch_ok=box_scores_complete)
+    except Exception as e:
+        logging.warning(f"Learning loop skipped ({type(e).__name__}: {e})")
+
+    if not result:
+        return
 
     total = result["total_picks"]
     hits = result["hits"]

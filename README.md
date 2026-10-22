@@ -39,6 +39,17 @@ Only **A+ and A** picks are flagged as valid.
 ### 6 — On Hold: no line, no pick
 A prop that meets ≥ 80% of its conditions but has **no line** — the books don't hang it and Underdog doesn't either — can't be measured, so it goes **On Hold** instead of being graded. Each hold says why, e.g. *No PTS line: books pulled theirs before tip; Underdog suspended its 24.5 — GTD · Ankle* (injury designations come from the CBS injury report). Every scheduled run re-checks the holds — five runs per game day, the last at about 7:30 PM ET to catch lines posted or restored near tip-off — and a hold becomes a pick (or drops) as soon as a line appears. A starter listed **OUT** is replaced by his backup before any of this, and the backup is evaluated against his own line. Holds are never graded.
 
+### 7 — The learning loop: it learns from its own results
+Every morning, after grading, the model studies the night before:
+
+1. **Label** — every prop that had a line (not just the published picks, ~100 a night) is marked hit or miss from the box scores (`logs/training/`). Older boards are backfilled automatically; a night whose box scores came back incomplete is retried on later runs rather than saved half-labeled.
+2. **Retrain** — a supervised model (L2-regularized logistic regression, recent nights weighted more, always anchored to today) learns P(hit) from what was known at pick time: hit rate against the line, season average vs the line, the price's implied probability, share of conditions met, stat type, over/under, line source, books hanging the line, injury tag and sample size (`logs/learner.json`). Features are recomputed from each stored board, so a definition change never mixes old and new encodings. It retrains only when new labels exist.
+3. **Check itself honestly** — walk-forward: each night is predicted by a model trained only on the nights *before* it, and compared with two baselines, the average hit rate and the de-vigged book price. To turn **active** it must, on *effective* evidence of ≥ 300 props over ≥ 10 nights (recent nights count most), beat the stronger baseline by ≥ 1% with a statistically clear margin, its EV rule must not have cost units on past published picks, and all of that must hold on three retrains in a row. Until then it runs in **shadow** mode: its probability shows on every card, nothing changes. Once active it only drops back after two failing retrains in a row.
+4. **Act** — once active, a valid pick must also be **+EV**: the model's P(hit) must beat the break-even probability of the pick's price (settled the same way the grader pays), or the pick is cut — and listed on the board under *Cut by the model* with the reason. Valid picks are then listed best expected value first.
+5. **Post-mortem** — what went right (a segment that would beat a −110 price), what went wrong and the biggest misses for each night (`logs/postmortem_{date}.json`), shown on the site in *The Film Room* with the model's current top factors (real, varying inputs only).
+
+Retraining after every run does not overfit: each retrain refits from scratch on all labels, and the gate above decides whether it may act. It replaces the earlier adaptive multipliers (`src/adaptive.py`, no longer used).
+
 ### Lines and odds: sportsbooks first, Underdog as backup
 Every prop — points, rebounds, assists and all four combos (PTS+REB+AST, PTS+REB, PTS+AST, REB+AST) — is measured against the **sportsbook line** from [The Odds API](https://the-odds-api.com): the line most books hang for that prop, with the best price on each side and the book offering it (DraftKings, FanDuel, BetOnline…). Only when the books have no line for a prop does the model use **Underdog's** line instead, and the card says so. Picks are graded against that same line and price.
 
@@ -180,6 +191,7 @@ NBA-Player-Prop-Model/
 │   ├── hitrate.py       # Hit rate vs the line, from NBA.com game logs
 │   ├── vegas_odds.py    # Sportsbook lines + prices (The Odds API) — primary line source
 │   ├── lines.py         # The line each prop is measured against: books first, Underdog backup
+│   ├── learner.py       # The learning loop: labels every prop nightly, retrains, gates -EV picks, post-mortems
 │   ├── scoring_engine.py# Core scoring logic
 │   └── output.py        # Report formatting
 └── logs/                # Daily reports and run logs

@@ -71,14 +71,46 @@ def _fetch_game_ids(date: str) -> list[str]:
     return [g["gameId"] for g in games]
 
 
+_BOX_CACHE: dict[str, dict] = {}
+_BOX_STATUS: dict[str, dict] = {}   # date -> {"games": n, "failed": k}
+
+
+def clear_box_cache() -> None:
+    """Start of a grading run: never reuse box scores fetched by an earlier run in this process."""
+    _BOX_CACHE.clear()
+    _BOX_STATUS.clear()
+
+
+def box_scores_complete(date: str) -> bool:
+    """Did every game on *date* come back? (False if any game's box score failed or nothing was fetched.)"""
+    st = _BOX_STATUS.get(date)
+    return bool(st) and st["games"] > 0 and st["failed"] == 0
+
+
 def _fetch_box_scores(date: str) -> dict[str, dict]:
     """
-    Fetch box-score stats for every player who played on *date*.
+    Fetch box-score stats for every player who played on *date* (once per date per run;
+    grading and the learning loop share it). An empty result is never cached.
 
     Returns: {player_name_lower: {"pts": int, "reb": int, "ast": int, "min": float, "dnp": bool}}
     """
-    game_ids = _fetch_game_ids(date)
+    if date in _BOX_CACHE:
+        return _BOX_CACHE[date]
+    box = _fetch_box_scores_uncached(date)
+    if box:
+        _BOX_CACHE[date] = box
+    return box
+
+
+def _fetch_box_scores_uncached(date: str) -> dict[str, dict]:
+    try:
+        game_ids = _fetch_game_ids(date)
+    except Exception as e:
+        logger.warning(f"Could not list games for {date}: {e}")
+        _BOX_STATUS[date] = {"games": 0, "failed": 1}
+        return {}
     player_stats: dict[str, dict] = {}
+    failed = 0
 
     for gid in game_ids:
         time.sleep(0.6)
@@ -107,9 +139,12 @@ def _fetch_box_scores(date: str) -> dict[str, dict]:
                         "dnp": minutes == 0,
                     }
         except Exception as e:
+            failed += 1
             logger.warning(f"Box-score fetch failed for game {gid}: {e}")
 
-    logger.info(f"Fetched box-score data for {len(player_stats)} players")
+    _BOX_STATUS[date] = {"games": len(game_ids), "failed": failed}
+    logger.info(f"Fetched box-score data for {len(player_stats)} players"
+                + (f" ({failed}/{len(game_ids)} games FAILED — their picks will be voided)" if failed else ""))
     return player_stats
 
 
