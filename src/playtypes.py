@@ -19,6 +19,34 @@ from src.season import stats_season
 logger = logging.getLogger(__name__)
 
 
+# League-wide player table per playtype, fetched once per run and shared by
+# every player (one request per playtype instead of one per player per playtype).
+_player_frames: dict[tuple[str, str], pd.DataFrame] = {}
+
+
+def reset_cache() -> None:
+    _player_frames.clear()
+
+
+def _league_player_frame(playtype: str) -> pd.DataFrame:
+    key = (stats_season(), playtype)
+    if key not in _player_frames:
+        time.sleep(0.6)
+        try:
+            data = synergyplaytypes.SynergyPlayTypes(
+                season=stats_season(),
+                play_type_nullable=playtype,
+                player_or_team_abbreviation="P",
+                type_grouping_nullable="offensive",
+                per_mode_simple="PerGame",
+            )
+            _player_frames[key] = data.get_data_frames()[0]
+        except Exception as e:
+            logger.warning(f"  Playtype {playtype}: league table unavailable this run ({type(e).__name__})")
+            _player_frames[key] = pd.DataFrame()   # don't retry per player
+    return _player_frames[key]
+
+
 def get_player_playtypes(player_name: str) -> list[dict]:
     """
     Get player's primary playtypes (>= 15% frequency).
@@ -30,16 +58,8 @@ def get_player_playtypes(player_name: str) -> list[dict]:
     all_playtypes = []
 
     for playtype in PLAYTYPE_CATEGORIES:
-        time.sleep(0.6)
         try:
-            data = synergyplaytypes.SynergyPlayTypes(
-                season=stats_season(),
-                play_type_nullable=playtype,
-                player_or_team_abbreviation="P",
-                type_grouping_nullable="offensive",
-                per_mode_simple="PerGame",
-            )
-            df = data.get_data_frames()[0]
+            df = _league_player_frame(playtype)
 
             if df.empty:
                 continue

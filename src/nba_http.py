@@ -8,9 +8,11 @@ Importing this module patches nba_api's HTTP layer so that every endpoint:
   * uses a configurable timeout      (NBA_TIMEOUT, default 45 s)
   * retries transient failures       (NBA_RETRIES, default 2)
   * can route through a proxy        (NBA_PROXY, e.g. http://user:pass@host:port)
-  * trips a circuit breaker after repeated failures so a blocked host
-    fails instantly for the rest of the run instead of stretching it
-    across hours (main.py then aborts without writing a board)
+  * trips a circuit breaker, PER ENDPOINT, after repeated failures so a
+    blocked or slow endpoint fails instantly for the rest of the run instead
+    of stretching it across hours. Optional endpoints (Synergy playtypes)
+    degrade gracefully; an essential one tripping makes main.py abort without
+    writing a board.
 
 Import it before any endpoint is used:  `import src.nba_http`
 """
@@ -27,14 +29,23 @@ logger = logging.getLogger(__name__)
 TIMEOUT = float(os.environ.get("NBA_TIMEOUT", "45"))
 RETRIES = int(os.environ.get("NBA_RETRIES", "2"))
 PROXY = os.environ.get("NBA_PROXY") or None
-BREAKER_THRESHOLD = 3     # consecutive failures before failing fast
+BREAKER_THRESHOLD = 3     # consecutive failures (per endpoint) before failing fast
+# Endpoints the board can do without: their breaker never aborts a run
+OPTIONAL_ENDPOINTS = {"synergyplaytypes"}
 
-_consecutive_failures = 0
+_failures: dict[str, int] = {}     # endpoint -> consecutive failures
 _original_send = nba_http.NBAHTTP.send_api_request
 
 
-def breaker_open() -> bool:
-    return _consecutive_failures >= BREAKER_THRESHOLD
+def breaker_open(endpoint: str | None = None) -> bool:
+    """Is this endpoint failing fast? With no endpoint: is any ESSENTIAL endpoint?"""
+    if endpoint is not None:
+        return _failures.get(endpoint, 0) >= BREAKER_THRESHOLD
+    return any(n >= BREAKER_THRESHOLD for ep, n in _failures.items() if ep not in OPTIONAL_ENDPOINTS)
+
+
+def reset_breakers() -> None:
+    _failures.clear()
 
 
 def _resilient_send(
@@ -47,14 +58,12 @@ def _resilient_send(
     timeout=None,
     raise_exception_on_error=False,
 ):
-    global _consecutive_failures
-
     if proxy is None and PROXY:
         proxy = PROXY
 
-    if breaker_open():
-        # The host is down for this run: fail immediately so the caller can
-        # abort instead of spending the day on doomed requests.
+    if breaker_open(endpoint):
+        # This endpoint is down for the run: fail immediately so the caller can
+        # move on (or abort) instead of spending the day on doomed requests.
         raise requests.exceptions.ConnectionError(
             f"stats.nba.com unreachable (circuit breaker open) — {endpoint}"
         )
@@ -76,7 +85,7 @@ def _resilient_send(
             )
             valid = response.valid_json() if hasattr(response, "valid_json") else True
             if valid:
-                _consecutive_failures = 0
+                _failures[endpoint] = 0
                 return response
             # A block page (HTML / "An error has occurred") counts as a failure
             last_error = None
@@ -89,11 +98,12 @@ def _resilient_send(
             logger.warning(
                 f"stats.nba.com {endpoint}: {type(e).__name__} (attempt {attempt}/{attempts})"
             )
-        _consecutive_failures += 1
-        if breaker_open():
+        _failures[endpoint] = _failures.get(endpoint, 0) + 1
+        if breaker_open(endpoint):
             logger.error(
-                f"stats.nba.com unreachable ({_consecutive_failures} consecutive failures) "
-                f"— failing fast for the rest of this run"
+                f"stats.nba.com {endpoint}: {_failures[endpoint]} consecutive failures — "
+                f"failing fast for the rest of this run"
+                + (" (optional endpoint: the board continues without it)" if endpoint in OPTIONAL_ENDPOINTS else "")
             )
             break
         if attempt < attempts:

@@ -96,6 +96,8 @@ def run(date: str | None = None, fast: bool = False):
     reset_stats_season()
     from src.hitrate import reset_cache as reset_gamelog_cache
     reset_gamelog_cache()
+    from src.playtypes import reset_cache as reset_playtype_cache
+    reset_playtype_cache()
 
     logger.info(f"{'='*60}")
     logger.info(f"NBA Player Prop Model starting for {date}")
