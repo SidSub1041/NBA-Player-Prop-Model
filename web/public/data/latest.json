@@ -1175,59 +1175,59 @@
   "learning": {
     "mode": "shadow",
     "trusted": false,
-    "trained_at": "2026-10-22T14:45:43Z",
-    "n_rows": 446,
-    "n_days": 29,
+    "trained_at": "2026-10-23T09:41:09Z",
+    "n_rows": 459,
+    "n_days": 30,
     "cv": {
-      "scored_rows": 355,
-      "scored_nights": 26,
-      "logloss": 0.6774,
-      "baseline_logloss": 0.6603,
+      "scored_rows": 368,
+      "scored_nights": 27,
+      "logloss": 0.6887,
+      "baseline_logloss": 0.6721,
       "baseline": "market price",
-      "logloss_vs_average": 0.6983,
-      "logloss_vs_market": 0.6603,
-      "gain": -0.0259,
-      "gain_lower_bound": -0.0283,
-      "effective_rows": 124.2,
-      "effective_nights": 1.6,
+      "logloss_vs_average": 0.6978,
+      "logloss_vs_market": 0.6721,
+      "gain": -0.0247,
+      "gain_lower_bound": -0.027,
+      "effective_rows": 136.3,
+      "effective_nights": 2.1,
       "calibration": [
         {
           "band": "0%\u201345%",
-          "n": 87,
-          "predicted": 0.391,
-          "actual": 0.483
+          "n": 90,
+          "predicted": 0.39,
+          "actual": 0.489
         },
         {
           "band": "45%\u201350%",
-          "n": 70,
+          "n": 71,
           "predicted": 0.475,
-          "actual": 0.571
+          "actual": 0.577
         },
         {
           "band": "50%\u201355%",
-          "n": 66,
-          "predicted": 0.523,
-          "actual": 0.545
+          "n": 68,
+          "predicted": 0.524,
+          "actual": 0.544
         },
         {
           "band": "55%\u201360%",
-          "n": 63,
+          "n": 67,
           "predicted": 0.574,
-          "actual": 0.46
+          "actual": 0.463
         },
         {
           "band": "60%\u2013100%",
-          "n": 69,
-          "predicted": 0.649,
-          "actual": 0.609
+          "n": 72,
+          "predicted": 0.65,
+          "actual": 0.597
         }
       ],
       "gate_check": {
-        "published_scored": 106,
-        "kept": 48,
-        "demoted": 58,
-        "units_kept": 5.1,
-        "units_demoted": 6.37,
+        "published_scored": 111,
+        "kept": 50,
+        "demoted": 61,
+        "units_kept": 3.1,
+        "units_demoted": 7.8,
         "passed": false,
         "verdict": "cutting -EV picks would have cost units"
       }
@@ -1244,37 +1244,37 @@
       {
         "feature": "implied",
         "label": "the price's implied probability",
-        "weight": 0.571,
+        "weight": 0.463,
         "effect": "more hits"
       },
       {
         "feature": "stat_rebounds",
         "label": "rebounds props (vs points)",
-        "weight": 0.375,
+        "weight": 0.354,
         "effect": "more hits"
       },
       {
         "feature": "pass_rate",
         "label": "share of matchup conditions met",
-        "weight": -0.251,
+        "weight": -0.303,
         "effect": "more misses"
       },
       {
-        "feature": "is_over",
-        "label": "overs (vs unders)",
-        "weight": -0.183,
+        "feature": "cushion",
+        "label": "season average vs the line, in the pick's direction",
+        "weight": -0.164,
         "effect": "more misses"
       },
       {
-        "feature": "log_gp",
-        "label": "games in the hit-rate sample",
-        "weight": 0.177,
+        "feature": "log_books",
+        "label": "books hanging the line",
+        "weight": 0.159,
         "effect": "more hits"
       },
       {
         "feature": "stat_combo2",
         "label": "two-stat combos (vs points)",
-        "weight": 0.128,
+        "weight": 0.151,
         "effect": "more hits"
       }
     ],
@@ -1282,35 +1282,45 @@
       "stat": {
         "assists": {
           "hits": 7,
-          "misses": 12,
-          "rate": 0.368
+          "misses": 14,
+          "rate": 0.333
         },
         "points": {
-          "hits": 12,
-          "misses": 14,
-          "rate": 0.462
+          "hits": 15,
+          "misses": 15,
+          "rate": 0.5
         },
         "pra": {
           "hits": 1,
           "misses": 3,
           "rate": 0.25
         },
+        "pts+reb": {
+          "hits": 0,
+          "misses": 1,
+          "rate": 0.0
+        },
+        "reb+ast": {
+          "hits": 1,
+          "misses": 0,
+          "rate": 1.0
+        },
         "rebounds": {
-          "hits": 17,
-          "misses": 11,
-          "rate": 0.607
+          "hits": 20,
+          "misses": 13,
+          "rate": 0.606
         }
       },
       "edge": {
         "over": {
-          "hits": 27,
-          "misses": 36,
-          "rate": 0.429
+          "hits": 31,
+          "misses": 38,
+          "rate": 0.449
         },
         "under": {
-          "hits": 10,
-          "misses": 4,
-          "rate": 0.714
+          "hits": 13,
+          "misses": 8,
+          "rate": 0.619
         }
       },
       "line source": {
@@ -1318,175 +1328,128 @@
           "hits": 37,
           "misses": 40,
           "rate": 0.481
+        },
+        "sportsbooks": {
+          "hits": 7,
+          "misses": 6,
+          "rate": 0.538
         }
       },
       "hit rate vs line": {
+        "50\u201356%": {
+          "hits": 3,
+          "misses": 2,
+          "rate": 0.6
+        },
+        "<50%": {
+          "hits": 3,
+          "misses": 3,
+          "rate": 0.5
+        },
         "no line-based hit rate": {
           "hits": 37,
           "misses": 40,
           "rate": 0.481
+        },
+        "\u226556%": {
+          "hits": 1,
+          "misses": 1,
+          "rate": 0.5
         }
       },
       "season average vs line": {
         "average against the pick": {
-          "hits": 17,
-          "misses": 14,
-          "rate": 0.548
+          "hits": 20,
+          "misses": 18,
+          "rate": 0.526
         },
         "average favors the pick": {
-          "hits": 20,
-          "misses": 26,
-          "rate": 0.435
+          "hits": 24,
+          "misses": 28,
+          "rate": 0.462
         }
       }
     },
-    "note": "shadow mode: 124/300 effective labeled props; 1.6/10 effective nights; beats the market price by -2.6% on unseen nights (needs 1%); its EV rule would have cost units on past picks",
-    "base_rate": 0.496,
+    "note": "shadow mode: 136/300 effective labeled props; 2.1/10 effective nights; beats the market price by -2.5% on unseen nights (needs 1%); its EV rule would have cost units on past picks",
+    "base_rate": 0.501,
     "postmortem": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "published": {
-        "total_picks": 34,
-        "hits": 13,
-        "misses": 21,
-        "voided": 2,
-        "units": -7.453
+        "total_picks": 5,
+        "hits": 2,
+        "misses": 3,
+        "voided": 0,
+        "units": -0.57
       },
       "all_props": {
-        "hits": 37,
-        "misses": 40,
-        "rate": 0.481
+        "hits": 7,
+        "misses": 6,
+        "rate": 0.538
       },
       "scope": "segments cover every prop with a line that night, not only the published picks",
       "went_right": [
         {
-          "segment": "edge: under",
-          "hits": 10,
-          "misses": 4,
-          "rate": 0.714
+          "segment": "stat: points",
+          "hits": 3,
+          "misses": 1,
+          "rate": 0.75
         },
         {
-          "segment": "stat: rebounds",
-          "hits": 17,
-          "misses": 11,
-          "rate": 0.607
+          "segment": "season average vs line: average favors the pick",
+          "hits": 4,
+          "misses": 2,
+          "rate": 0.667
         },
         {
-          "segment": "season average vs line: average against the pick",
-          "hits": 17,
-          "misses": 14,
-          "rate": 0.548
+          "segment": "edge: over",
+          "hits": 4,
+          "misses": 2,
+          "rate": 0.667
         }
       ],
       "went_wrong": [
         {
-          "segment": "stat: pra",
-          "hits": 1,
-          "misses": 3,
-          "rate": 0.25
+          "segment": "edge: under",
+          "hits": 3,
+          "misses": 4,
+          "rate": 0.429
         },
         {
-          "segment": "stat: assists",
-          "hits": 7,
-          "misses": 12,
-          "rate": 0.368
-        },
-        {
-          "segment": "edge: over",
-          "hits": 27,
-          "misses": 36,
+          "segment": "season average vs line: average against the pick",
+          "hits": 3,
+          "misses": 4,
           "rate": 0.429
         }
       ],
       "biggest_misses": [
         {
-          "player": "Trey Murphy III",
+          "player": "Donovan Mitchell",
           "stat": "rebounds",
-          "edge": "over",
-          "line": 5.5,
-          "actual": 4.0
+          "edge": "under",
+          "line": 4.5,
+          "actual": 10.0
         },
         {
-          "player": "Cedric Coward",
+          "player": "Christian Braun",
           "stat": "assists",
           "edge": "over",
-          "line": 3.5,
-          "actual": 2.0
+          "line": 1.5,
+          "actual": 1.0
         },
         {
-          "player": "Kawhi Leonard",
-          "stat": "assists",
-          "edge": "over",
-          "line": 3.5,
-          "actual": 2.0
-        },
-        {
-          "player": "Keyonte George",
+          "player": "Evan Mobley",
           "stat": "rebounds",
           "edge": "over",
-          "line": 3.5,
-          "actual": 3.0
-        },
-        {
-          "player": "Jaren Jackson Jr.",
-          "stat": "rebounds",
-          "edge": "over",
-          "line": 5.5,
-          "actual": 5.0
+          "line": 8.5,
+          "actual": 8.0
         }
       ],
-      "near_misses": 8,
+      "near_misses": 2,
       "picks_cut_by_model": 0,
-      "published_segments": {
-        "stat": {
-          "assists": {
-            "hits": 4,
-            "misses": 5,
-            "rate": 0.444
-          },
-          "rebounds": {
-            "hits": 6,
-            "misses": 6,
-            "rate": 0.5
-          }
-        },
-        "edge": {
-          "over": {
-            "hits": 7,
-            "misses": 10,
-            "rate": 0.412
-          },
-          "under": {
-            "hits": 3,
-            "misses": 1,
-            "rate": 0.75
-          }
-        },
-        "line source": {
-          "Underdog": {
-            "hits": 10,
-            "misses": 11,
-            "rate": 0.476
-          }
-        },
-        "hit rate vs line": {
-          "no line-based hit rate": {
-            "hits": 10,
-            "misses": 11,
-            "rate": 0.476
-          }
-        },
-        "season average vs line": {
-          "average against the pick": {
-            "hits": 6,
-            "misses": 1,
-            "rate": 0.857
-          },
-          "average favors the pick": {
-            "hits": 4,
-            "misses": 10,
-            "rate": 0.286
-          }
-        }
+      "live_model": {
+        "n": 13,
+        "avg_p_on_hits": 0.515,
+        "avg_p_on_misses": 0.57
       }
     }
   },
@@ -1572,6 +1535,15 @@
       "misses": 21,
       "voided": 2,
       "units": -7.453
+    },
+    {
+      "date": "2026-10-22",
+      "season": "2026-27",
+      "total_picks": 5,
+      "hits": 2,
+      "misses": 3,
+      "voided": 0,
+      "units": -0.57
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
- "trained_at": "2026-10-22T14:45:43Z",
- "anchor_date": "2026-10-22",
- "labels_fingerprint": "bb41ec046e55cb35",
+ "trained_at": "2026-10-23T09:41:09Z",
+ "anchor_date": "2026-10-23",
+ "labels_fingerprint": "c42e44d90d466413",
  "features": [
   "hr_line",
   "hr_line_missing",
@@ -21,92 +21,90 @@
   "stat_pra",
   "stat_combo2"
  ],
- "n_rows": 446,
- "n_days": 29,
+ "n_rows": 459,
+ "n_days": 30,
  "mode": "shadow",
  "trusted": false,
  "pass_streak": 0,
- "fail_streak": 1,
+ "fail_streak": 2,
  "fill": [
+  0.49153846153846154,
+  0.886932163781922,
+  0.049123900280724206,
+  0.010583026534920418,
+  0.517500326809632,
+  0.004422915929834957,
+  0.783980194540387,
+  0.9939305223708937,
+  0.654005146749133,
+  0.11306783621807781,
+  0.8046438046245187,
   0.0,
-  1.0,
-  0.05685755945928828,
-  0.011932171328406753,
-  0.5182564113574919,
-  0.004986757849636917,
-  0.7845758542072119,
-  0.972163633315339,
-  0.6785411738879424,
-  0.0,
-  0.693147180559945,
-  0.0,
-  4.071097677647534,
-  0.34017769885305876,
-  0.2549491992419238,
-  0.03862564638420697,
-  0.043684410827522634
+  4.074731953829139,
+  0.34520217182874385,
+  0.24351769666396603,
+  0.03425832812502007,
+  0.05614016074465121
  ],
  "mean": [
+  0.49153846153846237,
+  0.886932163781921,
+  0.049123900280724206,
+  0.010583026534920418,
+  0.517500326809632,
+  0.004422915929834957,
+  0.7839801945403867,
+  0.9939305223708915,
+  0.6540051467491323,
+  0.11306783621807782,
+  0.8046438046245189,
   0.0,
-  1.000000000000001,
-  0.0568575594592883,
-  0.011932171328406752,
-  0.5182564113574919,
-  0.004986757849636918,
-  0.7845758542072118,
-  0.9721636333153372,
-  0.678541173887942,
-  0.0,
-  0.6931471805599453,
-  0.0,
-  4.0710976776475345,
-  0.34017769885305854,
-  0.2549491992419236,
-  0.03862564638420697,
-  0.04368441082752265
+  4.074731953829139,
+  0.3452021718287436,
+  0.24351769666396586,
+  0.03425832812502007,
+  0.05614016074465121
  ],
  "std": [
+  0.04283910201819418,
+  0.3166757026218459,
+  0.24841679111609458,
+  0.10232803176198393,
+  0.09522911302165957,
+  0.06635777079221813,
+  0.33781176624401144,
+  0.5592972435075295,
+  0.4756915121954333,
+  0.3166757026218458,
+  0.3319664335715544,
   1.0,
-  1.0,
-  0.23902532285892422,
-  0.1085808206627502,
-  0.10004500128362871,
-  0.07044068494688303,
-  0.33942163931630803,
-  0.5560039433268162,
-  0.46703645385206816,
-  1.0,
-  1.0,
-  1.0,
-  0.601747719712965,
-  0.47376875377772265,
-  0.4358326571607795,
-  0.1927010789425144,
-  0.2043919838892291
+  0.5702100039017476,
+  0.4754341514799524,
+  0.4292048789045187,
+  0.18189198739663745,
+  0.23019218730490423
  ],
- "intercept": -0.035762352203987414,
+ "intercept": -0.00974278446322417,
  "coef": [
+  0.05789656752431484,
+  0.0677906426198964,
+  -0.16422813062533506,
+  0.04545382825465337,
+  0.4625660488729953,
+  -0.060961221714301406,
+  -0.3027309867383495,
+  -0.05754757117306963,
+  -0.07858428389816223,
+  -0.06779064261989629,
+  0.15899196965721218,
   0.0,
-  0.0,
-  -0.1264904146904785,
-  0.10107942012611192,
-  0.5714506055589799,
-  -0.0714959868995868,
-  -0.2513116334390922,
-  0.012664777246589577,
-  -0.18326471596448235,
-  0.0,
-  0.0,
-  0.0,
-  0.1773718466763585,
-  0.37483474312492115,
-  -0.0003276028064579706,
-  -0.018817591043115225,
-  0.12834595164340337
+  0.10464380393362013,
+  0.35410324212915567,
+  -0.06122927002754227,
+  -0.03165510649038232,
+  0.15078116951194157
  ],
  "constant": [
-  true,
-  true,
   false,
   false,
   false,
@@ -114,8 +112,10 @@
   false,
   false,
   false,
-  true,
-  true,
+  false,
+  false,
+  false,
+  false,
   true,
   false,
   false,
@@ -124,55 +124,55 @@
   false
  ],
  "cv": {
-  "scored_rows": 355,
-  "scored_nights": 26,
-  "logloss": 0.6774,
-  "baseline_logloss": 0.6603,
+  "scored_rows": 368,
+  "scored_nights": 27,
+  "logloss": 0.6887,
+  "baseline_logloss": 0.6721,
   "baseline": "market price",
-  "logloss_vs_average": 0.6983,
-  "logloss_vs_market": 0.6603,
-  "gain": -0.0259,
-  "gain_lower_bound": -0.0283,
-  "effective_rows": 124.2,
-  "effective_nights": 1.6,
+  "logloss_vs_average": 0.6978,
+  "logloss_vs_market": 0.6721,
+  "gain": -0.0247,
+  "gain_lower_bound": -0.027,
+  "effective_rows": 136.3,
+  "effective_nights": 2.1,
   "calibration": [
    {
     "band": "0%\u201345%",
-    "n": 87,
-    "predicted": 0.391,
-    "actual": 0.483
+    "n": 90,
+    "predicted": 0.39,
+    "actual": 0.489
    },
    {
     "band": "45%\u201350%",
-    "n": 70,
+    "n": 71,
     "predicted": 0.475,
-    "actual": 0.571
+    "actual": 0.577
    },
    {
     "band": "50%\u201355%",
-    "n": 66,
-    "predicted": 0.523,
-    "actual": 0.545
+    "n": 68,
+    "predicted": 0.524,
+    "actual": 0.544
    },
    {
     "band": "55%\u201360%",
-    "n": 63,
+    "n": 67,
     "predicted": 0.574,
-    "actual": 0.46
+    "actual": 0.463
    },
    {
     "band": "60%\u2013100%",
-    "n": 69,
-    "predicted": 0.649,
-    "actual": 0.609
+    "n": 72,
+    "predicted": 0.65,
+    "actual": 0.597
    }
   ],
   "gate_check": {
-   "published_scored": 106,
-   "kept": 48,
-   "demoted": 58,
-   "units_kept": 5.1,
-   "units_demoted": 6.37,
+   "published_scored": 111,
+   "kept": 50,
+   "demoted": 61,
+   "units_kept": 3.1,
+   "units_demoted": 7.8,
    "passed": false,
    "verdict": "cutting -EV picks would have cost units"
   }
@@ -184,42 +184,42 @@
   "significant": false,
   "pick_gate": false
  },
- "base_rate": 0.496,
+ "base_rate": 0.501,
  "factors": [
   {
    "feature": "implied",
    "label": "the price's implied probability",
-   "weight": 0.571,
+   "weight": 0.463,
    "effect": "more hits"
   },
   {
    "feature": "stat_rebounds",
    "label": "rebounds props (vs points)",
-   "weight": 0.375,
+   "weight": 0.354,
    "effect": "more hits"
   },
   {
    "feature": "pass_rate",
    "label": "share of matchup conditions met",
-   "weight": -0.251,
+   "weight": -0.303,
    "effect": "more misses"
   },
   {
-   "feature": "is_over",
-   "label": "overs (vs unders)",
-   "weight": -0.183,
+   "feature": "cushion",
+   "label": "season average vs the line, in the pick's direction",
+   "weight": -0.164,
    "effect": "more misses"
   },
   {
-   "feature": "log_gp",
-   "label": "games in the hit-rate sample",
-   "weight": 0.177,
+   "feature": "log_books",
+   "label": "books hanging the line",
+   "weight": 0.159,
    "effect": "more hits"
   },
   {
    "feature": "stat_combo2",
    "label": "two-stat combos (vs points)",
-   "weight": 0.128,
+   "weight": 0.151,
    "effect": "more hits"
   }
  ],
@@ -227,35 +227,45 @@
   "stat": {
    "assists": {
     "hits": 7,
-    "misses": 12,
-    "rate": 0.368
+    "misses": 14,
+    "rate": 0.333
    },
    "points": {
-    "hits": 12,
-    "misses": 14,
-    "rate": 0.462
+    "hits": 15,
+    "misses": 15,
+    "rate": 0.5
    },
    "pra": {
     "hits": 1,
     "misses": 3,
     "rate": 0.25
    },
+   "pts+reb": {
+    "hits": 0,
+    "misses": 1,
+    "rate": 0.0
+   },
+   "reb+ast": {
+    "hits": 1,
+    "misses": 0,
+    "rate": 1.0
+   },
    "rebounds": {
-    "hits": 17,
-    "misses": 11,
-    "rate": 0.607
+    "hits": 20,
+    "misses": 13,
+    "rate": 0.606
    }
   },
   "edge": {
    "over": {
-    "hits": 27,
-    "misses": 36,
-    "rate": 0.429
+    "hits": 31,
+    "misses": 38,
+    "rate": 0.449
    },
    "under": {
-    "hits": 10,
-    "misses": 4,
-    "rate": 0.714
+    "hits": 13,
+    "misses": 8,
+    "rate": 0.619
    }
   },
   "line source": {
@@ -263,27 +273,47 @@
     "hits": 37,
     "misses": 40,
     "rate": 0.481
+   },
+   "sportsbooks": {
+    "hits": 7,
+    "misses": 6,
+    "rate": 0.538
    }
   },
   "hit rate vs line": {
+   "50\u201356%": {
+    "hits": 3,
+    "misses": 2,
+    "rate": 0.6
+   },
+   "<50%": {
+    "hits": 3,
+    "misses": 3,
+    "rate": 0.5
+   },
    "no line-based hit rate": {
     "hits": 37,
     "misses": 40,
     "rate": 0.481
+   },
+   "\u226556%": {
+    "hits": 1,
+    "misses": 1,
+    "rate": 0.5
    }
   },
   "season average vs line": {
    "average against the pick": {
-    "hits": 17,
-    "misses": 14,
-    "rate": 0.548
+    "hits": 20,
+    "misses": 18,
+    "rate": 0.526
    },
    "average favors the pick": {
-    "hits": 20,
-    "misses": 26,
-    "rate": 0.435
+    "hits": 24,
+    "misses": 28,
+    "rate": 0.462
    }
   }
  },
- "note": "shadow mode: 124/300 effective labeled props; 1.6/10 effective nights; beats the market price by -2.6% on unseen nights (needs 1%); its EV rule would have cost units on past picks"
+ "note": "shadow mode: 136/300 effective labeled props; 2.1/10 effective nights; beats the market price by -2.5% on unseen nights (needs 1%); its EV rule would have cost units on past picks"
 }

@@ -1,0 +1,80 @@
+{
+ "date": "2026-10-22",
+ "published": {
+  "total_picks": 5,
+  "hits": 2,
+  "misses": 3,
+  "voided": 0,
+  "units": -0.57
+ },
+ "all_props": {
+  "hits": 7,
+  "misses": 6,
+  "rate": 0.538
+ },
+ "scope": "segments cover every prop with a line that night, not only the published picks",
+ "went_right": [
+  {
+   "segment": "stat: points",
+   "hits": 3,
+   "misses": 1,
+   "rate": 0.75
+  },
+  {
+   "segment": "season average vs line: average favors the pick",
+   "hits": 4,
+   "misses": 2,
+   "rate": 0.667
+  },
+  {
+   "segment": "edge: over",
+   "hits": 4,
+   "misses": 2,
+   "rate": 0.667
+  }
+ ],
+ "went_wrong": [
+  {
+   "segment": "edge: under",
+   "hits": 3,
+   "misses": 4,
+   "rate": 0.429
+  },
+  {
+   "segment": "season average vs line: average against the pick",
+   "hits": 3,
+   "misses": 4,
+   "rate": 0.429
+  }
+ ],
+ "biggest_misses": [
+  {
+   "player": "Donovan Mitchell",
+   "stat": "rebounds",
+   "edge": "under",
+   "line": 4.5,
+   "actual": 10.0
+  },
+  {
+   "player": "Christian Braun",
+   "stat": "assists",
+   "edge": "over",
+   "line": 1.5,
+   "actual": 1.0
+  },
+  {
+   "player": "Evan Mobley",
+   "stat": "rebounds",
+   "edge": "over",
+   "line": 8.5,
+   "actual": 8.0
+  }
+ ],
+ "near_misses": 2,
+ "picks_cut_by_model": 0,
+ "live_model": {
+  "n": 13,
+  "avg_p_on_hits": 0.515,
+  "avg_p_on_misses": 0.57
+ }
+}
