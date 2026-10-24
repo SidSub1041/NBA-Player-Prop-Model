@@ -1,0 +1,182 @@
+{
+ "date": "2026-10-23",
+ "published": {
+  "total_picks": 53,
+  "hits": 28,
+  "misses": 25,
+  "voided": 0,
+  "units": -0.704
+ },
+ "all_props": {
+  "hits": 73,
+  "misses": 69,
+  "rate": 0.514
+ },
+ "scope": "segments cover every prop with a line that night, not only the published picks",
+ "went_right": [
+  {
+   "segment": "stat: pts+reb",
+   "hits": 4,
+   "misses": 1,
+   "rate": 0.8
+  },
+  {
+   "segment": "hit rate vs line: 50\u201356%",
+   "hits": 13,
+   "misses": 10,
+   "rate": 0.565
+  },
+  {
+   "segment": "season average vs line: average against the pick",
+   "hits": 40,
+   "misses": 32,
+   "rate": 0.556
+  }
+ ],
+ "went_wrong": [
+  {
+   "segment": "line source: Underdog",
+   "hits": 2,
+   "misses": 3,
+   "rate": 0.4
+  },
+  {
+   "segment": "stat: assists",
+   "hits": 17,
+   "misses": 21,
+   "rate": 0.447
+  },
+  {
+   "segment": "season average vs line: average favors the pick",
+   "hits": 33,
+   "misses": 37,
+   "rate": 0.471
+  }
+ ],
+ "biggest_misses": [
+  {
+   "player": "Domantas Sabonis",
+   "stat": "pts+ast",
+   "edge": "under",
+   "line": 23.5,
+   "actual": 37.0
+  },
+  {
+   "player": "Domantas Sabonis",
+   "stat": "points",
+   "edge": "under",
+   "line": 16.5,
+   "actual": 27.0
+  },
+  {
+   "player": "Austin Reaves",
+   "stat": "assists",
+   "edge": "under",
+   "line": 5.5,
+   "actual": 9.0
+  },
+  {
+   "player": "Desmond Bane",
+   "stat": "assists",
+   "edge": "over",
+   "line": 3.5,
+   "actual": 0.0
+  },
+  {
+   "player": "Domantas Sabonis",
+   "stat": "assists",
+   "edge": "under",
+   "line": 6.5,
+   "actual": 10.0
+  }
+ ],
+ "near_misses": 9,
+ "picks_cut_by_model": 0,
+ "published_segments": {
+  "stat": {
+   "assists": {
+    "hits": 12,
+    "misses": 12,
+    "rate": 0.5
+   },
+   "points": {
+    "hits": 3,
+    "misses": 1,
+    "rate": 0.75
+   },
+   "pra": {
+    "hits": 1,
+    "misses": 0,
+    "rate": 1.0
+   },
+   "pts+ast": {
+    "hits": 1,
+    "misses": 1,
+    "rate": 0.5
+   },
+   "pts+reb": {
+    "hits": 1,
+    "misses": 0,
+    "rate": 1.0
+   },
+   "reb+ast": {
+    "hits": 2,
+    "misses": 1,
+    "rate": 0.667
+   },
+   "rebounds": {
+    "hits": 8,
+    "misses": 10,
+    "rate": 0.444
+   }
+  },
+  "edge": {
+   "over": {
+    "hits": 20,
+    "misses": 13,
+    "rate": 0.606
+   },
+   "under": {
+    "hits": 8,
+    "misses": 12,
+    "rate": 0.4
+   }
+  },
+  "line source": {
+   "sportsbooks": {
+    "hits": 28,
+    "misses": 25,
+    "rate": 0.528
+   }
+  },
+  "hit rate vs line": {
+   "50\u201356%": {
+    "hits": 10,
+    "misses": 7,
+    "rate": 0.588
+   },
+   "\u226556%": {
+    "hits": 18,
+    "misses": 18,
+    "rate": 0.5
+   }
+  },
+  "season average vs line": {
+   "average against the pick": {
+    "hits": 5,
+    "misses": 3,
+    "rate": 0.625
+   },
+   "average favors the pick": {
+    "hits": 23,
+    "misses": 22,
+    "rate": 0.511
+   }
+  }
+ },
+ "live_model": {
+  "n": 142,
+  "avg_p_on_hits": 0.532,
+  "avg_p_on_misses": 0.518
+ }
+}
