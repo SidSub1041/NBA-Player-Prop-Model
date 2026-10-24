@@ -10,7 +10,8 @@ Methodology:
   4. Evaluate each player/prop via the scoring engine:
        - POINTS: shooting zone analysis + playtype analysis
        - REBOUNDS / ASSISTS: DvP signal + hit rate
-  5. Check season hit rate against the Underdog line (>= 56% required)
+  5. Check season hit rate against the line (sportsbooks first, DFS apps
+     as backup; >= 56% required)
   6. Output graded picks: A+/A = valid, B+/B = watchlist
 
 Run manually:
@@ -21,6 +22,9 @@ Run for a specific date:
 
 Run in --fast mode (skips playtypes to reduce API calls):
     python main.py --fast
+
+Afternoon re-check — keep the board's lines, fill the holds only:
+    python main.py --fill-holds
 """
 
 import argparse
@@ -62,8 +66,8 @@ from src.output import format_report, save_report, print_report, save_json_repor
 from src.config import POSITION_MAP
 from src.season import stats_season
 from src.underdog import fetch_underdog_lines, load_cached_lines, merge_lines
-from src.lines import apply as apply_line, hold_reason, resolve
-from src.vegas_odds import VegasLines
+from src.lines import apply as apply_line, hold_reason, load_board_lines, lock_key, resolve
+from src.vegas_odds import VegasLines, dfs_backup_enabled
 from src.injuries import fetch_injury_report, is_player_out, find_backup_player, injury_for, injury_label
 
 
@@ -81,13 +85,15 @@ def _assert_stats_reachable(stage: str):
         )
 
 
-def run(date: str | None = None, fast: bool = False):
+def run(date: str | None = None, fast: bool = False, fill_holds: bool = False):
     """
     Main pipeline for a single day.
 
     Args:
         date: Date string YYYY-MM-DD. Defaults to today.
         fast: Skip per-player playtype fetches (fewer API calls).
+        fill_holds: Keep every line already on the day's board and only look
+                    for lines for the props still waiting on one (afternoon runs).
     """
     if date is None:
         date = slate_today()
@@ -100,7 +106,7 @@ def run(date: str | None = None, fast: bool = False):
     reset_playtype_cache()
 
     logger.info(f"{'='*60}")
-    logger.info(f"NBA Player Prop Model starting for {date}")
+    logger.info(f"NBA Player Prop Model starting for {date}" + (" (fill holds)" if fill_holds else ""))
     logger.info(f"{'='*60}")
 
     # ── Step 1: Today's games ────────────────────────────────────────
@@ -151,13 +157,15 @@ def run(date: str | None = None, fast: bool = False):
     except Exception as e:
         logger.warning(f"Could not fetch MPG data: {e}")
 
-    # ── Step 3c: Fetch Underdog Fantasy lines ────────────────────────
+    # ── Step 3c: Underdog's own feed (last-resort lines) ─────────────
     _assert_stats_reachable("player minutes")
 
-    logger.info("Step 3c: Fetching Underdog Fantasy lines...")
+    logger.info("Step 3c: Underdog lines...")
     ud_lines = load_cached_lines(date)
     fresh_ok = False   # did Underdog answer with tonight's lines on this run?
-    if date >= slate_today():   # today, or tomorrow's board built the night before
+    if dfs_backup_enabled():
+        logger.info("  Underdog/PrizePicks lines come through The Odds API (DFS region); Underdog's own feed not used")
+    elif date >= slate_today():   # today, or tomorrow's board built the night before
         fresh = fetch_underdog_lines(date)
         fresh_ok = any(not v.get("suspended") for v in fresh.values())
         ud_lines = merge_lines(ud_lines, fresh)  # fresh lines win
@@ -200,21 +208,6 @@ def run(date: str | None = None, fast: bool = False):
             "refusing to publish a board built without them"
         )
 
-    # ── Step 4b: Sportsbook lines (primary line source) ──────────────
-    # Priced before evaluation (each prop's hit rate is measured against its
-    # line) but after the stats checks above, so an aborted run buys nothing.
-    # Only the stats the DvP matchups ask for are bought per game.
-    logger.info("Step 4b: Fetching sportsbook lines (The Odds API)...")
-    vegas = VegasLines(date)
-    wants: dict[str, set] = {}
-    for m in dvp_matchups:
-        off_team = matchups.get(m["team"])
-        if off_team:
-            wants.setdefault(off_team, set()).add(m["stat"])
-    vegas.ensure(wants)
-    vegas.save()
-    logger.info(f"  {vegas.report()}")
-
     # ── Step 3e: Fetch injury report ─────────────────────────────────
     logger.info("Step 3e: Fetching injury report...")
     injuries = fetch_injury_report()
@@ -223,9 +216,11 @@ def run(date: str | None = None, fast: bool = False):
     # Superseded by the learning loop (src/learner.py), applied after Step 6.
     adaptive_weights = None
 
-    # ── Step 5: Evaluate each matchup ───────────────────────────────
-    logger.info("Step 5: Evaluating player props...")
-    prop_scores = []
+    # ── Step 5a: Candidate props — who, and which stat ───────────────
+    # Decided before any line is bought, so only the markets these players
+    # need are paid for.
+    logger.info("Step 5a: Selecting candidate props...")
+    candidates = []
     seen = set()  # Avoid duplicate player+stat combos
 
     for matchup in dvp_matchups:
@@ -279,14 +274,54 @@ def run(date: str | None = None, fast: bool = False):
             logger.info(f"  Skipping {player_name} — only {mpg:.1f} MPG")
             continue
 
+        candidates.append({"player": player_name, "team": offensive_team, "opponent": defensive_team,
+                           "position": position, "stat": stat, "edge": edge})
+    logger.info(f"  {len(candidates)} candidate props")
+
+    # ── Step 4b: Lines — sportsbooks first, DFS apps as backup ───────
+    # Priced before evaluation (each prop's hit rate is measured against its
+    # line) but after the stats checks above, so an aborted run buys nothing.
+    # Only the markets the candidates need are bought. In fill mode every line
+    # already on the board is locked (kept exactly as the board showed it) and
+    # only markets with a candidate still waiting on a line are bought.
+    logger.info("Step 4b: Fetching lines (The Odds API)...")
+    locked: dict = {}
+    if fill_holds:
+        locked = load_board_lines(date)
+        if locked:
+            logger.info(f"  Fill mode: {len(locked)} line(s) already on the {date} board are locked; filling holds only")
+        else:
+            logger.info(f"  Fill mode: no board for {date} yet — building it from scratch")
+    vegas = VegasLines(date, locked={f"{n}|{s}" for (n, s) in locked})
+
+    def _wants(items):
+        """{team: {stat: {player, ...}}} for the (player, team, stat) items without a locked line."""
+        out: dict[str, dict] = {}
+        for player, team, stat in items:
+            if lock_key(player, stat) not in locked:
+                out.setdefault(team, {}).setdefault(stat, set()).add(player)
+        return out
+
+    vegas.ensure(_wants((c["player"], c["team"], c["stat"]) for c in candidates))
+    vegas.save()
+    logger.info(f"  {vegas.report()}")
+
+    # ── Step 5: Evaluate each candidate ──────────────────────────────
+    logger.info("Step 5: Evaluating player props...")
+    prop_scores = []
+
+    for c in candidates:
+        player_name, offensive_team, defensive_team = c["player"], c["team"], c["opponent"]
+        position, stat, edge = c["position"], c["stat"], c["edge"]
+
         logger.info(
             f"\n  Evaluating: {player_name} ({offensive_team}) "
             f"| {stat.upper()} {edge.upper()} vs {defensive_team}"
         )
 
         # The line comes first: the hit-rate gate is measured against it.
-        # Books first; Underdog only when the books have no line for this prop.
-        res = resolve(player_name, offensive_team, stat, vegas, ud_lines, not_started)
+        # Locked (fill mode), else books, else DFS apps, else Underdog's feed.
+        res = resolve(player_name, offensive_team, stat, vegas, ud_lines, not_started, locked)
 
         prop = evaluate_prop(
             player_name=player_name,
@@ -319,15 +354,13 @@ def run(date: str | None = None, fast: bool = False):
     _assert_stats_reachable("player evaluation")   # before buying combo markets
 
     # Price the combo markets only for combos that will actually be built
-    combo_wants: dict[str, set] = {}
-    for _player, team, combo_stat, _edge in combo_candidates(prop_scores):
-        combo_wants.setdefault(team, set()).add(combo_stat)
+    combo_wants = _wants((player, team, combo_stat) for player, team, combo_stat, _edge in combo_candidates(prop_scores))
     if combo_wants:
         vegas.ensure(combo_wants)
         vegas.save()
 
     def _line_for(player: str, team: str, stat: str):
-        return resolve(player, team, stat, vegas, ud_lines, not_started)
+        return resolve(player, team, stat, vegas, ud_lines, not_started, locked)
 
     combo_scores = build_combo_props(prop_scores, _line_for, before=date)
     for c in combo_scores:
@@ -338,11 +371,13 @@ def run(date: str | None = None, fast: bool = False):
     held = [p for p in prop_scores if p.on_hold]
     if held:
         logger.info(f"  {len(held)} prop(s) ON HOLD awaiting a line — re-checked on the next run")
+    n_locked = sum(1 for p in prop_scores if getattr(p.resolution, "locked", False))
     by_source = {}
     for p in prop_scores:
         src = (p.line_info or {}).get("source", "none")
         by_source[src] = by_source.get(src, 0) + 1
-    logger.info(f"  Lines by source: {by_source} | {vegas.report()}")
+    logger.info(f"  Lines by source: {by_source}" + (f" | {n_locked} kept from the earlier board" if n_locked else "")
+                + f" | {vegas.report()}")
 
     _assert_stats_reachable("player evaluation")
 
@@ -377,7 +412,7 @@ def run(date: str | None = None, fast: bool = False):
     logger.info(f"\nStep 7: Generating report ({len(prop_scores)} props evaluated)...")
     report = format_report(prop_scores, date)
     save_report(report, date)
-    save_json_report(prop_scores, date)
+    save_json_report(prop_scores, date, run_mode="fill-holds" if fill_holds else "full", lines_locked=n_locked)
     print_report(report)
 
     valid_count = sum(1 for p in prop_scores if p.is_valid)
@@ -402,6 +437,12 @@ def main():
         help="Build tomorrow's board (the night-before run: lines as the books post them).",
     )
     parser.add_argument(
+        "--fill-holds",
+        action="store_true",
+        help="Afternoon re-check: keep every line already on the day's board and only look for "
+             "lines for the props still On Hold (no re-pricing of picks already made).",
+    )
+    parser.add_argument(
         "--fast",
         action="store_true",
         help="Skip per-playtype team rankings (fewer API calls, less detail).",
@@ -412,7 +453,7 @@ def main():
         from datetime import timedelta
         date = (datetime.strptime(slate_today(), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
     try:
-        run(date=date, fast=args.fast)
+        run(date=date, fast=args.fast, fill_holds=args.fill_holds)
     except Exception as e:
         logger.error(f"Model run failed: {e}", exc_info=True)
         sys.exit(1)

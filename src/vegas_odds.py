@@ -1,23 +1,34 @@
 """
-Sportsbook ("Vegas") lines and prices from The Odds API (https://the-odds-api.com, v4)
-— the model's primary line source. Underdog is only the backup (src/lines.py).
+Sportsbook ("Vegas") and DFS-app lines from The Odds API (https://the-odds-api.com, v4)
+— the model's line source. Sportsbooks first; the DFS pick'em apps are the backup.
 
 For each player prop the books hang, the model's line is the one most books
 hang (the consensus), and each side carries the best price any book offers at
-that line and which book has it.
+that line and which book has it. A prop no sportsbook lists falls back to the
+DFS apps (PrizePicks, Underdog, DraftKings Pick6, Betr, Dabble — The Odds API's
+`us_dfs` region): the line most of them hang, labelled as a DFS backup.
 
 Setup: an ODDS_API_KEY repository secret. Without it (or once the plan's
-credits run out) props fall back to Underdog's line, except that book lines
+credits run out) props fall back to Underdog's own feed, except that lines
 bought earlier the same day are kept until they can be re-priced.
 
-Credits: listing the slate is free; pricing a game costs (markets × regions).
-Each run prices only the markets its candidate props need, and remembers what
-it bought in logs/vegas_{date}.json, so a later run re-buys a market only when
-the stored price is older than ODDS_API_REFRESH_MINUTES (default 150) — or
+Credits: listing the slate is free; pricing a game costs (markets × regions)
+per request. Each run prices only the markets its candidate props need, buys
+the sportsbook regions first and the DFS region only for markets where a
+wanted player still has no sportsbook line, and remembers what it bought in
+logs/vegas_{date}.json, so a later run re-buys a market only when the stored
+price is older than ODDS_API_REFRESH_MINUTES (default 150) — or
 ODDS_API_NEAR_TIP_REFRESH_MINUTES (default 45) within 3 hours of tip-off, so
 the last pre-tip run catches late injury pulls and late postings. A run
-stops buying at ODDS_API_MAX_CREDITS_PER_RUN (default 100) or when the plan has
-fewer than ODDS_API_MIN_REMAINING (default 25) credits left.
+stops buying at ODDS_API_MAX_CREDITS_PER_RUN (default 150), when the plan has
+fewer than ODDS_API_MIN_REMAINING (default 25) credits left, or when the first
+ODDS_API_EMPTY_STOP_EVENTS (default 2) games more than ODDS_API_EMPTY_STOP_HOURS
+(default 8) from tip-off come back with no props at all — nobody has posted
+the slate yet, so the rest would be bought for nothing.
+
+Fill mode (main.py --fill-holds): lines already on the day's board are locked
+— `locked` keys are never re-priced or marked pulled — and only markets with a
+wanted player who still has no line are bought.
 """
 
 import json
@@ -63,6 +74,16 @@ def _env_int(name: str, default: int) -> int:
         return int(os.environ.get(name, default))
     except ValueError:
         return default
+
+
+def _regions(name: str, default: str) -> str:
+    """A comma-separated regions setting with blanks removed ("" disables)."""
+    return ",".join(r.strip() for r in os.environ.get(name, default).split(",") if r.strip())
+
+
+def dfs_backup_enabled() -> bool:
+    """Do DFS-app lines come through The Odds API on this machine? (key set, DFS region on)"""
+    return bool(os.environ.get("ODDS_API_KEY", "").strip()) and bool(_regions("ODDS_API_DFS_REGIONS", "us_dfs"))
 
 
 def _team_abbrev(full_name: str) -> str | None:
@@ -153,7 +174,8 @@ def parse_event_odds(data: dict) -> dict:
 
 def consensus(offers: dict) -> dict:
     """
-    One prop's book offers -> the model's line and prices.
+    One prop's offers (from the sportsbooks, or from the DFS apps) -> the
+    model's line and prices.
 
     The line is the one most books hang (ties go to the line nearest the
     median of all books' lines). Each side gets the best price any book offers
@@ -197,30 +219,43 @@ def summarize(offers: dict, ud_line=None, edge: str = "over") -> dict:
     return c
 
 
+def _covered(found: dict, stat: str, pnorm: str) -> bool:
+    """Does `found` (parsed event odds) hold a line for this player+stat? Exact name, then suffix-free."""
+    if (pnorm, stat) in found:
+        return True
+    base = norm_name_base(pnorm)
+    return any(s == stat and norm_name_base(n) == base for (n, s) in found)
+
+
 class VegasLines:
     """
-    The day's sportsbook lines: what earlier runs bought (logs/vegas_{date}.json)
-    plus whatever this run buys. One instance per model run.
+    The day's lines: what earlier runs bought (logs/vegas_{date}.json) plus
+    whatever this run buys. One instance per model run.
     """
 
-    def __init__(self, date: str, logs_dir: str | None = None):
+    def __init__(self, date: str, logs_dir: str | None = None, locked: set | None = None):
         self.date = date
         self.path = os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json")
         self.api_key = os.environ.get("ODDS_API_KEY", "").strip()
         self.refresh = timedelta(minutes=_env_int("ODDS_API_REFRESH_MINUTES", 150))
         self.near_tip_refresh = timedelta(minutes=_env_int("ODDS_API_NEAR_TIP_REFRESH_MINUTES", 45))
         self.near_tip_hours = _env_int("ODDS_API_NEAR_TIP_HOURS", 3)
-        self.max_per_run = _env_int("ODDS_API_MAX_CREDITS_PER_RUN", 100)
+        self.max_per_run = _env_int("ODDS_API_MAX_CREDITS_PER_RUN", 150)
         self.min_remaining = _env_int("ODDS_API_MIN_REMAINING", 25)
-        self.regions = os.environ.get("ODDS_API_REGIONS", "us")
-        self.n_regions = len([r for r in self.regions.split(",") if r.strip()]) or 1
+        self.empty_stop_events = _env_int("ODDS_API_EMPTY_STOP_EVENTS", 2)
+        self.empty_stop_hours = _env_int("ODDS_API_EMPTY_STOP_HOURS", 8)
+        self.regions = _regions("ODDS_API_REGIONS", "us") or "us"          # sportsbooks
+        self.dfs_regions = _regions("ODDS_API_DFS_REGIONS", "us_dfs")      # DFS apps ("" = off)
+        self.locked: set[str] = set(locked or ())   # "normname|stat" keys never re-priced (fill mode)
         self.events: list[dict] = []
         self.remaining: int | None = None
         self.spent = 0
+        self.bought = {"books": 0, "dfs": 0}       # market purchases this run, per tier
         self.stopped = False
+        self.nothing_posted = False                # the slate's props aren't up yet (empty-stop fired)
         self.events_failed = False
-        self.unpriced_teams: set[str] = set()   # games this run wanted but could not price
-        self.pulled: set[tuple] = set()          # props the books took down pre-tip on a re-price
+        self.unpriced_teams: set[str] = set()   # games this run wanted but could not (fully) price
+        self.pulled: set[tuple] = set()          # props taken down pre-tip on a re-price
         self.cache = {"date": date, "events": {}, "lines": {}}
         try:
             with open(self.path, encoding="utf-8") as f:
@@ -239,11 +274,67 @@ class VegasLines:
         else:
             logger.info("  Vegas lines off (no ODDS_API_KEY secret) — Underdog lines only")
 
+    @property
+    def dfs_backup(self) -> bool:
+        """Are the DFS apps part of this run's line search?"""
+        return bool(self.api_key and self.dfs_regions)
+
     # ── buying ────────────────────────────────────────────────────────────
+    @staticmethod
+    def _wanted(wants: dict, teams: set) -> dict:
+        """{stat: {norm player, ...}} wanted for one game. A stat with no player list (None) wants everyone."""
+        wanted: dict = {}
+        for t in teams:
+            stats = wants.get(t) or {}
+            items = stats.items() if isinstance(stats, dict) else ((s, None) for s in stats)
+            for s, players in items:
+                if s not in MARKETS:
+                    continue
+                if players is None:
+                    wanted[s] = None
+                elif wanted.get(s, set()) is not None:
+                    wanted.setdefault(s, set()).update(norm_name(p) for p in players)
+        return wanted
+
+    def _buy(self, ev: dict, markets: list[str], regions: str, tier: str) -> dict | None:
+        """Price `markets` for one event in `regions`. Parsed offers, or None if not bought."""
+        cost = len(markets) * (len(regions.split(",")) or 1)
+        if not self.stopped and (
+            self.spent + cost > self.max_per_run
+            or (self.remaining is not None and self.remaining - cost < self.min_remaining)
+        ):
+            logger.warning(
+                f"  Vegas: stopping to save credits (spent {self.spent} this run, {self.remaining} left on the plan)"
+            )
+            self.stopped = True
+        if self.stopped:
+            return None
+        try:
+            data, headers = _get(f"/events/{ev.get('id')}/odds", {
+                "apiKey": self.api_key,
+                "regions": regions,
+                "markets": ",".join(markets),
+                "oddsFormat": "american",
+                "dateFormat": "iso",
+            })
+        except Exception as e:
+            logger.warning(f"  Vegas: {ev.get('away_team')} @ {ev.get('home_team')} unavailable ({type(e).__name__}: {e})")
+            if "401" in str(e) or "429" in str(e):
+                self.stopped = True
+            return None
+        self.spent += cost
+        self.bought[tier] += len(markets)
+        r = _remaining(headers)
+        self.remaining = r if r is not None else self.remaining
+        return parse_event_odds(data)
+
     def ensure(self, wants: dict) -> None:
         """
-        Make sure the day's lines cover `wants` ({team: {stat, ...}}), buying
-        only markets with no price yet or one older than the refresh window.
+        Make sure the day's lines cover `wants` ({team: {stat: {player, ...}}},
+        or {team: {stat, ...}} to want every player), buying only markets with
+        no price yet or one older than the refresh window. Sportsbooks first;
+        the DFS apps only for markets where a wanted player still has no
+        sportsbook line. Locked props (fill mode) are never wanted.
         """
         if not self.api_key:
             return
@@ -251,10 +342,11 @@ class VegasLines:
             self.unpriced_teams |= set(wants)
             return
         now = _now()
+        empty_streak = 0
         for ev in sorted(self.events, key=lambda e: str(e.get("commence_time"))):
             teams = {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} - {None}
-            stats = {s for t in teams for s in wants.get(t, ()) if s in MARKETS}
-            if not stats or _started(ev):
+            wanted = self._wanted(wants, teams)
+            if not wanted or _started(ev):
                 continue   # nothing wanted, or tipped: keep the last pre-game prices
             ev_id = str(ev.get("id"))
             ev_cache = self.cache["events"].setdefault(ev_id, {"teams": sorted(teams), "markets": {}})
@@ -266,56 +358,63 @@ class VegasLines:
             if tip is not None and tip - now <= timedelta(hours=self.near_tip_hours):
                 window = min(self.refresh, self.near_tip_refresh)
             due = sorted(
-                MARKETS[s] for s in stats
+                MARKETS[s] for s in wanted
                 if not (_parse_ts(ev_cache["markets"].get(MARKETS[s])) and now - _parse_ts(ev_cache["markets"][MARKETS[s]]) < window)
             )
             if not due:
                 continue
-            cost = len(due) * self.n_regions
-            if not self.stopped and (
-                self.spent + cost > self.max_per_run
-                or (self.remaining is not None and self.remaining - cost < self.min_remaining)
-            ):
+            far_off = tip is None or tip - now > timedelta(hours=self.empty_stop_hours)
+            if self.nothing_posted:
+                self.unpriced_teams |= teams
+                continue
+            # Pass 1: the sportsbooks
+            found = self._buy(ev, due, self.regions, "books")
+            if found is None:
+                self.unpriced_teams |= teams
+                continue
+            # Pass 2: the DFS apps, only for markets where a wanted player has no book line yet
+            missing = [m for m in due if self._missing(found, STAT_FOR_MARKET[m], wanted[STAT_FOR_MARKET[m]])]
+            dfs_found: dict = {}
+            if missing and self.dfs_regions:
+                bought = self._buy(ev, missing, self.dfs_regions, "dfs")
+                if bought is None:
+                    self.unpriced_teams |= teams   # books checked, DFS apps not: re-checked next run
+                else:
+                    dfs_found = bought
+            self._store(ev_id, due, found, dfs_found, now)
+            empty_streak = empty_streak + 1 if not found and not dfs_found else 0
+            if empty_streak >= self.empty_stop_events and far_off and not self.nothing_posted:
+                self.nothing_posted = True
                 logger.warning(
-                    f"  Vegas: stopping to save credits (spent {self.spent} this run, {self.remaining} left on the plan)"
+                    f"  Vegas: no book or DFS app has posted props for the first {empty_streak} games "
+                    f"(tip-off more than {self.empty_stop_hours}h away) — stopping to save credits; the rest is re-checked next run"
                 )
-                self.stopped = True
-            if self.stopped:
-                self.unpriced_teams |= teams
-                continue
-            try:
-                data, headers = _get(f"/events/{ev_id}/odds", {
-                    "apiKey": self.api_key,
-                    "regions": self.regions,
-                    "markets": ",".join(due),
-                    "oddsFormat": "american",
-                    "dateFormat": "iso",
-                })
-            except Exception as e:
-                logger.warning(f"  Vegas: {ev.get('away_team')} @ {ev.get('home_team')} unavailable ({type(e).__name__}: {e})")
-                self.unpriced_teams |= teams
-                if "401" in str(e) or "429" in str(e):
-                    self.stopped = True
-                continue
-            self.spent += cost
-            r = _remaining(headers)
-            self.remaining = r if r is not None else self.remaining
-            self._store(ev_id, due, parse_event_odds(data), now)
 
-    def _store(self, ev_id: str, markets: list[str], found: dict, now: datetime) -> None:
+    @staticmethod
+    def _missing(found: dict, stat: str, players: set | None) -> bool:
+        """Does a wanted player still lack a line for `stat`? (No player list: is the market empty?)"""
+        if players is None:
+            return not any(s == stat for (_, s) in found)
+        return any(not _covered(found, stat, p) for p in players)
+
+    def _store(self, ev_id: str, markets: list[str], found: dict, dfs_found: dict, now: datetime) -> None:
         stamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
         lines = self.cache["lines"]
         for market in markets:
             stat = STAT_FOR_MARKET[market]
             before = {k for k, v in lines.items() if v.get("event_id") == ev_id and v.get("stat") == stat}
             fresh = {}
-            for (pname, s), entry in found.items():
-                if s != stat:
-                    continue
-                c = consensus(entry["offers"])
-                if c:
-                    fresh[f"{pname}|{stat}"] = {**c, "player": entry["player"], "stat": stat,
-                                                "event_id": ev_id, "fetched_at": stamp}
+            for tier, src in (("books", found), ("dfs", dfs_found)):   # books first, DFS fills the gaps
+                for (pname, s), entry in src.items():
+                    key = f"{pname}|{stat}"
+                    if s != stat or key in fresh:
+                        continue
+                    c = consensus(entry["offers"])
+                    if c:
+                        fresh[key] = {**c, "player": entry["player"], "stat": stat, "tier": tier,
+                                      "event_id": ev_id, "fetched_at": stamp}
+            for k in self.locked & before:   # fill mode: a line already on the board stays as it is
+                fresh[k] = lines[k]
             for k in before - set(fresh):
                 self.pulled.add(tuple(k.rsplit("|", 1)))   # was hung earlier today, gone now (pre-tip)
                 del lines[k]
@@ -333,7 +432,8 @@ class VegasLines:
 
     # ── reading ───────────────────────────────────────────────────────────
     def lookup(self, player_name: str, stat: str) -> dict | None:
-        """The books' line for this player+stat (exact name, then suffix-free), or None."""
+        """The line on file for this player+stat (exact name, then suffix-free), or None.
+        The entry's "tier" says who hangs it: "books" (sportsbooks) or "dfs" (DFS apps)."""
         lines = self.cache["lines"]
         hit = lines.get(f"{norm_name(player_name)}|{stat}")
         if hit:
@@ -346,7 +446,7 @@ class VegasLines:
         return None
 
     def issue(self, player_name: str, team: str, stat: str) -> str:
-        """Why the books have no line for this prop: off / pulled / unpriced / not_offered."""
+        """Why there is no line for this prop: off / pulled / unpriced / not_offered."""
         if (norm_name(player_name), stat) in self.pulled or (norm_name_base(player_name), stat) in self.pulled:
             return "pulled"
         if not self.api_key:
@@ -356,5 +456,8 @@ class VegasLines:
         return "not_offered"
 
     def report(self) -> str:
-        return (f"{len(self.cache['lines'])} book lines on file today; spent ~{self.spent} credits this run"
+        tiers = Counter(v.get("tier", "books") for v in self.cache["lines"].values())
+        return (f"{len(self.cache['lines'])} lines on file today ({tiers.get('books', 0)} from sportsbooks, "
+                f"{tiers.get('dfs', 0)} from DFS apps); bought {self.bought['books']} book + {self.bought['dfs']} DFS markets, "
+                f"~{self.spent} credits this run"
                 + ("" if self.remaining is None else f", {self.remaining} left on the plan"))

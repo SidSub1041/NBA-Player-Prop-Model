@@ -197,11 +197,12 @@ def _prop_to_dict(p) -> dict:
         "season_avg": p.hitrate_data.get("season_avg"),
         "games_played": p.hitrate_data.get("games_played"),
         "games_hit": p.hitrate_data.get("games_hit"),
-        # the designated line: sportsbooks first, Underdog backup (src/lines.py)
+        # the designated line: sportsbooks first, DFS apps as backup (src/lines.py)
         "line": p.line,
         "line_source": (p.line_info or {}).get("source"),
         "line_book": p.side_book() or None,
         "line_books": (p.line_info or {}).get("books"),
+        "line_locked": bool(getattr(getattr(p, "resolution", None), "locked", False)),
         "over_odds": (p.line_info or {}).get("over_odds"),
         "over_book": (p.line_info or {}).get("over_book"),
         "under_odds": (p.line_info or {}).get("under_odds"),
@@ -232,8 +233,12 @@ def _prop_to_dict(p) -> dict:
     }
 
 
-def save_json_report(prop_scores: list, date: str | None = None) -> str:
-    """Save model results as JSON for the web dashboard."""
+def save_json_report(prop_scores: list, date: str | None = None, run_mode: str = "full", lines_locked: int = 0) -> str:
+    """Save model results as JSON for the web dashboard.
+
+    run_mode is "full" (the night-before and morning boards) or "fill-holds"
+    (an afternoon re-check that kept `lines_locked` lines from the earlier board).
+    """
     if date is None:
         date = slate_today()
 
@@ -282,6 +287,8 @@ def save_json_report(prop_scores: list, date: str | None = None) -> str:
         "stats_season_reason": stats_season_reason(),
         "run_at": _eastern_label(now_utc),
         "run_at_iso": now_utc.isoformat(timespec="seconds"),
+        "run_mode": run_mode,
+        "lines_locked": lines_locked,
         "candidates_analyzed": len(individual),
         "valid_count": len(valid),
         "watchlist_count": len(watchlist),

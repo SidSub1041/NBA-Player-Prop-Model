@@ -14,9 +14,11 @@ export interface PropPick {
   games_played: number | null;
   /** games that cleared the line in the pick's direction (hit rate vs the line) */
   games_hit?: number | null;
-  /** the designated line: sportsbooks first, Underdog backup (boards before Oct 22, 2026: absent) */
+  /** the designated line: sportsbooks first, DFS apps ("dfs") as backup, Underdog's own feed last (boards before Oct 22, 2026: absent) */
   line?: number | null;
-  line_source?: "vegas" | "underdog" | null;
+  line_source?: "vegas" | "dfs" | "underdog" | null;
+  /** fill-holds run: this line was kept from the earlier board, not re-priced */
+  line_locked?: boolean;
   line_book?: string | null;
   line_books?: number | null;
   over_odds?: string | null;
@@ -80,6 +82,9 @@ export interface PropsData {
   stats_season_reason?: string;
   run_at: string;
   run_at_iso: string;
+  /** "full" (night-before / morning board) or "fill-holds" (afternoon re-check that kept the board's lines) */
+  run_mode?: "full" | "fill-holds";
+  lines_locked?: number;
   candidates_analyzed: number;
   valid_count: number;
   watchlist_count: number;

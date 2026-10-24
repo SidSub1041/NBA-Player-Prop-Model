@@ -231,7 +231,7 @@ function EmptyState({ title, body }: { title: string; body: string }) {
   );
 }
 
-/* ── The line a pick is measured against: sportsbooks first, Underdog backup ── */
+/* ── The line a pick is measured against: sportsbooks first, DFS apps as backup ── */
 
 function pickLine(pick: PropPick): number | null {
   return pick.line !== undefined ? pick.line ?? null : pick.ud_line;
@@ -245,6 +245,7 @@ function pickPrice(pick: PropPick, edge: string): string | null {
 function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
   const price = pickPrice(pick, edge);
   const fromBooks = pick.line_source === "vegas";
+  const fromDfs = pick.line_source === "dfs";
   const book = pick.line_book ?? (pick.line_source === "underdog" || pick.line === undefined ? "Underdog" : null);
   const udPrice = edge === "under" ? pick.ud_under_odds : pick.ud_over_odds;
   return (
@@ -252,7 +253,13 @@ function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
       <div className="text-right">
         <div className="text-[13px] font-bold text-[var(--text)]">{price ?? "—"}</div>
         <div className="text-[11px] text-[var(--text-faint)] whitespace-nowrap">
-          {pickLine(pick) === null ? "no line" : fromBooks ? `best · ${book ?? "books"}` : "underdog backup"}
+          {pickLine(pick) === null
+            ? "no line"
+            : fromBooks
+              ? `best · ${book ?? "books"}`
+              : fromDfs
+                ? `${book ?? "DFS"} · dfs backup`
+                : "underdog backup"}
         </div>
       </div>
       {fromBooks && pick.ud_line != null && (
@@ -277,7 +284,7 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <div className="font-display text-2xl tracking-wide whitespace-nowrap">ON HOLD</div>
         <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
-          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED THE MORNING OF
+          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED THROUGH THE AFTERNOON
         </div>
       </div>
       <div className="flex flex-col divide-y divide-[var(--border-soft)]">
@@ -1015,6 +1022,11 @@ export default function Home() {
         <span>
           GENERATED <span className="text-[var(--text-muted)]">{runTime}</span>
         </span>
+        {data.run_mode === "fill-holds" && (
+          <span title="Afternoon re-check: every line already on the board was kept as it was; only props still waiting on a line were looked up.">
+            LINES LOCKED <span className="text-[var(--text-muted)]">{data.lines_locked ?? 0} FROM THE MORNING BOARD</span>
+          </span>
+        )}
         <span>
           VIEWED <span className="text-[var(--text-muted)]">{fmtLongDate(today)}</span>
         </span>
@@ -1062,7 +1074,7 @@ export default function Home() {
           <div className="text-lg sm:text-xl font-semibold" style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}>
             {boardState === "live" && `${data.candidates_analyzed} props scanned. ${boardPicks.length} on the board.`}
             {boardState === "upcoming" &&
-              `Tomorrow's board, posted the night before: ${boardPicks.length} on it. Refreshed about 9 AM ET.`}
+              `Tomorrow's board, posted the night before: ${boardPicks.length} on it. Refreshed about 9 AM ET; holds filled through the afternoon.`}
             {boardState === "stale" &&
               `Board from ${fmtDayDate(data.date)}. The next board posts the night before each game day (about 10:30 PM ET).`}
             {boardState === "last-season" &&
@@ -1190,7 +1202,7 @@ export default function Home() {
       <div className="flex items-center gap-4 px-6 lg:px-16 py-7 border-t border-[var(--border-soft)] bg-[var(--bg-deep)]">
         <BallLogo size={20} ink="var(--bg-deep)" />
         <div className="text-xs text-[var(--text-faint)]">
-          Runs every game day · Lines via Underdog Fantasy · Not financial advice
+          Runs every game day · Lines via The Odds API: sportsbooks first, DFS apps as backup · Not financial advice
         </div>
         <a
           href={GITHUB_URL}

@@ -66,7 +66,7 @@ class PropScore:
         self.hold_reason = ""
         self.injury = None        # injury-report label, e.g. "GTD · Ankle"
 
-        # The designated line (books first, Underdog backup) — see src/lines.py
+        # The designated line (books first, DFS apps as backup) — see src/lines.py
         self.line_info = {}
         self.resolution = None
         # The books' consensus for this prop (display + CSV)
@@ -202,7 +202,8 @@ class PropScore:
 
         if self.line is not None:
             info = self.line_info
-            lines.append(f"\n--- Line ({'sportsbooks' if info.get('source') == 'vegas' else 'Underdog backup'}) ---")
+            src_label = {"vegas": "sportsbooks", "dfs": "DFS apps (backup)", "underdog": "Underdog backup"}.get(info.get("source"), "line")
+            lines.append(f"\n--- Line ({src_label}) ---")
             lines.append(f"  Line: {self.line}  ({info.get('books') or 1} book(s))")
             lines.append(f"  Over:  {info.get('over_odds')} @ {info.get('over_book')}")
             lines.append(f"  Under: {info.get('under_odds')} @ {info.get('under_book')}")

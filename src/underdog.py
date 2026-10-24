@@ -1,12 +1,17 @@
 """
-Fetch player prop lines from Underdog Fantasy.
+Fetch player prop lines from Underdog Fantasy's own feed — the LAST-RESORT
+line source, used only when The Odds API is not configured (no ODDS_API_KEY).
+With a key, Underdog's lines (and PrizePicks', Pick6's…) arrive through the
+API's DFS region instead (src/vegas_odds.py), which is also where the name
+normalization below is reused.
 
 Underdog's public pick'em feed has moved between endpoints over time. In
 October 2026 the versioned paths (beta/v3, v5, v6) began answering HTTP 426
-"upgrade_required"; the web client now reads the unversioned v1 path, which
-returns the same players/appearances/games/over_under_lines payload. The
-fetcher tries each known endpoint and keeps the first payload that contains
-NBA over/under lines. Lines are keyed by a normalized
+"upgrade_required"; the web client then read the unversioned v1 path, which
+returned the same players/appearances/games/over_under_lines payload until
+it, too, started answering 426 on October 24, 2026. The fetcher tries each
+known endpoint and keeps the first payload that contains NBA over/under lines,
+logging a retired endpoint instead of failing. Lines are keyed by a normalized
 (player, stat) pair so name variants ("Jaren Jackson Jr.", accents) and stat
 title variants ("Pts + Rebs + Asts" vs "Points + Rebounds + Assists") match.
 """

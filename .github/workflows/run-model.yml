@@ -9,8 +9,14 @@ on:
     #   the NIGHT BEFORE (~10:30 PM ET) — builds tomorrow's board (--tomorrow)
     #   the MORNING OF   (~9:15 AM ET)  — refreshes today's: re-prices the
     #                                     books, re-checks holds and injuries
+    # Then two fill runs (--fill-holds) that never touch a line already on the
+    # board: they only look for lines for the props still On Hold, as the
+    # books and DFS apps post them through the day:
+    #   AFTERNOON        (~1 PM and ~5 PM ET)
     - cron: "30 2 * * *"
     - cron: "15 13 * * *"
+    - cron: "0 17 * * *"
+    - cron: "0 21 * * *"
     # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
     - cron: "30 9 * * *"
   # Data pushed from a local runner (run_daily.sh) redeploys the site
@@ -26,11 +32,12 @@ on:
         type: choice
         options:
           - model
+          - fill
           - grade
           - probe
         default: model
       slate:
-        description: "Model only: build today's board or tomorrow's (the night-before run)"
+        description: "Model/fill only: today's board or tomorrow's (the night-before run). fill = keep the board's lines, fill the holds"
         type: choice
         options:
           - today
@@ -98,6 +105,11 @@ jobs:
           MODEL_ARGS=""
           if [ "${{ github.event.schedule }}" = "30 2 * * *" ] || [ "${{ github.event.inputs.slate }}" = "tomorrow" ]; then
             MODEL_ARGS="--tomorrow"
+          fi
+          # Afternoon crons (and the manual "fill" task) only fill holes in the board
+          if [ "${{ github.event.schedule }}" = "0 17 * * *" ] || [ "${{ github.event.schedule }}" = "0 21 * * *" ] || [ "$TASK" = "fill" ]; then
+            TASK="model"
+            MODEL_ARGS="${MODEL_ARGS:+$MODEL_ARGS }--fill-holds"
           fi
           echo "Task: $TASK $MODEL_ARGS"
           echo "model_args=$MODEL_ARGS" >> "$GITHUB_OUTPUT"
