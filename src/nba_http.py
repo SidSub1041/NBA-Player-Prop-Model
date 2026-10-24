@@ -87,9 +87,11 @@ def _resilient_send(
             if valid:
                 _failures[endpoint] = 0
                 return response
-            # A block page (HTML / "An error has occurred") counts as a failure
+            # A block page (HTML / "An error has occurred") counts as a failure.
+            # Say what came back: a proxy that is out of traffic or rejecting
+            # credentials answers every request with its own HTML page.
             last_error = None
-            logger.warning(f"stats.nba.com {endpoint}: non-JSON response (attempt {attempt}/{attempts})")
+            logger.warning(f"stats.nba.com {endpoint}: non-JSON response (attempt {attempt}/{attempts}) — {_describe(response)}")
         except (requests.exceptions.InvalidURL, requests.exceptions.InvalidSchema,
                 requests.exceptions.MissingSchema):
             raise  # caller bug / bad NBA_PROXY — never retry
@@ -111,6 +113,25 @@ def _resilient_send(
     if last_error is not None:
         raise last_error
     return response  # non-JSON after all attempts; the endpoint raises a clear error
+
+
+def _describe(response) -> str:
+    """HTTP status plus a glimpse of a non-JSON body, for the log."""
+    status = getattr(response, "_status_code", None) or getattr(response, "status_code", None)
+    body = getattr(response, "_response", None)
+    if body is None and hasattr(response, "get_response"):
+        try:
+            body = response.get_response()
+        except Exception:
+            body = None
+    text = " ".join(str(body or "").split())[:160]
+    hint = ""
+    low = text.lower()
+    if status in (402, 407) or "traffic" in low or "bandwidth" in low or "quota" in low or "payment" in low:
+        hint = " [looks like the PROXY itself answered: out of traffic / payment / auth — check the proxy dashboard]"
+    elif "<html" in low or "<!doctype" in low:
+        hint = " [HTML page instead of data: a block or proxy page]"
+    return f"HTTP {status}: {text!r}{hint}"
 
 
 def install():
