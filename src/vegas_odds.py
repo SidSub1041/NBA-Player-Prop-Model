@@ -28,7 +28,10 @@ the slate yet, so the rest would be bought for nothing.
 
 Fill mode (main.py --fill-holds): lines already on the day's board are locked
 — `locked` keys are never re-priced or marked pulled — and only markets with a
-wanted player who still has no line are bought.
+wanted player who still has no line are bought. Those markets are, by
+definition, ones whose last purchase left a hole, so a fill run re-buys them
+once they are ODDS_API_FILL_REFRESH_MINUTES (default 60) old instead of waiting
+for the full refresh window.
 """
 
 import json
@@ -233,13 +236,15 @@ class VegasLines:
     whatever this run buys. One instance per model run.
     """
 
-    def __init__(self, date: str, logs_dir: str | None = None, locked: set | None = None):
+    def __init__(self, date: str, logs_dir: str | None = None, locked: set | None = None, fill: bool = False):
         self.date = date
         self.path = os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json")
         self.api_key = os.environ.get("ODDS_API_KEY", "").strip()
         self.refresh = timedelta(minutes=_env_int("ODDS_API_REFRESH_MINUTES", 150))
         self.near_tip_refresh = timedelta(minutes=_env_int("ODDS_API_NEAR_TIP_REFRESH_MINUTES", 45))
         self.near_tip_hours = _env_int("ODDS_API_NEAR_TIP_HOURS", 3)
+        self.fill = fill                                                     # fill-holds run
+        self.fill_refresh = timedelta(minutes=_env_int("ODDS_API_FILL_REFRESH_MINUTES", 60))
         self.max_per_run = _env_int("ODDS_API_MAX_CREDITS_PER_RUN", 150)
         self.min_remaining = _env_int("ODDS_API_MIN_REMAINING", 25)
         self.empty_stop_events = _env_int("ODDS_API_EMPTY_STOP_EVENTS", 2)
@@ -354,9 +359,9 @@ class VegasLines:
             # Within NEAR_TIP_HOURS of tip-off, prices are re-bought sooner, so the
             # last pre-tip run sees late injury pulls and late postings.
             tip = _parse_ts(ev.get("commence_time"))
-            window = self.refresh
+            window = min(self.refresh, self.fill_refresh) if self.fill else self.refresh
             if tip is not None and tip - now <= timedelta(hours=self.near_tip_hours):
-                window = min(self.refresh, self.near_tip_refresh)
+                window = min(window, self.near_tip_refresh)
             due = sorted(
                 MARKETS[s] for s in wanted
                 if not (_parse_ts(ev_cache["markets"].get(MARKETS[s])) and now - _parse_ts(ev_cache["markets"][MARKETS[s]]) < window)

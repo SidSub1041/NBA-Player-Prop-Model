@@ -17,6 +17,26 @@ logger = logging.getLogger(__name__)
 
 LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 
+GRADE_RANK = {"A+": 6, "A": 5, "B+": 4, "B": 3, "C": 2, "D": 1, "F": 0}
+
+
+def rank_key(p, active: bool = False) -> tuple:
+    """
+    Best pick first: grade (A+ before A), then — once the learner is ACTIVE —
+    expected value at the price, else the hit rate against the line, then the
+    share of conditions met, then how many books hang the line.
+    """
+    hr = p.hitrate_data.get("hitrate", -1) if isinstance(getattr(p, "hitrate_data", None), dict) else -1
+    hr = hr if isinstance(hr, (int, float)) and hr >= 0 else -1
+    learned = getattr(p, "learned", None) or {}
+    ev = learned.get("ev") if active and learned.get("active") and learned.get("ev") is not None else None
+    books = (p.line_info or {}).get("books") or 0
+    return (-GRADE_RANK.get(p.final_grade, 0), -(ev if ev is not None else -9.0), -hr, -p.total_score_pct, -books)
+
+
+def rank_picks(prop_scores: list, active: bool = False) -> list:
+    return sorted(prop_scores, key=lambda p: rank_key(p, active))
+
 
 def format_report(prop_scores: list, date: str | None = None) -> str:
     """Build the full daily report string."""
@@ -249,18 +269,26 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
     def _held(p):
         return bool(getattr(p, "on_hold", False))
 
-    def _by_ev(ps):   # best expected value first — only once the learner is ACTIVE (shadow mode changes nothing)
-        def key(p):
-            l = getattr(p, "learned", None) or {}
-            ev = l.get("ev")
-            return -ev if (l.get("active") and ev is not None) else 9.0
-        return sorted(ps, key=key)
-
-    valid = _by_ev([p for p in individual if p.is_valid])
-    watchlist = [p for p in individual if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")]
-    valid_combos = _by_ev([p for p in combos if p.is_valid])
-    watchlist_combos = [p for p in combos if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")]
+    # Best first: A+ before A, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books
+    active = any((getattr(p, "learned", None) or {}).get("active") for p in prop_scores)
+    valid = rank_picks([p for p in individual if p.is_valid], active)
+    watchlist = rank_picks([p for p in individual if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")], active)
+    valid_combos = rank_picks([p for p in combos if p.is_valid], active)
+    watchlist_combos = rank_picks([p for p in combos if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")], active)
     on_hold = [p for p in prop_scores if _held(p)]
+
+    # One dict per prop, shared by every list it appears in, so the rank tagged
+    # on a board list is on the same row in all_props (and so in picks.csv).
+    dicts = {id(p): _prop_to_dict(p) for p in prop_scores}
+
+    def _dicts(ps):
+        return [dicts[id(p)] for p in ps]
+
+    def _ranked_dicts(ps):
+        out = _dicts(ps)
+        for i, d in enumerate(out, 1):
+            d["rank"] = i
+        return out
 
     # Hitrate summary across all evaluated individual props
     all_hr = [p.hitrate_data.get("hitrate", -1) for p in individual]
@@ -301,13 +329,13 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
             "condition_pass_rate_points": CONDITION_PASS_RATE_POINTS,
             "hitrate": HITRATE_THRESHOLD,
         },
-        "valid_picks": [_prop_to_dict(p) for p in valid],
-        "watchlist": [_prop_to_dict(p) for p in watchlist],
-        "valid_combos": [_prop_to_dict(p) for p in valid_combos],
-        "watchlist_combos": [_prop_to_dict(p) for p in watchlist_combos],
-        "on_hold": [_prop_to_dict(p) for p in on_hold],
-        "demoted": [_prop_to_dict(p) for p in prop_scores if getattr(p, "learn_note", "")],
-        "all_props": [_prop_to_dict(p) for p in prop_scores],
+        "valid_picks": _ranked_dicts(valid),
+        "watchlist": _ranked_dicts(watchlist),
+        "valid_combos": _ranked_dicts(valid_combos),
+        "watchlist_combos": _ranked_dicts(watchlist_combos),
+        "on_hold": _dicts(on_hold),
+        "demoted": _dicts([p for p in prop_scores if getattr(p, "learn_note", "")]),
+        "all_props": _dicts(prop_scores),
         "hitrate_summary": hitrate_summary,
     }
     try:
@@ -315,6 +343,11 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
         payload["learning"] = learner_summary()
     except Exception as e:
         logger.warning(f"Learning summary unavailable ({e})")
+    try:
+        from src.record import season_record
+        payload["season_record"] = season_record(payload["season"])
+    except Exception as e:
+        logger.warning(f"Season record unavailable ({e})")
 
     # Load existing model results history if available
     web_data_dir = os.path.join(

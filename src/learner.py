@@ -687,6 +687,13 @@ def refresh_site_summary() -> None:
     except (OSError, ValueError):
         return
     latest["learning"] = summary()
+    try:
+        from src.record import season_record
+        from src.config import season_for_date
+        season = latest.get("season") or season_for_date(datetime.strptime(str(latest.get("date")), "%Y-%m-%d").date())
+        latest["season_record"] = season_record(season)
+    except Exception as e:
+        logger.warning(f"Season record not refreshed ({type(e).__name__}: {e})")
     tmp = WEB_LATEST + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(latest, f, indent=2)
@@ -695,10 +702,13 @@ def refresh_site_summary() -> None:
 
 def nightly_update(date: str, graded: dict | None, fetch_box, fetch_ok=None) -> dict:
     """Grading-run hook: label last night, backfill older boards, retrain, write the post-mortem, refresh the site."""
-    rows = label_date(date, fetch_box, fetch_ok)
-    backfill(fetch_box, before=date, max_dates=int(os.environ.get("LEARN_BACKFILL_MAX_DATES", "40")), fetch_ok=fetch_ok)
-    model = train()   # weights anchored to today, whatever date was graded
-    if rows:
-        postmortem(date, rows, graded)
-    refresh_site_summary()
+    model = None
+    try:
+        rows = label_date(date, fetch_box, fetch_ok)
+        backfill(fetch_box, before=date, max_dates=int(os.environ.get("LEARN_BACKFILL_MAX_DATES", "40")), fetch_ok=fetch_ok)
+        model = train()   # weights anchored to today, whatever date was graded
+        if rows:
+            postmortem(date, rows, graded)
+    finally:
+        refresh_site_summary()   # the season record and learning summary reach the site whatever happened above
     return model

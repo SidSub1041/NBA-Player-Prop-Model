@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { PropsData, PropPick, DayResult, Learning } from "@/lib/types";
+import { Fragment, useEffect, useState } from "react";
+import type { PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -362,12 +362,17 @@ function ModelRow({ pick, mode }: { pick: PropPick; mode?: string }) {
   );
 }
 
-function PickCard({ pick, hrThreshold, mode }: { pick: PropPick; hrThreshold: number; mode?: string }) {
+function PickCard({ pick, hrThreshold, mode, rank }: { pick: PropPick; hrThreshold: number; mode?: string; rank?: number }) {
   const edge = pick.edge.toLowerCase();
   const hr = pick.hitrate !== null ? Math.round(pick.hitrate * 100) : null;
   return (
     <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
       <div className="flex items-center gap-4">
+        {rank != null && (
+          <div className="font-display text-2xl leading-none text-[var(--wood)] w-7 shrink-0" title={`#${rank} on the board`}>
+            {String(rank).padStart(2, "0")}
+          </div>
+        )}
         <div className="w-12 h-12 shrink-0 rounded-full bg-[var(--card-hover)] border-2 border-[var(--border-strong)] flex items-center justify-center">
           <PlayerSilhouette size={26} />
         </div>
@@ -384,6 +389,11 @@ function PickCard({ pick, hrThreshold, mode }: { pick: PropPick; hrThreshold: nu
               {pick.opponent}
             </span>
             <span className="whitespace-nowrap">· {pick.position}</span>
+            {rank === 1 && (
+              <span className="text-[11px] font-bold tracking-wider px-1.5 py-0.5 bg-[var(--accent)] text-[var(--bg)] whitespace-nowrap">
+                TOP PLAY
+              </span>
+            )}
             {pick.injury && (
               <span className="text-[11px] font-bold tracking-wider px-1.5 py-0.5 border border-[var(--under)] text-[var(--under)] whitespace-nowrap">
                 {pick.injury.toUpperCase()}
@@ -865,6 +875,26 @@ const GRADE_RANK: Record<string, number> = {
   "A+": 6, A: 5, "B+": 4, B: 3, C: 2, D: 1, F: 0,
 };
 
+/** Best pick first: grade, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books on the line. */
+function pickStrength(p: PropPick, active: boolean): number[] {
+  return [
+    GRADE_RANK[p.grade] ?? 0,
+    active && p.ev != null ? p.ev : -9,
+    p.hitrate ?? -1,
+    p.pass_rate ?? 0,
+    p.line_books ?? 0,
+  ];
+}
+
+function rankPicks(picks: PropPick[], active: boolean): PropPick[] {
+  return [...picks].sort((a, b) => {
+    const x = pickStrength(a, active);
+    const y = pickStrength(b, active);
+    for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return y[i] - x[i];
+    return 0;
+  });
+}
+
 function deduplicatePicks(picks: PropPick[]): PropPick[] {
   const best = new Map<string, PropPick>();
   for (const p of picks) {
@@ -875,6 +905,74 @@ function deduplicatePicks(picks: PropPick[]): PropPick[] {
     }
   }
   return Array.from(best.values());
+}
+
+/* ── Where it's ahead: every cut of the record that is ahead, sample sizes attached ── */
+
+interface Positive {
+  label: string;
+  value: string;
+  sub: string;
+}
+
+function positives(rec: SeasonRecord | null | undefined, lastSeason: { season: string; summary: ResultsSummary } | null): Positive[] {
+  const out: Positive[] = [];
+  if (rec) {
+    for (const h of rec.highlights) {
+      out.push({
+        label: h.label.toUpperCase(),
+        value: h.record,
+        sub: `${h.rate != null ? `${Math.round(h.rate * 100)}%` : "—"} · ${fmtUnits(h.units)} · ${h.n} picks`,
+      });
+    }
+    if (rec.best_night && rec.best_night.units > 0) {
+      out.push({
+        label: "BEST NIGHT",
+        value: fmtUnits(rec.best_night.units),
+        sub: `${rec.best_night.record} · ${fmtDate(rec.best_night.date)}`,
+      });
+    }
+    if (rec.streak > 1) {
+      out.push({ label: "STREAK", value: `${rec.streak} NIGHTS`, sub: "winning nights in a row" });
+    }
+  }
+  if (lastSeason && lastSeason.summary.totalPicks > 0 && lastSeason.summary.allUnits > 0) {
+    out.push({
+      label: `LAST SEASON`,
+      value: fmtUnits(lastSeason.summary.allUnits),
+      sub: `${lastSeason.summary.hits}–${lastSeason.summary.misses} · ${lastSeason.summary.gradedDays} nights · ${lastSeason.season}`,
+    });
+  }
+  return out.slice(0, 8);
+}
+
+function WhatsWorking({ rec, items }: { rec: SeasonRecord | null | undefined; items: Positive[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-4 px-6 lg:px-16 pt-10">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <div className="font-display text-3xl sm:text-4xl tracking-wide leading-none">WHERE IT&apos;S AHEAD</div>
+        {rec && rec.nights > 0 && (
+          <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+            SEASON {rec.season} · {rec.record} · {fmtUnits(rec.units)} · {rec.nights} {rec.nights === 1 ? "NIGHT" : "NIGHTS"} ·
+            CUTS WITH {rec.min_sample}+ PICKS ABOVE {(rec.breakeven * 100).toFixed(1)}% (BREAK-EVEN AT −110) OR IN PROFIT
+          </div>
+        )}
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        {items.map((t) => (
+          <div
+            key={t.label}
+            className="bg-[var(--card)] border border-[var(--border)] border-t-[3px] border-t-[var(--over)] px-6 py-5 flex flex-col gap-1.5"
+          >
+            <div className="text-xs font-bold tracking-[3px] text-[var(--text-muted)]">{t.label}</div>
+            <div className="text-4xl font-bold leading-none text-[var(--over)]">{t.value}</div>
+            <div className="text-xs text-[var(--text-faint)]">{t.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ── Main page ────────────────────────────────────────────────────── */
@@ -928,7 +1026,8 @@ export default function Home() {
   const boardState: BoardState =
     boardSeason !== currentSeason ? "last-season" : data.date === today ? "live" : data.date > today ? "upcoming" : "stale";
 
-  const allPicks = deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]);
+  const learnerActive = data.learning?.mode === "active";
+  const allPicks = rankPicks(deduplicatePicks([...data.valid_picks, ...(data.valid_combos ?? [])]), learnerActive);
   const boardPicks = boardState === "last-season" ? [] : allPicks;
   const archivedPicks = boardState === "last-season" ? allPicks : [];
 
@@ -952,23 +1051,42 @@ export default function Home() {
         ? { text: `LAST RUN · ${fmtDayDate(data.date)}`, bg: "var(--under)", ink: "var(--under-ink)" }
         : { text: `SEASON ${currentSeason}`, bg: "var(--accent)", ink: "var(--bg)" };
 
+  const rec = data.season_record ?? null;
+  // Last night: the season record when the board carries one, else the graded history the page already has
+  const lg = summary.lastGraded;
+  const lastNight: NightRecord | null =
+    rec?.last_night ??
+    (lg
+      ? {
+          date: lg.date,
+          hits: lg.hits,
+          misses: lg.misses,
+          units: lg.units ?? 0,
+          rate: lg.total_picks > 0 ? lg.hits / lg.total_picks : null,
+          record: `${lg.hits}–${lg.misses}`,
+        }
+      : null);
   const kpis = [
     {
       label: "PLAYS",
       value: boardState === "last-season" ? "—" : String(boardPicks.length),
-      sub: boardState === "last-season" ? "no board yet" : "graded A or better",
+      sub: boardState === "last-season" ? "no board yet" : "graded A or better · best first",
       color: "var(--text)",
     },
     {
-      label: "HIT RATE",
-      value: summary.totalPicks > 0 ? `${summary.rate}%` : "—",
-      sub: hasThisSeason ? "this season" : "no grades yet",
-      color: "var(--text)",
+      label: "LAST NIGHT",
+      value: lastNight ? lastNight.record : "—",
+      sub: lastNight
+        ? `${lastNight.rate != null ? (lastNight.rate * 100).toFixed(1) : "—"}% · ${fmtUnits(lastNight.units)} at the prices · ${fmtDate(lastNight.date)}`
+        : "no grades yet",
+      color: lastNight ? unitsColor(lastNight.units) : "var(--text)",
     },
     {
-      label: "UNITS",
-      value: hasThisSeason ? fmtUnits(summary.allUnits) : "—",
-      sub: "this season, flat 1u",
+      label: "SEASON",
+      value: summary.totalPicks > 0 ? `${summary.hits}–${summary.misses}` : "—",
+      sub: hasThisSeason
+        ? `${summary.rate}% · ${fmtUnits(summary.allUnits)} flat 1u · ${summary.gradedDays} ${summary.gradedDays === 1 ? "night" : "nights"}`
+        : "no grades yet",
       color: hasThisSeason ? unitsColor(summary.allUnits) : "var(--text)",
     },
     {
@@ -978,6 +1096,7 @@ export default function Home() {
       color: "var(--text)",
     },
   ];
+  const working = positives(rec, hasLastSeason ? { season: lastSeason, summary: lastSummary } : null);
 
   return (
     <main className="flex flex-col">
@@ -1095,6 +1214,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Where it's ahead: the positives, every one with its sample size */}
+      {boardState !== "last-season" && <WhatsWorking rec={rec} items={working} />}
+
       {/* KPI row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 px-6 lg:px-16 pt-10 pb-2">
         {kpis.map((t) => (
@@ -1136,9 +1258,35 @@ export default function Home() {
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {boardPicks.map((p) => (
-              <PickCard key={`${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`} pick={p} hrThreshold={hrThreshold} mode={data.learning?.mode} />
-            ))}
+            {boardPicks.map((p, i) => {
+              const seg = rec?.segments?.[`grade:${p.grade}`];
+              return (
+                <Fragment key={`${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`}>
+                  {(i === 0 || boardPicks[i - 1].grade !== p.grade) && (
+                    <div className="lg:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-1 pt-2">
+                      <GradeBadge grade={p.grade} />
+                      <div className="text-[12px] font-bold tracking-wider text-[var(--text-muted)] whitespace-nowrap">
+                        {boardPicks.filter((q) => q.grade === p.grade).length} PLAYS · BEST FIRST
+                        {seg && seg.n > 0 && (
+                          <span className="font-semibold text-[var(--text-faint)]">
+                            {" "}· THIS SEASON {seg.record} · {fmtUnits(seg.units)}
+                          </span>
+                        )}
+                      </div>
+                      <div className="court-rule h-1 flex-grow hidden sm:block" />
+                      {i === 0 && (
+                        <div className="text-[11px] text-[var(--text-faint)]">
+                          {learnerActive
+                            ? "RANKED BY EXPECTED VALUE AT THE PRICE"
+                            : "RANKED BY HIT RATE VS THE LINE, THEN CONDITIONS MET"}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <PickCard pick={p} hrThreshold={hrThreshold} mode={data.learning?.mode} rank={i + 1} />
+                </Fragment>
+              );
+            })}
           </div>
         )}
         {boardState !== "last-season" && <OnHoldPanel picks={deduplicatePicks(data.on_hold ?? [])} />}

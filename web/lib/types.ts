@@ -47,8 +47,50 @@ export interface PropPick {
   injury?: string | null;
   grade: string;
   is_valid: boolean;
+  /** 1 = best in its list (A+ first, then hit rate vs the line, conditions met, books) */
+  rank?: number;
   zone_details: string[];
   playtype_details: string[];
+}
+
+/** One cut of the season's graded record (src/record.py) */
+export interface RecordCut {
+  label: string;
+  hits: number;
+  misses: number;
+  units: number;
+  n: number;
+  rate: number | null;
+  record: string;
+}
+
+export interface NightRecord {
+  date: string;
+  hits: number;
+  misses: number;
+  units: number;
+  rate: number | null;
+  record: string;
+}
+
+export interface SeasonRecord {
+  season: string;
+  nights: number;
+  hits: number;
+  misses: number;
+  units: number;
+  rate: number | null;
+  record: string;
+  voided: number;
+  breakeven: number;
+  min_sample: number;
+  segments: Record<string, RecordCut>;
+  /** cuts with min_sample+ picks that are ahead of break-even or in profit, best first */
+  highlights: RecordCut[];
+  best_night: NightRecord | null;
+  last_night: NightRecord | null;
+  /** +k winning nights in a row, -k losing, 0 none */
+  streak: number;
 }
 
 export interface HitrateSummary {
@@ -107,6 +149,7 @@ export interface PropsData {
   hitrate_summary?: HitrateSummary;
   model_results?: DayResult[];
   learning?: Learning | null;
+  season_record?: SeasonRecord | null;
 }
 
 export interface SegmentRecord {

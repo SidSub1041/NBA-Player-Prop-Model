@@ -292,7 +292,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False):
             logger.info(f"  Fill mode: {len(locked)} line(s) already on the {date} board are locked; filling holds only")
         else:
             logger.info(f"  Fill mode: no board for {date} yet — building it from scratch")
-    vegas = VegasLines(date, locked={f"{n}|{s}" for (n, s) in locked})
+    vegas = VegasLines(date, locked={f"{n}|{s}" for (n, s) in locked}, fill=fill_holds)
 
     def _wants(items):
         """{team: {stat: {player, ...}}} for the (player, team, stat) items without a locked line."""

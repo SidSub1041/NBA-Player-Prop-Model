@@ -55,6 +55,8 @@ PICK_FIELDS = [
     "line", "line_source", "line_book", "over_odds", "under_odds",
     # the learning loop's prediction at pick time
     "p_hit", "ev",
+    # best-first order within the pick's list (1 = best; A+ before A, then hit rate vs the line, conditions met, books)
+    "rank",
 ]
 
 GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
@@ -160,6 +162,7 @@ def _flatten_prop(prop, date):
         "under_odds": prop.get("under_odds", prop.get("ud_under_odds")),
         "p_hit": prop.get("p_hit"),
         "ev": prop.get("ev"),
+        "rank": prop.get("rank"),
     }
 
 
