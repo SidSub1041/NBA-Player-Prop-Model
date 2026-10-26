@@ -3,16 +3,16 @@
   "season": "2026-27",
   "stats_season": "2025-26",
   "stats_season_reason": "early season: teams have played as few as 2 games, using 2025-26 stats until everyone reaches 5",
-  "run_at": "01:11 PM ET",
-  "run_at_iso": "2026-10-26T17:11:30+00:00",
+  "run_at": "05:17 PM ET",
+  "run_at_iso": "2026-10-26T21:17:48+00:00",
   "run_mode": "fill-holds",
-  "lines_locked": 104,
-  "candidates_analyzed": 120,
+  "lines_locked": 103,
+  "candidates_analyzed": 115,
   "valid_count": 31,
-  "watchlist_count": 33,
+  "watchlist_count": 31,
   "combo_valid_count": 7,
   "combo_watchlist_count": 6,
-  "on_hold_count": 31,
+  "on_hold_count": 27,
   "demoted_count": 0,
   "thresholds": {
     "condition_pass_rate": 0.8,
@@ -646,53 +646,6 @@
       "rank": 13
     },
     {
-      "player_name": "Chet Holmgren",
-      "team": "OKC",
-      "opponent": "PHX",
-      "position": "C",
-      "stat": "rebounds",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.594,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 8.9,
-      "games_played": 69,
-      "games_hit": 41,
-      "line": 8.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-110",
-      "over_book": "BetOnline.ag",
-      "under_odds": "+105",
-      "under_book": "BetMGM",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 8.5,
-      "vegas_over_odds": "-110",
-      "vegas_under_odds": "+105",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 6,
-      "p_hit": 0.601,
-      "ev": 0.148,
-      "breakeven": 0.524,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": null,
-      "grade": "A+",
-      "is_valid": true,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "rank": 14
-    },
-    {
       "player_name": "Payton Pritchard",
       "team": "BOS",
       "opponent": "CHI",
@@ -737,7 +690,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 15
+      "rank": 14
     },
     {
       "player_name": "Kyle Kuzma",
@@ -784,7 +737,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 16
+      "rank": 15
     },
     {
       "player_name": "Brandon Miller",
@@ -831,7 +784,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 17
+      "rank": 16
     },
     {
       "player_name": "Ryan Rollins",
@@ -878,7 +831,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 18
+      "rank": 17
     },
     {
       "player_name": "Pascal Siakam",
@@ -925,7 +878,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 19
+      "rank": 18
     },
     {
       "player_name": "Pascal Siakam",
@@ -979,7 +932,7 @@
         "  \u2717 Transition: MIL rank 15/30 (PPP allowed: 1.131) - Not favorable",
         "  \u2713 Spotup: MIL rank 5/30 (PPP allowed: 1.089) - FAVORABLE for over"
       ],
-      "rank": 20
+      "rank": 19
     },
     {
       "player_name": "Matas Buzelis",
@@ -1026,7 +979,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 21
+      "rank": 20
     },
     {
       "player_name": "Bam Adebayo",
@@ -1073,7 +1026,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 22
+      "rank": 21
     },
     {
       "player_name": "Tyler Herro",
@@ -1120,7 +1073,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 23
+      "rank": 22
     },
     {
       "player_name": "Myles Turner",
@@ -1172,6 +1125,53 @@
         "  \u2713 PRRollMan: IND rank 10/30 (PPP allowed: 1.123) - FAVORABLE for over",
         "  \u2713 Spotup: IND rank 9/30 (PPP allowed: 1.071) - FAVORABLE for over"
       ],
+      "rank": 23
+    },
+    {
+      "player_name": "Shai Gilgeous-Alexander",
+      "team": "OKC",
+      "opponent": "PHX",
+      "position": "C",
+      "stat": "assists",
+      "edge": "under",
+      "total_points": 1,
+      "total_conditions": 1,
+      "pass_rate": 1.0,
+      "hitrate": 0.529,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 6.6,
+      "games_played": 68,
+      "games_hit": 36,
+      "line": 6.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 6,
+      "line_locked": false,
+      "over_odds": "+103",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-117",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 6.5,
+      "vegas_over_odds": "+103",
+      "vegas_under_odds": "-117",
+      "vegas_book": "BetRivers",
+      "vegas_books": 6,
+      "p_hit": 0.521,
+      "ev": -0.034,
+      "breakeven": 0.539,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "A",
+      "is_valid": true,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
       "rank": 24
     },
     {
@@ -1506,59 +1506,6 @@
   ],
   "watchlist": [
     {
-      "player_name": "Oso Ighodaro",
-      "team": "PHX",
-      "opponent": "OKC",
-      "position": "PF",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 2,
-      "total_conditions": 4,
-      "pass_rate": 0.5,
-      "hitrate": 0.585,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 6.5,
-      "games_played": 82,
-      "games_hit": 48,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Oblique",
-      "grade": "B+",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  \u2717 Restricted Area: OKC rank 7/30 (FG% allowed: 68.6%) - Not favorable",
-        "  \u2717 In The Paint (Non-RA): OKC rank 13/30 (FG% allowed: 45.1%) - Not favorable"
-      ],
-      "playtype_details": [
-        "  \u2713 PRRollMan: OKC rank 28/30 (PPP allowed: 1.043) - FAVORABLE for under",
-        "  \u2713 Cut: OKC rank 27/30 (PPP allowed: 1.215) - FAVORABLE for under"
-      ],
-      "rank": 1
-    },
-    {
       "player_name": "Jaden McDaniels",
       "team": "MIN",
       "opponent": "CLE",
@@ -1609,7 +1556,7 @@
         "  \u2717 Transition: CLE rank 24/30 (PPP allowed: 1.115) - Not favorable",
         "  \u2713 Spotup: CLE rank 6/30 (PPP allowed: 1.083) - FAVORABLE for over"
       ],
-      "rank": 2
+      "rank": 1
     },
     {
       "player_name": "Jamal Murray",
@@ -1656,7 +1603,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 3
+      "rank": 2
     },
     {
       "player_name": "Draymond Green",
@@ -1709,7 +1656,7 @@
         "  \u2717 Spotup: DEN rank 27/30 (PPP allowed: 1.018) - Not favorable",
         "  \u2713 Misc: DEN rank 1/30 (PPP allowed: 0.602) - FAVORABLE for over"
       ],
-      "rank": 4
+      "rank": 3
     },
     {
       "player_name": "Dillon Brooks",
@@ -1756,7 +1703,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 5
+      "rank": 4
     },
     {
       "player_name": "P.J. Washington",
@@ -1803,7 +1750,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 6
+      "rank": 5
     },
     {
       "player_name": "Miles Bridges",
@@ -1850,7 +1797,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 7
+      "rank": 6
     },
     {
       "player_name": "Keyonte George",
@@ -1897,7 +1844,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 8
+      "rank": 7
     },
     {
       "player_name": "Christian Braun",
@@ -1950,7 +1897,7 @@
         "  \u2713 Spotup: GSW rank 2/30 (PPP allowed: 1.099) - FAVORABLE for over",
         "  \u2717 Cut: GSW rank 21/30 (PPP allowed: 1.275) - Not favorable"
       ],
-      "rank": 9
+      "rank": 8
     },
     {
       "player_name": "Brandin Podziemski",
@@ -1997,7 +1944,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 10
+      "rank": 9
     },
     {
       "player_name": "Shai Gilgeous-Alexander",
@@ -2044,54 +1991,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 11
-    },
-    {
-      "player_name": "Chet Holmgren",
-      "team": "OKC",
-      "opponent": "PHX",
-      "position": "C",
-      "stat": "assists",
-      "edge": "under",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.464,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 1.7,
-      "games_played": 69,
-      "games_hit": 32,
-      "line": 1.5,
-      "line_source": "vegas",
-      "line_book": "BetRivers",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+120",
-      "over_book": "Bovada",
-      "under_odds": "-124",
-      "under_book": "BetRivers",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 1.5,
-      "vegas_over_odds": "+120",
-      "vegas_under_odds": "-124",
-      "vegas_book": "BetRivers",
-      "vegas_books": 6,
-      "p_hit": 0.555,
-      "ev": 0.003,
-      "breakeven": 0.554,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": null,
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "rank": 12
+      "rank": 10
     },
     {
       "player_name": "Brandin Podziemski",
@@ -2138,7 +2038,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 13
+      "rank": 11
     },
     {
       "player_name": "James Harden",
@@ -2185,7 +2085,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 14
+      "rank": 12
     },
     {
       "player_name": "Draymond Green",
@@ -2232,7 +2132,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 15
+      "rank": 13
     },
     {
       "player_name": "Jaylon Tyson",
@@ -2279,7 +2179,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 16
+      "rank": 14
     },
     {
       "player_name": "Cedric Coward",
@@ -2334,7 +2234,7 @@
         "  \u2713 PRBallHandler: UTA rank 3/30 (PPP allowed: 0.926) - FAVORABLE for over",
         "  \u2713 Spotup: UTA rank 7/30 (PPP allowed: 1.083) - FAVORABLE for over"
       ],
-      "rank": 17
+      "rank": 15
     },
     {
       "player_name": "Myles Turner",
@@ -2381,7 +2281,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 18
+      "rank": 16
     },
     {
       "player_name": "Davion Mitchell",
@@ -2428,7 +2328,54 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 19
+      "rank": 17
+    },
+    {
+      "player_name": "Devin Booker",
+      "team": "PHX",
+      "opponent": "OKC",
+      "position": "PF",
+      "stat": "assists",
+      "edge": "under",
+      "total_points": 1,
+      "total_conditions": 1,
+      "pass_rate": 1.0,
+      "hitrate": 0.438,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 6.0,
+      "games_played": 64,
+      "games_hit": 28,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 6,
+      "line_locked": false,
+      "over_odds": "+100",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-113",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "+100",
+      "vegas_under_odds": "-113",
+      "vegas_book": "BetRivers",
+      "vegas_books": 6,
+      "p_hit": 0.536,
+      "ev": 0.01,
+      "breakeven": 0.531,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "rank": 18
     },
     {
       "player_name": "Neemias Queta",
@@ -2475,7 +2422,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 20
+      "rank": 19
     },
     {
       "player_name": "Rudy Gobert",
@@ -2528,7 +2475,7 @@
         "  \u2713 Cut: CLE rank 24/30 (PPP allowed: 1.256) - FAVORABLE for under",
         "  \u2713 OffRebound: CLE rank 27/30 (PPP allowed: 1.037) - FAVORABLE for under"
       ],
-      "rank": 21
+      "rank": 20
     },
     {
       "player_name": "Tyler Herro",
@@ -2575,7 +2522,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 22
+      "rank": 21
     },
     {
       "player_name": "Brandin Podziemski",
@@ -2628,7 +2575,7 @@
         "  \u2717 PRBallHandler: DEN rank 13/30 (PPP allowed: 0.886) - Not favorable",
         "  \u2717 Spotup: DEN rank 27/30 (PPP allowed: 1.018) - Not favorable"
       ],
-      "rank": 23
+      "rank": 22
     },
     {
       "player_name": "Ryan Rollins",
@@ -2675,62 +2622,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 24
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "points",
-      "edge": "over",
-      "total_points": 3,
-      "total_conditions": 6,
-      "pass_rate": 0.5,
-      "hitrate": 0.375,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 14.1,
-      "games_played": 48,
-      "games_hit": 18,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  \u2713 Restricted Area: MIL rank 4/30 (FG% allowed: 70.1%) - FAVORABLE for over",
-        "  \u2717 In The Paint (Non-RA): MIL rank 24/30 (FG% allowed: 42.2%) - Not favorable"
-      ],
-      "playtype_details": [
-        "  \u2713 PRRollMan: MIL rank 2/30 (PPP allowed: 1.216) - FAVORABLE for over",
-        "  \u2717 Postup: MIL rank 19/30 (PPP allowed: 0.984) - Not favorable",
-        "  \u2713 Cut: MIL rank 8/30 (PPP allowed: 1.344) - FAVORABLE for over",
-        "  \u2717 OffRebound: MIL rank 23/30 (PPP allowed: 1.083) - Not favorable"
-      ],
-      "rank": 25
+      "rank": 23
     },
     {
       "player_name": "Cooper Flagg",
@@ -2777,7 +2669,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 26
+      "rank": 24
     },
     {
       "player_name": "Onyeka Okongwu",
@@ -2824,7 +2716,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 27
+      "rank": 25
     },
     {
       "player_name": "Kevin Durant",
@@ -2871,7 +2763,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 28
+      "rank": 26
     },
     {
       "player_name": "Tyler Herro",
@@ -2925,7 +2817,7 @@
         "  \u2713 PRBallHandler: IND rank 1/30 (PPP allowed: 0.952) - FAVORABLE for over",
         "  \u2713 Spotup: IND rank 9/30 (PPP allowed: 1.071) - FAVORABLE for over"
       ],
-      "rank": 29
+      "rank": 27
     },
     {
       "player_name": "Devin Booker",
@@ -2972,7 +2864,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 30
+      "rank": 28
     },
     {
       "player_name": "Jalen Smith",
@@ -3019,7 +2911,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 31
+      "rank": 29
     },
     {
       "player_name": "Josh Giddey",
@@ -3066,7 +2958,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 32
+      "rank": 30
     },
     {
       "player_name": "Brandon Miller",
@@ -3120,7 +3012,7 @@
         "  \u2713 PRBallHandler: WAS rank 4/30 (PPP allowed: 0.920) - FAVORABLE for over",
         "  \u2713 Spotup: WAS rank 1/30 (PPP allowed: 1.125) - FAVORABLE for over"
       ],
-      "rank": 33
+      "rank": 31
     }
   ],
   "valid_combos": [
@@ -3802,7 +3694,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -3848,7 +3740,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -3894,7 +3786,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -3940,7 +3832,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -3986,7 +3878,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4038,7 +3930,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4084,8 +3976,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -4130,8 +4022,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -4176,7 +4068,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4222,7 +4114,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4268,7 +4160,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
+      "hold_reason": "No AST line: books and DFS apps not checked this run \u2014 GTD \u00b7 Ankle",
       "injury": "GTD \u00b7 Ankle",
       "grade": "HOLD",
       "is_valid": false,
@@ -4314,7 +4206,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4360,7 +4252,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4413,54 +4305,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Oso Ighodaro",
-      "team": "PHX",
-      "opponent": "OKC",
-      "position": "PF",
-      "stat": "assists",
-      "edge": "under",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.622,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 2.3,
-      "games_played": 82,
-      "games_hit": 51,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Oblique",
-      "injury": "GTD \u00b7 Oblique",
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -4505,7 +4351,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4551,7 +4397,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4602,7 +4448,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4653,7 +4499,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4699,7 +4545,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4745,100 +4591,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "rebounds",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.542,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 10.6,
-      "games_played": 48,
-      "games_hit": 26,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "assists",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.333,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 2.2,
-      "games_played": 48,
-      "games_hit": 16,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -4883,8 +4637,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -4929,7 +4683,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -4977,7 +4731,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+AST line: no book or DFS app lists it",
+      "hold_reason": "No PTS+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -5025,8 +4779,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": true,
@@ -5073,7 +4827,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -5121,7 +4875,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+REB line: no book or DFS app lists it",
+      "hold_reason": "No PTS+REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -5169,7 +4923,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+AST line: no book or DFS app lists it",
+      "hold_reason": "No PTS+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -5177,54 +4931,6 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [
         "  Combo: PTS+AST = POINTS (2/3) + ASSISTS (1/1)"
-      ],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "reb+ast",
-      "edge": "over",
-      "total_points": 2,
-      "total_conditions": 2,
-      "pass_rate": 1.0,
-      "hitrate": 0.542,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 12.8,
-      "games_played": 48,
-      "games_hit": 26,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": true,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)"
       ],
       "playtype_details": []
     }
@@ -5250,7 +4956,7 @@
       "line_source": "vegas",
       "line_book": "FanDuel",
       "line_books": 6,
-      "line_locked": false,
+      "line_locked": true,
       "over_odds": "-110",
       "over_book": "BetMGM",
       "under_odds": "-102",
@@ -5329,7 +5035,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 32
+      "rank": 30
     },
     {
       "player_name": "Josh Giddey",
@@ -5417,13 +5123,13 @@
       "vegas_under_odds": "+105",
       "vegas_book": "BetRivers",
       "vegas_books": 4,
-      "p_hit": 0.552,
-      "ev": 0.013,
+      "p_hit": 0.236,
+      "ev": -0.567,
       "breakeven": 0.545,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Knee",
       "grade": "D",
       "is_valid": false,
       "is_combo": false,
@@ -5482,7 +5188,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 19
+      "rank": 17
     },
     {
       "player_name": "Stephen Curry",
@@ -5678,7 +5384,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 3
+      "rank": 2
     },
     {
       "player_name": "Jamal Murray",
@@ -5872,7 +5578,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 18
+      "rank": 17
     },
     {
       "player_name": "Ryan Rollins",
@@ -5919,7 +5625,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 24
+      "rank": 23
     },
     {
       "player_name": "Ryan Rollins",
@@ -6019,7 +5725,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 8
+      "rank": 7
     },
     {
       "player_name": "Pascal Siakam",
@@ -6113,7 +5819,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 19
+      "rank": 18
     },
     {
       "player_name": "James Harden",
@@ -6212,7 +5918,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 14
+      "rank": 12
     },
     {
       "player_name": "Devin Booker",
@@ -6312,7 +6018,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 30
+      "rank": 28
     },
     {
       "player_name": "Shai Gilgeous-Alexander",
@@ -6359,7 +6065,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 11
+      "rank": 10
     },
     {
       "player_name": "Shai Gilgeous-Alexander",
@@ -6469,7 +6175,7 @@
         "  \u2713 PRBallHandler: UTA rank 3/30 (PPP allowed: 0.926) - FAVORABLE for over",
         "  \u2713 Spotup: UTA rank 7/30 (PPP allowed: 1.083) - FAVORABLE for over"
       ],
-      "rank": 17
+      "rank": 15
     },
     {
       "player_name": "Grayson Allen",
@@ -6766,7 +6472,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 15
+      "rank": 14
     },
     {
       "player_name": "Tim Hardaway Jr.",
@@ -6904,7 +6610,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -6958,7 +6664,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 13
+      "rank": 11
     },
     {
       "player_name": "Brandin Podziemski",
@@ -7005,7 +6711,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 10
+      "rank": 9
     },
     {
       "player_name": "Brandin Podziemski",
@@ -7058,7 +6764,7 @@
         "  \u2717 PRBallHandler: DEN rank 13/30 (PPP allowed: 0.886) - Not favorable",
         "  \u2717 Spotup: DEN rank 27/30 (PPP allowed: 1.018) - Not favorable"
       ],
-      "rank": 23
+      "rank": 22
     },
     {
       "player_name": "Christian Braun",
@@ -7111,7 +6817,7 @@
         "  \u2713 Spotup: GSW rank 2/30 (PPP allowed: 1.099) - FAVORABLE for over",
         "  \u2717 Cut: GSW rank 21/30 (PPP allowed: 1.275) - Not favorable"
       ],
-      "rank": 9
+      "rank": 8
     },
     {
       "player_name": "Tyler Herro",
@@ -7158,7 +6864,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 23
+      "rank": 22
     },
     {
       "player_name": "Tyler Herro",
@@ -7205,7 +6911,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 22
+      "rank": 21
     },
     {
       "player_name": "Tyler Herro",
@@ -7259,7 +6965,7 @@
         "  \u2713 PRBallHandler: IND rank 1/30 (PPP allowed: 0.952) - FAVORABLE for over",
         "  \u2713 Spotup: IND rank 9/30 (PPP allowed: 1.071) - FAVORABLE for over"
       ],
-      "rank": 29
+      "rank": 27
     },
     {
       "player_name": "Isaiah Collier",
@@ -7298,7 +7004,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -7398,7 +7104,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -7444,7 +7150,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -7552,7 +7258,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 5
+      "rank": 4
     },
     {
       "player_name": "Miles Bridges",
@@ -7653,7 +7359,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 28
+      "rank": 26
     },
     {
       "player_name": "Kevin Durant",
@@ -7807,7 +7513,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 21
+      "rank": 20
     },
     {
       "player_name": "Matas Buzelis",
@@ -8006,7 +7712,7 @@
         "  \u2717 Transition: CLE rank 24/30 (PPP allowed: 1.115) - Not favorable",
         "  \u2713 Spotup: CLE rank 6/30 (PPP allowed: 1.083) - FAVORABLE for over"
       ],
-      "rank": 2
+      "rank": 1
     },
     {
       "player_name": "Andrew Wiggins",
@@ -8092,7 +7798,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -8144,7 +7850,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -8251,7 +7957,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 16
+      "rank": 15
     },
     {
       "player_name": "Cooper Flagg",
@@ -8351,7 +8057,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 26
+      "rank": 24
     },
     {
       "player_name": "Pascal Siakam",
@@ -8405,7 +8111,7 @@
         "  \u2717 Transition: MIL rank 15/30 (PPP allowed: 1.131) - Not favorable",
         "  \u2713 Spotup: MIL rank 5/30 (PPP allowed: 1.089) - FAVORABLE for over"
       ],
-      "rank": 20
+      "rank": 19
     },
     {
       "player_name": "Jaylon Tyson",
@@ -8452,7 +8158,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 16
+      "rank": 14
     },
     {
       "player_name": "Jaylon Tyson",
@@ -8551,7 +8257,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 7
+      "rank": 6
     },
     {
       "player_name": "Jaylin Williams",
@@ -8590,8 +8296,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -8636,8 +8342,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -8683,7 +8389,7 @@
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": "GTD \u00b7 Wrist",
+      "injury": null,
       "grade": "D",
       "is_valid": false,
       "is_combo": false,
@@ -8735,7 +8441,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -8781,7 +8487,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -8842,7 +8548,7 @@
         "  \u2713 PRBallHandler: WAS rank 4/30 (PPP allowed: 0.920) - FAVORABLE for over",
         "  \u2713 Spotup: WAS rank 1/30 (PPP allowed: 1.125) - FAVORABLE for over"
       ],
-      "rank": 33
+      "rank": 31
     },
     {
       "player_name": "Brandon Miller",
@@ -8889,7 +8595,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 17
+      "rank": 16
     },
     {
       "player_name": "Jabari Smith Jr.",
@@ -8990,7 +8696,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 31
+      "rank": 29
     },
     {
       "player_name": "Paul George",
@@ -9282,7 +8988,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 15
+      "rank": 13
     },
     {
       "player_name": "Draymond Green",
@@ -9335,7 +9041,7 @@
         "  \u2717 Spotup: DEN rank 27/30 (PPP allowed: 1.018) - Not favorable",
         "  \u2713 Misc: DEN rank 1/30 (PPP allowed: 0.602) - FAVORABLE for over"
       ],
-      "rank": 4
+      "rank": 3
     },
     {
       "player_name": "Cameron Johnson",
@@ -9374,7 +9080,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
+      "hold_reason": "No AST line: books and DFS apps not checked this run \u2014 GTD \u00b7 Ankle",
       "injury": "GTD \u00b7 Ankle",
       "grade": "HOLD",
       "is_valid": false,
@@ -9428,7 +9134,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 27
+      "rank": 25
     },
     {
       "player_name": "Onyeka Okongwu",
@@ -9514,7 +9220,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -9621,7 +9327,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 6
+      "rank": 5
     },
     {
       "player_name": "Jarace Walker",
@@ -9660,7 +9366,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -9713,7 +9419,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -9723,60 +9429,7 @@
       "playtype_details": []
     },
     {
-      "player_name": "Oso Ighodaro",
-      "team": "PHX",
-      "opponent": "OKC",
-      "position": "PF",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 2,
-      "total_conditions": 4,
-      "pass_rate": 0.5,
-      "hitrate": 0.585,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 6.5,
-      "games_played": 82,
-      "games_hit": 48,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Oblique",
-      "grade": "B+",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  \u2717 Restricted Area: OKC rank 7/30 (FG% allowed: 68.6%) - Not favorable",
-        "  \u2717 In The Paint (Non-RA): OKC rank 13/30 (FG% allowed: 45.1%) - Not favorable"
-      ],
-      "playtype_details": [
-        "  \u2713 PRRollMan: OKC rank 28/30 (PPP allowed: 1.043) - FAVORABLE for under",
-        "  \u2713 Cut: OKC rank 27/30 (PPP allowed: 1.215) - FAVORABLE for under"
-      ],
-      "rank": 1
-    },
-    {
-      "player_name": "Oso Ighodaro",
+      "player_name": "Devin Booker",
       "team": "PHX",
       "opponent": "OKC",
       "position": "PF",
@@ -9785,41 +9438,42 @@
       "total_points": 1,
       "total_conditions": 1,
       "pass_rate": 1.0,
-      "hitrate": 0.622,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 2.3,
-      "games_played": 82,
-      "games_hit": 51,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
+      "hitrate": 0.438,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 6.0,
+      "games_played": 64,
+      "games_hit": 28,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 6,
       "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
+      "over_odds": "+100",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-113",
+      "under_book": "BetRivers",
       "ud_line": null,
       "ud_over_odds": null,
       "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "+100",
+      "vegas_under_odds": "-113",
+      "vegas_book": "BetRivers",
+      "vegas_books": 6,
+      "p_hit": 0.536,
+      "ev": 0.01,
+      "breakeven": 0.531,
       "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Oblique",
-      "injury": "GTD \u00b7 Oblique",
-      "grade": "HOLD",
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
       "is_valid": false,
       "is_combo": false,
       "adaptive_multiplier": 1.0,
       "zone_details": [],
-      "playtype_details": []
+      "playtype_details": [],
+      "rank": 18
     },
     {
       "player_name": "Isaiah Hartenstein",
@@ -9957,7 +9611,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it",
+      "hold_reason": "No REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10003,7 +9657,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10054,7 +9708,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS line: no book or DFS app lists it",
+      "hold_reason": "No PTS line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10113,7 +9767,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 20
+      "rank": 19
     },
     {
       "player_name": "Neemias Queta",
@@ -10152,7 +9806,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10312,7 +9966,7 @@
         "  \u2713 Cut: CLE rank 24/30 (PPP allowed: 1.256) - FAVORABLE for under",
         "  \u2713 OffRebound: CLE rank 27/30 (PPP allowed: 1.037) - FAVORABLE for under"
       ],
-      "rank": 21
+      "rank": 20
     },
     {
       "player_name": "Bam Adebayo",
@@ -10359,7 +10013,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 22
+      "rank": 21
     },
     {
       "player_name": "Jock Landale",
@@ -10398,7 +10052,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10511,7 +10165,7 @@
         "  \u2713 PRRollMan: IND rank 10/30 (PPP allowed: 1.123) - FAVORABLE for over",
         "  \u2713 Spotup: IND rank 9/30 (PPP allowed: 1.071) - FAVORABLE for over"
       ],
-      "rank": 24
+      "rank": 23
     },
     {
       "player_name": "Myles Turner",
@@ -10558,7 +10212,7 @@
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 18
+      "rank": 16
     },
     {
       "player_name": "Myles Turner",
@@ -10597,7 +10251,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -10708,201 +10362,7 @@
       "rank": 4
     },
     {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "points",
-      "edge": "over",
-      "total_points": 3,
-      "total_conditions": 6,
-      "pass_rate": 0.5,
-      "hitrate": 0.375,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 14.1,
-      "games_played": 48,
-      "games_hit": 18,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  \u2713 Restricted Area: MIL rank 4/30 (FG% allowed: 70.1%) - FAVORABLE for over",
-        "  \u2717 In The Paint (Non-RA): MIL rank 24/30 (FG% allowed: 42.2%) - Not favorable"
-      ],
-      "playtype_details": [
-        "  \u2713 PRRollMan: MIL rank 2/30 (PPP allowed: 1.216) - FAVORABLE for over",
-        "  \u2717 Postup: MIL rank 19/30 (PPP allowed: 0.984) - Not favorable",
-        "  \u2713 Cut: MIL rank 8/30 (PPP allowed: 1.344) - FAVORABLE for over",
-        "  \u2717 OffRebound: MIL rank 23/30 (PPP allowed: 1.083) - Not favorable"
-      ],
-      "rank": 25
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "rebounds",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.542,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 10.6,
-      "games_played": 48,
-      "games_hit": 26,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No REB line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "assists",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.333,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 2.2,
-      "games_played": 48,
-      "games_hit": 16,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": []
-    },
-    {
-      "player_name": "Chet Holmgren",
-      "team": "OKC",
-      "opponent": "PHX",
-      "position": "C",
-      "stat": "rebounds",
-      "edge": "over",
-      "total_points": 1,
-      "total_conditions": 1,
-      "pass_rate": 1.0,
-      "hitrate": 0.594,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 8.9,
-      "games_played": 69,
-      "games_hit": 41,
-      "line": 8.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-110",
-      "over_book": "BetOnline.ag",
-      "under_odds": "+105",
-      "under_book": "BetMGM",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 8.5,
-      "vegas_over_odds": "-110",
-      "vegas_under_odds": "+105",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 6,
-      "p_hit": 0.601,
-      "ev": 0.148,
-      "breakeven": 0.524,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": null,
-      "grade": "A+",
-      "is_valid": true,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "rank": 14
-    },
-    {
-      "player_name": "Chet Holmgren",
+      "player_name": "Shai Gilgeous-Alexander",
       "team": "OKC",
       "opponent": "PHX",
       "position": "C",
@@ -10911,42 +10371,42 @@
       "total_points": 1,
       "total_conditions": 1,
       "pass_rate": 1.0,
-      "hitrate": 0.464,
+      "hitrate": 0.529,
       "hitrate_source": "gamelog_vs_line",
-      "season_avg": 1.7,
-      "games_played": 69,
-      "games_hit": 32,
-      "line": 1.5,
+      "season_avg": 6.6,
+      "games_played": 68,
+      "games_hit": 36,
+      "line": 6.5,
       "line_source": "vegas",
       "line_book": "BetRivers",
       "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+120",
-      "over_book": "Bovada",
-      "under_odds": "-124",
+      "line_locked": false,
+      "over_odds": "+103",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-117",
       "under_book": "BetRivers",
       "ud_line": null,
       "ud_over_odds": null,
       "ud_under_odds": null,
-      "vegas_line": 1.5,
-      "vegas_over_odds": "+120",
-      "vegas_under_odds": "-124",
+      "vegas_line": 6.5,
+      "vegas_over_odds": "+103",
+      "vegas_under_odds": "-117",
       "vegas_book": "BetRivers",
       "vegas_books": 6,
-      "p_hit": 0.555,
-      "ev": 0.003,
-      "breakeven": 0.554,
+      "p_hit": 0.521,
+      "ev": -0.034,
+      "breakeven": 0.539,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
       "injury": null,
-      "grade": "B",
-      "is_valid": false,
+      "grade": "A",
+      "is_valid": true,
       "is_combo": false,
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "rank": 12
+      "rank": 24
     },
     {
       "player_name": "Zach Edey",
@@ -10980,13 +10440,13 @@
       "vegas_under_odds": "+110",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.226,
-      "ev": -0.526,
+      "p_hit": 0.538,
+      "ev": 0.129,
       "breakeven": 0.476,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": "GTD \u00b7 Ankle",
+      "injury": null,
       "grade": "D",
       "is_valid": false,
       "is_combo": false,
@@ -11038,8 +10498,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
+      "hold_reason": "No AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": false,
@@ -11379,7 +10839,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -11525,7 +10985,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+AST line: no book or DFS app lists it",
+      "hold_reason": "No PTS+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -11622,8 +11082,8 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it \u2014 GTD \u00b7 Wrist",
-      "injury": "GTD \u00b7 Wrist",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
+      "injury": null,
       "grade": "HOLD",
       "is_valid": false,
       "is_combo": true,
@@ -11670,7 +11130,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it",
+      "hold_reason": "No REB+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -11816,7 +11276,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+REB line: no book or DFS app lists it",
+      "hold_reason": "No PTS+REB line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -11913,7 +11373,7 @@
       "breakeven": null,
       "learn_note": null,
       "on_hold": true,
-      "hold_reason": "No PTS+AST line: no book or DFS app lists it",
+      "hold_reason": "No PTS+AST line: books and DFS apps not checked this run",
       "injury": null,
       "grade": "HOLD",
       "is_valid": false,
@@ -12070,67 +11530,19 @@
       ],
       "playtype_details": [],
       "rank": 1
-    },
-    {
-      "player_name": "Ivica Zubac",
-      "team": "IND",
-      "opponent": "MIL",
-      "position": "C",
-      "stat": "reb+ast",
-      "edge": "over",
-      "total_points": 2,
-      "total_conditions": 2,
-      "pass_rate": 1.0,
-      "hitrate": 0.542,
-      "hitrate_source": "season_avg_estimate",
-      "season_avg": 12.8,
-      "games_played": 48,
-      "games_hit": 26,
-      "line": null,
-      "line_source": null,
-      "line_book": null,
-      "line_books": null,
-      "line_locked": false,
-      "over_odds": null,
-      "over_book": null,
-      "under_odds": null,
-      "under_book": null,
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": null,
-      "vegas_over_odds": null,
-      "vegas_under_odds": null,
-      "vegas_book": null,
-      "vegas_books": null,
-      "p_hit": null,
-      "ev": null,
-      "breakeven": null,
-      "learn_note": null,
-      "on_hold": true,
-      "hold_reason": "No REB+AST line: no book or DFS app lists it \u2014 GTD \u00b7 Ankle",
-      "injury": "GTD \u00b7 Ankle",
-      "grade": "HOLD",
-      "is_valid": false,
-      "is_combo": true,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "  Combo: REB+AST = REBOUNDS (1/1) + ASSISTS (1/1)"
-      ],
-      "playtype_details": []
     }
   ],
   "hitrate_summary": {
-    "avg": 0.478,
-    "above_threshold": 30,
-    "below_threshold": 90,
+    "avg": 0.477,
+    "above_threshold": 27,
+    "below_threshold": 88,
     "unavailable": 0,
     "threshold": 0.56,
     "distribution": {
-      "60_plus": 17,
-      "56_to_60": 13,
+      "60_plus": 16,
+      "56_to_60": 11,
       "50_to_56": 26,
-      "below_50": 64
+      "below_50": 62
     }
   },
   "learning": {
