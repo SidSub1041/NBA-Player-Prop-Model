@@ -6,7 +6,8 @@
 #
 #   1. sync with the repo (recovering from any interrupted earlier run)
 #   2. grade yesterday's picks
-#   3. run today's board (exits quietly when there are no games)
+#   3. run today's board (exits quietly when there are no games); after the
+#      first board of the day, later runs are fill runs (--fill-holds)
 #   4. refresh the CSV fact tables
 #   5. commit + push the data — GitHub Actions then redeploys the site
 #
@@ -31,7 +32,24 @@ git pull --rebase --autostash --quiet origin main \
     || echo "warning: git pull failed, continuing with local state"
 
 # ── 2-4. Produce the data (each step is independent; failures are logged).
+if [ "${MODEL_ARGS:-}" = "--snapshot" ]; then
+    # Closing-line snapshot only: re-price the games about to tip, commit the day's logs.
+    "$PYTHON" main.py --snapshot || echo "main.py --snapshot: failed"
+    git add logs/vegas_*.json logs/lines_*.json 2>/dev/null || true
+    git diff --cached --quiet && { echo "No new prices."; exit 0; }
+    git commit --quiet -m "chore: closing-line snapshot $STAMP (local runner)" || exit 1
+    git push --quiet origin main || { git pull --rebase --quiet origin main && git push --quiet origin main; } || echo "warning: push failed"
+    exit 0
+fi
+
 "$PYTHON" grade.py        || echo "grade.py: nothing to grade / failed"
+# The first board of the day is a full run; later runs the same day are fill
+# runs (published picks stay exactly as they were, new picks fill the room the
+# caps leave), matching the Actions schedule. MODEL_ARGS overrides this.
+TODAY_ET="$(TZ=America/New_York date +%F)"
+if [ -z "$MODEL_ARGS" ] && [ -f "logs/props_${TODAY_ET}.json" ]; then
+    MODEL_ARGS="--fill-holds"
+fi
 "$PYTHON" main.py ${MODEL_ARGS:-}  || echo "main.py: no games today / stats.nba.com unreachable / failed"
 "$PYTHON" export_csv.py   || echo "export_csv.py: failed"
 

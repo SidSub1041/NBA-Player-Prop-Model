@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import type { PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord } from "@/lib/types";
+import type { PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -86,6 +86,30 @@ function unitsColor(u: number): string {
 /** Colors the raw hit rate against the model's own A+ threshold (never the rounded display value). */
 function hitrateColor(hitrate: number, threshold: number): string {
   return hitrate >= threshold ? "var(--over)" : hitrate >= 0.5 ? "var(--under)" : "#f87171";
+}
+
+/** An edge in probability points (+6.1), from a probability difference. */
+function fmtEdgePts(edge: number): string {
+  const pts = edge * 100;
+  return `${pts >= 0 ? "+" : ""}${pts.toFixed(1)}`;
+}
+
+/** Green from 3 points (an A), amber from 1.5 (a B+), muted below — the same bars the grade uses. */
+function edgeColor(edge: number): string {
+  const pts = edge * 100;
+  return pts >= 3 ? "var(--over)" : pts >= 1.5 ? "var(--under)" : "var(--text-muted)";
+}
+
+function fmtPct(p: number | null | undefined): string {
+  return p == null ? "—" : `${Math.round(p * 100)}%`;
+}
+
+/** The edge of a pick: the blended probability (model and market) minus the price's break-even, from the stored value or its parts. */
+function pickEdge(pick: PropPick): number | null {
+  if (pick.edge_value != null) return pick.edge_value;
+  if (pick.p_hat != null && pick.breakeven_price != null) return pick.p_hat - pick.breakeven_price;
+  if (pick.p_model != null && pick.p_market != null) return pick.p_model - pick.p_market;
+  return null;
 }
 
 interface ResultsSummary {
@@ -275,7 +299,7 @@ function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
   );
 }
 
-/* ── On hold: conditions met, waiting on a line ─────────────────────── */
+/* ── On hold: no line right now ────────────────────────────────────── */
 
 function OnHoldPanel({ picks }: { picks: PropPick[] }) {
   if (picks.length === 0) return null;
@@ -284,7 +308,7 @@ function OnHoldPanel({ picks }: { picks: PropPick[] }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <div className="font-display text-2xl tracking-wide whitespace-nowrap">ON HOLD</div>
         <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
-          CONDITIONS MET · WAITING ON A LINE · RE-CHECKED THROUGH THE AFTERNOON
+          NO LINE RIGHT NOW · RE-CHECKED THROUGH THE AFTERNOON
         </div>
       </div>
       <div className="flex flex-col divide-y divide-[var(--border-soft)]">
@@ -358,6 +382,127 @@ function ModelRow({ pick, mode }: { pick: PropPick; mode?: string }) {
         </div>
       )}
       {mode !== "active" && <div className="text-[11px] text-[var(--text-faint)]">· learning (shadow)</div>}
+    </div>
+  );
+}
+
+/** What a failed guard says on the card: the number that failed it. */
+function guardLabel(guard: string, pick: PropPick, edge: string): string {
+  switch (guard) {
+    case "price":
+      return `price ${pickPrice(pick, edge) ?? "—"}`;
+    case "books":
+      return `${pick.line_books ?? 0} book${(pick.line_books ?? 0) === 1 ? "" : "s"}`;
+    case "line_size":
+      return `line ${pickLine(pick) ?? "—"}`;
+    case "minutes":
+      return pick.proj_minutes != null ? `${Math.round(pick.proj_minutes)} min` : "minutes";
+    default:
+      return guard;
+  }
+}
+
+/** The edge model's row: model vs market at the pick's line, the line's move since it opened, failed guards. */
+function EdgeRow({ pick }: { pick: PropPick }) {
+  if (pick.p_model == null) return null;
+  const edge = pick.edge.toLowerCase();
+  const e = pickEdge(pick);
+  const line = pickLine(pick);
+  const moved = pick.open_line != null && line != null && pick.open_line !== line;
+  const move = pick.line_move ?? 0;
+  const moveColor = move > 0 ? "var(--over)" : move < 0 ? "#f87171" : "var(--text-muted)";
+  const guards = pick.guards ?? [];
+  return (
+    <div className="flex flex-col gap-2 -mt-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">EDGE</div>
+        <div className="text-sm font-bold text-[var(--text)] whitespace-nowrap">MODEL {fmtPct(pick.p_model)}</div>
+        <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap">· MARKET {fmtPct(pick.p_market)}</div>
+        {pick.p_hat != null && (
+          <div className="text-sm font-semibold text-[var(--text)] whitespace-nowrap" title="the probability the pick is judged on: model and market blended">
+            · BLEND {fmtPct(pick.p_hat)}
+          </div>
+        )}
+        {pick.breakeven_price != null && (
+          <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap" title="the break-even probability of the price taken">
+            · NEEDS {fmtPct(pick.breakeven_price)}
+          </div>
+        )}
+        {e != null && (
+          <div className="text-sm font-bold whitespace-nowrap" style={{ color: edgeColor(e) }} title="the blended probability (model and market) minus the price's break-even, in points">
+            · EDGE {fmtEdgePts(e)}
+          </div>
+        )}
+        {pick.line_shopped && pick.consensus_line != null && (
+          <span className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap" title="one book hangs a better number than the consensus for this side; the price shown is that book's">
+            shopped · {pick.line_books ?? 1} {pick.line_books === 1 ? "book" : "books"} · consensus {pick.consensus_line}
+            {pick.consensus_books != null ? ` (${pick.consensus_books})` : ""}
+          </span>
+        )}
+        {moved && pick.open_line != null && line != null && (
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap"
+            title={move > 0 ? "the market moved toward the pick since it opened" : move < 0 ? "the market moved against the pick since it opened" : "line moved"}
+          >
+            opened {pick.open_line} → {line}
+            <span style={{ color: moveColor }} aria-label={move > 0 ? "toward the pick" : move < 0 ? "against the pick" : "moved"}>
+              {line > pick.open_line ? "↑" : "↓"}
+            </span>
+          </span>
+        )}
+      </div>
+      {guards.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 sm:pl-[92px]">
+          {guards.map((g) => (
+            <span
+              key={g}
+              className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text-muted)] whitespace-nowrap"
+              title={`guard: ${g}`}
+            >
+              {guardLabel(g, pick, edge)}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** A compact list of plays that are on the board's margin (capped, paused), one line each with its reason. */
+function CompactPanel({ title, tag, picks, prefix, note }: { title: string; tag: string; picks: PropPick[]; prefix: string; note: (p: PropPick) => string }) {
+  if (picks.length === 0) return null;
+  return (
+    <div className="bg-[var(--card)] border border-[var(--border)] p-5 flex flex-col gap-3">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div className="font-display text-2xl tracking-wide whitespace-nowrap">{title}</div>
+        <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">{tag}</div>
+      </div>
+      <div className="flex flex-col divide-y divide-[var(--border-soft)]">
+        {picks.map((p) => {
+          const e = pickEdge(p);
+          return (
+            <div
+              key={`${prefix}-${p.player_name}-${p.stat}-${p.edge.toLowerCase()}`}
+              className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2 text-sm"
+            >
+              <span className="font-semibold">{p.player_name}</span>
+              <span className="text-[var(--text-muted)]">
+                {p.team} vs {p.opponent}
+              </span>
+              <span className="font-display tracking-wide">
+                {statLabel(p.stat)} {pickLine(p) ?? "—"} {p.edge.toUpperCase()}
+              </span>
+              {e != null && (
+                <span className="text-xs font-bold" style={{ color: edgeColor(e) }}>
+                  {fmtEdgePts(e)}
+                </span>
+              )}
+              <GradeBadge grade={p.grade} small />
+              <span className="sm:ml-auto text-[12px] text-[var(--text-faint)]">{note(p)}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -438,7 +583,7 @@ function PickCard({ pick, hrThreshold, mode, rank }: { pick: PropPick; hrThresho
           )
         )}
       </div>
-      <ModelRow pick={pick} mode={mode} />
+      {pick.p_model != null ? <EdgeRow pick={pick} /> : <ModelRow pick={pick} mode={mode} />}
     </div>
   );
 }
@@ -756,8 +901,9 @@ function FilmRoom({ learning }: { learning: Learning }) {
   );
 }
 
-function Receipts({ summary, results }: { summary: ResultsSummary; results: DayResult[] }) {
+function Receipts({ summary, results, clv }: { summary: ResultsSummary; results: DayResult[]; clv?: SeasonClv | null }) {
   const { totalPicks, hits, misses, voided, rate, allUnits, lastGraded } = summary;
+  const hasClv = !!clv && clv.n > 0 && clv.avg_line != null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -780,7 +926,7 @@ function Receipts({ summary, results }: { summary: ResultsSummary; results: DayR
               </span>
             </div>
           </div>
-          <div className="border-t border-[var(--border)] pt-4 flex gap-6">
+          <div className="border-t border-[var(--border)] pt-4 flex flex-wrap gap-x-6 gap-y-3">
             <div className="flex flex-col gap-0.5">
               <div className="text-xl font-bold" style={{ color: unitsColor(allUnits) }}>
                 {fmtUnits(allUnits)}
@@ -801,6 +947,20 @@ function Receipts({ summary, results }: { summary: ResultsSummary; results: DayR
               <div className="text-xl font-bold">{voided}</div>
               <div className="text-[11px] tracking-wider text-[var(--text-faint)]">VOIDED</div>
             </div>
+            {hasClv && clv && clv.avg_line != null && (
+              <div
+                className="flex flex-col gap-0.5"
+                title="Closing-line value: points in the pick's favour between the line taken and the line at tip-off, averaged over the picks with a close on file"
+              >
+                <div className="text-xl font-bold" style={{ color: unitsColor(clv.avg_line) }}>
+                  CLV {clv.avg_line >= 0 ? "+" : ""}
+                  {clv.avg_line.toFixed(1)} pts
+                </div>
+                <div className="text-[11px] tracking-wider text-[var(--text-faint)]">
+                  BEAT THE CLOSE {clv.beat_close != null ? `${Math.round(clv.beat_close * 100)}%` : "—"} · {clv.n}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="bg-[var(--card)] border border-[var(--border)] p-7 flex flex-col gap-3">
@@ -869,16 +1029,26 @@ const SYSTEM_STEPS = [
   { n: "05", title: "VERIFY HITS", body: "Season hit rate confirms it. __HR__% seals an A+." },
 ];
 
+/** The edge model (round 18): a projection turned into a probability, priced against the market. */
+const SYSTEM_STEPS_EDGE = [
+  { n: "01", title: "PROJECT", body: "Two seasons of game logs, this season weighted by form, blended into tonight's mean and spread for every player with a line." },
+  { n: "02", title: "ADJUST", body: "Defense vs. position, pace, shot zones and playtypes, starters out — each a multiplier on the projection." },
+  { n: "03", title: "PRICE IT", body: "The best price at every book, de-vigged — and shifted to the pick's line when the market has moved since it opened." },
+  { n: "04", title: "FIND THE EDGE", body: "Model and market blended, minus the price's break-even. __EDGE__ points is an A, __STRONG__ an A+. Price, books, line size and minutes guard it." },
+  { n: "05", title: "CAP & CLOSE", body: "__PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is scored against the closing line." },
+];
+
 /* ── Grade ranking for deduplication ──────────────────────────────── */
 
 const GRADE_RANK: Record<string, number> = {
   "A+": 6, A: 5, "B+": 4, B: 3, C: 2, D: 1, F: 0,
 };
 
-/** Best pick first: grade, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books on the line. */
+/** Best pick first: grade, then the edge over the market, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books on the line. */
 function pickStrength(p: PropPick, active: boolean): number[] {
   return [
     GRADE_RANK[p.grade] ?? 0,
+    pickEdge(p) ?? -9,
     active && p.ev != null ? p.ev : -9,
     p.hitrate ?? -1,
     p.pass_rate ?? 0,
@@ -1042,6 +1212,25 @@ export default function Home() {
   const hrThreshold = data.thresholds?.hitrate ?? DEFAULT_HITRATE_THRESHOLD;
   const runTime = fmtRunTime(data.run_at_iso) ?? data.run_at;
 
+  // ── The edge model (round 18): a board is an edge board once any prop was projected and priced ──
+  const edgeBoard = data.model_version === "edge-1" || (data.all_props ?? []).some((p) => p.p_model != null);
+  const pausedStats = data.paused_stats ?? [];
+  const caps = data.caps ?? null;
+  const maxPerGame = data.thresholds?.max_per_game ?? caps?.limits?.max_per_game ?? null;
+  const capsLine =
+    caps && caps.dropped > 0
+      ? `${caps.kept} of ${caps.kept + caps.dropped} A-grade plays shown${maxPerGame != null ? ` (${maxPerGame} per game)` : ""}`
+      : null;
+  const systemSteps = (edgeBoard ? SYSTEM_STEPS_EDGE : SYSTEM_STEPS).map((s) => ({
+    ...s,
+    body: s.body
+      .replace("__HR__", String(Math.round(hrThreshold * 100)))
+      .replace("__EDGE__", ((data.thresholds?.min_edge ?? 0.03) * 100).toFixed(0))
+      .replace("__STRONG__", ((data.thresholds?.strong_edge ?? 0.06) * 100).toFixed(0))
+      .replace("__PICKS__", String(data.thresholds?.max_picks ?? caps?.limits?.max_picks ?? 15))
+      .replace("__PER_GAME__", String(maxPerGame ?? 3)),
+  }));
+
   const heroBadge =
     boardState === "live"
       ? { text: "LIVE", bg: "var(--over)", ink: "var(--over-ink)" }
@@ -1142,7 +1331,7 @@ export default function Home() {
           GENERATED <span className="text-[var(--text-muted)]">{runTime}</span>
         </span>
         {data.run_mode === "fill-holds" && (
-          <span title="Afternoon re-check: every line already on the board was kept as it was; only props still waiting on a line were looked up.">
+          <span title="Afternoon re-check: every published pick was kept as it was (withdrawn only if the player was ruled OUT); everything else was re-priced and new picks filled the room the caps left.">
             LINES LOCKED <span className="text-[var(--text-muted)]">{data.lines_locked ?? 0} FROM THE MORNING BOARD</span>
           </span>
         )}
@@ -1193,7 +1382,7 @@ export default function Home() {
           <div className="text-lg sm:text-xl font-semibold" style={{ textShadow: "0 1px 0 rgba(23,16,9,0.4)" }}>
             {boardState === "live" && `${data.candidates_analyzed} props scanned. ${boardPicks.length} on the board.`}
             {boardState === "upcoming" &&
-              `Tomorrow's board, posted the night before: ${boardPicks.length} on it. Refreshed about 9 AM ET; holds filled through the afternoon.`}
+              `Tomorrow's board, posted the night before: ${boardPicks.length} on it. Rebuilt about 9 AM ET and re-checked through the afternoon.`}
             {boardState === "stale" &&
               `Board from ${fmtDayDate(data.date)}. The next board posts the night before each game day (about 10:30 PM ET).`}
             {boardState === "last-season" &&
@@ -1243,6 +1432,21 @@ export default function Home() {
               : `${fmtDayDate(data.date)} · ${currentSeason}`
           }
         />
+        {boardState !== "last-season" && (pausedStats.length > 0 || capsLine) && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 -mt-3 text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+            {pausedStats.length > 0 && (
+              <span
+                className="px-2 py-0.5 border border-[var(--under)] text-[var(--under)] whitespace-nowrap"
+                title="Evaluated and listed below the board, never published, until the stat earns its place back"
+              >
+                PAUSED: {pausedStats.map((s) => statLabel(s)).join(", ")}
+              </span>
+            )}
+            {capsLine && (
+              <span title="Board caps: the strongest edges first; the rest are listed under the board">{capsLine}</span>
+            )}
+          </div>
+        )}
         {boardState === "last-season" ? (
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6">
             <EmptyState
@@ -1276,9 +1480,11 @@ export default function Home() {
                       <div className="court-rule h-1 flex-grow hidden sm:block" />
                       {i === 0 && (
                         <div className="text-[11px] text-[var(--text-faint)]">
-                          {learnerActive
-                            ? "RANKED BY EXPECTED VALUE AT THE PRICE"
-                            : "RANKED BY HIT RATE VS THE LINE, THEN CONDITIONS MET"}
+                          {edgeBoard
+                            ? "RANKED BY EDGE OVER THE MARKET"
+                            : learnerActive
+                              ? "RANKED BY EXPECTED VALUE AT THE PRICE"
+                              : "RANKED BY HIT RATE VS THE LINE, THEN CONDITIONS MET"}
                         </div>
                       )}
                     </div>
@@ -1291,6 +1497,24 @@ export default function Home() {
         )}
         {boardState !== "last-season" && <OnHoldPanel picks={deduplicatePicks(data.on_hold ?? [])} />}
         {boardState !== "last-season" && <DemotedPanel picks={deduplicatePicks(data.demoted ?? [])} />}
+        {boardState !== "last-season" && (
+          <CompactPanel
+            title="BELOW THE CAP"
+            tag="A-GRADE EDGES THE BOARD CAPS DROPPED · STRONGEST EDGES FIRST"
+            picks={deduplicatePicks(data.capped ?? [])}
+            prefix="cap"
+            note={(p) => p.cap_note ?? "capped"}
+          />
+        )}
+        {boardState !== "last-season" && (
+          <CompactPanel
+            title="PAUSED"
+            tag={`A-GRADE EDGES IN A PAUSED STAT${pausedStats.length ? ` (${pausedStats.map((s) => statLabel(s)).join(", ")})` : ""} · SHOWN, NEVER PUBLISHED`}
+            picks={deduplicatePicks(data.paused ?? [])}
+            prefix="paused"
+            note={(p) => `${statLabel(p.stat)} paused`}
+          />
+        )}
       </div>
 
       {/* The Film Room: what the model learned from its own results */}
@@ -1307,7 +1531,7 @@ export default function Home() {
         <div className={`grid grid-cols-1 gap-6 ${hasLastSeason ? "lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
           <div className="min-w-0">
             {hasThisSeason ? (
-              <Receipts summary={summary} results={thisSeasonResults} />
+              <Receipts summary={summary} results={thisSeasonResults} clv={rec?.clv ?? null} />
             ) : (
               <EmptyState
                 title="NO GRADES YET THIS SEASON."
@@ -1334,13 +1558,11 @@ export default function Home() {
       <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-10">
         <SectionHead title="THE SYSTEM" tag="NO GUESSWORK" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {SYSTEM_STEPS.map((s) => (
+          {systemSteps.map((s) => (
             <div key={s.n} className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-3">
               <div className="font-display text-4xl text-[var(--wood)] leading-none">{s.n}</div>
               <div className="font-display text-2xl tracking-wide leading-none">{s.title}</div>
-              <div className="text-[13px] leading-relaxed text-[var(--text-muted)]">
-                {s.body.replace("__HR__", String(Math.round(hrThreshold * 100)))}
-              </div>
+              <div className="text-[13px] leading-relaxed text-[var(--text-muted)]">{s.body}</div>
             </div>
           ))}
         </div>
@@ -1350,7 +1572,8 @@ export default function Home() {
       <div className="flex items-center gap-4 px-6 lg:px-16 py-7 border-t border-[var(--border-soft)] bg-[var(--bg-deep)]">
         <BallLogo size={20} ink="var(--bg-deep)" />
         <div className="text-xs text-[var(--text-faint)]">
-          Runs every game day · Lines via The Odds API: sportsbooks first, DFS apps as backup · Not financial advice
+          Runs every game day · Lines via The Odds API: sportsbooks first, DFS apps as backup
+          {edgeBoard ? " · Every pick scored against the closing line" : ""} · Not financial advice
         </div>
         <a
           href={GITHUB_URL}

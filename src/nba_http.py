@@ -30,8 +30,10 @@ TIMEOUT = float(os.environ.get("NBA_TIMEOUT", "45"))
 RETRIES = int(os.environ.get("NBA_RETRIES", "2"))
 PROXY = os.environ.get("NBA_PROXY") or None
 BREAKER_THRESHOLD = 3     # consecutive failures (per endpoint) before failing fast
-# Endpoints the board can do without: their breaker never aborts a run
-OPTIONAL_ENDPOINTS = {"synergyplaytypes"}
+# Endpoints the board can do without: their breaker never aborts a run.
+# playergamelogs (the league-wide game-log table, src/gamelogs.py) falls back
+# to the disk cache or to per-player PlayerGameLog calls.
+OPTIONAL_ENDPOINTS = {"synergyplaytypes", "playergamelogs", "playerindex"}
 
 _failures: dict[str, int] = {}     # endpoint -> consecutive failures
 _original_send = nba_http.NBAHTTP.send_api_request

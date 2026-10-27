@@ -1,6 +1,10 @@
 """
 Core scoring engine that implements the full methodology.
 
+LEGACY (pre-round-18) path, kept so older boards and tests still evaluate.
+Round 18's edge model lives in main.py, src/projection.py and src/matchup.py;
+PropScore.compute_edge_grade() is its grade.
+
 For each DvP-highlighted matchup:
 1. Find the player at the relevant position on the opposing team
 2. For POINTS:
@@ -76,6 +80,20 @@ class PropScore:
         self.learned = {}
         self.learn_note = ""
 
+        # ── Round 18: the edge model (src/projection.py, src/matchup.py) ──
+        self.projection = {}      # {"mu", "sd", "minutes", "dist", "n_this", "n_last", "weight_this", "p_over", "p_under", "adjustments": {...}}
+        self.p_model = None       # modelled probability of the pick side at the pick line
+        self.p_market = None      # de-vigged market probability of the pick side at the pick line (current consensus, shifted to the pick line)
+        self.edge_value = None    # p_model − p_market
+        self.open_line = None     # first line seen today (line history)
+        self.line_move = None     # latest line − opening line, signed toward the pick (+ = market moved our way)
+        self.dvp_z = None         # opponent's by-position stat allowed, z-score (+ = allows more)
+        self.matchup_z = None     # points: zone + playtype continuous score (+ = favourable for over)
+        self.teammate_out = 0     # OUT starters on the player's own team
+        self.paused = False       # stat paused by PAUSED_STATS: evaluated and shown, never published
+        self.cap_note = ""        # dropped by the board caps (MAX_PICKS / MAX_PER_GAME / MAX_PER_PLAYER)
+        self.guards = []          # guard names that failed: price / books / line_size / minutes
+
     # ── designated line helpers ──────────────────────────────────────
     @property
     def line(self):
@@ -101,8 +119,44 @@ class PropScore:
         """Share of conditions a prop of this stat must meet to be valid."""
         return CONDITION_PASS_RATE_POINTS if self.stat in POINTS_STATS else CONDITION_PASS_RATE
 
+    def compute_edge_grade(self):
+        """
+        Round 18 grade: from the edge over the market at the best price.
+        A+ edge ≥ STRONG_EDGE, A ≥ MIN_EDGE, B+ ≥ WATCH_EDGE, B > 0, C ≤ 0; HOLD
+        without a line. A pick is valid only when it is A+/A, every guard
+        passes (a STRONG_EDGE edge may override the price and line-size
+        guards), the stat is not paused and no cap dropped it.
+        """
+        from src.config import MIN_EDGE, STRONG_EDGE, WATCH_EDGE
+        self.is_valid = False
+        self.on_hold = False
+        if self.line is None:
+            self.on_hold = True
+            self.final_grade = "HOLD"
+            return
+        e = self.edge_value
+        if e is None:
+            self.final_grade = "D"
+            return
+        if e >= STRONG_EDGE:
+            self.final_grade = "A+"
+        elif e >= MIN_EDGE:
+            self.final_grade = "A"
+        elif e >= WATCH_EDGE:
+            self.final_grade = "B+"
+        elif e > 0:
+            self.final_grade = "B"
+        else:
+            self.final_grade = "C"
+        hard = [g for g in self.guards if g in ("books", "minutes")]
+        soft = [g for g in self.guards if g in ("price", "line_size")]
+        self.is_valid = (
+            self.final_grade in ("A+", "A") and not hard and (not soft or e >= STRONG_EDGE)
+            and not self.paused and not self.cap_note
+        )
+
     def compute_grade(self):
-        """Compute final letter grade based on score percentage and hit rate."""
+        """Legacy grade (pre-round-18): share of conditions met + hit rate vs the line."""
         pct = self.total_score_pct
         hr = self.hitrate_data.get("hitrate", -1)
         valid_bar = self.valid_bar

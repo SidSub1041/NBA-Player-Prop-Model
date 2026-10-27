@@ -4,19 +4,31 @@ on:
   schedule:
     # Crons are UTC and do not track daylight saving: the ET labels below are
     # summer (EDT) times; from November to mid-March everything is an hour earlier.
-    # Two boards per slate, so picks are made on the lines the books post
-    # rather than on lines that have moved or been pulled during the day:
-    #   the NIGHT BEFORE (~10:30 PM ET) — builds tomorrow's board (--tomorrow)
-    #   the MORNING OF   (~9:15 AM ET)  — refreshes today's: re-prices the
-    #                                     books, re-checks holds and injuries
-    # Then two fill runs (--fill-holds) that never touch a line already on the
-    # board: they only look for lines for the props still On Hold, as the
-    # books and DFS apps post them through the day:
-    #   AFTERNOON        (~1 PM and ~5 PM ET)
+    # Board runs:
+    #   the NIGHT BEFORE (~10:30 PM ET, --tomorrow) — tomorrow's board, if the
+    #       books have posted; otherwise it writes nothing and tonight's stays up
+    #   the MORNING OF   (~9:15 AM ET) — re-prices everything and rebuilds the board
+    #   two FILL runs    (~1 PM and ~5 PM ET, --fill-holds) — re-price every
+    #       untipped game, keep every published pick as it was (withdrawn only
+    #       if the player is ruled OUT) and add new picks into the room the
+    #       caps leave
     - cron: "30 2 * * *"
     - cron: "15 13 * * *"
     - cron: "0 17 * * *"
     - cron: "0 21 * * *"
+    # Snapshot runs (--snapshot): at :15 and :45 from 15:15 to 03:45 UTC —
+    #   11:15 AM to 11:45 PM EDT / 10:15 AM to 10:45 PM EST — each re-prices
+    # only the games tipping within SNAPSHOT_WINDOW_MINUTES (45), so every tip
+    # from noon to the last late game is re-priced once or twice in its last
+    # 45 minutes; an hour with no game near tip costs nothing (the events list
+    # is free). That last price before tip-off is the close the grader scores
+    # each pick against; a close only counts when its market was re-bought
+    # within CLOSE_WINDOW_MINUTES (90) of tip. Snapshots never touch the board,
+    # skip the CSV export and the deploy, commit only the day's price cache and
+    # line history, and run in their own concurrency group, so they never
+    # queue behind (or cancel) a board run; the two can finish together, and
+    # scripts/commit_data.sh merges the day's logs if they do.
+    - cron: "15,45 15-23,0-3 * * *"
     # Grade picks: ~5:30 AM ET (4:30 AM in winter) — after the last West Coast final
     - cron: "30 9 * * *"
   # Data pushed from a local runner (run_daily.sh) redeploys the site
@@ -33,6 +45,7 @@ on:
         options:
           - model
           - fill
+          - snapshot
           - grade
           - probe
         default: model
@@ -56,12 +69,16 @@ permissions:
 
 # Allow only one concurrent deployment
 concurrency:
-  group: "pages"
+  # Snapshot runs get their own group: a queued snapshot only ever replaces an
+  # older queued snapshot, never a pending board or grading run.
+  group: ${{ (github.event.schedule == '15,45 15-23,0-3 * * *' || github.event.inputs.task == 'snapshot') && 'snapshots' || 'pages' }}
   cancel-in-progress: false
 
 jobs:
   run-model:
     runs-on: ubuntu-latest
+    outputs:
+      snapshot: ${{ steps.task.outputs.model_args == '--snapshot' }}
     env:
       # stats.nba.com blocks cloud runners, so scheduled model/grade runs only
       # happen here when an NBA_PROXY secret is configured. Without one, the
@@ -111,6 +128,12 @@ jobs:
             TASK="model"
             MODEL_ARGS="${MODEL_ARGS:+$MODEL_ARGS }--fill-holds"
           fi
+          # The snapshot cron (and the manual "snapshot" task) re-prices the games
+          # about to tip for the closing lines; never --tomorrow, never the board
+          if [ "${{ github.event.schedule }}" = "15,45 15-23,0-3 * * *" ] || [ "$TASK" = "snapshot" ]; then
+            TASK="model"
+            MODEL_ARGS="--snapshot"
+          fi
           echo "Task: $TASK $MODEL_ARGS"
           echo "model_args=$MODEL_ARGS" >> "$GITHUB_OUTPUT"
           echo "run_model=$([ "$TASK" = "model" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
@@ -138,6 +161,19 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python probe_vegas.py
 
+      # League game logs (src/gamelogs.py) persist between runs: last season is
+      # fetched once, this season only since its newest game. Each run restores
+      # the newest saved cache (restore-keys) and saves its own under a new key
+      # at the end of the job. Only when a model or grade step will run:
+      # snapshot runs never read game logs, push-triggered deploys run no model.
+      - name: Cache league game logs
+        if: ((steps.task.outputs.run_model == 'true' && steps.task.outputs.model_args != '--snapshot') || steps.task.outputs.run_grade == 'true') && (env.HAS_PROXY == 'true' || github.event_name == 'workflow_dispatch')
+        uses: actions/cache@v4
+        with:
+          path: cache/gamelogs
+          key: gamelogs-${{ github.run_id }}
+          restore-keys: gamelogs-
+
       # Both data steps are non-blocking for the deploy, but a failure shows as a
       # red step on the run and blocks the data commit instead of being swallowed.
       - name: Grade picks (yesterday, or the requested date)
@@ -164,42 +200,41 @@ jobs:
         run: python main.py ${{ steps.task.outputs.model_args }}
 
       - name: Export CSV fact tables (for BI dashboards)
-        # Never blocks the data commit/deploy, but a failure is shown on the run
+        # Never blocks the data commit/deploy, but a failure is shown on the run.
+        # Snapshot runs change no board, so they don't re-export.
+        if: steps.task.outputs.model_args != '--snapshot'
         continue-on-error: true
         run: python export_csv.py
 
       # A model run that aborts mid-way publishes nothing, but the sportsbook
-      # prices it already paid for are kept so the next run doesn't buy them again.
+      # prices it already paid for (and the line history they add to) are kept
+      # so the next run doesn't buy them again.
       - name: Keep purchased sportsbook prices (model aborted)
         if: ${{ !cancelled() && steps.model.outcome == 'failure' }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add logs/vegas_*.json 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "chore: keep sportsbook prices from an aborted run $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git pull --rebase --autostash origin main
-          git push
+          bash scripts/commit_data.sh "chore: keep sportsbook prices from an aborted run $(date -u +'%Y-%m-%d %H:%M UTC')" \
+            "logs/vegas_*.json" "logs/lines_*.json"
 
       - name: Commit updated data
         # Never commit the output of a failed model/grade step (a board built
         # on fallbacks alone would overwrite real data).
         if: steps.model.outcome != 'failure' && steps.grade.outcome != 'failure'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add web/public/data/latest.json
-          git add web/public/data/results_history.json
-          git add web/public/data/picks.csv
-          git add web/public/data/graded_picks.csv
-          git add web/public/data/daily_results.csv
-          git add logs/
-          git diff --cached --quiet || git commit -m "chore: update props data $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git pull --rebase origin main
-          git push
+          STAMP="$(date -u +'%Y-%m-%d %H:%M UTC')"
+          if [ "${{ steps.task.outputs.model_args }}" = "--snapshot" ]; then
+            # a snapshot only adds closing prices: commit the day's cache and line history alone
+            bash scripts/commit_data.sh "chore: closing-line snapshot $STAMP" "logs/vegas_*.json" "logs/lines_*.json"
+          else
+            bash scripts/commit_data.sh "chore: update props data $STAMP" \
+              web/public/data/latest.json web/public/data/results_history.json \
+              web/public/data/picks.csv web/public/data/graded_picks.csv web/public/data/daily_results.csv logs/
+          fi
 
   # ── Deploy to GitHub Pages ──────────────────────────────────────
   deploy:
     needs: run-model
+    # a snapshot never changes the board, so there is nothing to deploy
+    if: needs.run-model.outputs.snapshot != 'true'
     runs-on: ubuntu-latest
 
     environment:

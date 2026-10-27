@@ -44,6 +44,8 @@ install_cron() {
             h="${t%%:*}"; m="${t##*:}"
             echo "$((10#$m)) $((10#$h)) * * * cd \"$SCRIPT_DIR\" && PYTHON=\"$PYTHON\" /bin/bash run_daily.sh >> \"$CRON_LOG\" 2>&1 $MARKER"
         done
+        # Closing-line snapshots: every 30 minutes from 11:15 to 23:45 (re-price games about to tip)
+        echo "15,45 11-23 * * * cd \"$SCRIPT_DIR\" && PYTHON=\"$PYTHON\" MODEL_ARGS=--snapshot /bin/bash run_daily.sh >> \"$CRON_LOG\" 2>&1 $MARKER"
     ) | crontab -
 
     echo ""

@@ -9,13 +9,15 @@ DFS apps (PrizePicks, Underdog, DraftKings Pick6, Betr, Dabble — The Odds API'
 `us_dfs` region): the line most of them hang, labelled as a DFS backup.
 
 Setup: an ODDS_API_KEY repository secret. Without it (or once the plan's
-credits run out) props fall back to Underdog's own feed, except that lines
-bought earlier the same day are kept until they can be re-priced.
+credits run out) lines bought earlier the same day are kept until they can be
+re-priced, and Underdog's own feed supplies candidates (shown on the board,
+never published: the edge model's books guard needs 3 sportsbooks).
 
 Credits: listing the slate is free; pricing a game costs (markets × regions)
 per request. Each run prices only the markets its candidate props need, buys
-the sportsbook regions first and the DFS region only for markets where a
-wanted player still has no sportsbook line, and remembers what it bought in
+the sportsbook regions first and the DFS region only for a market the books
+have not posted at all in a game (the edge model wants every player, so a
+single player the books skip gets no DFS line), and remembers what it bought in
 logs/vegas_{date}.json, so a later run re-buys a market only when the stored
 price is older than ODDS_API_REFRESH_MINUTES (default 150) — or
 ODDS_API_NEAR_TIP_REFRESH_MINUTES (default 45) within 3 hours of tip-off, so
@@ -26,12 +28,28 @@ ODDS_API_EMPTY_STOP_EVENTS (default 2) games more than ODDS_API_EMPTY_STOP_HOURS
 (default 8) from tip-off come back with no props at all — nobody has posted
 the slate yet, so the rest would be bought for nothing.
 
-Fill mode (main.py --fill-holds): lines already on the day's board are locked
-— `locked` keys are never re-priced or marked pulled — and only markets with a
-wanted player who still has no line are bought. Those markets are, by
-definition, ones whose last purchase left a hole, so a fill run re-buys them
-once they are ODDS_API_FILL_REFRESH_MINUTES (default 60) old instead of waiting
-for the full refresh window.
+Fill mode (main.py --fill-holds): picks already on the day's board keep their
+line (the lock is applied when the board is built, src/lines.resolve); the
+cache itself always holds the market's current numbers so the day's line
+history (src/line_history.py) records every move, and a locked key is never
+marked "pulled". A fill run re-buys markets once they are
+ODDS_API_FILL_REFRESH_MINUTES (default 60) old: the edge model wants every
+player's market, so a fill run re-prices every untipped game, which is how it
+finds bench and late props.
+
+Budget (edge model, full 10–12-game day): night-before ~30–40 credits,
+morning ~40–60 with combos, each fill run ~30–40, snapshot runs ~40–80 —
+about 200–250 credits a day, 6,000–7,500 a month.
+
+Line history (round 18): every save() appends the lines that changed to
+logs/lines_{date}.json (src/line_history.py), so the model knows where each
+line opened and moved. Snapshot runs (main.py --snapshot, `ensure_snapshot`)
+re-price every game tipping within SNAPSHOT_WINDOW_MINUTES (45; the snapshot
+cron runs every 30 minutes through the evening), whatever the refresh window
+says, so the last price before tip-off — the close — is on file for every
+player the books list; the grader scores each pick against it (closing-line
+value) when the market was re-priced within CLOSE_WINDOW_MINUTES of tip. A snapshot costs (markets × regions) credits per game
+about to tip, the DFS region only for a market no sportsbook has posted.
 """
 
 import json
@@ -44,7 +62,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from src.config import TEAM_ABBREVS
+from src import line_history
+from src.config import SNAPSHOT_WINDOW_MINUTES, TEAM_ABBREVS
 from src.underdog import norm_name, norm_name_base
 
 logger = logging.getLogger(__name__)
@@ -222,6 +241,29 @@ def summarize(offers: dict, ud_line=None, edge: str = "over") -> dict:
     return c
 
 
+def tip_offs(date: str, logs_dir: str | None = None) -> dict[str, str]:
+    """
+    {team abbreviation: commence_time} for every game priced on `date`, read
+    from the day's cache file (logs/vegas_{date}.json) without touching the
+    API. (The grader reads the same file itself, since it also needs each
+    market's last re-price time to verify a close.)
+    """
+    path = os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            cache = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    events = cache.get("events") if isinstance(cache, dict) else None
+    tips: dict[str, str] = {}
+    for ev in (events or {}).values():
+        if not isinstance(ev, dict) or not ev.get("commence_time"):
+            continue
+        for team in ev.get("teams") or []:
+            tips[str(team)] = str(ev["commence_time"])
+    return tips
+
+
 def _covered(found: dict, stat: str, pnorm: str) -> bool:
     """Does `found` (parsed event odds) hold a line for this player+stat? Exact name, then suffix-free."""
     if (pnorm, stat) in found:
@@ -238,7 +280,8 @@ class VegasLines:
 
     def __init__(self, date: str, logs_dir: str | None = None, locked: set | None = None, fill: bool = False):
         self.date = date
-        self.path = os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json")
+        self.logs_dir = logs_dir or LOGS_DIR
+        self.path = os.path.join(self.logs_dir, f"vegas_{date}.json")
         self.api_key = os.environ.get("ODDS_API_KEY", "").strip()
         self.refresh = timedelta(minutes=_env_int("ODDS_API_REFRESH_MINUTES", 150))
         self.near_tip_refresh = timedelta(minutes=_env_int("ODDS_API_NEAR_TIP_REFRESH_MINUTES", 45))
@@ -395,6 +438,77 @@ class VegasLines:
                     f"(tip-off more than {self.empty_stop_hours}h away) — stopping to save credits; the rest is re-checked next run"
                 )
 
+    def ensure_snapshot(self, games: list[dict] | None = None, window_minutes: int = SNAPSHOT_WINDOW_MINUTES,
+                        stats: tuple = ("points", "rebounds", "assists")) -> int:
+        """
+        Snapshot run: re-price every game that tips within `window_minutes`
+        (and has not tipped), ignoring the refresh window, so the close is on
+        file for every player the books list. Buys the `stats` markets for all
+        players plus any market already bought for the game today (combos on
+        the board get a close too); the DFS apps only for a market no
+        sportsbook has posted. `games` (games_today shape) narrows the slate to
+        the listed games and skips ones already started. Returns the number of
+        games priced. The credit guards apply as in ensure(); ensure() itself
+        is unchanged.
+        """
+        if not self.api_key or self.events_failed:
+            return 0
+        now = _now()
+        window = timedelta(minutes=max(int(window_minutes), 0))
+        allowed: dict[frozenset, dict] | None = None
+        if games is not None:
+            allowed = {}
+            for g in games:
+                if isinstance(g, dict) and g.get("home") and g.get("away"):
+                    allowed[frozenset((str(g["home"]), str(g["away"])))] = g
+        priced = 0
+        for ev in sorted(self.events, key=lambda e: str(e.get("commence_time"))):
+            teams = {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} - {None}
+            tip = _parse_ts(ev.get("commence_time"))
+            if allowed is not None:
+                game = allowed.get(frozenset(teams))
+                if game is None or game.get("status") in (2, 3):   # not on the slate, or in progress / final
+                    continue
+                if tip is None:
+                    tip = _parse_ts(game.get("start_utc"))
+            if tip is None or tip <= now or tip - now > window:
+                continue
+            ev_id = str(ev.get("id"))
+            ev_cache = self.cache["events"].setdefault(ev_id, {"teams": sorted(teams), "markets": {}})
+            ev_cache["commence_time"] = ev.get("commence_time")
+            wanted = {s: None for s in stats if s in MARKETS}
+            wanted.update({STAT_FOR_MARKET[m]: None for m in ev_cache["markets"] if m in STAT_FOR_MARKET})
+            due = sorted(MARKETS[s] for s in wanted)
+            if not due:
+                continue
+            found = self._buy(ev, due, self.regions, "books")
+            if found is None:
+                self.unpriced_teams |= teams
+                if self.stopped:
+                    break
+                continue
+            missing = [m for m in due if self._missing(found, STAT_FOR_MARKET[m], None)]
+            dfs_found: dict = {}
+            if missing and self.dfs_regions:
+                bought = self._buy(ev, missing, self.dfs_regions, "dfs")
+                if bought is not None:
+                    dfs_found = bought
+            self._store(ev_id, due, found, dfs_found, now)
+            priced += 1
+        if priced:
+            logger.info(f"  Vegas: snapshot priced {priced} game(s) tipping within {int(window_minutes)} min")
+        return priced
+
+    def tip_for_team(self, team: str) -> str | None:
+        """Commence time (ISO, UTC) of the cached event that includes `team`, else from the live slate, else None."""
+        for ev in self.cache["events"].values():
+            if isinstance(ev, dict) and team in (ev.get("teams") or []) and ev.get("commence_time"):
+                return str(ev["commence_time"])
+        for ev in self.events:
+            if team in {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} and ev.get("commence_time"):
+                return str(ev["commence_time"])
+        return None
+
     @staticmethod
     def _missing(found: dict, stat: str, players: set | None) -> bool:
         """Does a wanted player still lack a line for `stat`? (No player list: is the market empty?)"""
@@ -417,11 +531,15 @@ class VegasLines:
                     c = consensus(entry["offers"])
                     if c:
                         fresh[key] = {**c, "player": entry["player"], "stat": stat, "tier": tier,
-                                      "event_id": ev_id, "fetched_at": stamp}
-            for k in self.locked & before:   # fill mode: a line already on the board stays as it is
-                fresh[k] = lines[k]
+                                      "event_id": ev_id, "fetched_at": stamp,
+                                      "offers": {book: {"line": point, "over": _fmt_american(sides.get("Over")),
+                                                        "under": _fmt_american(sides.get("Under"))}
+                                                 for (book, point), sides in entry["offers"].items()}}
+            # Fill mode: a locked pick keeps ITS line on the board (src/lines.resolve), but the
+            # cache always reflects the market now, so the day's line history records the move.
             for k in before - set(fresh):
-                self.pulled.add(tuple(k.rsplit("|", 1)))   # was hung earlier today, gone now (pre-tip)
+                if k not in self.locked:
+                    self.pulled.add(tuple(k.rsplit("|", 1)))   # was hung earlier today, gone now (pre-tip)
                 del lines[k]
             lines.update(fresh)
             self.cache["events"][ev_id]["markets"][market] = stamp
@@ -434,6 +552,13 @@ class VegasLines:
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.cache, f, indent=1, sort_keys=True)
         os.replace(tmp, self.path)
+        # The day's line history (open / moves / close) — never lets a failure break the save
+        try:
+            appended = line_history.record(self.date, self.cache["lines"], _now(), self.logs_dir)
+            if appended:
+                logger.info(f"  Line history: {appended} snapshot(s) appended to lines_{self.date}.json")
+        except Exception as e:
+            logger.warning(f"  Line history not updated ({type(e).__name__}: {e})")
 
     # ── reading ───────────────────────────────────────────────────────────
     def lookup(self, player_name: str, stat: str) -> dict | None:

@@ -101,8 +101,13 @@ def get_player_shooting_zones(player_name: str, team_abbrev: str) -> list[dict]:
         return []
 
 
-def _parse_player_shot_locations(df: pd.DataFrame, player_name: str) -> list[dict]:
-    """Extract a player's primary zones from the flattened shot-location frame."""
+def _player_zone_shares(df: pd.DataFrame, player_name: str) -> list[dict]:
+    """
+    Every scoring zone for a player from the flattened shot-location frame,
+    with the zone's (unrounded) share of his FGA. [] when the player is not
+    in the frame or has no attempts. Shared by the primary-zone filter and
+    the round-18 continuous zone score.
+    """
     zones: list[dict] = []
     if df.empty or "PLAYER_NAME" not in df.columns:
         return zones
@@ -135,17 +140,49 @@ def _parse_player_shot_locations(df: pd.DataFrame, player_name: str) -> list[dic
         return zones
 
     for zone, data in zone_data.items():
-        fga_pct = data["fga"] / total_fga
-        if fga_pct >= FGA_ZONE_THRESHOLD:
-            zones.append({
-                "zone": zone,
-                "fga_pct": round(fga_pct, 3),
-                "fga": data["fga"],
-                "fgm": data["fgm"],
-                "fg_pct": round(data["fg_pct"], 3),
-            })
-            logger.info(f"  Primary zone: {zone} - {fga_pct:.1%} FGA, {data['fg_pct']:.1%} FG%")
+        zones.append({
+            "zone": zone,
+            "fga_pct": data["fga"] / total_fga,
+            "fga": data["fga"],
+            "fgm": data["fgm"],
+            "fg_pct": data["fg_pct"],
+        })
     return zones
+
+
+def _round_zone(z: dict) -> dict:
+    return {
+        "zone": z["zone"],
+        "fga_pct": round(z["fga_pct"], 3),
+        "fga": z["fga"],
+        "fgm": z["fgm"],
+        "fg_pct": round(z["fg_pct"], 3),
+    }
+
+
+def _parse_player_shot_locations(df: pd.DataFrame, player_name: str) -> list[dict]:
+    """Extract a player's primary zones from the flattened shot-location frame."""
+    zones: list[dict] = []
+    for z in _player_zone_shares(df, player_name):
+        if z["fga_pct"] >= FGA_ZONE_THRESHOLD:
+            zones.append(_round_zone(z))
+            logger.info(f"  Primary zone: {z['zone']} - {z['fga_pct']:.1%} FGA, {z['fg_pct']:.1%} FG%")
+    return zones
+
+
+def get_player_zone_shares(player_name: str) -> list[dict]:
+    """
+    ALL of a player's scoring zones with their share of his FGA (no 20% cut):
+    [{"zone", "fga_pct", "fga", "fgm", "fg_pct"}, ...] in SCORING_ZONES order.
+    The round-18 zone score weights every zone by this share. [] on failure.
+    """
+    logger.info(f"Fetching zone shares for {player_name}")
+    try:
+        df = _league_player_shot_frame()
+        return [_round_zone(z) for z in _player_zone_shares(df, player_name)]
+    except Exception as e:
+        logger.error(f"Failed to fetch player zone shares: {e}")
+        return []
 
 
 def get_team_zone_rankings() -> dict[str, dict[str, dict]]:
@@ -201,6 +238,62 @@ def _parse_team_zone_rankings(df: pd.DataFrame) -> dict[str, dict[str, dict]]:
             for rank, (abbrev, pct) in enumerate(team_pcts, start=1)
         }
     return rankings
+
+
+def zone_table_from_rankings(rankings: dict) -> dict[str, dict[str, float]]:
+    """{zone: {team: fg_pct}} from a get_team_zone_rankings() dict (no extra request)."""
+    table: dict[str, dict[str, float]] = {}
+    for zone, teams in (rankings or {}).items():
+        column = {}
+        for team, entry in (teams or {}).items():
+            pct = entry.get("fg_pct") if isinstance(entry, dict) else entry
+            if pct is not None and pct == pct:
+                column[team] = float(pct)
+        table[zone] = column
+    return table
+
+
+def get_team_zone_table() -> dict[str, dict[str, float]]:
+    """
+    {zone: {team: FG% allowed}} — the numbers behind get_team_zone_rankings
+    without the ranks. Its own request; when the rankings dict is already in
+    hand, zone_table_from_rankings() gives the same table for free.
+    """
+    logger.info("Fetching team shooting zone table...")
+    time.sleep(0.6)
+    try:
+        team_data = leaguedashteamshotlocations.LeagueDashTeamShotLocations(
+            season=stats_season(),
+            season_type_all_star=SEASON_TYPE,
+            distance_range="By Zone",
+        )
+        df = _flatten_shot_frame(team_data)
+        return zone_table_from_rankings(_parse_team_zone_rankings(df))
+    except Exception as e:
+        logger.error(f"Failed to fetch team zone table: {e}")
+        return {}
+
+
+def league_zone_stats(table_or_rankings: dict) -> dict[str, dict]:
+    """{zone: {"mean", "sd", "n"}} of FG% allowed across the league, from either
+    a {zone: {team: fg_pct}} table or a get_team_zone_rankings() dict."""
+    from src.matchup import league_stats
+    out = {}
+    for zone, column in (table_or_rankings or {}).items():
+        stats = league_stats(column, "fg_pct")
+        if stats:
+            out[zone] = stats
+    return out
+
+
+def zone_z(table_or_rankings: dict, zone: str, opponent: str) -> float | None:
+    """
+    How far the opponent's FG% allowed in `zone` sits from the league, in
+    league sds (+ = allows more = good for the over). None when the zone or
+    team is missing. Accepts the table or the rankings dict.
+    """
+    from src.matchup import table_z
+    return table_z(table_or_rankings, zone, opponent, "fg_pct")
 
 
 def score_shooting_zones(

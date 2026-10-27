@@ -9,6 +9,12 @@ a −110 price needs) or in profit, on at least MIN_SAMPLE decided picks.
 
 Every number is what the grader recorded; nothing is reweighted. Sample sizes
 travel with every cut so a 6–2 segment reads as 6–2, not as "75%".
+
+Since round 18 the record also carries the season's closing-line value (CLV):
+over the decided picks the grader found a close for, the mean line CLV (points
+in the pick's favour between the line taken and the line at tip-off), the
+share that beat the close and the mean probability CLV — the only evidence of
+an edge that doesn't need the result to land.
 """
 
 import glob
@@ -68,6 +74,35 @@ def _load_nights(season: str, logs_dir: str) -> list[dict]:
             "picks": decided,
         })
     return [by_date[d] for d in sorted(by_date)]
+
+
+def _num(v):
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return f if f == f else None
+
+
+def clv_record(picks: list[dict]) -> dict:
+    """
+    Closing-line value over the graded picks that have one (clv_line set):
+    {"n", "avg_line" (mean points in the pick's favour vs the close),
+     "beat_close" (share with clv_line > 0), "avg_prob" (mean probability
+     CLV, None when no pick carried one)}; n is 0 when no pick had a close.
+    """
+    rows = [(float(_num(p.get("clv_line"))), _num(p.get("clv_prob"))) for p in picks
+            if isinstance(p, dict) and _num(p.get("clv_line")) is not None]
+    if not rows:
+        return {"n": 0, "avg_line": None, "beat_close": None, "avg_prob": None}
+    n = len(rows)
+    probs = [pr for _, pr in rows if pr is not None]
+    return {
+        "n": n,
+        "avg_line": round(sum(cl for cl, _ in rows) / n, 3),
+        "beat_close": round(sum(1 for cl, _ in rows if cl > 0) / n, 3),
+        "avg_prob": round(sum(probs) / len(probs), 4) if probs else None,
+    }
 
 
 def season_record(season: str, logs_dir: str | None = None) -> dict:
@@ -134,4 +169,5 @@ def season_record(season: str, logs_dir: str | None = None) -> dict:
         "best_night": night_view(best),
         "last_night": night_view(last),
         "streak": streak,
+        "clv": clv_record([p for n in nights for p in n["picks"]]),
     }

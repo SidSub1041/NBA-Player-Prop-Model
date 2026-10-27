@@ -11,6 +11,17 @@ known at pick time:
   probability · share of conditions met · stat type · over/under · line
   source · books hanging the line · injury tag · sample size
 
+and, since round 18, the edge model's own view of the prop:
+
+  modelled probability · de-vigged market probability · the edge between
+  them · how the line moved toward the pick · the opponent's by-position
+  z-score · the zone/playtype matchup z-score · projected minutes · how
+  much of the projection came from this season
+
+Its segment cuts are pre-registered (stat, side, price band, books, edge
+band, line size, plus the older cuts) and every cut carries its sample size
+and a Wilson 95% interval, so a 6–2 segment never reads as "75%".
+
 It is validated walk-forward: each night is predicted by a model trained only
 on the nights BEFORE it, and compared with two baselines — the average hit
 rate and the de-vigged book price. It stays in SHADOW mode (its probability is
@@ -61,7 +72,14 @@ FEATURES = [
     "hr_line", "hr_line_missing", "cushion", "cushion_missing", "implied", "implied_missing",
     "pass_rate", "log_conditions", "is_over", "from_books", "log_books", "injured", "log_gp",
     "stat_rebounds", "stat_assists", "stat_pra", "stat_combo2",
+    # round 18 — the edge model's view of the prop (0 / flagged missing on boards before it)
+    "p_model", "p_model_missing", "p_market", "p_market_missing", "edge", "line_move",
+    "dvp_z", "matchup_z", "log_minutes", "weight_this",
 ]
+# Edge-model price bands and cuts (points = probability x 100), pre-registered so the
+# segment report never goes looking for a cut that happens to look good.
+MAX_PRICE_BAND = -121      # the diagnosis split: picks priced -121 or worse lost, better than -121 won
+EDGE_BANDS = ((6.0, "≥6 pts"), (3.0, "3–6 pts"), (1.5, "1.5–3 pts"), (0.0, "0–1.5 pts"))
 FEATURE_LABELS = {
     "hr_line": "hit rate against the line",
     "hr_line_missing": "no line-based hit rate (older boards)",
@@ -80,6 +98,16 @@ FEATURE_LABELS = {
     "stat_assists": "assists props (vs points)",
     "stat_pra": "PTS+REB+AST props (vs points)",
     "stat_combo2": "two-stat combos (vs points)",
+    "p_model": "the model's probability of the pick",
+    "p_model_missing": "no modelled probability (older boards)",
+    "p_market": "the de-vigged market probability of the pick",
+    "p_market_missing": "no market probability",
+    "edge": "the model's edge over the market",
+    "line_move": "line movement toward the pick",
+    "dvp_z": "opponent's by-position stat allowed (z-score)",
+    "matchup_z": "zone and playtype matchup (z-score)",
+    "log_minutes": "projected minutes",
+    "weight_this": "share of the projection from this season",
 }
 STAT_COLS = {"points": ["pts"], "rebounds": ["reb"], "assists": ["ast"], "pra": ["pts", "reb", "ast"],
              "pts+reb": ["pts", "reb"], "pts+ast": ["pts", "ast"], "reb+ast": ["reb", "ast"]}
@@ -88,6 +116,10 @@ SNAPSHOT_KEYS = [
     "stat", "edge", "line", "over_odds", "under_odds", "ud_line", "ud_over_odds", "ud_under_odds",
     "hitrate", "hitrate_source", "season_avg", "pass_rate", "adaptive_multiplier", "total_conditions",
     "line_source", "line_books", "injury", "games_played",
+    # round 18 — the edge model's fields (src/output._prop_to_dict)
+    "proj_mu", "proj_sd", "proj_minutes", "proj_dist", "n_this", "n_last", "weight_this",
+    "p_model", "p_market", "edge_value", "open_line", "line_move", "dvp_z", "matchup_z",
+    "teammate_out", "paused", "cap_note", "guards", "model_version",
 ]
 
 
@@ -156,6 +188,13 @@ def featurize(p: dict) -> dict | None:
     imp = implied_prob(odds)
     stat = p.get("stat")
     tc = _num(p.get("total_conditions")); gp = _num(p.get("games_played")); books = _num(p.get("line_books"))
+    # The edge model's fields: probabilities are mean-imputed with a missing flag
+    # (like hr_line); the signed quantities read 0 when a board never had them.
+    p_model = _num(p.get("p_model")); p_market = _num(p.get("p_market"))
+    edge = _num(p.get("edge_value"))
+    if math.isnan(edge):
+        edge = p_model - p_market if not (math.isnan(p_model) or math.isnan(p_market)) else 0.0
+    minutes = _num(p.get("proj_minutes")); w_this = _num(p.get("weight_this"))
     return {
         "hr_line": hr, "hr_line_missing": float(math.isnan(hr)),
         "cushion": cushion, "cushion_missing": float(math.isnan(cushion)),
@@ -169,7 +208,30 @@ def featurize(p: dict) -> dict | None:
         "log_gp": math.log1p(0.0 if math.isnan(gp) else gp),
         "stat_rebounds": float(stat == "rebounds"), "stat_assists": float(stat == "assists"),
         "stat_pra": float(stat == "pra"), "stat_combo2": float(stat in ("pts+reb", "pts+ast", "reb+ast")),
+        "p_model": p_model, "p_model_missing": float(math.isnan(p_model)),
+        "p_market": p_market, "p_market_missing": float(math.isnan(p_market)),
+        "edge": edge,
+        "line_move": _zero_if_nan(_num(p.get("line_move"))),
+        "dvp_z": _zero_if_nan(_num(p.get("dvp_z"))),
+        "matchup_z": _zero_if_nan(_num(p.get("matchup_z"))),
+        "log_minutes": math.log1p(max(0.0, _zero_if_nan(minutes))),
+        "weight_this": _zero_if_nan(w_this),
     }
+
+
+def _zero_if_nan(v: float) -> float:
+    return 0.0 if math.isnan(v) else float(v)
+
+
+def wilson(hits: int, n: int, z: float = 1.96) -> list | None:
+    """Wilson 95% interval for a hit rate of hits/n, as [lo, hi]; None without a sample."""
+    if n <= 0:
+        return None
+    p = hits / n
+    denom = 1.0 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return [round(max(0.0, centre - half), 3), round(min(1.0, centre + half), 3)]
 
 
 def row_features(r: dict) -> dict | None:
@@ -388,11 +450,52 @@ def _wmean(v, w):
 
 
 def _record(rows: list[dict]) -> dict:
+    """hits / misses / rate for a set of labeled rows, with n and a Wilson 95% interval."""
     hits = sum(r["hit"] for r in rows)
-    return {"hits": hits, "misses": len(rows) - hits, "rate": round(hits / len(rows), 3) if rows else None}
+    n = len(rows)
+    return {"hits": hits, "misses": n - hits, "rate": round(hits / n, 3) if n else None, "n": n, "ci": wilson(hits, n)}
+
+
+def price_band(odds) -> str:
+    """The diagnosis split: a pick-side price better than −121 (−120, +100, …) or −121 or worse."""
+    o = _num(odds)
+    if math.isnan(o) or o == 0:
+        return "no price"
+    return "better than −121" if o > MAX_PRICE_BAND else "−121 or worse"
+
+
+def books_band(books) -> str:
+    b = _num(books)
+    if math.isnan(b) or b <= 0:
+        return "no books"
+    return "1–2 books" if b <= 2 else "3–5 books" if b <= 5 else "6+ books"
+
+
+def edge_band(edge) -> str:
+    """The modelled edge in points: ≥6 / 3–6 / 1.5–3 / 0–1.5 / ≤0; 'no edge' when the prop was never priced by the model."""
+    e = _num(edge)
+    if math.isnan(e):
+        return "no edge"
+    pts = e * 100.0
+    for floor, label in EDGE_BANDS:
+        if pts >= floor and (pts > 0 or floor > 0):
+            return label
+    return "≤0 pts"
+
+
+def line_size_band(line) -> str:
+    v = _num(line)
+    if math.isnan(v):
+        return "no line"
+    return "≤3.5" if v <= 3.5 else ">3.5"
 
 
 def _segments(rows: list[dict]) -> dict:
+    """
+    Pre-registered cuts of the labeled rows (every record carries n and a
+    Wilson 95% interval): stat, side, price band, books, edge band, line size,
+    line source, hit rate vs the line, season average vs the line.
+    """
     def seg(key):
         groups = defaultdict(list)
         for r in rows:
@@ -404,6 +507,9 @@ def _segments(rows: list[dict]) -> dict:
         v = f.get(k)
         return None if v is None or (isinstance(v, float) and math.isnan(v)) else v
 
+    def snap(r, k):
+        return (r.get("prop") or {}).get(k)
+
     def cush(r):
         c = feat(r, "cushion")
         return "n/a" if c is None else ("average favors the pick" if c > 0 else "average against the pick")
@@ -414,9 +520,26 @@ def _segments(rows: list[dict]) -> dict:
             return "no line-based hit rate"
         return "≥56%" if h >= 0.56 else "50–56%" if h >= 0.50 else "<50%"
 
+    def books(r):
+        b = snap(r, "line_books")
+        if b is None:   # rows without a snapshot: back out of the feature (log1p(books), 1 when unknown)
+            lb = feat(r, "log_books")
+            b = None if lb is None else round(math.expm1(lb))
+        return books_band(b)
+
+    def edge_pts(r):
+        e = snap(r, "edge_value")
+        if e is None and snap(r, "p_model") is not None and snap(r, "p_market") is not None:
+            e = _num(snap(r, "p_model")) - _num(snap(r, "p_market"))
+        return edge_band(e)
+
     return {
         "stat": seg(lambda r: r["stat"]),
         "edge": seg(lambda r: r["edge"]),
+        "price band": seg(lambda r: price_band(r.get("odds"))),
+        "books": seg(books),
+        "edge band": seg(edge_pts),
+        "line size": seg(lambda r: line_size_band(r.get("line"))),
         "line source": seg(lambda r: "sportsbooks" if feat(r, "from_books") else "Underdog"),
         "hit rate vs line": seg(hrb),
         "season average vs line": seg(cush),

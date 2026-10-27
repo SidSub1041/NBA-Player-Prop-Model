@@ -47,10 +47,70 @@ export interface PropPick {
   injury?: string | null;
   grade: string;
   is_valid: boolean;
-  /** 1 = best in its list (A+ first, then hit rate vs the line, conditions met, books) */
+  /** 1 = best in its list (A+ first, then the edge over the market, then hit rate vs the line, conditions met, books) */
   rank?: number;
   zone_details: string[];
   playtype_details: string[];
+  /* ── round 18: the edge model (absent on boards before it) ── */
+  /** projected mean / spread / minutes and the distribution used ("normal" | "nb") */
+  proj_mu?: number | null;
+  proj_sd?: number | null;
+  proj_minutes?: number | null;
+  proj_dist?: string | null;
+  /** games in the two-season sample and this season's share of the blend */
+  n_this?: number | null;
+  n_last?: number | null;
+  weight_this?: number | null;
+  /** modelled probability of the pick side at the pick line */
+  /** MODEL_TRUST × p_model + (1 − MODEL_TRUST) × p_market: the probability the edge is judged on */
+  p_hat?: number | null;
+  /** the pick price's break-even probability (what you pay); edge_value = p_hat − breakeven_price */
+  breakeven_price?: number | null;
+  market_basis?: "pick" | "shifted" | null;
+  consensus_line?: number | null;
+  /** books at the consensus line when the pick's number was shopped from one book */
+  consensus_books?: number | null;
+  line_shopped?: boolean;
+  p_model?: number | null;
+  /** de-vigged market probability of the pick side at the pick line (shifted when the market moved) */
+  p_market?: number | null;
+  /** p_model − p_market; the number behind the grade ("edge" is the side) */
+  edge_value?: number | null;
+  /** first line seen today and the move since, signed toward the pick (+ = market moved our way) */
+  open_line?: number | null;
+  line_move?: number | null;
+  /** opponent's by-position stat allowed (z, + = allows more) and the zone/playtype matchup (points) */
+  dvp_z?: number | null;
+  matchup_z?: number | null;
+  /** OUT starters on the player's own team */
+  teammate_out?: number;
+  /** stat paused (shown, never published) / dropped by a board cap */
+  paused?: boolean;
+  cap_note?: string | null;
+  /** guards that failed: "price" | "books" | "line_size" | "minutes" */
+  guards?: string[];
+  /** "edge-1" (projected and priced) or "filter-0" (the legacy filter) */
+  model_version?: "edge-1" | "filter-0" | string;
+}
+
+/** The season's closing-line value (src/record.py) */
+export interface SeasonClv {
+  /** decided picks the grader found a close for */
+  n: number;
+  /** mean points in the pick's favour between the line taken and the close */
+  avg_line: number | null;
+  /** share of those picks that beat the close */
+  beat_close: number | null;
+  /** mean probability CLV (de-vigged close − pick-time price, at the pick line) */
+  avg_prob: number | null;
+}
+
+/** What src/caps.py did to the board */
+export interface BoardCaps {
+  kept: number;
+  dropped: number;
+  by_reason?: { per_player?: number; per_game?: number; board?: number };
+  limits?: { max_picks?: number; max_per_game?: number; max_per_player?: number };
 }
 
 /** One cut of the season's graded record (src/record.py) */
@@ -91,6 +151,8 @@ export interface SeasonRecord {
   last_night: NightRecord | null;
   /** +k winning nights in a row, -k losing, 0 none */
   streak: number;
+  /** closing-line value over the season's decided picks (boards before round 18: absent) */
+  clv?: SeasonClv | null;
 }
 
 export interface HitrateSummary {
@@ -115,6 +177,9 @@ export interface DayResult {
   misses: number;
   voided?: number;
   units?: number;
+  /** the night's mean closing-line value and the share of picks that beat the close (when closes were on file) */
+  clv_avg_line?: number | null;
+  clv_beat?: number | null;
 }
 
 export interface PropsData {
@@ -132,7 +197,17 @@ export interface PropsData {
   watchlist_count: number;
   thresholds: {
     condition_pass_rate: number;
+    condition_pass_rate_points?: number;
     hitrate: number;
+    /** the edge model's bars (round 18): edges as probabilities, price as American odds */
+    min_edge?: number;
+    strong_edge?: number;
+    max_price?: number;
+    min_books?: number;
+    min_line?: number;
+    min_proj_minutes?: number;
+    max_picks?: number;
+    max_per_game?: number;
   };
   valid_picks: PropPick[];
   watchlist: PropPick[];
@@ -144,6 +219,17 @@ export interface PropsData {
   /** valid picks the learned model cut as -EV (ACTIVE mode only) */
   demoted?: PropPick[];
   demoted_count?: number;
+  /** round 18: "edge-1" once the board is projected and priced, "filter-0" before */
+  model_version?: "edge-1" | "filter-0" | string;
+  /** stats evaluated but never published (PAUSED_STATS), e.g. ["assists"] */
+  paused_stats?: string[];
+  /** what the board caps did (null when they were not applied) */
+  caps?: BoardCaps | null;
+  /** A-grade edges in a paused stat, and A-grade edges a cap dropped (best first) */
+  paused?: PropPick[];
+  capped?: PropPick[];
+  paused_count?: number;
+  capped_count?: number;
   combo_valid_count?: number;
   combo_watchlist_count?: number;
   hitrate_summary?: HitrateSummary;
@@ -156,6 +242,9 @@ export interface SegmentRecord {
   hits: number;
   misses: number;
   rate: number | null;
+  /** sample size and a Wilson 95% interval on the rate (round 18) */
+  n?: number;
+  ci?: [number, number] | null;
 }
 
 export interface Postmortem {

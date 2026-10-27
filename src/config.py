@@ -81,7 +81,51 @@ CONDITION_PASS_RATE = 0.80      # >= 80% of conditions must be met (rebounds, as
 # while rebounds/assists have one, so points use a majority bar instead.
 CONDITION_PASS_RATE_POINTS = 0.60   # points, and combos that include points
 POINTS_STATS = {"points", "pts+reb", "pts+ast", "pra"}
-HITRATE_THRESHOLD = 0.56        # >= 56% season hit rate against the line
+HITRATE_THRESHOLD = 0.56        # legacy A+ hit-rate bar (display + learner feature only since round 18)
+
+# ── Round 18: the edge model ──────────────────────────────────────────────
+# A pick is the side whose modelled probability beats the de-vigged market
+# probability at the best price by at least MIN_EDGE. Thresholds are env-
+# overridable so they can be re-tuned without a code change.
+def _env_float(name: str, default: float) -> float:
+    try:
+        return float(os.environ.get(name, default))
+    except ValueError:
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.environ.get(name, default))
+    except ValueError:
+        return default
+
+
+MODEL_TRUST = _env_float("MODEL_TRUST", 0.5)        # weight of the model's probability vs the market's in p_hat
+MIN_EDGE = _env_float("MIN_EDGE", 0.03)             # A: p_hat − the pick price's break-even (net of vig)
+STRONG_EDGE = _env_float("STRONG_EDGE", 0.06)       # A+
+WATCH_EDGE = _env_float("WATCH_EDGE", 0.015)        # B+ (B: any positive edge)
+MAX_PRICE = _env_int("MAX_PRICE", -121)             # skip prices worse than this unless edge >= STRONG_EDGE
+MIN_BOOKS = _env_int("MIN_BOOKS", 3)                # sportsbooks at the consensus line
+MIN_LINE = _env_float("MIN_LINE", 4.0)              # skip lines below this (tiny-count props) unless edge >= STRONG_EDGE
+MIN_PROJ_MINUTES = _env_float("MIN_PROJ_MINUTES", 24.0)
+MIN_CANDIDATE_MPG = _env_float("MIN_CANDIDATE_MPG", 20.0)   # who gets projected at all
+BLEND_K = _env_float("BLEND_K", 10.0)               # this season's weight = n / (n + K)
+FORM_HALF_LIFE = _env_float("FORM_HALF_LIFE", 10.0) # games; recent games weigh more within a season
+DVP_SHRINK = _env_float("DVP_SHRINK", 0.5)          # how much of the opponent's by-position deviation to apply
+MATCHUP_WEIGHT = _env_float("MATCHUP_WEIGHT", 0.02) # points: multiplier per unit of zone/playtype z-score
+PACE_WEIGHT = _env_float("PACE_WEIGHT", 1.0)        # 1 = full pace scaling, 0 = none
+TEAMMATE_OUT_BOOST = _env_float("TEAMMATE_OUT_BOOST", 0.03)   # per OUT starter on the player's own team
+TEAMMATE_OUT_MAX = _env_int("TEAMMATE_OUT_MAX", 2)
+MAX_PICKS = _env_int("MAX_PICKS", 15)
+MAX_PER_GAME = _env_int("MAX_PER_GAME", 3)
+MAX_PER_PLAYER = _env_int("MAX_PER_PLAYER", 1)      # singles; one combo per player on top
+PAUSED_STATS = {s.strip() for s in os.environ.get("PAUSED_STATS", "assists").split(",") if s.strip()}
+SNAPSHOT_WINDOW_MINUTES = _env_int("SNAPSHOT_WINDOW_MINUTES", 45)   # --snapshot: re-price games tipping within this (runs every 30 min)
+CLOSE_WINDOW_MINUTES = _env_int("CLOSE_WINDOW_MINUTES", 90)         # a close counts only if the market was re-priced this close to tip
+VAR_PRIOR_K = _env_float("VAR_PRIOR_K", 8.0)        # games of 'typical spread' prior mixed into a player's sample variance
+COMBO_RHO = _env_float("COMBO_RHO", 0.25)           # correlation between a player's stats when summing a combo
+EDGE_STATS = ("points", "rebounds", "assists")      # single-stat markets the edge model projects
 
 # Shooting zones from NBA.com
 SHOOTING_ZONES = [

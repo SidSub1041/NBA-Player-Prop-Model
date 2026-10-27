@@ -10,7 +10,10 @@ import os
 from datetime import datetime, timezone
 from tabulate import tabulate
 
-from src.config import CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, season_for_date, slate_today
+from src.config import (
+    CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, MAX_PER_GAME, MAX_PICKS, MAX_PRICE,
+    MIN_BOOKS, MIN_EDGE, MIN_LINE, MIN_PROJ_MINUTES, PAUSED_STATS, STRONG_EDGE, season_for_date, slate_today,
+)
 from src.season import stats_season, stats_season_reason
 
 logger = logging.getLogger(__name__)
@@ -19,23 +22,72 @@ LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 
 GRADE_RANK = {"A+": 6, "A": 5, "B+": 4, "B": 3, "C": 2, "D": 1, "F": 0}
 
+# The JSON key for the modelled edge is edge_value (p_model − p_market, pick
+# side): "edge" has always been the side (over/under) in every board, CSV and
+# graded file, so the number travels under the PropScore attribute's name.
+MODEL_VERSION_EDGE = "edge-1"       # round 18: projection vs the de-vigged market price
+MODEL_VERSION_FILTER = "filter-0"   # the legacy DvP-colour + hit-rate-gate filter
+
+
+def _num_or_none(v, digits: int | None = None):
+    """A finite number rounded to `digits` (or as is), else None."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return None
+    if v != v or v in (float("inf"), float("-inf")):
+        return None
+    return round(float(v), digits) if digits is not None else v
+
 
 def rank_key(p, active: bool = False) -> tuple:
     """
-    Best pick first: grade (A+ before A), then — once the learner is ACTIVE —
+    Best pick first: grade (A+ before A), then the modelled edge over the
+    market when the prop has one, then — once the learner is ACTIVE —
     expected value at the price, else the hit rate against the line, then the
     share of conditions met, then how many books hang the line.
     """
     hr = p.hitrate_data.get("hitrate", -1) if isinstance(getattr(p, "hitrate_data", None), dict) else -1
     hr = hr if isinstance(hr, (int, float)) and hr >= 0 else -1
+    edge = _num_or_none(getattr(p, "edge_value", None))
     learned = getattr(p, "learned", None) or {}
     ev = learned.get("ev") if active and learned.get("active") and learned.get("ev") is not None else None
     books = (p.line_info or {}).get("books") or 0
-    return (-GRADE_RANK.get(p.final_grade, 0), -(ev if ev is not None else -9.0), -hr, -p.total_score_pct, -books)
+    return (-GRADE_RANK.get(p.final_grade, 0), -(edge if edge is not None else -9.0),
+            -(ev if ev is not None else -9.0), -hr, -p.total_score_pct, -books)
 
 
 def rank_picks(prop_scores: list, active: bool = False) -> list:
     return sorted(prop_scores, key=lambda p: rank_key(p, active))
+
+
+def _has_edge(props: list) -> bool:
+    """Did the edge model price any of these props (p_model set)?"""
+    return any(_num_or_none(getattr(p, "p_model", None)) is not None for p in props)
+
+
+def _pct(v) -> str:
+    v = _num_or_none(v)
+    return f"{v:.0%}" if v is not None else "-"
+
+
+def _edge_pts(v) -> str:
+    v = _num_or_none(v)
+    return f"{v * 100:+.1f}" if v is not None else "-"
+
+
+def _table_rows(props: list, with_edge: bool) -> list:
+    """One report row per prop; the edge columns (Model %, Market %, Edge) when the board has them."""
+    rows = []
+    for p in props:
+        hr = p.hitrate_data.get("hitrate", -1)
+        hr_str = f"{hr:.0%}" if hr >= 0 else "N/A"
+        line_str = str(p.line) if p.line is not None else "-"
+        odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
+        row = [p.player_name, p.team, p.opponent, p.position, p.stat.upper(), p.edge.upper(), line_str, odds]
+        if with_edge:
+            row += [_pct(getattr(p, "p_model", None)), _pct(getattr(p, "p_market", None)), _edge_pts(getattr(p, "edge_value", None))]
+        row += [f"{p.total_points}/{p.total_conditions}", f"{p.total_score_pct:.0%}", hr_str, p.final_grade]
+        rows.append(row)
+    return rows
 
 
 def format_report(prop_scores: list, date: str | None = None) -> str:
@@ -45,10 +97,13 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
 
     valid = [p for p in prop_scores if p.is_valid]
     on_hold = [p for p in prop_scores if getattr(p, "on_hold", False)]
+    capped = [p for p in prop_scores if getattr(p, "cap_note", "")]
+    paused = [p for p in prop_scores if getattr(p, "paused", False) and p.final_grade in ("A+", "A")]
     watchlist = [
         p for p in prop_scores
         if not p.is_valid and not getattr(p, "on_hold", False) and p.final_grade in ("B+", "B")
     ]
+    with_edge = _has_edge(prop_scores)
 
     lines = [
         "",
@@ -61,14 +116,26 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         f"  Valid picks (A/A+)  : {len(valid)}",
         f"  On hold (no line)   : {len(on_hold)}",
         f"  Watchlist (B/B+)    : {len(watchlist)}",
-        f"  Thresholds          : >={CONDITION_PASS_RATE:.0%} conditions (points {CONDITION_PASS_RATE_POINTS:.0%}) | >={HITRATE_THRESHOLD:.0%} hit rate",
-        "",
     ]
+    if with_edge:
+        lines += [
+            f"  Capped (board)      : {len(capped)}",
+            f"  Paused              : {len(paused)}" + (f" ({', '.join(sorted(PAUSED_STATS))})" if PAUSED_STATS else ""),
+            f"  Thresholds          : edge >= {MIN_EDGE * 100:.1f} pts (A), >= {STRONG_EDGE * 100:.1f} pts (A+) | "
+            f"price >= {MAX_PRICE} | >= {MIN_BOOKS} books | line >= {MIN_LINE} | >= {MIN_PROJ_MINUTES:.0f} min | "
+            f"{MAX_PICKS} on the board, {MAX_PER_GAME} per game",
+            "",
+        ]
+    else:
+        lines += [
+            f"  Thresholds          : >={CONDITION_PASS_RATE:.0%} conditions (points {CONDITION_PASS_RATE_POINTS:.0%}) | >={HITRATE_THRESHOLD:.0%} hit rate",
+            "",
+        ]
 
-    headers = [
-        "Player", "Team", "Opp", "Pos", "Stat",
-        "Edge", "Line", "Odds", "Score", "Pct", "HR", "Grade"
-    ]
+    headers = ["Player", "Team", "Opp", "Pos", "Stat", "Edge", "Line", "Odds"]
+    if with_edge:
+        headers += ["Model %", "Market %", "Edge pts"]
+    headers += ["Score", "Pct", "HR", "Grade"]
 
     # ── VALID PICKS ──────────────────────────────────────────────────
     if valid:
@@ -76,37 +143,43 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         lines.append("│  ✅  VALID PICKS                                                     │")
         lines.append("└─────────────────────────────────────────────────────────────────────┘")
         lines.append("")
-
-        table_data = []
-        for p in sorted(valid, key=lambda x: x.total_score_pct, reverse=True):
-            hr = p.hitrate_data.get("hitrate", -1)
-            hr_str = f"{hr:.0%}" if hr >= 0 else "N/A"
-            line_str = str(p.line) if p.line is not None else "-"
-            odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
-            table_data.append([
-                p.player_name,
-                p.team,
-                p.opponent,
-                p.position,
-                p.stat.upper(),
-                p.edge.upper(),
-                line_str,
-                odds,
-                f"{p.total_points}/{p.total_conditions}",
-                f"{p.total_score_pct:.0%}",
-                hr_str,
-                p.final_grade,
-            ])
-
-        lines.append(tabulate(table_data, headers=headers, tablefmt="rounded_outline"))
+        lines.append(tabulate(_table_rows(rank_picks(valid), with_edge), headers=headers, tablefmt="rounded_outline"))
         lines.append("")
     else:
         lines.append("  No valid picks today.\n")
 
+    # ── CAPPED / PAUSED (edge model) ─────────────────────────────────
+    if capped:
+        lines.append("┌─────────────────────────────────────────────────────────────────────┐")
+        lines.append("│  ✂  CAPPED  (A-grade edges dropped by the board caps)                 │")
+        lines.append("└─────────────────────────────────────────────────────────────────────┘")
+        lines.append("")
+        lines.append(tabulate(
+            [[p.player_name, p.team, p.opponent, p.stat.upper(), p.edge.upper(), str(p.line) if p.line is not None else "-",
+              _edge_pts(getattr(p, "edge_value", None)), p.final_grade, p.cap_note]
+             for p in rank_picks(capped)],
+            headers=["Player", "Team", "Opp", "Stat", "Edge", "Line", "Edge pts", "Grade", "Why"],
+            tablefmt="rounded_outline",
+        ))
+        lines.append("")
+    if paused:
+        lines.append("┌─────────────────────────────────────────────────────────────────────┐")
+        lines.append("│  ⏯  PAUSED  (A-grade edges in a paused stat — shown, never published) │")
+        lines.append("└─────────────────────────────────────────────────────────────────────┘")
+        lines.append("")
+        lines.append(tabulate(
+            [[p.player_name, p.team, p.opponent, p.stat.upper(), p.edge.upper(), str(p.line) if p.line is not None else "-",
+              _edge_pts(getattr(p, "edge_value", None)), p.final_grade]
+             for p in rank_picks(paused)],
+            headers=["Player", "Team", "Opp", "Stat", "Edge", "Line", "Edge pts", "Grade"],
+            tablefmt="rounded_outline",
+        ))
+        lines.append("")
+
     # ── ON HOLD ──────────────────────────────────────────────────────
     if on_hold:
         lines.append("┌─────────────────────────────────────────────────────────────────────┐")
-        lines.append("│  ⏸  ON HOLD  (conditions met — waiting on a line; re-checked next run) │")
+        lines.append("│  ⏸  ON HOLD  (no line right now — re-checked on the next run)         │")
         lines.append("└─────────────────────────────────────────────────────────────────────┘")
         lines.append("")
         lines.append(tabulate(
@@ -121,32 +194,13 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
     # ── WATCHLIST ────────────────────────────────────────────────────
     if watchlist:
         lines.append("┌─────────────────────────────────────────────────────────────────────┐")
-        lines.append("│  👀  WATCHLIST  (60-79% conditions met)                              │")
+        if with_edge:
+            lines.append("│  👀  WATCHLIST  (B+/B: a positive edge below the A bar)              │")
+        else:
+            lines.append("│  👀  WATCHLIST  (60-79% conditions met)                              │")
         lines.append("└─────────────────────────────────────────────────────────────────────┘")
         lines.append("")
-
-        table_data = []
-        for p in sorted(watchlist, key=lambda x: x.total_score_pct, reverse=True):
-            hr = p.hitrate_data.get("hitrate", -1)
-            hr_str = f"{hr:.0%}" if hr >= 0 else "N/A"
-            line_str = str(p.line) if p.line is not None else "-"
-            odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
-            table_data.append([
-                p.player_name,
-                p.team,
-                p.opponent,
-                p.position,
-                p.stat.upper(),
-                p.edge.upper(),
-                line_str,
-                odds,
-                f"{p.total_points}/{p.total_conditions}",
-                f"{p.total_score_pct:.0%}",
-                hr_str,
-                p.final_grade,
-            ])
-
-        lines.append(tabulate(table_data, headers=headers, tablefmt="rounded_outline"))
+        lines.append(tabulate(_table_rows(rank_picks(watchlist), with_edge), headers=headers, tablefmt="rounded_outline"))
         lines.append("")
 
     # ── DETAILED BREAKDOWNS ──────────────────────────────────────────
@@ -197,6 +251,13 @@ def _eastern_label(now_utc: datetime) -> str:
 
 
 COMBO_STATS = {"pts+ast", "pts+reb", "reb+ast", "pra"}
+
+
+def _r4(x):
+    try:
+        return None if x is None else round(float(x), 4)
+    except (TypeError, ValueError):
+        return None
 
 
 def _prop_to_dict(p) -> dict:
@@ -250,14 +311,61 @@ def _prop_to_dict(p) -> dict:
         "adaptive_multiplier": round(p.adaptive_multiplier, 4),
         "zone_details": p.zone_score.get("details", []),
         "playtype_details": p.playtype_score.get("details", []),
+        # ── round 18: the edge model (src/projection.py, src/matchup.py, src/line_history.py) ──
+        **_edge_fields(p),
     }
 
 
-def save_json_report(prop_scores: list, date: str | None = None, run_mode: str = "full", lines_locked: int = 0) -> str:
+def _edge_fields(p) -> dict:
+    """
+    The edge model's view of a prop: the projection, the modelled and market
+    probabilities of the pick side at the pick line, the edge between them,
+    where the line opened and how it moved (signed toward the pick), the
+    matchup z-scores, teammate outs, the pause/cap state and the guards that
+    failed. model_version says which model graded the prop: "edge-1" when it
+    was projected and priced, "filter-0" for the legacy filter (older boards
+    and props the projection could not cover).
+    """
+    proj = getattr(p, "projection", None) or {}
+    p_model = _num_or_none(getattr(p, "p_model", None), 4)
+    guards = getattr(p, "guards", None) or []
+    return {
+        "proj_mu": _num_or_none(proj.get("mu"), 2),
+        "proj_sd": _num_or_none(proj.get("sd"), 2),
+        "proj_minutes": _num_or_none(proj.get("minutes"), 1),
+        "proj_dist": proj.get("dist") or None,
+        "n_this": _num_or_none(proj.get("n_this")),
+        "n_last": _num_or_none(proj.get("n_last")),
+        "weight_this": _num_or_none(proj.get("weight_this"), 3),
+        "p_hat": _r4((getattr(p, "projection", None) or {}).get("p_hat")),
+        "breakeven_price": _r4((getattr(p, "projection", None) or {}).get("breakeven")),
+        "market_basis": (getattr(p, "projection", None) or {}).get("market_basis"),
+        "consensus_line": (p.line_info or {}).get("consensus_line"),
+        "consensus_books": (p.line_info or {}).get("consensus_books"),
+        "line_shopped": bool((p.line_info or {}).get("shopped")),
+        "p_model": p_model,
+        "p_market": _num_or_none(getattr(p, "p_market", None), 4),
+        "edge_value": _num_or_none(getattr(p, "edge_value", None), 4),
+        "open_line": _num_or_none(getattr(p, "open_line", None)),
+        "line_move": _num_or_none(getattr(p, "line_move", None), 2),
+        "dvp_z": _num_or_none(getattr(p, "dvp_z", None), 2),
+        "matchup_z": _num_or_none(getattr(p, "matchup_z", None), 2),
+        "teammate_out": int(getattr(p, "teammate_out", 0) or 0),
+        "paused": bool(getattr(p, "paused", False)),
+        "cap_note": getattr(p, "cap_note", "") or None,
+        "guards": [str(g) for g in guards],
+        "model_version": MODEL_VERSION_EDGE if p_model is not None else MODEL_VERSION_FILTER,
+    }
+
+
+def save_json_report(prop_scores: list, date: str | None = None, run_mode: str = "full", lines_locked: int = 0,
+                     caps: dict | None = None) -> str:
     """Save model results as JSON for the web dashboard.
 
     run_mode is "full" (the night-before and morning boards) or "fill-holds"
     (an afternoon re-check that kept `lines_locked` lines from the earlier board).
+    `caps` is what src.caps.apply_caps returned for this board (None when the
+    caps were not applied), stored as the payload's "caps".
     """
     if date is None:
         date = slate_today()
@@ -269,13 +377,17 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
     def _held(p):
         return bool(getattr(p, "on_hold", False))
 
-    # Best first: A+ before A, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books
+    # Best first: A+ before A, then the edge over the market, then EV (learner ACTIVE only)
+    # or hit rate vs the line, conditions met, books
     active = any((getattr(p, "learned", None) or {}).get("active") for p in prop_scores)
     valid = rank_picks([p for p in individual if p.is_valid], active)
     watchlist = rank_picks([p for p in individual if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")], active)
     valid_combos = rank_picks([p for p in combos if p.is_valid], active)
     watchlist_combos = rank_picks([p for p in combos if not p.is_valid and not _held(p) and p.final_grade in ("B+", "B")], active)
     on_hold = [p for p in prop_scores if _held(p)]
+    # Edge model: A-grade edges in a paused stat (shown, never published) and A-grade edges the caps dropped
+    paused = rank_picks([p for p in prop_scores if getattr(p, "paused", False) and p.final_grade in ("A+", "A")], active)
+    capped = rank_picks([p for p in prop_scores if getattr(p, "cap_note", "")], active)
 
     # One dict per prop, shared by every list it appears in, so the rank tagged
     # on a board list is on the same row in all_props (and so in picks.csv).
@@ -324,10 +436,24 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
         "combo_watchlist_count": len(watchlist_combos),
         "on_hold_count": len(on_hold),
         "demoted_count": sum(1 for p in prop_scores if getattr(p, "learn_note", "")),
+        "paused_count": len(paused),
+        "capped_count": len(capped),
+        "model_version": MODEL_VERSION_EDGE if _has_edge(prop_scores) else MODEL_VERSION_FILTER,
+        "paused_stats": sorted(PAUSED_STATS),
+        "caps": caps,
         "thresholds": {
             "condition_pass_rate": CONDITION_PASS_RATE,
             "condition_pass_rate_points": CONDITION_PASS_RATE_POINTS,
             "hitrate": HITRATE_THRESHOLD,
+            # the edge model's bars (src/config.py)
+            "min_edge": MIN_EDGE,
+            "strong_edge": STRONG_EDGE,
+            "max_price": MAX_PRICE,
+            "min_books": MIN_BOOKS,
+            "min_line": MIN_LINE,
+            "min_proj_minutes": MIN_PROJ_MINUTES,
+            "max_picks": MAX_PICKS,
+            "max_per_game": MAX_PER_GAME,
         },
         "valid_picks": _ranked_dicts(valid),
         "watchlist": _ranked_dicts(watchlist),
@@ -335,6 +461,8 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
         "watchlist_combos": _ranked_dicts(watchlist_combos),
         "on_hold": _dicts(on_hold),
         "demoted": _dicts([p for p in prop_scores if getattr(p, "learn_note", "")]),
+        "paused": _dicts(paused),
+        "capped": _dicts(capped),
         "all_props": _dicts(prop_scores),
         "hitrate_summary": hitrate_summary,
     }

@@ -47,14 +47,12 @@ def _league_player_frame(playtype: str) -> pd.DataFrame:
     return _player_frames[key]
 
 
-def get_player_playtypes(player_name: str) -> list[dict]:
+def _player_playtype_rows(player_name: str) -> list[dict]:
     """
-    Get player's primary playtypes (>= 15% frequency).
-
-    Returns list of dicts:
-    [{"playtype": "Isolation", "freq_pct": 0.25, "ppp": 1.05, "poss": 120}, ...]
+    Every playtype the league tables list the player in, with frequency,
+    PPP and per-game possessions (no frequency cut). Shared by the primary-
+    playtype filter and the round-18 continuous playtype score.
     """
-    logger.info(f"Fetching playtypes for {player_name}")
     all_playtypes = []
 
     for playtype in PLAYTYPE_CATEGORIES:
@@ -97,6 +95,19 @@ def get_player_playtypes(player_name: str) -> list[dict]:
             logger.debug(f"  Playtype {playtype} fetch failed: {e}")
             continue
 
+    return all_playtypes
+
+
+def get_player_playtypes(player_name: str) -> list[dict]:
+    """
+    Get player's primary playtypes (>= 15% frequency).
+
+    Returns list of dicts:
+    [{"playtype": "Isolation", "freq_pct": 0.25, "ppp": 1.05, "poss": 120}, ...]
+    """
+    logger.info(f"Fetching playtypes for {player_name}")
+    all_playtypes = _player_playtype_rows(player_name)
+
     # Filter to primary playtypes (>= 15% frequency)
     primary = [pt for pt in all_playtypes if pt["freq_pct"] >= PLAYTYPE_FREQ_THRESHOLD]
 
@@ -107,6 +118,16 @@ def get_player_playtypes(player_name: str) -> list[dict]:
         )
 
     return primary
+
+
+def get_player_playtype_shares(player_name: str) -> list[dict]:
+    """
+    ALL of a player's playtypes with their frequency (no 15% cut):
+    [{"playtype", "freq_pct", "ppp", "poss"}, ...]. The round-18 playtype
+    score weights every playtype by freq_pct. [] when the tables are down.
+    """
+    logger.info(f"Fetching playtype shares for {player_name}")
+    return _player_playtype_rows(player_name)
 
 
 def get_team_playtype_defense_rankings() -> dict[str, dict[str, dict]]:
@@ -165,6 +186,28 @@ def get_team_playtype_defense_rankings() -> dict[str, dict[str, dict]]:
             continue
 
     return rankings
+
+
+def league_playtype_stats(rankings: dict) -> dict[str, dict]:
+    """{playtype: {"mean", "sd", "n"}} of PPP allowed across the league from a
+    get_team_playtype_defense_rankings() dict (or a {playtype: {team: ppp}} table)."""
+    from src.matchup import league_stats
+    out = {}
+    for playtype, column in (rankings or {}).items():
+        stats = league_stats(column, "ppp")
+        if stats:
+            out[playtype] = stats
+    return out
+
+
+def playtype_z(rankings: dict, playtype: str, opponent: str) -> float | None:
+    """
+    How far the opponent's PPP allowed in `playtype` sits from the league, in
+    league sds (+ = allows more = good for the over). None when the playtype
+    or team is missing.
+    """
+    from src.matchup import table_z
+    return table_z(rankings, playtype, opponent, "ppp")
 
 
 def score_playtypes(

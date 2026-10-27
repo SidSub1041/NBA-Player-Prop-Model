@@ -57,11 +57,18 @@ PICK_FIELDS = [
     "p_hit", "ev",
     # best-first order within the pick's list (1 = best; A+ before A, then hit rate vs the line, conditions met, books)
     "rank",
+    # round 18 — the edge model: projection, model vs market probability at the pick line,
+    # the edge between them (edge_value; "edge" stays the side), where the line opened and
+    # how it moved toward the pick, matchup z-scores, the guards that failed, pause/cap state
+    "proj_mu", "proj_sd", "p_model", "p_market", "edge_value", "open_line", "line_move",
+    "dvp_z", "matchup_z", "guards", "paused", "cap_note", "model_version",
 ]
 
-GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units"]
+# graded picks also carry the close (closing_line) and the closing-line value against it
+GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units", "closing_line", "clv_line", "clv_prob"]
 
-RESULT_FIELDS = ["date", "total_picks", "hits", "misses", "voided", "units", "season"]
+# clv_avg_line / clv_beat: the night's mean closing-line value and the share of picks that beat the close
+RESULT_FIELDS = ["date", "total_picks", "hits", "misses", "voided", "units", "season", "clv_avg_line", "clv_beat"]
 
 
 def _load_days(prefix):
@@ -163,6 +170,20 @@ def _flatten_prop(prop, date):
         "p_hit": prop.get("p_hit"),
         "ev": prop.get("ev"),
         "rank": prop.get("rank"),
+        "proj_mu": prop.get("proj_mu"),
+        "proj_sd": prop.get("proj_sd"),
+        "p_model": prop.get("p_model"),
+        "p_market": prop.get("p_market"),
+        "edge_value": prop.get("edge_value"),
+        "open_line": prop.get("open_line"),
+        "line_move": prop.get("line_move"),
+        "dvp_z": prop.get("dvp_z"),
+        "matchup_z": prop.get("matchup_z"),
+        "guards": "|".join(str(g) for g in (prop.get("guards") or []) if g),
+        "paused": prop.get("paused", False),
+        "cap_note": prop.get("cap_note"),
+        # boards before round 18 never stored a version: they were the filter
+        "model_version": prop.get("model_version") or ("edge-1" if prop.get("p_model") is not None else "filter-0"),
     }
 
 
@@ -196,6 +217,9 @@ def export_graded(graded_days):
             row["actual_value"] = pick.get("actual_value")
             row["result"] = pick.get("result")
             row["units"] = pick.get("units")
+            row["closing_line"] = pick.get("closing_line")
+            row["clv_line"] = pick.get("clv_line")
+            row["clv_prob"] = pick.get("clv_prob")
             rows.append(row)
     _write_csv(os.path.join(DATA_DIR, "graded_picks.csv"), GRADED_FIELDS, rows)
 
@@ -212,6 +236,11 @@ def export_daily_results(graded_days):
         if row["units"] is None:
             row["units"] = 0.0
         row["season"] = row.get("season") or _season(date)
+        # graded files carry the night's CLV under "clv"; history entries flatten it
+        clv = src.get("clv") if isinstance(src.get("clv"), dict) else None
+        if clv and clv.get("n"):
+            row["clv_avg_line"] = row.get("clv_avg_line") if row.get("clv_avg_line") is not None else clv.get("avg_line")
+            row["clv_beat"] = row.get("clv_beat") if row.get("clv_beat") is not None else clv.get("beat_close")
         return row
 
     by_date = {}
