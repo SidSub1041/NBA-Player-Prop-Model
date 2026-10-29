@@ -355,7 +355,23 @@ def _edge_fields(p) -> dict:
         "cap_note": getattr(p, "cap_note", "") or None,
         "guards": [str(g) for g in guards],
         "model_version": MODEL_VERSION_EDGE if p_model is not None else MODEL_VERSION_FILTER,
+        # round 19: "passing" when the assists came from passing (src/passing.py), with its pieces per game
+        "proj_source": proj.get("source") or None,
+        "proj_mu_box": _num_or_none(proj.get("mu_box"), 2),
+        "passing": _passing_fields(proj.get("passing")),
     }
+
+
+def _passing_fields(pieces) -> dict | None:
+    """The passing projection's pieces for the board (per game at the projected minutes), rounded; None without them."""
+    if not isinstance(pieces, dict):
+        return None
+    digits = {"passes": 1, "pot_ast": 1, "pa_per_pass": 3, "conv": 3, "conv_seen": 3, "conv_prior": 3,
+              "team_shooting": 3, "opp_shooting": 3, "opp_share": 3, "base": 2, "weight_this": 3}
+    out = {k: _num_or_none(pieces.get(k), d) for k, d in digits.items()}
+    out["gp_this"] = _num_or_none(pieces.get("gp_this"))
+    out["gp_last"] = _num_or_none(pieces.get("gp_last"))
+    return out
 
 
 def save_json_report(prop_scores: list, date: str | None = None, run_mode: str = "full", lines_locked: int = 0,

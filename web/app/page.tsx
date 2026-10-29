@@ -397,9 +397,57 @@ function guardLabel(guard: string, pick: PropPick, edge: string): string {
       return `line ${pickLine(pick) ?? "—"}`;
     case "minutes":
       return pick.proj_minutes != null ? `${Math.round(pick.proj_minutes)} min` : "minutes";
+    case "passing":
+      return "no passing data";
     default:
       return guard;
   }
+}
+
+/** A factor vs the league as a signed percentage: 1.034 -> "+3%". */
+function fmtFactor(f: number): string {
+  const pct = Math.round((f - 1) * 100);
+  return `${pct > 0 ? "+" : pct < 0 ? "−" : "±"}${Math.abs(pct)}%`;
+}
+
+/** Assists from passing: passes made -> potential assists -> conversion, and the opponent's shooting and ball movement. */
+function PassingRow({ pick }: { pick: PropPick }) {
+  const pa = pick.passing;
+  if (!pa || pick.stat !== "assists" || pa.passes == null || pa.pot_ast == null || pa.conv == null) return null;
+  const chip = "text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap";
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">PASSING</div>
+      <div className="text-sm font-semibold text-[var(--text)] whitespace-nowrap" title="passes made a game at tonight's projected minutes">
+        {pa.passes.toFixed(0)} passes
+      </div>
+      <div className="text-sm font-semibold text-[var(--text)] whitespace-nowrap" title="potential assists: passes that lead to a shot within one dribble">
+        · {pa.pot_ast.toFixed(1)} potential
+      </div>
+      <div
+        className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap"
+        title="share of potential assists that become assists: mostly the teammates' shooting, so it is pulled toward the league rate (scaled by his team's shooting)"
+      >
+        · {fmtPct(pa.conv)} made{pa.conv_seen != null ? ` (${fmtPct(pa.conv_seen)} so far)` : ""}
+      </div>
+      {pick.proj_mu != null && (
+        <div className="text-sm font-bold text-[var(--text)] whitespace-nowrap" title="the projection tonight, with the matchup">
+          → {pick.proj_mu.toFixed(1)} AST
+          {pick.proj_mu_box != null && <span className="font-semibold text-[var(--text-muted)]"> (box {pick.proj_mu_box.toFixed(1)})</span>}
+        </div>
+      )}
+      {pa.opp_shooting != null && Math.abs(pa.opp_shooting - 1) >= 0.005 && (
+        <span className={chip} title={`${pick.opponent}'s FG% allowed on the shots his team's passes create, vs the league (shrunk)`}>
+          {pick.opponent} shooting {fmtFactor(pa.opp_shooting)}
+        </span>
+      )}
+      {pa.opp_share != null && Math.abs(pa.opp_share - 1) >= 0.005 && (
+        <span className={chip} title={`share of the makes ${pick.opponent} allows that are assisted, vs the league (shrunk)`}>
+          ball movement {fmtFactor(pa.opp_share)}
+        </span>
+      )}
+    </div>
+  );
 }
 
 /** The edge model's row: model vs market at the pick's line, the line's move since it opened, failed guards. */
@@ -451,6 +499,7 @@ function EdgeRow({ pick }: { pick: PropPick }) {
           </span>
         )}
       </div>
+      <PassingRow pick={pick} />
       {guards.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 sm:pl-[92px]">
           {guards.map((g) => (
@@ -1031,8 +1080,8 @@ const SYSTEM_STEPS = [
 
 /** The edge model (round 18): a projection turned into a probability, priced against the market. */
 const SYSTEM_STEPS_EDGE = [
-  { n: "01", title: "PROJECT", body: "Two seasons of game logs, this season weighted by form, blended into tonight's mean and spread for every player with a line." },
-  { n: "02", title: "ADJUST", body: "Defense vs. position, pace, shot zones and playtypes, starters out — each a multiplier on the projection." },
+  { n: "01", title: "PROJECT", body: "Two seasons of game logs, this season weighted by form, blended into tonight's mean and spread. Assists come from passing: passes made × shots they set up × the share that go in." },
+  { n: "02", title: "ADJUST", body: "Defense vs. position, pace, shot zones allowed and playtypes, starters out — and for passers, the opponent's shooting defense and ball movement allowed." },
   { n: "03", title: "PRICE IT", body: "The best price at every book, de-vigged — and shifted to the pick's line when the market has moved since it opened." },
   { n: "04", title: "FIND THE EDGE", body: "Model and market blended, minus the price's break-even. __EDGE__ points is an A, __STRONG__ an A+. Price, books, line size and minutes guard it." },
   { n: "05", title: "CAP & CLOSE", body: "__PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is scored against the closing line." },

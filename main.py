@@ -7,14 +7,16 @@ For every player with a points, rebounds or assists line on tonight's board:
      and last season's game logs (recent games weigh more), scaled by the
      matchup: the opponent's stat allowed to the position (FantasyPros DvP,
      numeric), pace, shooting-zone and playtype fit for points, and OUT
-     teammates.
+     teammates. Assists are projected from passing instead (src/passing.py):
+     passes made x potential assists per pass x conversion, with the
+     opponent's shooting defence and ball movement allowed.
   2. Turn the projection into a probability of clearing the line (normal
      for points and combos, negative binomial for rebounds and assists).
   3. Compare it with the de-vigged market probability at the best price —
      shifted to the pick's number when the market has moved — and publish
      the side whose edge clears MIN_EDGE, subject to the guards (price,
-     books at the line, line size, projected minutes), the paused stats and
-     the board caps.
+     books at the line, line size, projected minutes, passing data for
+     assists), the paused stats and the board caps.
 Every line seen during the day is recorded (logs/lines_{date}.json); the
 --snapshot runs re-price games about to tip so each pick gets a closing
 line and a closing-line value when it is graded.
@@ -79,6 +81,7 @@ from src.matchup import (
     roster_index, dvp_positions, dvp_blend, reset_roster_cache,
 )
 from src.pace import blended_pace, pace_factor
+from src import passing as passing_model
 from src.line_history import movement, load as load_history, key_for
 from src.caps import apply_caps
 
@@ -111,11 +114,18 @@ def _float(x) -> float | None:
         return None
 
 
+def _uses_assists(stat: str) -> bool:
+    return stat == "assists" or "assists" in COMBO_DEFS.get(stat, {}).get("components", [])
+
+
 def _guards(prop: PropScore) -> list[str]:
     """
-    Which guards a priced prop fails: price / books / line_size / minutes.
-    The books guard is about the market's depth: a shopped number (one book
-    lagging the consensus) is judged by the consensus it lags.
+    Which guards a priced prop fails: price / books / line_size / minutes /
+    passing. The books guard is about the market's depth: a shopped number
+    (one book lagging the consensus) is judged by the consensus it lags. The
+    passing guard holds back an assists prop (or a combo with assists) whose
+    assists could not be projected from passing (src/passing.py): the
+    box-score fallback is what the assists pause was about.
     """
     out = []
     info = prop.line_info or {}
@@ -130,6 +140,8 @@ def _guards(prop: PropScore) -> list[str]:
     minutes = (prop.projection or {}).get("minutes")
     if minutes is not None and minutes < MIN_PROJ_MINUTES:
         out.append("minutes")
+    if _uses_assists(prop.stat) and (prop.projection or {}).get("source") != "passing":
+        out.append("passing")
     return out
 
 
@@ -354,7 +366,8 @@ def _prop_from_board(d: dict) -> PropScore:
     p.line_info["books"] = d.get("line_books")
     p.projection = {"mu": d.get("proj_mu"), "sd": d.get("proj_sd"), "minutes": d.get("proj_minutes"), "dist": d.get("proj_dist"),
                     "n_this": d.get("n_this"), "n_last": d.get("n_last"), "weight_this": d.get("weight_this"),
-                    "p_hat": d.get("p_hat"), "breakeven": d.get("breakeven_price"), "market_basis": d.get("market_basis")}
+                    "p_hat": d.get("p_hat"), "breakeven": d.get("breakeven_price"), "market_basis": d.get("market_basis"),
+                    "source": d.get("proj_source"), "mu_box": d.get("proj_mu_box"), "passing": d.get("passing")}
     if d.get("line_shopped"):
         p.line_info["shopped"] = True
         p.line_info["consensus_line"] = d.get("consensus_line")
@@ -409,12 +422,17 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
 
     from src.season import reset as reset_stats_season
     reset_stats_season()
+    from src.nba_http import reset_breakers
+    reset_breakers()            # a new run (a new day in the long-lived scheduler) starts with every endpoint closed
     from src.hitrate import reset_cache as reset_gamelog_cache
     reset_gamelog_cache()
     from src.playtypes import reset_cache as reset_playtype_cache
     reset_playtype_cache()
     reset_dvp_cache()
     reset_roster_cache()
+    passing_model.reset_cache()
+    from src.shooting_zones import reset_cache as reset_zone_cache
+    reset_zone_cache()
     try:
         from src.pace import reset_cache as reset_pace_cache
         reset_pace_cache()
@@ -494,6 +512,10 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         logger.info("  [Fast mode] Skipping playtype rankings")
     pace = blended_pace(season_now, season_prev)
     logger.info(f"  Pace for {len(pace)} teams")
+    from src.nba_http import optional_calls
+    with optional_calls():                      # the passing tables never abort a board (assists are held back instead)
+        pctx = passing_model.context(date, season_now, season_prev)
+    logger.info(f"  Passing: {passing_model.describe(pctx)}")
     _assert_stats_reachable("league tables")
     if not team_zone_rankings:
         raise RuntimeError("No shooting-zone rankings came back from stats.nba.com — refusing to publish a board built without them")
@@ -639,6 +661,11 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         if proj is None:
             logger.info(f"  {name} {stat}: no game-log sample — skipped")
             continue
+        if stat == "assists":
+            # passes made x potential assists per pass x conversion; the box-score projection gives minutes and spread
+            pproj = passing_model.project_assists(pctx, name, team, opponent, proj, mult)
+            if pproj is not None:
+                proj, mult = pproj, pproj["adjustments"]
         projections[lk] = proj
 
         res = resolve(name, team, stat, vegas, ud_lines, not_started, locked)
@@ -674,6 +701,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         time.sleep(0.3)
 
     _assert_stats_reachable("projections")
+    _log_passing_vs_box(prop_scores)
 
     # ── Step 6: Combos — players with two A-grade singles on one side ─
     logger.info("Step 6: Building combo props...")
@@ -717,6 +745,10 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         proj = combo_projection([c.projection for c in comps])
         if proj is None:
             continue
+        if any(c.stat == "assists" for c in comps):
+            ast = next(c for c in comps if c.stat == "assists")
+            if (ast.projection or {}).get("source") == "passing":
+                proj["source"] = "passing"      # its assists part came from passing (the passing guard reads this)
         res = resolve(name, team, combo_stat, vegas, ud_lines, not_started, locked)
         line = res.line["line"] if res.line else None
         current = vegas.lookup(name, combo_stat) or {}
@@ -795,6 +827,29 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
 
     valid_count = sum(1 for p in prop_scores if p.is_valid)
     logger.info(f"Done. {valid_count} valid picks out of {len(prop_scores)} evaluated.")
+
+
+def _log_passing_vs_box(prop_scores: list) -> None:
+    """How far the passing projection moved assists from the box-score one: the median and the five largest moves."""
+    moves, missing = [], []
+    for p in prop_scores:
+        proj = p.projection or {}
+        if p.stat != "assists" or getattr(p, "pinned", False) or getattr(getattr(p, "resolution", None), "locked", False):
+            continue
+        if proj.get("source") == "passing" and proj.get("mu_box") is not None:
+            moves.append((float(proj["mu"]) - float(proj["mu_box"]), p.player_name, float(proj["mu"]), float(proj["mu_box"])))
+        elif proj.get("mu") is not None:
+            missing.append(p.player_name)
+    if missing:
+        logger.warning(f"  {len(missing)} assists prop(s) without a passing projection (held back by the passing guard): "
+                       + ", ".join(sorted(missing)[:12]) + (" ..." if len(missing) > 12 else ""))
+    if not moves:
+        return
+    diffs = sorted(abs(m[0]) for m in moves)
+    median = diffs[len(diffs) // 2]
+    top = sorted(moves, key=lambda m: -abs(m[0]))[:5]
+    logger.info(f"  Assists from passing vs box score: {len(moves)} props, median move {median:.2f}; largest "
+                + ", ".join(f"{n} {mu:.1f} (box {box:.1f})" for _d, n, mu, box in top))
 
 
 def cdef_label(combo_stat: str) -> str:

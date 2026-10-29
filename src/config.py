@@ -120,12 +120,21 @@ TEAMMATE_OUT_MAX = _env_int("TEAMMATE_OUT_MAX", 2)
 MAX_PICKS = _env_int("MAX_PICKS", 15)
 MAX_PER_GAME = _env_int("MAX_PER_GAME", 3)
 MAX_PER_PLAYER = _env_int("MAX_PER_PLAYER", 1)      # singles; one combo per player on top
-PAUSED_STATS = {s.strip() for s in os.environ.get("PAUSED_STATS", "assists").split(",") if s.strip()}
+# Stats shown but never published (comma list, e.g. PAUSED_STATS=assists). Empty since round 19: assists
+# are projected from passing (src/passing.py) and publish like any other stat.
+PAUSED_STATS = {s.strip() for s in os.environ.get("PAUSED_STATS", "").split(",") if s.strip()}
 SNAPSHOT_WINDOW_MINUTES = _env_int("SNAPSHOT_WINDOW_MINUTES", 45)   # --snapshot: re-price games tipping within this (runs every 30 min)
 CLOSE_WINDOW_MINUTES = _env_int("CLOSE_WINDOW_MINUTES", 90)         # a close counts only if the market was re-priced this close to tip
 VAR_PRIOR_K = _env_float("VAR_PRIOR_K", 8.0)        # games of 'typical spread' prior mixed into a player's sample variance
 COMBO_RHO = _env_float("COMBO_RHO", 0.25)           # correlation between a player's stats when summing a combo
 EDGE_STATS = ("points", "rebounds", "assists")      # single-stat markets the edge model projects
+
+# ── Round 19: assists from passing (src/passing.py) ───────────────────────
+# assists = minutes × passes/min × potential assists per pass × conversion; each link has its own prior.
+PASS_BLEND_K = _env_float("PASS_BLEND_K", 5.0)      # games: this season's passes/min weighs n / (n + K) against last season's
+PA_RATIO_K = _env_float("PA_RATIO_K", 400.0)        # passes of prior behind potential assists per pass (last season, then the league)
+AST_CONV_K = _env_float("AST_CONV_K", 300.0)        # potential assists of prior behind conversion (league rate × his team's shooting)
+CONV_LAST_WEIGHT = _env_float("CONV_LAST_WEIGHT", 0.5)   # last season's potential assists count this much in his conversion
 
 # Shooting zones from NBA.com
 SHOOTING_ZONES = [

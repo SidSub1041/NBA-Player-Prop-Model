@@ -87,10 +87,39 @@ export interface PropPick {
   /** stat paused (shown, never published) / dropped by a board cap */
   paused?: boolean;
   cap_note?: string | null;
-  /** guards that failed: "price" | "books" | "line_size" | "minutes" */
+  /** guards that failed: "price" | "books" | "line_size" | "minutes" | "passing" (assists without the passing tables) */
   guards?: string[];
   /** "edge-1" (projected and priced) or "filter-0" (the legacy filter) */
   model_version?: "edge-1" | "filter-0" | string;
+  /* ── round 19: assists from passing (absent on boards before it) ── */
+  /** "passing" when the assists were projected from passing (src/passing.py) */
+  proj_source?: "passing" | string | null;
+  /** the box-score projection the passing one replaced, for comparison */
+  proj_mu_box?: number | null;
+  passing?: PassingPieces | null;
+}
+
+/** The passing projection's pieces, per game at the projected minutes (src/passing.py) */
+export interface PassingPieces {
+  /** passes made */
+  passes: number | null;
+  /** potential assists (passes that lead to a shot within one dribble) */
+  pot_ast: number | null;
+  pa_per_pass: number | null;
+  /** share of potential assists that become assists: the projection's, this season's so far, and the prior it is pulled toward */
+  conv: number | null;
+  conv_seen: number | null;
+  conv_prior: number | null;
+  /** his team's shooting on assisted shots vs the league (scales the conversion prior) */
+  team_shooting: number | null;
+  /** tonight's opponent: FG% allowed on those shots, and assisted share of makes allowed, vs the league */
+  opp_shooting: number | null;
+  opp_share: number | null;
+  /** minutes x the per-minute rate, before the matchup */
+  base: number | null;
+  weight_this: number | null;
+  gp_this: number | null;
+  gp_last: number | null;
 }
 
 /** The season's closing-line value (src/record.py) */

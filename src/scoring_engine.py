@@ -125,7 +125,8 @@ class PropScore:
         A+ edge ≥ STRONG_EDGE, A ≥ MIN_EDGE, B+ ≥ WATCH_EDGE, B > 0, C ≤ 0; HOLD
         without a line. A pick is valid only when it is A+/A, every guard
         passes (a STRONG_EDGE edge may override the price and line-size
-        guards), the stat is not paused and no cap dropped it.
+        guards; never books, minutes or passing), the stat is not paused and
+        no cap dropped it.
         """
         from src.config import MIN_EDGE, STRONG_EDGE, WATCH_EDGE
         self.is_valid = False
@@ -148,7 +149,7 @@ class PropScore:
             self.final_grade = "B"
         else:
             self.final_grade = "C"
-        hard = [g for g in self.guards if g in ("books", "minutes")]
+        hard = [g for g in self.guards if g in ("books", "minutes", "passing")]
         soft = [g for g in self.guards if g in ("price", "line_size")]
         self.is_valid = (
             self.final_grade in ("A+", "A") and not hard and (not soft or e >= STRONG_EDGE)

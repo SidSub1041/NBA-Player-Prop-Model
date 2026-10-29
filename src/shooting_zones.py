@@ -7,6 +7,14 @@ Team shooting zones (defense): ranks teams by FG% allowed in each zone.
 The ShotLocations endpoints return a two-level header (a zone row over a
 FGM/FGA/FG_PCT row). nba_api exposes that as a pandas MultiIndex, which we
 flatten to "<Zone>_FGA"-style column names before reading.
+
+The team endpoint answers for the team's own shots unless it is asked for
+the opponent measure (measure_type_simple="Opponent", columns OPP_FGM /
+OPP_FGA / OPP_FG_PCT): FG% ALLOWED is the opponent measure. Before round 19
+the rankings used the default (the team's own shooting), so the points
+model's zone fit read the opponent's offence; it now reads its defence.
+src/passing.py uses both: the opponent measure for tonight's defence, the
+base measure for where a team takes its shots and how well it makes them.
 """
 
 import logging
@@ -44,9 +52,11 @@ def _flatten_shot_frame(endpoint) -> pd.DataFrame:
 
 
 def _zone_cols(df: pd.DataFrame, zone: str) -> tuple[str, str, str] | None:
-    fga, fgm, pct = f"{zone}_FGA", f"{zone}_FGM", f"{zone}_FG_PCT"
-    if fga in df.columns and pct in df.columns:
-        return fga, fgm, pct
+    """(FGA, FGM, FG_PCT) column names for a zone: "<Zone>_FGA" (base measure) or "<Zone>_OPP_FGA" (opponent measure)."""
+    for prefix in ("", "OPP_"):
+        fga, fgm, pct = f"{zone}_{prefix}FGA", f"{zone}_{prefix}FGM", f"{zone}_{prefix}FG_PCT"
+        if fga in df.columns and pct in df.columns:
+            return fga, fgm, pct
     return None
 
 
@@ -185,9 +195,78 @@ def get_player_zone_shares(player_name: str) -> list[dict]:
         return []
 
 
+_team_frame_cache: dict[tuple, pd.DataFrame] = {}
+
+
+def reset_cache() -> None:
+    """Forget this run's shot-location frames (main resets every per-run cache)."""
+    _team_frame_cache.clear()
+    _player_frame_cache.clear()
+
+
+def team_shot_frame(season: str, measure: str = "Opponent", date_to: str = "") -> pd.DataFrame:
+    """
+    League-wide team shot locations by zone for `season`: measure "Opponent"
+    (what each team ALLOWS) or "Base" (each team's own shots), through
+    `date_to` (MM/DD/YYYY, '' = to date). One request per (season, measure,
+    date_to) per run; raises on failure (callers decide what that costs).
+    """
+    key = (season, measure, date_to or "")
+    if key in _team_frame_cache:
+        return _team_frame_cache[key]
+    time.sleep(0.6)
+    team_data = leaguedashteamshotlocations.LeagueDashTeamShotLocations(
+        season=season,
+        season_type_all_star=SEASON_TYPE,
+        distance_range="By Zone",
+        measure_type_simple=measure,
+        date_to_nullable=date_to or "",
+    )
+    df = _flatten_shot_frame(team_data)
+    _team_frame_cache[key] = df
+    return df
+
+
+def team_zone_counts(season: str, measure: str = "Opponent", date_to: str = "") -> dict[str, dict[str, list]]:
+    """
+    {team: {zone: [FGM, FGA]}} over the scoring zones for `season` (totals),
+    from team_shot_frame(). {} when the request fails or the season has no
+    rows yet.
+    """
+    try:
+        df = team_shot_frame(season, measure, date_to)
+    except Exception as e:
+        logger.warning(f"Team shot locations ({measure}, {season}) unavailable: {type(e).__name__}: {e}")
+        return {}
+    out: dict[str, dict[str, list]] = {}
+    if df.empty or "TEAM_ID" not in df.columns:
+        return out
+    id_to_abbrev = {v: k for k, v in NBA_TEAM_IDS.items()}
+    for _, row in df.iterrows():
+        try:
+            abbrev = id_to_abbrev.get(int(row["TEAM_ID"]), "")
+        except (TypeError, ValueError):
+            continue
+        if not abbrev:
+            continue
+        zones = {}
+        for zone in SCORING_ZONES:
+            cols = _zone_cols(df, zone)
+            if not cols:
+                continue
+            fga_col, fgm_col, pct_col = cols
+            fga = _num(row[fga_col])
+            fgm = _num(row[fgm_col]) if fgm_col in df.columns else _num(row[pct_col]) * fga
+            zones[zone] = [fgm, fga]
+        if zones:
+            out[abbrev] = zones
+    return out
+
+
 def get_team_zone_rankings() -> dict[str, dict[str, dict]]:
     """
-    Get all teams' defensive FG% allowed rankings by zone.
+    Get all teams' defensive FG% allowed rankings by zone (the opponent
+    measure of LeagueDashTeamShotLocations, stats season).
 
     Returns: {zone_name: {team_abbrev: {"fg_pct": float, "rank": int}}}
     Rank 1 = allows highest FG% (worst defense / best for over).
@@ -199,15 +278,8 @@ def get_team_zone_rankings() -> dict[str, dict[str, dict]]:
     a position filter, so overall team zone defense is used as a proxy.
     """
     logger.info("Fetching team shooting zone defense rankings...")
-    time.sleep(0.6)
-
     try:
-        team_data = leaguedashteamshotlocations.LeagueDashTeamShotLocations(
-            season=stats_season(),
-            season_type_all_star=SEASON_TYPE,
-            distance_range="By Zone",
-        )
-        df = _flatten_shot_frame(team_data)
+        df = team_shot_frame(stats_season(), "Opponent")
         return _parse_team_zone_rankings(df)
     except Exception as e:
         logger.error(f"Failed to fetch team zone rankings: {e}")
@@ -256,18 +328,13 @@ def zone_table_from_rankings(rankings: dict) -> dict[str, dict[str, float]]:
 def get_team_zone_table() -> dict[str, dict[str, float]]:
     """
     {zone: {team: FG% allowed}} — the numbers behind get_team_zone_rankings
-    without the ranks. Its own request; when the rankings dict is already in
-    hand, zone_table_from_rankings() gives the same table for free.
+    without the ranks (the same opponent-measure frame, shared for the run).
+    When the rankings dict is already in hand, zone_table_from_rankings()
+    gives the same table for free.
     """
     logger.info("Fetching team shooting zone table...")
-    time.sleep(0.6)
     try:
-        team_data = leaguedashteamshotlocations.LeagueDashTeamShotLocations(
-            season=stats_season(),
-            season_type_all_star=SEASON_TYPE,
-            distance_range="By Zone",
-        )
-        df = _flatten_shot_frame(team_data)
+        df = team_shot_frame(stats_season(), "Opponent")
         return zone_table_from_rankings(_parse_team_zone_rankings(df))
     except Exception as e:
         logger.error(f"Failed to fetch team zone table: {e}")

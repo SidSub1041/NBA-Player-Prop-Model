@@ -62,6 +62,8 @@ PICK_FIELDS = [
     # how it moved toward the pick, matchup z-scores, the guards that failed, pause/cap state
     "proj_mu", "proj_sd", "p_model", "p_market", "edge_value", "open_line", "line_move",
     "dvp_z", "matchup_z", "guards", "paused", "cap_note", "model_version",
+    # round 19 — assists from passing: the source, potential assists a game and the conversion projected
+    "proj_source", "pot_ast", "ast_conv",
 ]
 
 # graded picks also carry the close (closing_line) and the closing-line value against it
@@ -184,6 +186,9 @@ def _flatten_prop(prop, date):
         "cap_note": prop.get("cap_note"),
         # boards before round 18 never stored a version: they were the filter
         "model_version": prop.get("model_version") or ("edge-1" if prop.get("p_model") is not None else "filter-0"),
+        "proj_source": prop.get("proj_source"),
+        "pot_ast": (prop.get("passing") or {}).get("pot_ast"),
+        "ast_conv": (prop.get("passing") or {}).get("conv"),
     }
 
 

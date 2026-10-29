@@ -20,6 +20,7 @@ Import it before any endpoint is used:  `import src.nba_http`
 import logging
 import os
 import time
+from contextlib import contextmanager
 
 import requests
 from nba_api.library import http as nba_http
@@ -32,8 +33,9 @@ PROXY = os.environ.get("NBA_PROXY") or None
 BREAKER_THRESHOLD = 3     # consecutive failures (per endpoint) before failing fast
 # Endpoints the board can do without: their breaker never aborts a run.
 # playergamelogs (the league-wide game-log table, src/gamelogs.py) falls back
-# to the disk cache or to per-player PlayerGameLog calls.
-OPTIONAL_ENDPOINTS = {"synergyplaytypes", "playergamelogs", "playerindex"}
+# to the disk cache or to per-player PlayerGameLog calls; leaguedashptstats (the
+# passing tables, src/passing.py) only holds assists back when it is down.
+OPTIONAL_ENDPOINTS = {"synergyplaytypes", "playergamelogs", "playerindex", "leaguedashptstats"}
 
 _failures: dict[str, int] = {}     # endpoint -> consecutive failures
 _original_send = nba_http.NBAHTTP.send_api_request
@@ -48,6 +50,27 @@ def breaker_open(endpoint: str | None = None) -> bool:
 
 def reset_breakers() -> None:
     _failures.clear()
+
+
+@contextmanager
+def optional_calls():
+    """
+    Requests made inside never decide the run: whatever they do to an
+    essential endpoint's failure count (src/passing.py asks the same team
+    endpoints the zone rankings and pace use) is undone on the way out, so a
+    blocked passing-only request costs its feature, never the board. Inside,
+    a breaker that opens still fails the remaining calls fast.
+    """
+    saved = {ep: n for ep, n in _failures.items() if ep not in OPTIONAL_ENDPOINTS}
+    try:
+        yield
+    finally:
+        for ep in list(_failures):
+            if ep not in OPTIONAL_ENDPOINTS:
+                if ep in saved:
+                    _failures[ep] = saved[ep]
+                else:
+                    del _failures[ep]
 
 
 def _resilient_send(
