@@ -3,28 +3,28 @@
   "season": "2026-27",
   "stats_season": "2025-26",
   "stats_season_reason": "early season: teams have played as few as 3 games, using 2025-26 stats until everyone reaches 5",
-  "run_at": "01:15 PM ET",
-  "run_at_iso": "2026-10-30T17:15:48+00:00",
+  "run_at": "05:10 PM ET",
+  "run_at_iso": "2026-10-30T21:10:38+00:00",
   "run_mode": "fill-holds",
   "lines_locked": 409,
-  "candidates_analyzed": 341,
+  "candidates_analyzed": 350,
   "valid_count": 9,
-  "watchlist_count": 105,
+  "watchlist_count": 108,
   "combo_valid_count": 6,
   "combo_watchlist_count": 4,
   "on_hold_count": 1,
   "demoted_count": 0,
   "paused_count": 0,
-  "capped_count": 119,
+  "capped_count": 120,
   "model_version": "edge-1",
   "paused_stats": [],
   "caps": {
     "kept": 15,
-    "dropped": 119,
+    "dropped": 120,
     "by_reason": {
       "per_player": 16,
       "per_game": 36,
-      "board": 67
+      "board": 68
     },
     "limits": {
       "max_picks": 15,
@@ -154,8 +154,8 @@
       "vegas_under_odds": "+118",
       "vegas_book": "DraftKings",
       "vegas_books": 6,
-      "p_hit": 0.258,
-      "ev": -0.214,
+      "p_hit": 0.353,
+      "ev": 0.078,
       "breakeven": 0.328,
       "learn_note": null,
       "on_hold": false,
@@ -202,7 +202,7 @@
       "p_market": 0.3946,
       "edge_value": 0.1862,
       "open_line": 7.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.75,
       "matchup_z": 0.5,
       "teammate_out": 0,
@@ -341,8 +341,8 @@
       "vegas_under_odds": "-125",
       "vegas_book": "Bovada",
       "vegas_books": 5,
-      "p_hit": 0.146,
-      "ev": -0.591,
+      "p_hit": 0.212,
+      "ev": -0.406,
       "breakeven": 0.357,
       "learn_note": null,
       "on_hold": false,
@@ -389,7 +389,7 @@
       "p_market": 0.3623,
       "edge_value": 0.1301,
       "open_line": 11.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 2.55,
       "matchup_z": -0.13,
       "teammate_out": 2,
@@ -792,8 +792,8 @@
       "vegas_under_odds": "-109",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.446,
-      "ev": -0.133,
+      "p_hit": 0.559,
+      "ev": 0.087,
       "breakeven": 0.515,
       "learn_note": null,
       "on_hold": false,
@@ -841,7 +841,7 @@
       "p_market": 0.4966,
       "edge_value": 0.1152,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.84,
       "matchup_z": -0.32,
       "teammate_out": 0,
@@ -963,8 +963,8 @@
       "vegas_under_odds": "-125",
       "vegas_book": "DraftKings",
       "vegas_books": 4,
-      "p_hit": 0.365,
-      "ev": -0.277,
+      "p_hit": 0.475,
+      "ev": -0.059,
       "breakeven": 0.505,
       "learn_note": null,
       "on_hold": false,
@@ -1011,7 +1011,7 @@
       "p_market": 0.4761,
       "edge_value": 0.0297,
       "open_line": 14.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 0.3,
       "matchup_z": -0.5,
       "teammate_out": 0,
@@ -1332,8 +1332,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.752,
-      "ev": 0.059,
+      "p_hit": 0.827,
+      "ev": 0.164,
       "breakeven": 0.71,
       "learn_note": null,
       "on_hold": false,
@@ -1378,7 +1378,7 @@
       "p_market": 0.7122,
       "edge_value": 0.0269,
       "open_line": 12.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 0.09,
       "matchup_z": -0.46,
       "teammate_out": 0,
@@ -1516,8 +1516,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.498,
-      "ev": -0.07,
+      "p_hit": 0.386,
+      "ev": -0.278,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -1564,7 +1564,7 @@
       "p_market": 0.5377,
       "edge_value": 0.0265,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.0,
       "matchup_z": 0.78,
       "teammate_out": 0,
@@ -2037,6 +2037,97 @@
       "rank": 13
     },
     {
+      "player_name": "Dean Wade",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "F-C",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.593,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.8,
+      "games_played": 59,
+      "games_hit": 35,
+      "line": 4.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "-124",
+      "over_book": "BetRivers",
+      "under_odds": "+105",
+      "under_book": "BetMGM",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 4.5,
+      "vegas_over_odds": "-124",
+      "vegas_under_odds": "+105",
+      "vegas_book": "BetRivers",
+      "vegas_books": 4,
+      "p_hit": 0.505,
+      "ev": -0.087,
+      "breakeven": 0.554,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B+",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 23% of FGA \u00d7 z -0.9",
+        "In The Paint (Non-RA): 4% of FGA \u00d7 z +0.0",
+        "Mid-Range: 3% of FGA \u00d7 z -0.8",
+        "Left Corner 3: 13% of FGA \u00d7 z -0.3",
+        "Right Corner 3: 16% of FGA \u00d7 z -0.2",
+        "Above the Break 3: 42% of FGA \u00d7 z +0.5"
+      ],
+      "playtype_details": [
+        "Transition: 27% of poss \u00d7 z +0.8",
+        "PRRollMan: 7% of poss \u00d7 z -0.2",
+        "Spotup: 46% of poss \u00d7 z -0.3",
+        "Cut: 10% of poss \u00d7 z +1.0",
+        "OffRebound: 5% of poss \u00d7 z -1.7"
+      ],
+      "proj_mu": 5.77,
+      "proj_sd": 4.02,
+      "proj_minutes": 23.4,
+      "proj_dist": "normal",
+      "n_this": 3,
+      "n_last": 59,
+      "weight_this": 0.231,
+      "p_hat": 0.5779,
+      "breakeven_price": 0.5536,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.6242,
+      "p_market": 0.5316,
+      "edge_value": 0.0243,
+      "open_line": 4.5,
+      "line_move": 0.0,
+      "dvp_z": 0.67,
+      "matchup_z": 0.01,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 14
+    },
+    {
       "player_name": "Day'Ron Sharpe",
       "team": "BKN",
       "opponent": "DET",
@@ -2127,7 +2218,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 14
+      "rank": 15
     },
     {
       "player_name": "Dillon Brooks",
@@ -2220,7 +2311,7 @@
         "gp_this": 3,
         "gp_last": 56
       },
-      "rank": 15
+      "rank": 16
     },
     {
       "player_name": "Cooper Flagg",
@@ -2309,7 +2400,7 @@
         "gp_this": 4,
         "gp_last": 70
       },
-      "rank": 16
+      "rank": 17
     },
     {
       "player_name": "Josh Hart",
@@ -2384,7 +2475,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 17
+      "rank": 18
     },
     {
       "player_name": "Andrew Wiggins",
@@ -2459,7 +2550,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 18
+      "rank": 19
     },
     {
       "player_name": "Derrick Jones Jr.",
@@ -2551,7 +2642,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 19
+      "rank": 20
     },
     {
       "player_name": "Mitchell Robinson",
@@ -2628,7 +2719,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 20
+      "rank": 21
     },
     {
       "player_name": "Karl-Anthony Towns",
@@ -2662,13 +2753,13 @@
       "vegas_under_odds": "-118",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.499,
-      "ev": -0.003,
+      "p_hit": 0.465,
+      "ev": -0.07,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Wrist",
       "grade": "B+",
       "is_valid": false,
       "is_combo": false,
@@ -2722,7 +2813,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 21
+      "rank": 22
     },
     {
       "player_name": "Pascal Siakam",
@@ -2797,7 +2888,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 22
+      "rank": 23
     },
     {
       "player_name": "LeBron James",
@@ -2872,7 +2963,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 23
+      "rank": 24
     },
     {
       "player_name": "Leonard Miller",
@@ -2949,7 +3040,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 24
+      "rank": 25
     },
     {
       "player_name": "Brandin Podziemski",
@@ -3040,7 +3131,7 @@
         "gp_this": 3,
         "gp_last": 82
       },
-      "rank": 25
+      "rank": 26
     },
     {
       "player_name": "Austin Reaves",
@@ -3115,7 +3206,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 26
+      "rank": 27
     },
     {
       "player_name": "Matisse Thybulle",
@@ -3202,7 +3293,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 27
+      "rank": 28
     },
     {
       "player_name": "Jalen Brunson",
@@ -3291,7 +3382,7 @@
         "gp_this": 5,
         "gp_last": 74
       },
-      "rank": 28
+      "rank": 29
     },
     {
       "player_name": "Jalen Brunson",
@@ -3368,7 +3459,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 29
+      "rank": 30
     },
     {
       "player_name": "Tre Johnson",
@@ -3447,7 +3538,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 30
+      "rank": 31
     },
     {
       "player_name": "Trevon Brazile",
@@ -3481,8 +3572,8 @@
       "vegas_under_odds": "-114",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 2,
-      "p_hit": 0.542,
-      "ev": 0.026,
+      "p_hit": 0.429,
+      "ev": -0.187,
       "breakeven": 0.528,
       "learn_note": null,
       "on_hold": false,
@@ -3511,7 +3602,7 @@
       "p_market": 0.4979,
       "edge_value": 0.0196,
       "open_line": 8.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 0.33,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -3525,7 +3616,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 31
+      "rank": 32
     },
     {
       "player_name": "Quentin Grimes",
@@ -3559,8 +3650,8 @@
       "vegas_under_odds": "+129",
       "vegas_book": "DraftKings",
       "vegas_books": 3,
-      "p_hit": 0.397,
-      "ev": -0.048,
+      "p_hit": 0.509,
+      "ev": 0.221,
       "breakeven": 0.417,
       "learn_note": null,
       "on_hold": false,
@@ -3589,7 +3680,7 @@
       "p_market": 0.4075,
       "edge_value": 0.0195,
       "open_line": 2.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.05,
       "matchup_z": null,
       "teammate_out": 0,
@@ -3602,7 +3693,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 32
+      "rank": 33
     },
     {
       "player_name": "Keaton Wagler",
@@ -3680,7 +3771,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 33
+      "rank": 34
     },
     {
       "player_name": "Day'Ron Sharpe",
@@ -3773,7 +3864,7 @@
         "gp_this": 4,
         "gp_last": 62
       },
-      "rank": 34
+      "rank": 35
     },
     {
       "player_name": "Kris Dunn",
@@ -3864,7 +3955,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 35
+      "rank": 36
     },
     {
       "player_name": "Leonard Miller",
@@ -3952,7 +4043,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 36
+      "rank": 37
     },
     {
       "player_name": "Daniss Jenkins",
@@ -4030,7 +4121,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 37
+      "rank": 38
     },
     {
       "player_name": "Amen Thompson",
@@ -4119,7 +4210,7 @@
         "gp_this": 5,
         "gp_last": 79
       },
-      "rank": 38
+      "rank": 39
     },
     {
       "player_name": "Jalen Green",
@@ -4211,7 +4302,7 @@
         "gp_this": 3,
         "gp_last": 32
       },
-      "rank": 39
+      "rank": 40
     },
     {
       "player_name": "Obi Toppin",
@@ -4245,13 +4336,13 @@
       "vegas_under_odds": "-102",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.499,
-      "ev": -0.011,
+      "p_hit": 0.466,
+      "ev": -0.078,
       "breakeven": 0.505,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Back",
       "grade": "B+",
       "is_valid": false,
       "is_combo": false,
@@ -4303,7 +4394,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 40
+      "rank": 41
     },
     {
       "player_name": "Amen Thompson",
@@ -4378,7 +4469,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 41
+      "rank": 42
     },
     {
       "player_name": "P.J. Washington",
@@ -4471,7 +4562,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 42
+      "rank": 43
     },
     {
       "player_name": "Ayo Dosunmu",
@@ -4548,7 +4639,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 43
+      "rank": 44
     },
     {
       "player_name": "Tyrese Maxey",
@@ -4582,8 +4673,8 @@
       "vegas_under_odds": "+128",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.676,
-      "ev": 0.103,
+      "p_hit": 0.57,
+      "ev": -0.07,
       "breakeven": 0.612,
       "learn_note": null,
       "on_hold": false,
@@ -4612,7 +4703,7 @@
       "p_market": 0.5827,
       "edge_value": 0.0158,
       "open_line": 3.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": 1.33,
       "matchup_z": null,
       "teammate_out": 0,
@@ -4626,7 +4717,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 44
+      "rank": 45
     },
     {
       "player_name": "Grayson Allen",
@@ -4704,7 +4795,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 45
+      "rank": 46
     },
     {
       "player_name": "Tristan da Silva",
@@ -4797,7 +4888,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 46
+      "rank": 47
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -4889,7 +4980,7 @@
         "gp_this": 5,
         "gp_last": 73
       },
-      "rank": 47
+      "rank": 48
     },
     {
       "player_name": "Paul George",
@@ -4981,7 +5072,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 48
+      "rank": 49
     },
     {
       "player_name": "Davion Mitchell",
@@ -5070,7 +5161,7 @@
         "gp_this": 5,
         "gp_last": 70
       },
-      "rank": 49
+      "rank": 50
     },
     {
       "player_name": "Andrew Wiggins",
@@ -5162,7 +5253,7 @@
         "gp_this": 5,
         "gp_last": 68
       },
-      "rank": 50
+      "rank": 51
     },
     {
       "player_name": "De'Anthony Melton",
@@ -5254,7 +5345,7 @@
         "gp_this": 5,
         "gp_last": 49
       },
-      "rank": 51
+      "rank": 52
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -5347,7 +5438,7 @@
         "gp_this": 4,
         "gp_last": 72
       },
-      "rank": 52
+      "rank": 53
     },
     {
       "player_name": "Obi Toppin",
@@ -5381,13 +5472,13 @@
       "vegas_under_odds": "+117",
       "vegas_book": "BetRivers",
       "vegas_books": 2,
-      "p_hit": 0.501,
-      "ev": -0.144,
+      "p_hit": 0.467,
+      "ev": -0.201,
       "breakeven": 0.585,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Back",
       "grade": "B",
       "is_valid": false,
       "is_combo": false,
@@ -5441,7 +5532,7 @@
         "gp_this": 5,
         "gp_last": 24
       },
-      "rank": 53
+      "rank": 54
     },
     {
       "player_name": "Grayson Allen",
@@ -5534,7 +5625,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 54
+      "rank": 55
     },
     {
       "player_name": "Joel Embiid",
@@ -5625,7 +5716,7 @@
         "gp_this": 4,
         "gp_last": 38
       },
-      "rank": 55
+      "rank": 56
     },
     {
       "player_name": "Kelly Oubre Jr.",
@@ -5717,7 +5808,7 @@
         "gp_this": 5,
         "gp_last": 50
       },
-      "rank": 56
+      "rank": 57
     },
     {
       "player_name": "Jamal Shead",
@@ -5808,7 +5899,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 57
+      "rank": 58
     },
     {
       "player_name": "Cooper Flagg",
@@ -5902,7 +5993,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 58
+      "rank": 59
     },
     {
       "player_name": "Wendell Carter Jr.",
@@ -5977,7 +6068,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 59
+      "rank": 60
     },
     {
       "player_name": "Dennis Schr\u00f6der",
@@ -6054,7 +6145,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 60
+      "rank": 61
     },
     {
       "player_name": "Pelle Larsson",
@@ -6146,7 +6237,7 @@
         "gp_this": 5,
         "gp_last": 70
       },
-      "rank": 61
+      "rank": 62
     },
     {
       "player_name": "Brandin Podziemski",
@@ -6223,7 +6314,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 62
+      "rank": 63
     },
     {
       "player_name": "Kyshawn George",
@@ -6315,7 +6406,7 @@
         "gp_this": 5,
         "gp_last": 48
       },
-      "rank": 63
+      "rank": 64
     },
     {
       "player_name": "Naji Marshall",
@@ -6392,7 +6483,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 64
+      "rank": 65
     },
     {
       "player_name": "Walker Kessler",
@@ -6476,7 +6567,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 65
+      "rank": 66
     },
     {
       "player_name": "Bam Adebayo",
@@ -6567,7 +6658,7 @@
         "gp_this": 5,
         "gp_last": 73
       },
-      "rank": 66
+      "rank": 67
     },
     {
       "player_name": "Miles Bridges",
@@ -6642,7 +6733,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 67
+      "rank": 68
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -6719,7 +6810,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 68
+      "rank": 69
     },
     {
       "player_name": "Derrick White",
@@ -6797,7 +6888,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 69
+      "rank": 70
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -6886,7 +6977,7 @@
         "gp_this": 4,
         "gp_last": 64
       },
-      "rank": 70
+      "rank": 71
     },
     {
       "player_name": "Wendell Carter Jr.",
@@ -6978,7 +7069,7 @@
         "gp_this": 4,
         "gp_last": 78
       },
-      "rank": 71
+      "rank": 72
     },
     {
       "player_name": "Aaron Gordon",
@@ -7070,7 +7161,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 72
+      "rank": 73
     },
     {
       "player_name": "RJ Barrett",
@@ -7145,7 +7236,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 73
+      "rank": 74
     },
     {
       "player_name": "Max Christie",
@@ -7238,7 +7329,7 @@
         "gp_this": 5,
         "gp_last": 77
       },
-      "rank": 74
+      "rank": 75
     },
     {
       "player_name": "Desmond Bane",
@@ -7329,7 +7420,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 75
+      "rank": 76
     },
     {
       "player_name": "Daniel Gafford",
@@ -7422,7 +7513,7 @@
         "gp_this": 5,
         "gp_last": 55
       },
-      "rank": 76
+      "rank": 77
     },
     {
       "player_name": "Jalen Smith",
@@ -7499,7 +7590,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 77
+      "rank": 78
     },
     {
       "player_name": "DeMar DeRozan",
@@ -7577,7 +7668,102 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 78
+      "rank": 79
+    },
+    {
+      "player_name": "Kobe Sanders",
+      "team": "LAC",
+      "opponent": "MIN",
+      "position": "G",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.529,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 7.3,
+      "games_played": 68,
+      "games_hit": 36,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 3,
+      "line_locked": false,
+      "over_odds": "-108",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-106",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "-108",
+      "vegas_under_odds": "-106",
+      "vegas_book": "BetRivers",
+      "vegas_books": 3,
+      "p_hit": 0.528,
+      "ev": 0.027,
+      "breakeven": 0.515,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 18% of FGA \u00d7 z -1.4",
+        "In The Paint (Non-RA): 18% of FGA \u00d7 z -0.7",
+        "Mid-Range: 13% of FGA \u00d7 z -0.7",
+        "Left Corner 3: 12% of FGA \u00d7 z +1.8",
+        "Right Corner 3: 6% of FGA \u00d7 z -0.6",
+        "Above the Break 3: 33% of FGA \u00d7 z -0.9"
+      ],
+      "playtype_details": [
+        "Transition: 17% of poss \u00d7 z -0.2",
+        "Isolation: 5% of poss \u00d7 z -1.5",
+        "PRBallHandler: 12% of poss \u00d7 z +0.1",
+        "PRRollMan: 4% of poss \u00d7 z -0.4",
+        "Spotup: 42% of poss \u00d7 z -0.5",
+        "Handoff: 3% of poss \u00d7 z +0.4",
+        "Cut: 5% of poss \u00d7 z -1.3",
+        "OffScreen: 2% of poss \u00d7 z -0.9",
+        "OffRebound: 2% of poss \u00d7 z -1.9",
+        "Misc: 8% of poss \u00d7 z +1.2"
+      ],
+      "proj_mu": 6.96,
+      "proj_sd": 4.68,
+      "proj_minutes": 20.4,
+      "proj_dist": "normal",
+      "n_this": 4,
+      "n_last": 68,
+      "weight_this": 0.286,
+      "p_hat": 0.5219,
+      "breakeven_price": 0.5146,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.546,
+      "p_market": 0.4977,
+      "edge_value": 0.0073,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -0.29,
+      "matchup_z": -0.95,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 80
     },
     {
       "player_name": "Alex Sarr",
@@ -7652,7 +7838,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 79
+      "rank": 81
     },
     {
       "player_name": "Immanuel Quickley",
@@ -7747,7 +7933,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 80
+      "rank": 82
     },
     {
       "player_name": "Immanuel Quickley",
@@ -7824,7 +8010,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 81
+      "rank": 83
     },
     {
       "player_name": "Austin Reaves",
@@ -7913,7 +8099,7 @@
         "gp_this": 5,
         "gp_last": 51
       },
-      "rank": 82
+      "rank": 84
     },
     {
       "player_name": "Scottie Barnes",
@@ -7990,7 +8176,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 83
+      "rank": 85
     },
     {
       "player_name": "Derrick White",
@@ -8079,7 +8265,7 @@
         "gp_this": 4,
         "gp_last": 77
       },
-      "rank": 84
+      "rank": 86
     },
     {
       "player_name": "Sandro Mamukelashvili",
@@ -8158,7 +8344,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 85
+      "rank": 87
     },
     {
       "player_name": "Tari Eason",
@@ -8233,7 +8419,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 86
+      "rank": 88
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -8326,7 +8512,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 87
+      "rank": 89
     },
     {
       "player_name": "Alperen Sengun",
@@ -8403,7 +8589,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 88
+      "rank": 90
     },
     {
       "player_name": "Fred VanVleet",
@@ -8480,7 +8666,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 89
+      "rank": 91
     },
     {
       "player_name": "Norman Powell",
@@ -8572,7 +8758,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 90
+      "rank": 92
     },
     {
       "player_name": "Kevin Durant",
@@ -8649,7 +8835,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 91
+      "rank": 93
     },
     {
       "player_name": "Immanuel Quickley",
@@ -8738,7 +8924,7 @@
         "gp_this": 4,
         "gp_last": 70
       },
-      "rank": 92
+      "rank": 94
     },
     {
       "player_name": "Rui Hachimura",
@@ -8830,7 +9016,7 @@
         "gp_this": 3,
         "gp_last": 68
       },
-      "rank": 93
+      "rank": 95
     },
     {
       "player_name": "Daniel Gafford",
@@ -8907,7 +9093,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 94
+      "rank": 96
     },
     {
       "player_name": "Jamal Shead",
@@ -9000,7 +9186,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 95
+      "rank": 97
     },
     {
       "player_name": "Aaron Gordon",
@@ -9091,7 +9277,7 @@
         "gp_this": 4,
         "gp_last": 36
       },
-      "rank": 96
+      "rank": 98
     },
     {
       "player_name": "Keon Ellis",
@@ -9180,7 +9366,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 97
+      "rank": 99
     },
     {
       "player_name": "Mikel Brown Jr.",
@@ -9258,7 +9444,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 98
+      "rank": 100
     },
     {
       "player_name": "Alex Sarr",
@@ -9292,8 +9478,8 @@
       "vegas_under_odds": "-165",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.666,
-      "ev": 0.07,
+      "p_hit": 0.758,
+      "ev": 0.218,
       "breakeven": 0.623,
       "learn_note": null,
       "on_hold": false,
@@ -9322,7 +9508,7 @@
       "p_market": 0.594,
       "edge_value": 0.0019,
       "open_line": 2.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -0.33,
       "matchup_z": null,
       "teammate_out": 0,
@@ -9350,7 +9536,7 @@
         "gp_this": 5,
         "gp_last": 48
       },
-      "rank": 99
+      "rank": 101
     },
     {
       "player_name": "Scottie Barnes",
@@ -9444,7 +9630,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 100
+      "rank": 102
     },
     {
       "player_name": "Nikola Joki\u0107",
@@ -9537,7 +9723,84 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 101
+      "rank": 103
+    },
+    {
+      "player_name": "Bilal Coulibaly",
+      "team": "WAS",
+      "opponent": "CHA",
+      "position": "SG",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.357,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 4.3,
+      "games_played": 56,
+      "games_hit": 20,
+      "line": 3.5,
+      "line_source": "vegas",
+      "line_book": "BetMGM",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "-109",
+      "over_book": "DraftKings",
+      "under_odds": "+100",
+      "under_book": "BetMGM",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "-109",
+      "vegas_under_odds": "+100",
+      "vegas_book": "BetMGM",
+      "vegas_books": 4,
+      "p_hit": 0.557,
+      "ev": 0.113,
+      "breakeven": 0.5,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 3.63,
+      "proj_sd": 1.91,
+      "proj_minutes": 26.5,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 56,
+      "weight_this": 0.333,
+      "p_hat": 0.5012,
+      "breakeven_price": 0.5,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.5129,
+      "p_market": 0.4895,
+      "edge_value": 0.0012,
+      "open_line": 3.5,
+      "line_move": -0.0,
+      "dvp_z": -1.2,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "line_size"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 104
     },
     {
       "player_name": "Cameron Johnson",
@@ -9614,7 +9877,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 102
+      "rank": 105
     },
     {
       "player_name": "Aaron Gordon",
@@ -9689,7 +9952,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 103
+      "rank": 106
     },
     {
       "player_name": "Fred VanVleet",
@@ -9780,7 +10043,7 @@
         "gp_this": 4,
         "gp_last": 0
       },
-      "rank": 104
+      "rank": 107
     },
     {
       "player_name": "Naji Marshall",
@@ -9871,7 +10134,7 @@
         "gp_this": 3,
         "gp_last": 74
       },
-      "rank": 105
+      "rank": 108
     }
   ],
   "valid_combos": [
@@ -10915,8 +11178,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "DraftKings",
       "vegas_books": 4,
-      "p_hit": 0.464,
-      "ev": -0.133,
+      "p_hit": 0.577,
+      "ev": 0.078,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -10945,7 +11208,7 @@
       "p_market": 0.5493,
       "edge_value": 0.1266,
       "open_line": 15.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 0.24,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -11653,8 +11916,8 @@
       "vegas_under_odds": "-113",
       "vegas_book": "Fanatics",
       "vegas_books": 5,
-      "p_hit": 0.218,
-      "ev": -0.378,
+      "p_hit": 0.151,
+      "ev": -0.571,
       "breakeven": 0.351,
       "learn_note": null,
       "on_hold": false,
@@ -11700,7 +11963,7 @@
       "p_market": 0.3466,
       "edge_value": 0.1032,
       "open_line": 25.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.66,
       "matchup_z": -0.17,
       "teammate_out": 0,
@@ -12267,6 +12530,99 @@
       "passing": null
     },
     {
+      "player_name": "Bilal Coulibaly",
+      "team": "WAS",
+      "opponent": "CHA",
+      "position": "SG",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.732,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 11.7,
+      "games_played": 56,
+      "games_hit": 41,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "BetMGM",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-125",
+      "over_book": "BetMGM",
+      "under_odds": null,
+      "under_book": null,
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 8.5,
+      "vegas_over_odds": "-123",
+      "vegas_under_odds": "-103",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 3,
+      "p_hit": 0.582,
+      "ev": 0.047,
+      "breakeven": 0.556,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "A+",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 35% of FGA \u00d7 z -0.3",
+        "In The Paint (Non-RA): 20% of FGA \u00d7 z -0.5",
+        "Mid-Range: 7% of FGA \u00d7 z -0.7",
+        "Left Corner 3: 7% of FGA \u00d7 z -0.9",
+        "Right Corner 3: 6% of FGA \u00d7 z +0.8",
+        "Above the Break 3: 25% of FGA \u00d7 z +0.1"
+      ],
+      "playtype_details": [
+        "Transition: 22% of poss \u00d7 z -0.4",
+        "Isolation: 9% of poss \u00d7 z +0.3",
+        "PRBallHandler: 19% of poss \u00d7 z +0.8",
+        "Spotup: 23% of poss \u00d7 z -0.6",
+        "Handoff: 6% of poss \u00d7 z -0.9",
+        "Cut: 7% of poss \u00d7 z -0.9",
+        "OffScreen: 2% of poss \u00d7 z +0.3",
+        "OffRebound: 4% of poss \u00d7 z -0.4",
+        "Misc: 5% of poss \u00d7 z +1.4"
+      ],
+      "proj_mu": 10.49,
+      "proj_sd": 5.57,
+      "proj_minutes": 26.5,
+      "proj_dist": "normal",
+      "n_this": 5,
+      "n_last": 56,
+      "weight_this": 0.333,
+      "p_hat": 0.648,
+      "breakeven_price": 0.5556,
+      "market_basis": "pick",
+      "consensus_line": 8.5,
+      "consensus_books": 3,
+      "line_shopped": true,
+      "p_model": 0.7045,
+      "p_market": 0.5916,
+      "edge_value": 0.0925,
+      "open_line": 8.5,
+      "line_move": 0.0,
+      "dvp_z": -0.55,
+      "matchup_z": -0.36,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": "cap: 15 on the board",
+      "guards": [
+        "price"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
       "player_name": "Jaden McDaniels",
       "team": "MIN",
       "opponent": "LAC",
@@ -12298,8 +12654,8 @@
       "vegas_under_odds": "-124",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.85,
-      "ev": 0.19,
+      "p_hit": 0.782,
+      "ev": 0.095,
       "breakeven": 0.714,
       "learn_note": null,
       "on_hold": false,
@@ -12346,7 +12702,7 @@
       "p_market": 0.7274,
       "edge_value": 0.0918,
       "open_line": 17.5,
-      "line_move": 1.0,
+      "line_move": -0.0,
       "dvp_z": -1.39,
       "matchup_z": 0.01,
       "teammate_out": 2,
@@ -12912,8 +13268,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 5,
-      "p_hit": 0.237,
-      "ev": -0.359,
+      "p_hit": 0.165,
+      "ev": -0.554,
       "breakeven": 0.37,
       "learn_note": null,
       "on_hold": false,
@@ -12961,7 +13317,7 @@
       "p_market": 0.3572,
       "edge_value": 0.0864,
       "open_line": 14.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 2.36,
       "matchup_z": -0.81,
       "teammate_out": 0,
@@ -13005,13 +13361,13 @@
       "vegas_under_odds": "+101",
       "vegas_book": "Caesars",
       "vegas_books": 6,
-      "p_hit": 0.226,
-      "ev": -0.378,
+      "p_hit": 0.203,
+      "ev": -0.441,
       "breakeven": 0.364,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Wrist",
       "grade": "A+",
       "is_valid": false,
       "is_combo": false,
@@ -13720,8 +14076,8 @@
       "vegas_under_odds": "+125",
       "vegas_book": "BetRivers",
       "vegas_books": 5,
-      "p_hit": 0.515,
-      "ev": -0.1,
+      "p_hit": 0.626,
+      "ev": 0.093,
       "breakeven": 0.573,
       "learn_note": null,
       "on_hold": false,
@@ -13750,7 +14106,7 @@
       "p_market": 0.563,
       "edge_value": 0.0759,
       "open_line": 3.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 1.27,
       "matchup_z": null,
       "teammate_out": 2,
@@ -13886,8 +14242,8 @@
       "vegas_under_odds": "-104",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.479,
-      "ev": -0.069,
+      "p_hit": 0.695,
+      "ev": 0.351,
       "breakeven": 0.515,
       "learn_note": null,
       "on_hold": false,
@@ -13934,7 +14290,7 @@
       "p_market": 0.5023,
       "edge_value": 0.0745,
       "open_line": 22.5,
-      "line_move": 0.0,
+      "line_move": 2.0,
       "dvp_z": 0.5,
       "matchup_z": -0.55,
       "teammate_out": 0,
@@ -15053,8 +15409,8 @@
       "vegas_under_odds": "+122",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 7,
-      "p_hit": 0.251,
-      "ev": -0.442,
+      "p_hit": 0.346,
+      "ev": -0.232,
       "breakeven": 0.45,
       "learn_note": null,
       "on_hold": false,
@@ -15083,7 +15439,7 @@
       "p_market": 0.4435,
       "edge_value": 0.0705,
       "open_line": 8.5,
-      "line_move": -1.0,
+      "line_move": -0.0,
       "dvp_z": 1.1,
       "matchup_z": null,
       "teammate_out": 2,
@@ -16711,8 +17067,8 @@
       "vegas_under_odds": "+101",
       "vegas_book": "BetRivers",
       "vegas_books": 5,
-      "p_hit": 0.571,
-      "ev": 0.095,
+      "p_hit": 0.458,
+      "ev": -0.122,
       "breakeven": 0.522,
       "learn_note": null,
       "on_hold": false,
@@ -16760,7 +17116,7 @@
       "p_market": 0.5118,
       "edge_value": 0.0609,
       "open_line": 12.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": 0.16,
       "matchup_z": 1.3,
       "teammate_out": 0,
@@ -17315,8 +17671,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 6,
-      "p_hit": 0.388,
-      "ev": -0.158,
+      "p_hit": 0.287,
+      "ev": -0.377,
       "breakeven": 0.461,
       "learn_note": null,
       "on_hold": false,
@@ -17362,7 +17718,7 @@
       "p_market": 0.458,
       "edge_value": 0.058,
       "open_line": 6.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 0.7,
       "matchup_z": 0.16,
       "teammate_out": 0,
@@ -17950,8 +18306,8 @@
       "vegas_under_odds": "+100",
       "vegas_book": "FanDuel",
       "vegas_books": 5,
-      "p_hit": 0.423,
-      "ev": -0.153,
+      "p_hit": 0.536,
+      "ev": 0.072,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
@@ -17998,7 +18354,7 @@
       "p_market": 0.4802,
       "edge_value": 0.0516,
       "open_line": 24.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -1.01,
       "matchup_z": 1.07,
       "teammate_out": 1,
@@ -18470,8 +18826,8 @@
       "vegas_under_odds": "+125",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.303,
-      "ev": -0.319,
+      "p_hit": 0.406,
+      "ev": -0.086,
       "breakeven": 0.444,
       "learn_note": null,
       "on_hold": false,
@@ -18500,7 +18856,7 @@
       "p_market": 0.4269,
       "edge_value": 0.0474,
       "open_line": 5.5,
-      "line_move": -1.0,
+      "line_move": -0.0,
       "dvp_z": 0.05,
       "matchup_z": null,
       "teammate_out": 1,
@@ -18651,8 +19007,8 @@
       "vegas_under_odds": "-118",
       "vegas_book": "FanDuel",
       "vegas_books": 7,
-      "p_hit": 0.483,
-      "ev": -0.033,
+      "p_hit": 0.596,
+      "ev": 0.192,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
@@ -18700,7 +19056,7 @@
       "p_market": 0.4802,
       "edge_value": 0.0472,
       "open_line": 11.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": -1.03,
       "matchup_z": -0.4,
       "teammate_out": 0,
@@ -18894,8 +19250,8 @@
       "vegas_under_odds": "-118",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.53,
-      "ev": 0.07,
+      "p_hit": 0.417,
+      "ev": -0.158,
       "breakeven": 0.495,
       "learn_note": null,
       "on_hold": false,
@@ -18924,7 +19280,7 @@
       "p_market": 0.4777,
       "edge_value": 0.0431,
       "open_line": 13.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": -0.29,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -19354,8 +19710,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 7,
-      "p_hit": 0.252,
-      "ev": -0.232,
+      "p_hit": 0.176,
+      "ev": -0.463,
       "breakeven": 0.328,
       "learn_note": null,
       "on_hold": false,
@@ -19402,7 +19758,7 @@
       "p_market": 0.3448,
       "edge_value": 0.0389,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.29,
       "matchup_z": 0.72,
       "teammate_out": 0,
@@ -20199,8 +20555,8 @@
       "vegas_under_odds": "+106",
       "vegas_book": "FanDuel",
       "vegas_books": 7,
-      "p_hit": 0.422,
-      "ev": -0.132,
+      "p_hit": 0.316,
+      "ev": -0.348,
       "breakeven": 0.485,
       "learn_note": null,
       "on_hold": false,
@@ -20229,7 +20585,7 @@
       "p_market": 0.4709,
       "edge_value": 0.0344,
       "open_line": 6.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.82,
       "matchup_z": null,
       "teammate_out": 1,
@@ -20647,7 +21003,7 @@
         "gp_this": 4,
         "gp_last": 36
       },
-      "rank": 96
+      "rank": 98
     },
     {
       "player_name": "Aaron Gordon",
@@ -20739,7 +21095,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 72
+      "rank": 73
     },
     {
       "player_name": "Aaron Gordon",
@@ -20814,7 +21170,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 103
+      "rank": 106
     },
     {
       "player_name": "Aaron Nesmith",
@@ -21199,8 +21555,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "DraftKings",
       "vegas_books": 4,
-      "p_hit": 0.464,
-      "ev": -0.133,
+      "p_hit": 0.577,
+      "ev": 0.078,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -21229,7 +21585,7 @@
       "p_market": 0.5493,
       "edge_value": 0.1266,
       "open_line": 15.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 0.24,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -21348,8 +21704,8 @@
       "vegas_under_odds": "-165",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.666,
-      "ev": 0.07,
+      "p_hit": 0.758,
+      "ev": 0.218,
       "breakeven": 0.623,
       "learn_note": null,
       "on_hold": false,
@@ -21378,7 +21734,7 @@
       "p_market": 0.594,
       "edge_value": 0.0019,
       "open_line": 2.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -0.33,
       "matchup_z": null,
       "teammate_out": 0,
@@ -21406,7 +21762,7 @@
         "gp_this": 5,
         "gp_last": 48
       },
-      "rank": 99
+      "rank": 101
     },
     {
       "player_name": "Alex Sarr",
@@ -21572,7 +21928,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 79
+      "rank": 81
     },
     {
       "player_name": "Alperen Sengun",
@@ -21830,7 +22186,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 88
+      "rank": 90
     },
     {
       "player_name": "Amen Thompson",
@@ -21919,7 +22275,7 @@
         "gp_this": 5,
         "gp_last": 79
       },
-      "rank": 38
+      "rank": 39
     },
     {
       "player_name": "Amen Thompson",
@@ -22089,7 +22445,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 41
+      "rank": 42
     },
     {
       "player_name": "Andrew Nembhard",
@@ -22123,8 +22479,8 @@
       "vegas_under_odds": "+122",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 7,
-      "p_hit": 0.251,
-      "ev": -0.442,
+      "p_hit": 0.346,
+      "ev": -0.232,
       "breakeven": 0.45,
       "learn_note": null,
       "on_hold": false,
@@ -22153,7 +22509,7 @@
       "p_market": 0.4435,
       "edge_value": 0.0705,
       "open_line": 8.5,
-      "line_move": -1.0,
+      "line_move": -0.0,
       "dvp_z": 1.1,
       "matchup_z": null,
       "teammate_out": 2,
@@ -22437,7 +22793,7 @@
         "gp_this": 5,
         "gp_last": 68
       },
-      "rank": 50
+      "rank": 51
     },
     {
       "player_name": "Andrew Wiggins",
@@ -22471,8 +22827,8 @@
       "vegas_under_odds": "+101",
       "vegas_book": "BetRivers",
       "vegas_books": 5,
-      "p_hit": 0.571,
-      "ev": 0.095,
+      "p_hit": 0.458,
+      "ev": -0.122,
       "breakeven": 0.522,
       "learn_note": null,
       "on_hold": false,
@@ -22520,7 +22876,7 @@
       "p_market": 0.5118,
       "edge_value": 0.0609,
       "open_line": 12.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": 0.16,
       "matchup_z": 1.3,
       "teammate_out": 0,
@@ -22605,7 +22961,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 18
+      "rank": 19
     },
     {
       "player_name": "Anthony Black",
@@ -23079,8 +23435,8 @@
       "vegas_under_odds": "-140",
       "vegas_book": "Bovada",
       "vegas_books": 6,
-      "p_hit": 0.314,
-      "ev": -0.12,
+      "p_hit": 0.225,
+      "ev": -0.369,
       "breakeven": 0.357,
       "learn_note": null,
       "on_hold": false,
@@ -23109,7 +23465,7 @@
       "p_market": 0.3462,
       "edge_value": -0.0104,
       "open_line": 10.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 0.27,
       "matchup_z": null,
       "teammate_out": 0,
@@ -23467,7 +23823,7 @@
         "gp_this": 5,
         "gp_last": 51
       },
-      "rank": 82
+      "rank": 84
     },
     {
       "player_name": "Austin Reaves",
@@ -23635,7 +23991,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 26
+      "rank": 27
     },
     {
       "player_name": "Ayo Dosunmu",
@@ -23760,8 +24116,8 @@
       "vegas_under_odds": "-105",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.512,
-      "ev": -0.062,
+      "p_hit": 0.622,
+      "ev": 0.141,
       "breakeven": 0.545,
       "learn_note": null,
       "on_hold": false,
@@ -23806,7 +24162,7 @@
       "p_market": 0.5157,
       "edge_value": -0.0151,
       "open_line": 15.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.9,
       "matchup_z": 0.23,
       "teammate_out": 2,
@@ -23893,7 +24249,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 43
+      "rank": 44
     },
     {
       "player_name": "Bam Adebayo",
@@ -23984,7 +24340,7 @@
         "gp_this": 5,
         "gp_last": 73
       },
-      "rank": 66
+      "rank": 67
     },
     {
       "player_name": "Bam Adebayo",
@@ -24496,7 +24852,7 @@
         "gp_this": 3,
         "gp_last": 82
       },
-      "rank": 25
+      "rank": 26
     },
     {
       "player_name": "Brandin Podziemski",
@@ -24665,7 +25021,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 62
+      "rank": 63
     },
     {
       "player_name": "Brandon Miller",
@@ -25047,8 +25403,8 @@
       "vegas_under_odds": "+100",
       "vegas_book": "FanDuel",
       "vegas_books": 5,
-      "p_hit": 0.423,
-      "ev": -0.153,
+      "p_hit": 0.536,
+      "ev": 0.072,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
@@ -25095,7 +25451,7 @@
       "p_market": 0.4802,
       "edge_value": 0.0516,
       "open_line": 24.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -1.01,
       "matchup_z": 1.07,
       "teammate_out": 1,
@@ -25591,7 +25947,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 102
+      "rank": 105
     },
     {
       "player_name": "Christian Braun",
@@ -25625,8 +25981,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.752,
-      "ev": 0.059,
+      "p_hit": 0.827,
+      "ev": 0.164,
       "breakeven": 0.71,
       "learn_note": null,
       "on_hold": false,
@@ -25671,7 +26027,7 @@
       "p_market": 0.7122,
       "edge_value": 0.0269,
       "open_line": 12.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 0.09,
       "matchup_z": -0.46,
       "teammate_out": 0,
@@ -26106,7 +26462,7 @@
         "gp_this": 4,
         "gp_last": 70
       },
-      "rank": 16
+      "rank": 17
     },
     {
       "player_name": "Cooper Flagg",
@@ -26200,7 +26556,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 58
+      "rank": 59
     },
     {
       "player_name": "Cooper Flagg",
@@ -26369,7 +26725,7 @@
         "gp_this": 5,
         "gp_last": 55
       },
-      "rank": 76
+      "rank": 77
     },
     {
       "player_name": "Daniel Gafford",
@@ -26534,7 +26890,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 94
+      "rank": 96
     },
     {
       "player_name": "Daniss Jenkins",
@@ -26796,7 +27152,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 37
+      "rank": 38
     },
     {
       "player_name": "Darius Garland",
@@ -27141,7 +27497,7 @@
         "gp_this": 5,
         "gp_last": 70
       },
-      "rank": 49
+      "rank": 50
     },
     {
       "player_name": "Davion Mitchell",
@@ -27175,8 +27531,8 @@
       "vegas_under_odds": "-105",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.589,
-      "ev": 0.15,
+      "p_hit": 0.476,
+      "ev": -0.07,
       "breakeven": 0.512,
       "learn_note": null,
       "on_hold": false,
@@ -27223,7 +27579,7 @@
       "p_market": 0.5,
       "edge_value": -0.005,
       "open_line": 11.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": 0.29,
       "matchup_z": 1.54,
       "teammate_out": 0,
@@ -27404,7 +27760,7 @@
         "gp_this": 4,
         "gp_last": 62
       },
-      "rank": 34
+      "rank": 35
     },
     {
       "player_name": "Day'Ron Sharpe",
@@ -27497,7 +27853,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 14
+      "rank": 15
     },
     {
       "player_name": "Day'Ron Sharpe",
@@ -27665,7 +28021,7 @@
         "gp_this": 5,
         "gp_last": 49
       },
-      "rank": 51
+      "rank": 52
     },
     {
       "player_name": "De'Anthony Melton",
@@ -27960,8 +28316,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 5,
-      "p_hit": 0.237,
-      "ev": -0.359,
+      "p_hit": 0.165,
+      "ev": -0.554,
       "breakeven": 0.37,
       "learn_note": null,
       "on_hold": false,
@@ -28009,7 +28365,7 @@
       "p_market": 0.3572,
       "edge_value": 0.0864,
       "open_line": 14.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 2.36,
       "matchup_z": -0.81,
       "teammate_out": 0,
@@ -28097,7 +28453,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 78
+      "rank": 79
     },
     {
       "player_name": "Dennis Schr\u00f6der",
@@ -28351,7 +28707,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 60
+      "rank": 61
     },
     {
       "player_name": "Derrick Jones Jr.",
@@ -28534,7 +28890,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 19
+      "rank": 20
     },
     {
       "player_name": "Derrick Jones Jr.",
@@ -28699,7 +29055,7 @@
         "gp_this": 4,
         "gp_last": 77
       },
-      "rank": 84
+      "rank": 86
     },
     {
       "player_name": "Derrick White",
@@ -28733,8 +29089,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.498,
-      "ev": -0.07,
+      "p_hit": 0.386,
+      "ev": -0.278,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -28781,7 +29137,7 @@
       "p_market": 0.5377,
       "edge_value": 0.0265,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.0,
       "matchup_z": 0.78,
       "teammate_out": 0,
@@ -28870,7 +29226,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 69
+      "rank": 70
     },
     {
       "player_name": "Desmond Bane",
@@ -28961,7 +29317,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 75
+      "rank": 76
     },
     {
       "player_name": "Desmond Bane",
@@ -29481,7 +29837,7 @@
         "gp_this": 3,
         "gp_last": 56
       },
-      "rank": 15
+      "rank": 16
     },
     {
       "player_name": "Dillon Brooks",
@@ -29685,8 +30041,8 @@
       "vegas_under_odds": "+115",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 4,
-      "p_hit": 0.791,
-      "ev": 0.329,
+      "p_hit": 0.706,
+      "ev": 0.187,
       "breakeven": 0.595,
       "learn_note": null,
       "on_hold": false,
@@ -29715,7 +30071,7 @@
       "p_market": 0.5613,
       "edge_value": -0.0299,
       "open_line": 5.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": -1.55,
       "matchup_z": null,
       "teammate_out": 0,
@@ -29775,8 +30131,8 @@
       "vegas_under_odds": "-120",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 6,
-      "p_hit": 0.388,
-      "ev": -0.158,
+      "p_hit": 0.287,
+      "ev": -0.377,
       "breakeven": 0.461,
       "learn_note": null,
       "on_hold": false,
@@ -29822,7 +30178,7 @@
       "p_market": 0.458,
       "edge_value": 0.058,
       "open_line": 6.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 0.7,
       "matchup_z": 0.16,
       "teammate_out": 0,
@@ -29940,8 +30296,8 @@
       "vegas_under_odds": "+145",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.715,
-      "ev": 0.072,
+      "p_hit": 0.614,
+      "ev": -0.079,
       "breakeven": 0.667,
       "learn_note": null,
       "on_hold": false,
@@ -29970,7 +30326,7 @@
       "p_market": 0.6494,
       "edge_value": -0.0231,
       "open_line": 1.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.28,
       "matchup_z": null,
       "teammate_out": 1,
@@ -30511,7 +30867,7 @@
         "gp_this": 4,
         "gp_last": 0
       },
-      "rank": 104
+      "rank": 107
     },
     {
       "player_name": "Fred VanVleet",
@@ -30662,7 +31018,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 89
+      "rank": 91
     },
     {
       "player_name": "Giannis Antetokounmpo",
@@ -31099,7 +31455,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 54
+      "rank": 55
     },
     {
       "player_name": "Grayson Allen",
@@ -31177,7 +31533,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 45
+      "rank": 46
     },
     {
       "player_name": "Immanuel Quickley",
@@ -31266,7 +31622,7 @@
         "gp_this": 4,
         "gp_last": 70
       },
-      "rank": 92
+      "rank": 94
     },
     {
       "player_name": "Immanuel Quickley",
@@ -31361,7 +31717,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 80
+      "rank": 82
     },
     {
       "player_name": "Immanuel Quickley",
@@ -31438,7 +31794,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 81
+      "rank": 83
     },
     {
       "player_name": "Isaiah Jackson",
@@ -32084,8 +32440,8 @@
       "vegas_under_odds": "-124",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.85,
-      "ev": 0.19,
+      "p_hit": 0.782,
+      "ev": 0.095,
       "breakeven": 0.714,
       "learn_note": null,
       "on_hold": false,
@@ -32132,7 +32488,7 @@
       "p_market": 0.7274,
       "edge_value": 0.0918,
       "open_line": 17.5,
-      "line_move": 1.0,
+      "line_move": -0.0,
       "dvp_z": -1.39,
       "matchup_z": 0.01,
       "teammate_out": 2,
@@ -32313,7 +32669,7 @@
         "gp_this": 4,
         "gp_last": 72
       },
-      "rank": 52
+      "rank": 53
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -32347,8 +32703,8 @@
       "vegas_under_odds": "+100",
       "vegas_book": "Bovada",
       "vegas_books": 7,
-      "p_hit": 0.331,
-      "ev": -0.337,
+      "p_hit": 0.438,
+      "ev": -0.123,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
@@ -32393,7 +32749,7 @@
       "p_market": 0.4852,
       "edge_value": 0.0631,
       "open_line": 11.5,
-      "line_move": -1.0,
+      "line_move": -0.0,
       "dvp_z": -0.1,
       "matchup_z": -0.19,
       "teammate_out": 1,
@@ -32571,7 +32927,7 @@
         "gp_this": 5,
         "gp_last": 74
       },
-      "rank": 28
+      "rank": 29
     },
     {
       "player_name": "Jalen Brunson",
@@ -32741,7 +33097,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 29
+      "rank": 30
     },
     {
       "player_name": "Jalen Green",
@@ -32833,7 +33189,7 @@
         "gp_this": 3,
         "gp_last": 32
       },
-      "rank": 39
+      "rank": 40
     },
     {
       "player_name": "Jalen Green",
@@ -33263,7 +33619,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 77
+      "rank": 78
     },
     {
       "player_name": "Jamal Murray",
@@ -33611,7 +33967,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 57
+      "rank": 58
     },
     {
       "player_name": "Jamal Shead",
@@ -33704,7 +34060,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 95
+      "rank": 97
     },
     {
       "player_name": "Jamal Shead",
@@ -33778,266 +34134,6 @@
         "price",
         "line_size",
         "minutes"
-      ],
-      "model_version": "edge-1",
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null
-    },
-    {
-      "player_name": "Jaylen Brown",
-      "team": "PHI",
-      "opponent": "NYK",
-      "position": "SF",
-      "stat": "assists",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.746,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 5.1,
-      "games_played": 71,
-      "games_hit": 53,
-      "line": 3.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+134",
-      "over_book": "BetOnline.ag",
-      "under_odds": "-150",
-      "under_book": "Bovada",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 3.5,
-      "vegas_over_odds": "+134",
-      "vegas_under_odds": "-150",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 6,
-      "p_hit": 0.315,
-      "ev": -0.263,
-      "breakeven": 0.427,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "A+",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "proj_mu": 4.73,
-      "proj_sd": 2.25,
-      "proj_minutes": 35.0,
-      "proj_dist": "nb",
-      "n_this": 5,
-      "n_last": 71,
-      "weight_this": 0.333,
-      "p_hat": 0.551,
-      "breakeven_price": 0.4274,
-      "market_basis": "pick",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "p_model": 0.686,
-      "p_market": 0.416,
-      "edge_value": 0.1236,
-      "open_line": 3.5,
-      "line_move": 0.0,
-      "dvp_z": -0.13,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": "cap: 1 per player",
-      "guards": [
-        "line_size"
-      ],
-      "model_version": "edge-1",
-      "proj_source": "passing",
-      "proj_mu_box": 4.64,
-      "passing": {
-        "passes": 37.5,
-        "pot_ast": 10.5,
-        "pa_per_pass": 0.279,
-        "conv": 0.459,
-        "conv_seen": 0.568,
-        "conv_prior": 0.542,
-        "team_shooting": 0.973,
-        "opp_shooting": 0.989,
-        "opp_share": 1.005,
-        "base": 4.8,
-        "weight_this": 0.5,
-        "gp_this": 5,
-        "gp_last": 71
-      }
-    },
-    {
-      "player_name": "Jaylen Brown",
-      "team": "PHI",
-      "opponent": "NYK",
-      "position": "SF",
-      "stat": "points",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.93,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 28.7,
-      "games_played": 71,
-      "games_hit": 66,
-      "line": 18.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 4,
-      "line_locked": true,
-      "over_odds": "-114",
-      "over_book": "BetOnline.ag",
-      "under_odds": "-104",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 18.5,
-      "vegas_over_odds": "-114",
-      "vegas_under_odds": "-104",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 4,
-      "p_hit": 0.406,
-      "ev": -0.238,
-      "breakeven": 0.533,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "A+",
-      "is_valid": true,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 22% of FGA \u00d7 z -0.9",
-        "In The Paint (Non-RA): 28% of FGA \u00d7 z +0.0",
-        "Mid-Range: 24% of FGA \u00d7 z -0.8",
-        "Left Corner 3: 2% of FGA \u00d7 z -0.3",
-        "Right Corner 3: 2% of FGA \u00d7 z -0.2",
-        "Above the Break 3: 23% of FGA \u00d7 z +0.5"
-      ],
-      "playtype_details": [
-        "Transition: 21% of poss \u00d7 z +0.8",
-        "Isolation: 20% of poss \u00d7 z -1.1",
-        "PRBallHandler: 22% of poss \u00d7 z -0.6",
-        "PRRollMan: 1% of poss \u00d7 z -0.2",
-        "Postup: 5% of poss \u00d7 z +0.3",
-        "Spotup: 14% of poss \u00d7 z -0.3",
-        "Handoff: 5% of poss \u00d7 z -0.3",
-        "Cut: 1% of poss \u00d7 z +1.0",
-        "OffScreen: 7% of poss \u00d7 z +0.8",
-        "OffRebound: 2% of poss \u00d7 z -1.7",
-        "Misc: 3% of poss \u00d7 z -0.9"
-      ],
-      "proj_mu": 26.21,
-      "proj_sd": 6.69,
-      "proj_minutes": 35.0,
-      "proj_dist": "normal",
-      "n_this": 5,
-      "n_last": 71,
-      "weight_this": 0.333,
-      "p_hat": 0.6932,
-      "breakeven_price": 0.5327,
-      "market_basis": "pick",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "p_model": 0.8754,
-      "p_market": 0.511,
-      "edge_value": 0.1605,
-      "open_line": 18.5,
-      "line_move": 0.0,
-      "dvp_z": 0.29,
-      "matchup_z": -0.49,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [],
-      "model_version": "edge-1",
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 3
-    },
-    {
-      "player_name": "Jaylen Brown",
-      "team": "PHI",
-      "opponent": "NYK",
-      "position": "SF",
-      "stat": "rebounds",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.718,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 6.9,
-      "games_played": 71,
-      "games_hit": 51,
-      "line": 5.5,
-      "line_source": "vegas",
-      "line_book": "BetRivers",
-      "line_books": 7,
-      "line_locked": true,
-      "over_odds": "-130",
-      "over_book": "BetRivers",
-      "under_odds": "+106",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 5.5,
-      "vegas_over_odds": "-130",
-      "vegas_under_odds": "+106",
-      "vegas_book": "BetRivers",
-      "vegas_books": 7,
-      "p_hit": 0.642,
-      "ev": 0.136,
-      "breakeven": 0.565,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "A",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "proj_mu": 6.93,
-      "proj_sd": 2.96,
-      "proj_minutes": 35.0,
-      "proj_dist": "nb",
-      "n_this": 5,
-      "n_last": 71,
-      "weight_this": 0.333,
-      "p_hat": 0.5996,
-      "breakeven_price": 0.5652,
-      "market_basis": "pick",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "p_model": 0.6613,
-      "p_market": 0.538,
-      "edge_value": 0.0344,
-      "open_line": 5.5,
-      "line_move": 1.0,
-      "dvp_z": 0.21,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "price"
       ],
       "model_version": "edge-1",
       "proj_source": null,
@@ -34165,8 +34261,8 @@
       "vegas_under_odds": "-102",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.42,
-      "ev": -0.169,
+      "p_hit": 0.315,
+      "ev": -0.377,
       "breakeven": 0.505,
       "learn_note": null,
       "on_hold": false,
@@ -34211,7 +34307,7 @@
       "p_market": 0.4887,
       "edge_value": -0.0086,
       "open_line": 27.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 1.5,
       "matchup_z": 0.66,
       "teammate_out": 0,
@@ -34386,7 +34482,7 @@
         "gp_this": 4,
         "gp_last": 38
       },
-      "rank": 55
+      "rank": 56
     },
     {
       "player_name": "Joel Embiid",
@@ -34420,8 +34516,8 @@
       "vegas_under_odds": "-104",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.479,
-      "ev": -0.069,
+      "p_hit": 0.695,
+      "ev": 0.351,
       "breakeven": 0.515,
       "learn_note": null,
       "on_hold": false,
@@ -34468,7 +34564,7 @@
       "p_market": 0.5023,
       "edge_value": 0.0745,
       "open_line": 22.5,
-      "line_move": 0.0,
+      "line_move": 2.0,
       "dvp_z": 0.5,
       "matchup_z": -0.55,
       "teammate_out": 0,
@@ -34772,8 +34868,8 @@
       "vegas_under_odds": "+106",
       "vegas_book": "FanDuel",
       "vegas_books": 7,
-      "p_hit": 0.422,
-      "ev": -0.132,
+      "p_hit": 0.316,
+      "ev": -0.348,
       "breakeven": 0.485,
       "learn_note": null,
       "on_hold": false,
@@ -34802,7 +34898,7 @@
       "p_market": 0.4709,
       "edge_value": 0.0344,
       "open_line": 6.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.82,
       "matchup_z": null,
       "teammate_out": 1,
@@ -35576,7 +35672,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 17
+      "rank": 18
     },
     {
       "player_name": "Julius Randle",
@@ -35869,13 +35965,13 @@
       "vegas_under_odds": "-145",
       "vegas_book": "Bovada",
       "vegas_books": 7,
-      "p_hit": 0.609,
-      "ev": 0.029,
+      "p_hit": 0.577,
+      "ev": -0.025,
       "breakeven": 0.592,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Wrist",
       "grade": "A",
       "is_valid": false,
       "is_combo": false,
@@ -35960,13 +36056,13 @@
       "vegas_under_odds": "-118",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.499,
-      "ev": -0.003,
+      "p_hit": 0.465,
+      "ev": -0.07,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Wrist",
       "grade": "B+",
       "is_valid": false,
       "is_combo": false,
@@ -36020,7 +36116,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 21
+      "rank": 22
     },
     {
       "player_name": "Karl-Anthony Towns",
@@ -36054,13 +36150,13 @@
       "vegas_under_odds": "+101",
       "vegas_book": "Caesars",
       "vegas_books": 6,
-      "p_hit": 0.226,
-      "ev": -0.378,
+      "p_hit": 0.203,
+      "ev": -0.441,
       "breakeven": 0.364,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Wrist",
       "grade": "A+",
       "is_valid": false,
       "is_combo": false,
@@ -36219,8 +36315,8 @@
       "vegas_under_odds": "-118",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.53,
-      "ev": 0.07,
+      "p_hit": 0.417,
+      "ev": -0.158,
       "breakeven": 0.495,
       "learn_note": null,
       "on_hold": false,
@@ -36249,7 +36345,7 @@
       "p_market": 0.4777,
       "edge_value": 0.0431,
       "open_line": 13.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": -0.29,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -36337,7 +36433,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 33
+      "rank": 34
     },
     {
       "player_name": "Kelly Oubre Jr.",
@@ -36429,7 +36525,7 @@
         "gp_this": 5,
         "gp_last": 50
       },
-      "rank": 56
+      "rank": 57
     },
     {
       "player_name": "Kelly Oubre Jr.",
@@ -36463,8 +36559,8 @@
       "vegas_under_odds": "-125",
       "vegas_book": "Bovada",
       "vegas_books": 5,
-      "p_hit": 0.146,
-      "ev": -0.591,
+      "p_hit": 0.212,
+      "ev": -0.406,
       "breakeven": 0.357,
       "learn_note": null,
       "on_hold": false,
@@ -36511,7 +36607,7 @@
       "p_market": 0.3623,
       "edge_value": 0.1301,
       "open_line": 11.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 2.55,
       "matchup_z": -0.13,
       "teammate_out": 2,
@@ -36556,8 +36652,8 @@
       "vegas_under_odds": "+125",
       "vegas_book": "BetRivers",
       "vegas_books": 5,
-      "p_hit": 0.515,
-      "ev": -0.1,
+      "p_hit": 0.626,
+      "ev": 0.093,
       "breakeven": 0.573,
       "learn_note": null,
       "on_hold": false,
@@ -36586,7 +36682,7 @@
       "p_market": 0.563,
       "edge_value": 0.0759,
       "open_line": 3.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 1.27,
       "matchup_z": null,
       "teammate_out": 2,
@@ -36688,7 +36784,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 97
+      "rank": 99
     },
     {
       "player_name": "Keon Ellis",
@@ -37026,7 +37122,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 91
+      "rank": 93
     },
     {
       "player_name": "Khaman Maluach",
@@ -37143,8 +37239,8 @@
       "vegas_under_odds": "-132",
       "vegas_book": "FanDuel",
       "vegas_books": 4,
-      "p_hit": 0.491,
-      "ev": -0.138,
+      "p_hit": 0.603,
+      "ev": 0.059,
       "breakeven": 0.569,
       "learn_note": null,
       "on_hold": false,
@@ -37173,7 +37269,7 @@
       "p_market": 0.5559,
       "edge_value": 0.1641,
       "open_line": 8.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 0.06,
       "matchup_z": null,
       "teammate_out": 1,
@@ -37277,7 +37373,7 @@
         "gp_this": 4,
         "gp_last": 82
       },
-      "rank": 35
+      "rank": 36
     },
     {
       "player_name": "Kris Dunn",
@@ -37404,8 +37500,8 @@
       "vegas_under_odds": "-149",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 5,
-      "p_hit": 0.591,
-      "ev": -0.013,
+      "p_hit": 0.694,
+      "ev": 0.16,
       "breakeven": 0.598,
       "learn_note": null,
       "on_hold": false,
@@ -37434,7 +37530,7 @@
       "p_market": 0.577,
       "edge_value": 0.0482,
       "open_line": 4.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -0.01,
       "matchup_z": null,
       "teammate_out": 0,
@@ -37571,8 +37667,8 @@
       "vegas_under_odds": "-117",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.787,
-      "ev": 0.108,
+      "p_hit": 0.853,
+      "ev": 0.201,
       "breakeven": 0.71,
       "learn_note": null,
       "on_hold": false,
@@ -37601,7 +37697,7 @@
       "p_market": 0.7257,
       "edge_value": 0.0573,
       "open_line": 19.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": -0.06,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -37781,7 +37877,7 @@
         "gp_this": 5,
         "gp_last": 48
       },
-      "rank": 63
+      "rank": 64
     },
     {
       "player_name": "Kyshawn George",
@@ -38588,8 +38684,8 @@
       "vegas_under_odds": "-109",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.446,
-      "ev": -0.133,
+      "p_hit": 0.559,
+      "ev": 0.087,
       "breakeven": 0.515,
       "learn_note": null,
       "on_hold": false,
@@ -38637,7 +38733,7 @@
       "p_market": 0.4966,
       "edge_value": 0.1152,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.84,
       "matchup_z": -0.32,
       "teammate_out": 0,
@@ -38723,7 +38819,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 23
+      "rank": 24
     },
     {
       "player_name": "Leonard Miller",
@@ -38811,7 +38907,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 36
+      "rank": 37
     },
     {
       "player_name": "Leonard Miller",
@@ -38888,7 +38984,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 24
+      "rank": 25
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -38977,7 +39073,7 @@
         "gp_this": 4,
         "gp_last": 64
       },
-      "rank": 70
+      "rank": 71
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -39070,7 +39166,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 87
+      "rank": 89
     },
     {
       "player_name": "Luka Don\u010di\u0107",
@@ -39147,7 +39243,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 68
+      "rank": 69
     },
     {
       "player_name": "Marcus Sasser",
@@ -39537,8 +39633,8 @@
       "vegas_under_odds": "-125",
       "vegas_book": "DraftKings",
       "vegas_books": 4,
-      "p_hit": 0.365,
-      "ev": -0.277,
+      "p_hit": 0.475,
+      "ev": -0.059,
       "breakeven": 0.505,
       "learn_note": null,
       "on_hold": false,
@@ -39585,7 +39681,7 @@
       "p_market": 0.4761,
       "edge_value": 0.0297,
       "open_line": 14.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 0.3,
       "matchup_z": -0.5,
       "teammate_out": 0,
@@ -39630,8 +39726,8 @@
       "vegas_under_odds": "+120",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 5,
-      "p_hit": 0.513,
-      "ev": -0.137,
+      "p_hit": 0.624,
+      "ev": 0.049,
       "breakeven": 0.595,
       "learn_note": null,
       "on_hold": false,
@@ -39660,7 +39756,7 @@
       "p_market": 0.567,
       "edge_value": 0.0461,
       "open_line": 4.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 2.62,
       "matchup_z": null,
       "teammate_out": 0,
@@ -39759,7 +39855,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 27
+      "rank": 28
     },
     {
       "player_name": "Matisse Thybulle",
@@ -39930,7 +40026,7 @@
         "gp_this": 5,
         "gp_last": 77
       },
-      "rank": 74
+      "rank": 75
     },
     {
       "player_name": "Max Christie",
@@ -40055,8 +40151,8 @@
       "vegas_under_odds": "-170",
       "vegas_book": "FanDuel",
       "vegas_books": 5,
-      "p_hit": 0.442,
-      "ev": 0.062,
+      "p_hit": 0.335,
+      "ev": -0.196,
       "breakeven": 0.417,
       "learn_note": null,
       "on_hold": false,
@@ -40085,7 +40181,7 @@
       "p_market": 0.3982,
       "edge_value": -0.009,
       "open_line": 3.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": -1.0,
       "matchup_z": null,
       "teammate_out": 0,
@@ -40880,7 +40976,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 98
+      "rank": 100
     },
     {
       "player_name": "Miles Bridges",
@@ -41138,7 +41234,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 67
+      "rank": 68
     },
     {
       "player_name": "Mitchell Robinson",
@@ -41300,7 +41396,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 20
+      "rank": 21
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -41392,7 +41488,7 @@
         "gp_this": 5,
         "gp_last": 73
       },
-      "rank": 47
+      "rank": 48
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -41426,8 +41522,8 @@
       "vegas_under_odds": "-115",
       "vegas_book": "BetRivers",
       "vegas_books": 6,
-      "p_hit": 0.461,
-      "ev": -0.138,
+      "p_hit": 0.574,
+      "ev": 0.073,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -41470,7 +41566,7 @@
       "p_market": 0.5169,
       "edge_value": -0.016,
       "open_line": 9.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 0.9,
       "matchup_z": 0.47,
       "teammate_out": 1,
@@ -41514,8 +41610,8 @@
       "vegas_under_odds": "-130",
       "vegas_book": "DraftKings",
       "vegas_books": 7,
-      "p_hit": 0.529,
-      "ev": -0.065,
+      "p_hit": 0.638,
+      "ev": 0.13,
       "breakeven": 0.565,
       "learn_note": null,
       "on_hold": false,
@@ -41544,7 +41640,7 @@
       "p_market": 0.5427,
       "edge_value": -0.0103,
       "open_line": 10.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 1.26,
       "matchup_z": null,
       "teammate_out": 1,
@@ -41647,7 +41743,7 @@
         "gp_this": 3,
         "gp_last": 74
       },
-      "rank": 105
+      "rank": 108
     },
     {
       "player_name": "Naji Marshall",
@@ -41816,7 +41912,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 64
+      "rank": 65
     },
     {
       "player_name": "Naz Reid",
@@ -42255,7 +42351,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 101
+      "rank": 103
     },
     {
       "player_name": "Nikola Joki\u0107",
@@ -42512,7 +42608,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 90
+      "rank": 92
     },
     {
       "player_name": "Norman Powell",
@@ -42623,13 +42719,13 @@
       "vegas_under_odds": "+117",
       "vegas_book": "BetRivers",
       "vegas_books": 2,
-      "p_hit": 0.501,
-      "ev": -0.144,
+      "p_hit": 0.467,
+      "ev": -0.201,
       "breakeven": 0.585,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Back",
       "grade": "B",
       "is_valid": false,
       "is_combo": false,
@@ -42683,7 +42779,7 @@
         "gp_this": 5,
         "gp_last": 24
       },
-      "rank": 53
+      "rank": 54
     },
     {
       "player_name": "Obi Toppin",
@@ -42717,13 +42813,13 @@
       "vegas_under_odds": "-102",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.499,
-      "ev": -0.011,
+      "p_hit": 0.466,
+      "ev": -0.078,
       "breakeven": 0.505,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Back",
       "grade": "B+",
       "is_valid": false,
       "is_combo": false,
@@ -42775,7 +42871,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 40
+      "rank": 41
     },
     {
       "player_name": "Obi Toppin",
@@ -42809,13 +42905,13 @@
       "vegas_under_odds": "+106",
       "vegas_book": "FanDuel",
       "vegas_books": 6,
-      "p_hit": 0.449,
-      "ev": -0.075,
+      "p_hit": 0.416,
+      "ev": -0.143,
       "breakeven": 0.485,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": null,
+      "injury": "GTD \u00b7 Back",
       "grade": "A",
       "is_valid": false,
       "is_combo": false,
@@ -43368,7 +43464,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 22
+      "rank": 23
     },
     {
       "player_name": "Paul George",
@@ -43550,7 +43646,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 48
+      "rank": 49
     },
     {
       "player_name": "Paul George",
@@ -43584,8 +43680,8 @@
       "vegas_under_odds": "+122",
       "vegas_book": "Bovada",
       "vegas_books": 5,
-      "p_hit": 0.556,
-      "ev": -0.032,
+      "p_hit": 0.664,
+      "ev": 0.155,
       "breakeven": 0.574,
       "learn_note": null,
       "on_hold": false,
@@ -43614,7 +43710,7 @@
       "p_market": 0.5605,
       "edge_value": 0.0532,
       "open_line": 4.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.8,
       "matchup_z": null,
       "teammate_out": 0,
@@ -44008,8 +44104,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 7,
-      "p_hit": 0.252,
-      "ev": -0.232,
+      "p_hit": 0.176,
+      "ev": -0.463,
       "breakeven": 0.328,
       "learn_note": null,
       "on_hold": false,
@@ -44056,7 +44152,7 @@
       "p_market": 0.3448,
       "edge_value": 0.0389,
       "open_line": 16.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.29,
       "matchup_z": 0.72,
       "teammate_out": 0,
@@ -44235,7 +44331,7 @@
         "gp_this": 5,
         "gp_last": 70
       },
-      "rank": 61
+      "rank": 62
     },
     {
       "player_name": "Pelle Larsson",
@@ -44269,8 +44365,8 @@
       "vegas_under_odds": "-105",
       "vegas_book": "BetRivers",
       "vegas_books": 4,
-      "p_hit": 0.622,
-      "ev": 0.187,
+      "p_hit": 0.511,
+      "ev": -0.025,
       "breakeven": 0.524,
       "learn_note": null,
       "on_hold": false,
@@ -44316,7 +44412,7 @@
       "p_market": 0.5056,
       "edge_value": -0.0153,
       "open_line": 11.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": -0.21,
       "matchup_z": 1.05,
       "teammate_out": 0,
@@ -44587,7 +44683,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 42
+      "rank": 43
     },
     {
       "player_name": "P.J. Washington",
@@ -44785,8 +44881,8 @@
       "vegas_under_odds": "+118",
       "vegas_book": "DraftKings",
       "vegas_books": 6,
-      "p_hit": 0.258,
-      "ev": -0.214,
+      "p_hit": 0.353,
+      "ev": 0.078,
       "breakeven": 0.328,
       "learn_note": null,
       "on_hold": false,
@@ -44833,7 +44929,7 @@
       "p_market": 0.3946,
       "edge_value": 0.1862,
       "open_line": 7.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.75,
       "matchup_z": 0.5,
       "teammate_out": 0,
@@ -44878,8 +44974,8 @@
       "vegas_under_odds": "+129",
       "vegas_book": "DraftKings",
       "vegas_books": 3,
-      "p_hit": 0.397,
-      "ev": -0.048,
+      "p_hit": 0.509,
+      "ev": 0.221,
       "breakeven": 0.417,
       "learn_note": null,
       "on_hold": false,
@@ -44908,7 +45004,7 @@
       "p_market": 0.4075,
       "edge_value": 0.0195,
       "open_line": 2.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.05,
       "matchup_z": null,
       "teammate_out": 0,
@@ -44921,7 +45017,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 32
+      "rank": 33
     },
     {
       "player_name": "RJ Barrett",
@@ -45182,7 +45278,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 73
+      "rank": 74
     },
     {
       "player_name": "Rudy Gobert",
@@ -45438,7 +45534,7 @@
         "gp_this": 3,
         "gp_last": 68
       },
-      "rank": 93
+      "rank": 95
     },
     {
       "player_name": "Rui Hachimura",
@@ -45731,8 +45827,8 @@
       "vegas_under_odds": "+100",
       "vegas_book": "BetRivers",
       "vegas_books": 4,
-      "p_hit": 0.505,
-      "ev": -0.043,
+      "p_hit": 0.617,
+      "ev": 0.167,
       "breakeven": 0.528,
       "learn_note": null,
       "on_hold": false,
@@ -45779,7 +45875,7 @@
       "p_market": 0.5138,
       "edge_value": 0.0552,
       "open_line": 8.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": -0.46,
       "matchup_z": 0.4,
       "teammate_out": 0,
@@ -45870,7 +45966,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 85
+      "rank": 87
     },
     {
       "player_name": "Scottie Barnes",
@@ -45904,8 +46000,8 @@
       "vegas_under_odds": "+125",
       "vegas_book": "Bovada",
       "vegas_books": 4,
-      "p_hit": 0.303,
-      "ev": -0.319,
+      "p_hit": 0.406,
+      "ev": -0.086,
       "breakeven": 0.444,
       "learn_note": null,
       "on_hold": false,
@@ -45934,7 +46030,7 @@
       "p_market": 0.4269,
       "edge_value": 0.0474,
       "open_line": 5.5,
-      "line_move": -1.0,
+      "line_move": -0.0,
       "dvp_z": 0.05,
       "matchup_z": null,
       "teammate_out": 1,
@@ -46052,7 +46148,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 100
+      "rank": 102
     },
     {
       "player_name": "Scottie Barnes",
@@ -46129,7 +46225,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 83
+      "rank": 85
     },
     {
       "player_name": "Sion James",
@@ -46163,8 +46259,8 @@
       "vegas_under_odds": "-114",
       "vegas_book": "BetRivers",
       "vegas_books": 7,
-      "p_hit": 0.49,
-      "ev": -0.08,
+      "p_hit": 0.602,
+      "ev": 0.131,
       "breakeven": 0.533,
       "learn_note": null,
       "on_hold": false,
@@ -46193,7 +46289,7 @@
       "p_market": 0.5196,
       "edge_value": 0.1,
       "open_line": 3.5,
-      "line_move": -0.0,
+      "line_move": 1.0,
       "dvp_z": 0.19,
       "matchup_z": null,
       "teammate_out": 1,
@@ -46516,8 +46612,8 @@
       "vegas_under_odds": "-113",
       "vegas_book": "Fanatics",
       "vegas_books": 5,
-      "p_hit": 0.218,
-      "ev": -0.378,
+      "p_hit": 0.151,
+      "ev": -0.571,
       "breakeven": 0.351,
       "learn_note": null,
       "on_hold": false,
@@ -46563,7 +46659,7 @@
       "p_market": 0.3466,
       "edge_value": 0.1032,
       "open_line": 25.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 1.66,
       "matchup_z": -0.17,
       "teammate_out": 0,
@@ -46774,8 +46870,8 @@
       "vegas_under_odds": "-118",
       "vegas_book": "BetRivers",
       "vegas_books": 6,
-      "p_hit": 0.484,
-      "ev": -0.05,
+      "p_hit": 0.596,
+      "ev": 0.17,
       "breakeven": 0.51,
       "learn_note": null,
       "on_hold": false,
@@ -46821,7 +46917,7 @@
       "p_market": 0.485,
       "edge_value": -0.0037,
       "open_line": 10.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.72,
       "matchup_z": -0.42,
       "teammate_out": 0,
@@ -46906,7 +47002,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 86
+      "rank": 88
     },
     {
       "player_name": "Terrence Shannon Jr",
@@ -47683,7 +47779,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 30
+      "rank": 31
     },
     {
       "player_name": "Trevon Brazile",
@@ -47717,8 +47813,8 @@
       "vegas_under_odds": "-114",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 2,
-      "p_hit": 0.542,
-      "ev": 0.026,
+      "p_hit": 0.429,
+      "ev": -0.187,
       "breakeven": 0.528,
       "learn_note": null,
       "on_hold": false,
@@ -47747,7 +47843,7 @@
       "p_market": 0.4979,
       "edge_value": 0.0196,
       "open_line": 8.5,
-      "line_move": 0.0,
+      "line_move": -1.0,
       "dvp_z": 0.33,
       "matchup_z": 0.0,
       "teammate_out": 0,
@@ -47761,7 +47857,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 31
+      "rank": 32
     },
     {
       "player_name": "Trevon Brazile",
@@ -48021,7 +48117,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 46
+      "rank": 47
     },
     {
       "player_name": "Tristan da Silva",
@@ -48219,8 +48315,8 @@
       "vegas_under_odds": "-108",
       "vegas_book": "Caesars",
       "vegas_books": 6,
-      "p_hit": 0.625,
-      "ev": 0.125,
+      "p_hit": 0.805,
+      "ev": 0.449,
       "breakeven": 0.556,
       "learn_note": null,
       "on_hold": false,
@@ -48268,7 +48364,7 @@
       "p_market": 0.5619,
       "edge_value": 0.0497,
       "open_line": 23.5,
-      "line_move": 0.0,
+      "line_move": 2.0,
       "dvp_z": -1.07,
       "matchup_z": -0.38,
       "teammate_out": 0,
@@ -48314,8 +48410,8 @@
       "vegas_under_odds": "+128",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.676,
-      "ev": 0.103,
+      "p_hit": 0.57,
+      "ev": -0.07,
       "breakeven": 0.612,
       "learn_note": null,
       "on_hold": false,
@@ -48344,7 +48440,7 @@
       "p_market": 0.5827,
       "edge_value": 0.0158,
       "open_line": 3.5,
-      "line_move": 1.0,
+      "line_move": 0.0,
       "dvp_z": 1.33,
       "matchup_z": null,
       "teammate_out": 0,
@@ -48358,7 +48454,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 44
+      "rank": 45
     },
     {
       "player_name": "VJ Edgecombe",
@@ -48482,8 +48578,8 @@
       "vegas_under_odds": "-118",
       "vegas_book": "FanDuel",
       "vegas_books": 7,
-      "p_hit": 0.483,
-      "ev": -0.033,
+      "p_hit": 0.596,
+      "ev": 0.192,
       "breakeven": 0.5,
       "learn_note": null,
       "on_hold": false,
@@ -48531,7 +48627,7 @@
       "p_market": 0.4802,
       "edge_value": 0.0472,
       "open_line": 11.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": -1.03,
       "matchup_z": -0.4,
       "teammate_out": 0,
@@ -48792,7 +48888,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 65
+      "rank": 66
     },
     {
       "player_name": "Walker Kessler",
@@ -48960,7 +49056,7 @@
         "gp_this": 4,
         "gp_last": 78
       },
-      "rank": 71
+      "rank": 72
     },
     {
       "player_name": "Wendell Carter Jr.",
@@ -49128,7 +49224,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 59
+      "rank": 60
     },
     {
       "player_name": "Yaxel Lendeborg",
@@ -49496,8 +49592,8 @@
       "vegas_under_odds": "-149",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 2,
-      "p_hit": 0.731,
-      "ev": 0.221,
+      "p_hit": 0.633,
+      "ev": 0.057,
       "breakeven": 0.598,
       "learn_note": null,
       "on_hold": false,
@@ -49526,7 +49622,7 @@
       "p_market": 0.5627,
       "edge_value": -0.0226,
       "open_line": 4.5,
-      "line_move": 1.0,
+      "line_move": -0.0,
       "dvp_z": -0.69,
       "matchup_z": null,
       "teammate_out": 0,
@@ -49535,6 +49631,1036 @@
       "guards": [
         "price",
         "books"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Bilal Coulibaly",
+      "team": "WAS",
+      "opponent": "CHA",
+      "position": "SG",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.732,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 11.7,
+      "games_played": 56,
+      "games_hit": 41,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "BetMGM",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-125",
+      "over_book": "BetMGM",
+      "under_odds": null,
+      "under_book": null,
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 8.5,
+      "vegas_over_odds": "-123",
+      "vegas_under_odds": "-103",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 3,
+      "p_hit": 0.582,
+      "ev": 0.047,
+      "breakeven": 0.556,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "A+",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 35% of FGA \u00d7 z -0.3",
+        "In The Paint (Non-RA): 20% of FGA \u00d7 z -0.5",
+        "Mid-Range: 7% of FGA \u00d7 z -0.7",
+        "Left Corner 3: 7% of FGA \u00d7 z -0.9",
+        "Right Corner 3: 6% of FGA \u00d7 z +0.8",
+        "Above the Break 3: 25% of FGA \u00d7 z +0.1"
+      ],
+      "playtype_details": [
+        "Transition: 22% of poss \u00d7 z -0.4",
+        "Isolation: 9% of poss \u00d7 z +0.3",
+        "PRBallHandler: 19% of poss \u00d7 z +0.8",
+        "Spotup: 23% of poss \u00d7 z -0.6",
+        "Handoff: 6% of poss \u00d7 z -0.9",
+        "Cut: 7% of poss \u00d7 z -0.9",
+        "OffScreen: 2% of poss \u00d7 z +0.3",
+        "OffRebound: 4% of poss \u00d7 z -0.4",
+        "Misc: 5% of poss \u00d7 z +1.4"
+      ],
+      "proj_mu": 10.49,
+      "proj_sd": 5.57,
+      "proj_minutes": 26.5,
+      "proj_dist": "normal",
+      "n_this": 5,
+      "n_last": 56,
+      "weight_this": 0.333,
+      "p_hat": 0.648,
+      "breakeven_price": 0.5556,
+      "market_basis": "pick",
+      "consensus_line": 8.5,
+      "consensus_books": 3,
+      "line_shopped": true,
+      "p_model": 0.7045,
+      "p_market": 0.5916,
+      "edge_value": 0.0925,
+      "open_line": 8.5,
+      "line_move": 0.0,
+      "dvp_z": -0.55,
+      "matchup_z": -0.36,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": "cap: 15 on the board",
+      "guards": [
+        "price"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Bilal Coulibaly",
+      "team": "WAS",
+      "opponent": "CHA",
+      "position": "SG",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.357,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 4.3,
+      "games_played": 56,
+      "games_hit": 20,
+      "line": 3.5,
+      "line_source": "vegas",
+      "line_book": "BetMGM",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "-109",
+      "over_book": "DraftKings",
+      "under_odds": "+100",
+      "under_book": "BetMGM",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "-109",
+      "vegas_under_odds": "+100",
+      "vegas_book": "BetMGM",
+      "vegas_books": 4,
+      "p_hit": 0.557,
+      "ev": 0.113,
+      "breakeven": 0.5,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 3.63,
+      "proj_sd": 1.91,
+      "proj_minutes": 26.5,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 56,
+      "weight_this": 0.333,
+      "p_hat": 0.5012,
+      "breakeven_price": 0.5,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.5129,
+      "p_market": 0.4895,
+      "edge_value": 0.0012,
+      "open_line": 3.5,
+      "line_move": -0.0,
+      "dvp_z": -1.2,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "line_size"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 104
+    },
+    {
+      "player_name": "Kentavious Caldwell-Pope",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "G",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.471,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 8.4,
+      "games_played": 51,
+      "games_hit": 24,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 6,
+      "line_locked": false,
+      "over_odds": "-111",
+      "over_book": "BetMGM",
+      "under_odds": "-106",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "-111",
+      "vegas_under_odds": "-106",
+      "vegas_book": "FanDuel",
+      "vegas_books": 6,
+      "p_hit": 0.543,
+      "ev": 0.055,
+      "breakeven": 0.515,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 16% of FGA \u00d7 z -0.9",
+        "In The Paint (Non-RA): 14% of FGA \u00d7 z +0.0",
+        "Mid-Range: 22% of FGA \u00d7 z -0.8",
+        "Left Corner 3: 6% of FGA \u00d7 z -0.3",
+        "Right Corner 3: 4% of FGA \u00d7 z -0.2",
+        "Above the Break 3: 38% of FGA \u00d7 z +0.5"
+      ],
+      "playtype_details": [
+        "Transition: 25% of poss \u00d7 z +0.8",
+        "Isolation: 3% of poss \u00d7 z -1.1",
+        "PRBallHandler: 19% of poss \u00d7 z -0.6",
+        "Spotup: 33% of poss \u00d7 z -0.3",
+        "Handoff: 6% of poss \u00d7 z -0.3",
+        "OffScreen: 5% of poss \u00d7 z +0.8",
+        "Misc: 4% of poss \u00d7 z -0.9"
+      ],
+      "proj_mu": 7.16,
+      "proj_sd": 4.32,
+      "proj_minutes": 22.9,
+      "proj_dist": "normal",
+      "n_this": 5,
+      "n_last": 51,
+      "weight_this": 0.333,
+      "p_hat": 0.513,
+      "breakeven_price": 0.5146,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.5315,
+      "p_market": 0.4945,
+      "edge_value": -0.0016,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -1.05,
+      "matchup_z": -0.2,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Dean Wade",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "F-C",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.593,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.8,
+      "games_played": 59,
+      "games_hit": 35,
+      "line": 4.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "-124",
+      "over_book": "BetRivers",
+      "under_odds": "+105",
+      "under_book": "BetMGM",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 4.5,
+      "vegas_over_odds": "-124",
+      "vegas_under_odds": "+105",
+      "vegas_book": "BetRivers",
+      "vegas_books": 4,
+      "p_hit": 0.505,
+      "ev": -0.087,
+      "breakeven": 0.554,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B+",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 23% of FGA \u00d7 z -0.9",
+        "In The Paint (Non-RA): 4% of FGA \u00d7 z +0.0",
+        "Mid-Range: 3% of FGA \u00d7 z -0.8",
+        "Left Corner 3: 13% of FGA \u00d7 z -0.3",
+        "Right Corner 3: 16% of FGA \u00d7 z -0.2",
+        "Above the Break 3: 42% of FGA \u00d7 z +0.5"
+      ],
+      "playtype_details": [
+        "Transition: 27% of poss \u00d7 z +0.8",
+        "PRRollMan: 7% of poss \u00d7 z -0.2",
+        "Spotup: 46% of poss \u00d7 z -0.3",
+        "Cut: 10% of poss \u00d7 z +1.0",
+        "OffRebound: 5% of poss \u00d7 z -1.7"
+      ],
+      "proj_mu": 5.77,
+      "proj_sd": 4.02,
+      "proj_minutes": 23.4,
+      "proj_dist": "normal",
+      "n_this": 3,
+      "n_last": 59,
+      "weight_this": 0.231,
+      "p_hat": 0.5779,
+      "breakeven_price": 0.5536,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.6242,
+      "p_market": 0.5316,
+      "edge_value": 0.0243,
+      "open_line": 4.5,
+      "line_move": 0.0,
+      "dvp_z": 0.67,
+      "matchup_z": 0.01,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 14
+    },
+    {
+      "player_name": "Anfernee Simons",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "G",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.345,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 14.3,
+      "games_played": 55,
+      "games_hit": 19,
+      "line": 11.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "-104",
+      "over_book": "BetRivers",
+      "under_odds": "-111",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 11.5,
+      "vegas_over_odds": "-104",
+      "vegas_under_odds": "-111",
+      "vegas_book": "FanDuel",
+      "vegas_books": 4,
+      "p_hit": 0.568,
+      "ev": 0.079,
+      "breakeven": 0.526,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 9% of FGA \u00d7 z -0.9",
+        "In The Paint (Non-RA): 17% of FGA \u00d7 z +0.0",
+        "Mid-Range: 16% of FGA \u00d7 z -0.8",
+        "Left Corner 3: 3% of FGA \u00d7 z -0.3",
+        "Right Corner 3: 2% of FGA \u00d7 z -0.2",
+        "Above the Break 3: 53% of FGA \u00d7 z +0.5"
+      ],
+      "playtype_details": [
+        "Transition: 14% of poss \u00d7 z +0.8",
+        "Isolation: 18% of poss \u00d7 z -1.1",
+        "PRBallHandler: 29% of poss \u00d7 z -0.6",
+        "Spotup: 20% of poss \u00d7 z -0.3",
+        "Handoff: 8% of poss \u00d7 z -0.3",
+        "OffScreen: 5% of poss \u00d7 z +0.8",
+        "OffRebound: 2% of poss \u00d7 z -1.7",
+        "Misc: 3% of poss \u00d7 z -0.9"
+      ],
+      "proj_mu": 11.25,
+      "proj_sd": 6.75,
+      "proj_minutes": 24.4,
+      "proj_dist": "normal",
+      "n_this": 5,
+      "n_last": 55,
+      "weight_this": 0.333,
+      "p_hat": 0.5113,
+      "breakeven_price": 0.5261,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.5147,
+      "p_market": 0.5078,
+      "edge_value": -0.0148,
+      "open_line": 11.5,
+      "line_move": -0.0,
+      "dvp_z": -1.05,
+      "matchup_z": -0.31,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Dean Wade",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "F-C",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.576,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 4.2,
+      "games_played": 59,
+      "games_hit": 34,
+      "line": 4.5,
+      "line_source": "vegas",
+      "line_book": "DraftKings",
+      "line_books": 2,
+      "line_locked": false,
+      "over_odds": "+123",
+      "over_book": "BetRivers",
+      "under_odds": "-154",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "-135",
+      "vegas_under_odds": "+124",
+      "vegas_book": "FanDuel",
+      "vegas_books": 2,
+      "p_hit": 0.67,
+      "ev": 0.105,
+      "breakeven": 0.606,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "A",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 3.84,
+      "proj_sd": 2.18,
+      "proj_minutes": 23.4,
+      "proj_dist": "nb",
+      "n_this": 3,
+      "n_last": 59,
+      "weight_this": 0.231,
+      "p_hat": 0.6379,
+      "breakeven_price": 0.6063,
+      "market_basis": "pick",
+      "consensus_line": 3.5,
+      "consensus_books": 2,
+      "line_shopped": true,
+      "p_model": 0.6577,
+      "p_market": 0.6181,
+      "edge_value": 0.0316,
+      "open_line": 3.5,
+      "line_move": -0.0,
+      "dvp_z": 0.13,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Kentavious Caldwell-Pope",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "G",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.49,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 2.5,
+      "games_played": 51,
+      "games_hit": 25,
+      "line": 2.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 4,
+      "line_locked": false,
+      "over_odds": "+126",
+      "over_book": "FanDuel",
+      "under_odds": "-144",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 2.5,
+      "vegas_over_odds": "+126",
+      "vegas_under_odds": "-144",
+      "vegas_book": "FanDuel",
+      "vegas_books": 4,
+      "p_hit": 0.469,
+      "ev": 0.06,
+      "breakeven": 0.442,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 2.41,
+      "proj_sd": 1.27,
+      "proj_minutes": 22.9,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 51,
+      "weight_this": 0.333,
+      "p_hat": 0.4294,
+      "breakeven_price": 0.4425,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.4303,
+      "p_market": 0.4285,
+      "edge_value": -0.0131,
+      "open_line": 2.5,
+      "line_move": 0.0,
+      "dvp_z": -0.39,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "line_size",
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Anfernee Simons",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "G",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.491,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 2.5,
+      "games_played": 55,
+      "games_hit": 27,
+      "line": 2.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 2,
+      "line_locked": false,
+      "over_odds": "+124",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-159",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 2.5,
+      "vegas_over_odds": "+124",
+      "vegas_under_odds": "-159",
+      "vegas_book": "BetRivers",
+      "vegas_books": 2,
+      "p_hit": 0.638,
+      "ev": 0.04,
+      "breakeven": 0.614,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 2.31,
+      "proj_sd": 1.34,
+      "proj_minutes": 24.4,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 55,
+      "weight_this": 0.333,
+      "p_hat": 0.5869,
+      "breakeven_price": 0.6139,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.5948,
+      "p_market": 0.579,
+      "edge_value": -0.027,
+      "open_line": 2.5,
+      "line_move": -0.0,
+      "dvp_z": -0.39,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "line_size"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Kobe Sanders",
+      "team": "LAC",
+      "opponent": "MIN",
+      "position": "G",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.529,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 7.3,
+      "games_played": 68,
+      "games_hit": 36,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 3,
+      "line_locked": false,
+      "over_odds": "-108",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-106",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "-108",
+      "vegas_under_odds": "-106",
+      "vegas_book": "BetRivers",
+      "vegas_books": 3,
+      "p_hit": 0.528,
+      "ev": 0.027,
+      "breakeven": 0.515,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "B",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 18% of FGA \u00d7 z -1.4",
+        "In The Paint (Non-RA): 18% of FGA \u00d7 z -0.7",
+        "Mid-Range: 13% of FGA \u00d7 z -0.7",
+        "Left Corner 3: 12% of FGA \u00d7 z +1.8",
+        "Right Corner 3: 6% of FGA \u00d7 z -0.6",
+        "Above the Break 3: 33% of FGA \u00d7 z -0.9"
+      ],
+      "playtype_details": [
+        "Transition: 17% of poss \u00d7 z -0.2",
+        "Isolation: 5% of poss \u00d7 z -1.5",
+        "PRBallHandler: 12% of poss \u00d7 z +0.1",
+        "PRRollMan: 4% of poss \u00d7 z -0.4",
+        "Spotup: 42% of poss \u00d7 z -0.5",
+        "Handoff: 3% of poss \u00d7 z +0.4",
+        "Cut: 5% of poss \u00d7 z -1.3",
+        "OffScreen: 2% of poss \u00d7 z -0.9",
+        "OffRebound: 2% of poss \u00d7 z -1.9",
+        "Misc: 8% of poss \u00d7 z +1.2"
+      ],
+      "proj_mu": 6.96,
+      "proj_sd": 4.68,
+      "proj_minutes": 20.4,
+      "proj_dist": "normal",
+      "n_this": 4,
+      "n_last": 68,
+      "weight_this": 0.286,
+      "p_hat": 0.5219,
+      "breakeven_price": 0.5146,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.546,
+      "p_market": 0.4977,
+      "edge_value": 0.0073,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -0.29,
+      "matchup_z": -0.95,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "minutes"
+      ],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 80
+    },
+    {
+      "player_name": "Jaylen Brown",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "assists",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.746,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.1,
+      "games_played": 71,
+      "games_hit": 53,
+      "line": 3.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 6,
+      "line_locked": true,
+      "over_odds": "+134",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-150",
+      "under_book": "Bovada",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "+134",
+      "vegas_under_odds": "-150",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 6,
+      "p_hit": 0.315,
+      "ev": -0.263,
+      "breakeven": 0.427,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Knee",
+      "grade": "A+",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 4.73,
+      "proj_sd": 2.25,
+      "proj_minutes": 35.0,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 71,
+      "weight_this": 0.333,
+      "p_hat": 0.551,
+      "breakeven_price": 0.4274,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.686,
+      "p_market": 0.416,
+      "edge_value": 0.1236,
+      "open_line": 3.5,
+      "line_move": 0.0,
+      "dvp_z": -0.13,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": "cap: 1 per player",
+      "guards": [
+        "line_size"
+      ],
+      "model_version": "edge-1",
+      "proj_source": "passing",
+      "proj_mu_box": 4.64,
+      "passing": {
+        "passes": 37.5,
+        "pot_ast": 10.5,
+        "pa_per_pass": 0.279,
+        "conv": 0.459,
+        "conv_seen": 0.568,
+        "conv_prior": 0.542,
+        "team_shooting": 0.973,
+        "opp_shooting": 0.989,
+        "opp_share": 1.005,
+        "base": 4.8,
+        "weight_this": 0.5,
+        "gp_this": 5,
+        "gp_last": 71
+      }
+    },
+    {
+      "player_name": "Jaylen Brown",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.93,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 28.7,
+      "games_played": 71,
+      "games_hit": 66,
+      "line": 18.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 4,
+      "line_locked": true,
+      "over_odds": "-114",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-104",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 18.5,
+      "vegas_over_odds": "-114",
+      "vegas_under_odds": "-104",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 4,
+      "p_hit": 0.406,
+      "ev": -0.238,
+      "breakeven": 0.533,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Knee",
+      "grade": "A+",
+      "is_valid": true,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 22% of FGA \u00d7 z -0.9",
+        "In The Paint (Non-RA): 28% of FGA \u00d7 z +0.0",
+        "Mid-Range: 24% of FGA \u00d7 z -0.8",
+        "Left Corner 3: 2% of FGA \u00d7 z -0.3",
+        "Right Corner 3: 2% of FGA \u00d7 z -0.2",
+        "Above the Break 3: 23% of FGA \u00d7 z +0.5"
+      ],
+      "playtype_details": [
+        "Transition: 21% of poss \u00d7 z +0.8",
+        "Isolation: 20% of poss \u00d7 z -1.1",
+        "PRBallHandler: 22% of poss \u00d7 z -0.6",
+        "PRRollMan: 1% of poss \u00d7 z -0.2",
+        "Postup: 5% of poss \u00d7 z +0.3",
+        "Spotup: 14% of poss \u00d7 z -0.3",
+        "Handoff: 5% of poss \u00d7 z -0.3",
+        "Cut: 1% of poss \u00d7 z +1.0",
+        "OffScreen: 7% of poss \u00d7 z +0.8",
+        "OffRebound: 2% of poss \u00d7 z -1.7",
+        "Misc: 3% of poss \u00d7 z -0.9"
+      ],
+      "proj_mu": 26.21,
+      "proj_sd": 6.69,
+      "proj_minutes": 35.0,
+      "proj_dist": "normal",
+      "n_this": 5,
+      "n_last": 71,
+      "weight_this": 0.333,
+      "p_hat": 0.6932,
+      "breakeven_price": 0.5327,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.8754,
+      "p_market": 0.511,
+      "edge_value": 0.1605,
+      "open_line": 18.5,
+      "line_move": 0.0,
+      "dvp_z": 0.29,
+      "matchup_z": -0.49,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [],
+      "model_version": "edge-1",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 3
+    },
+    {
+      "player_name": "Jaylen Brown",
+      "team": "PHI",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.718,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 6.9,
+      "games_played": 71,
+      "games_hit": 51,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "BetRivers",
+      "line_books": 7,
+      "line_locked": true,
+      "over_odds": "-130",
+      "over_book": "BetRivers",
+      "under_odds": "+106",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "-130",
+      "vegas_under_odds": "+106",
+      "vegas_book": "BetRivers",
+      "vegas_books": 7,
+      "p_hit": 0.642,
+      "ev": 0.136,
+      "breakeven": 0.565,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Knee",
+      "grade": "A",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "proj_mu": 6.93,
+      "proj_sd": 2.96,
+      "proj_minutes": 35.0,
+      "proj_dist": "nb",
+      "n_this": 5,
+      "n_last": 71,
+      "weight_this": 0.333,
+      "p_hat": 0.5996,
+      "breakeven_price": 0.5652,
+      "market_basis": "pick",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "p_model": 0.6613,
+      "p_market": 0.538,
+      "edge_value": 0.0344,
+      "open_line": 5.5,
+      "line_move": 1.0,
+      "dvp_z": 0.21,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price"
       ],
       "model_version": "edge-1",
       "proj_source": null,
@@ -55108,16 +56234,16 @@
     }
   ],
   "hitrate_summary": {
-    "avg": 0.595,
-    "above_threshold": 185,
-    "below_threshold": 133,
+    "avg": 0.592,
+    "above_threshold": 188,
+    "below_threshold": 139,
     "unavailable": 23,
     "threshold": 0.56,
     "distribution": {
-      "60_plus": 159,
-      "56_to_60": 26,
-      "50_to_56": 58,
-      "below_50": 75
+      "60_plus": 160,
+      "56_to_60": 28,
+      "50_to_56": 59,
+      "below_50": 80
     }
   },
   "learning": {
