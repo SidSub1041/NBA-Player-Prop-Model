@@ -3307,59 +3307,59 @@
   "learning": {
     "mode": "shadow",
     "trusted": false,
-    "trained_at": "2026-10-29T09:35:33Z",
-    "n_rows": 1451,
-    "n_days": 36,
+    "trained_at": "2026-10-30T09:35:14Z",
+    "n_rows": 1575,
+    "n_days": 37,
     "cv": {
-      "scored_rows": 1360,
-      "scored_nights": 33,
-      "logloss": 0.7179,
-      "baseline_logloss": 0.6825,
+      "scored_rows": 1484,
+      "scored_nights": 34,
+      "logloss": 0.7133,
+      "baseline_logloss": 0.6806,
       "baseline": "market price",
-      "logloss_vs_average": 0.6937,
-      "logloss_vs_market": 0.6825,
-      "gain": -0.0518,
-      "gain_lower_bound": -0.0414,
-      "effective_rows": 1120.1,
-      "effective_nights": 4.9,
+      "logloss_vs_average": 0.6935,
+      "logloss_vs_market": 0.6806,
+      "gain": -0.048,
+      "gain_lower_bound": -0.0387,
+      "effective_rows": 1243.6,
+      "effective_nights": 5.7,
       "calibration": [
         {
           "band": "0%\u201345%",
-          "n": 336,
-          "predicted": 0.35,
-          "actual": 0.476
+          "n": 370,
+          "predicted": 0.348,
+          "actual": 0.462
         },
         {
           "band": "45%\u201350%",
-          "n": 177,
-          "predicted": 0.477,
-          "actual": 0.593
+          "n": 197,
+          "predicted": 0.476,
+          "actual": 0.599
         },
         {
           "band": "50%\u201355%",
-          "n": 252,
+          "n": 270,
           "predicted": 0.526,
-          "actual": 0.524
+          "actual": 0.53
         },
         {
           "band": "55%\u201360%",
-          "n": 271,
+          "n": 293,
           "predicted": 0.576,
           "actual": 0.491
         },
         {
           "band": "60%\u2013100%",
-          "n": 324,
-          "predicted": 0.67,
-          "actual": 0.537
+          "n": 354,
+          "predicted": 0.669,
+          "actual": 0.545
         }
       ],
       "gate_check": {
-        "published_scored": 291,
-        "kept": 141,
-        "demoted": 150,
-        "units_kept": -15.15,
-        "units_demoted": 5.1,
+        "published_scored": 300,
+        "kept": 142,
+        "demoted": 158,
+        "units_kept": -16.15,
+        "units_demoted": 1.96,
         "passed": false,
         "verdict": "cutting -EV picks would have cost units"
       }
@@ -3374,146 +3374,146 @@
     "pass_streak": 0,
     "factors": [
       {
-        "feature": "log_minutes",
-        "label": "projected minutes",
-        "weight": -0.311,
-        "effect": "more misses"
+        "feature": "implied",
+        "label": "the price's implied probability",
+        "weight": 0.251,
+        "effect": "more hits"
       },
       {
         "feature": "p_market",
         "label": "the de-vigged market probability of the pick",
-        "weight": 0.276,
+        "weight": 0.239,
         "effect": "more hits"
       },
       {
-        "feature": "p_model",
-        "label": "the model's probability of the pick",
-        "weight": -0.261,
+        "feature": "log_minutes",
+        "label": "projected minutes",
+        "weight": -0.229,
         "effect": "more misses"
-      },
-      {
-        "feature": "implied",
-        "label": "the price's implied probability",
-        "weight": 0.24,
-        "effect": "more hits"
-      },
-      {
-        "feature": "edge",
-        "label": "the model's edge over the market",
-        "weight": 0.178,
-        "effect": "more hits"
       },
       {
         "feature": "cushion",
         "label": "season average vs the line, in the pick's direction",
-        "weight": -0.162,
+        "weight": -0.179,
         "effect": "more misses"
+      },
+      {
+        "feature": "p_model",
+        "label": "the model's probability of the pick",
+        "weight": -0.177,
+        "effect": "more misses"
+      },
+      {
+        "feature": "line_move",
+        "label": "line movement toward the pick",
+        "weight": 0.161,
+        "effect": "more hits"
       }
     ],
     "segments": {
       "stat": {
         "assists": {
-          "hits": 140,
-          "misses": 137,
-          "rate": 0.505,
-          "n": 277,
+          "hits": 155,
+          "misses": 153,
+          "rate": 0.503,
+          "n": 308,
           "ci": [
-            0.447,
-            0.564
+            0.448,
+            0.559
           ]
         },
         "points": {
-          "hits": 195,
-          "misses": 190,
+          "hits": 212,
+          "misses": 207,
           "rate": 0.506,
-          "n": 385,
+          "n": 419,
           "ci": [
-            0.457,
-            0.556
+            0.458,
+            0.554
           ]
         },
         "pra": {
-          "hits": 2,
-          "misses": 6,
-          "rate": 0.25,
-          "n": 8,
+          "hits": 5,
+          "misses": 8,
+          "rate": 0.385,
+          "n": 13,
           "ci": [
-            0.071,
-            0.591
+            0.177,
+            0.645
           ]
         },
         "pts+ast": {
-          "hits": 2,
-          "misses": 6,
-          "rate": 0.25,
-          "n": 8,
+          "hits": 7,
+          "misses": 9,
+          "rate": 0.438,
+          "n": 16,
           "ci": [
-            0.071,
-            0.591
+            0.231,
+            0.668
           ]
         },
         "pts+reb": {
-          "hits": 30,
-          "misses": 25,
-          "rate": 0.545,
-          "n": 55,
+          "hits": 34,
+          "misses": 29,
+          "rate": 0.54,
+          "n": 63,
           "ci": [
-            0.415,
-            0.67
+            0.418,
+            0.657
           ]
         },
         "reb+ast": {
-          "hits": 16,
+          "hits": 21,
           "misses": 12,
-          "rate": 0.571,
-          "n": 28,
+          "rate": 0.636,
+          "n": 33,
           "ci": [
-            0.391,
-            0.735
+            0.466,
+            0.778
           ]
         },
         "rebounds": {
-          "hits": 167,
-          "misses": 154,
-          "rate": 0.52,
-          "n": 321,
+          "hits": 183,
+          "misses": 171,
+          "rate": 0.517,
+          "n": 354,
           "ci": [
-            0.466,
-            0.574
+            0.465,
+            0.569
           ]
         }
       },
       "edge": {
         "over": {
-          "hits": 293,
-          "misses": 301,
-          "rate": 0.493,
-          "n": 594,
+          "hits": 336,
+          "misses": 347,
+          "rate": 0.492,
+          "n": 683,
           "ci": [
-            0.453,
-            0.533
+            0.455,
+            0.529
           ]
         },
         "under": {
-          "hits": 259,
-          "misses": 229,
-          "rate": 0.531,
-          "n": 488,
+          "hits": 281,
+          "misses": 242,
+          "rate": 0.537,
+          "n": 523,
           "ci": [
-            0.486,
-            0.575
+            0.494,
+            0.58
           ]
         }
       },
       "price band": {
         "better than \u2212121": {
-          "hits": 387,
-          "misses": 395,
-          "rate": 0.495,
-          "n": 782,
+          "hits": 428,
+          "misses": 442,
+          "rate": 0.492,
+          "n": 870,
           "ci": [
-            0.46,
-            0.53
+            0.459,
+            0.525
           ]
         },
         "no price": {
@@ -3527,77 +3527,77 @@
           ]
         },
         "\u2212121 or worse": {
-          "hits": 163,
-          "misses": 133,
-          "rate": 0.551,
-          "n": 296,
+          "hits": 187,
+          "misses": 145,
+          "rate": 0.563,
+          "n": 332,
           "ci": [
-            0.494,
-            0.606
+            0.509,
+            0.616
           ]
         }
       },
       "books": {
         "1\u20132 books": {
-          "hits": 136,
-          "misses": 139,
-          "rate": 0.495,
-          "n": 275,
+          "hits": 150,
+          "misses": 156,
+          "rate": 0.49,
+          "n": 306,
           "ci": [
-            0.436,
-            0.553
+            0.435,
+            0.546
           ]
         },
         "3\u20135 books": {
-          "hits": 216,
-          "misses": 207,
-          "rate": 0.511,
-          "n": 423,
+          "hits": 240,
+          "misses": 222,
+          "rate": 0.519,
+          "n": 462,
           "ci": [
-            0.463,
-            0.558
+            0.474,
+            0.565
           ]
         },
         "6+ books": {
-          "hits": 200,
-          "misses": 184,
-          "rate": 0.521,
-          "n": 384,
+          "hits": 227,
+          "misses": 211,
+          "rate": 0.518,
+          "n": 438,
           "ci": [
-            0.471,
-            0.57
+            0.472,
+            0.565
           ]
         }
       },
       "edge band": {
         "0\u20131.5 pts": {
-          "hits": 42,
-          "misses": 37,
-          "rate": 0.532,
-          "n": 79,
+          "hits": 47,
+          "misses": 41,
+          "rate": 0.534,
+          "n": 88,
           "ci": [
-            0.423,
-            0.638
+            0.431,
+            0.635
           ]
         },
         "1.5\u20133 pts": {
-          "hits": 43,
-          "misses": 33,
-          "rate": 0.566,
-          "n": 76,
+          "hits": 48,
+          "misses": 39,
+          "rate": 0.552,
+          "n": 87,
           "ci": [
-            0.454,
-            0.671
+            0.447,
+            0.652
           ]
         },
         "3\u20136 pts": {
-          "hits": 68,
-          "misses": 67,
-          "rate": 0.504,
-          "n": 135,
+          "hits": 88,
+          "misses": 83,
+          "rate": 0.515,
+          "n": 171,
           "ci": [
-            0.42,
-            0.587
+            0.44,
+            0.588
           ]
         },
         "no edge": {
@@ -3611,45 +3611,45 @@
           ]
         },
         "\u22640 pts": {
-          "hits": 54,
-          "misses": 47,
-          "rate": 0.535,
-          "n": 101,
+          "hits": 67,
+          "misses": 58,
+          "rate": 0.536,
+          "n": 125,
           "ci": [
-            0.438,
-            0.629
+            0.449,
+            0.621
           ]
         },
         "\u22656 pts": {
-          "hits": 80,
-          "misses": 87,
-          "rate": 0.479,
-          "n": 167,
+          "hits": 102,
+          "misses": 109,
+          "rate": 0.483,
+          "n": 211,
           "ci": [
-            0.405,
-            0.554
+            0.417,
+            0.551
           ]
         }
       },
       "line size": {
         ">3.5": {
-          "hits": 414,
-          "misses": 394,
-          "rate": 0.512,
-          "n": 808,
+          "hits": 461,
+          "misses": 436,
+          "rate": 0.514,
+          "n": 897,
           "ci": [
-            0.478,
+            0.481,
             0.547
           ]
         },
         "\u22643.5": {
-          "hits": 138,
-          "misses": 136,
-          "rate": 0.504,
-          "n": 274,
+          "hits": 156,
+          "misses": 153,
+          "rate": 0.505,
+          "n": 309,
           "ci": [
-            0.445,
-            0.562
+            0.449,
+            0.56
           ]
         }
       },
@@ -3665,369 +3665,235 @@
           ]
         },
         "sportsbooks": {
-          "hits": 509,
-          "misses": 485,
-          "rate": 0.512,
-          "n": 994,
+          "hits": 574,
+          "misses": 544,
+          "rate": 0.513,
+          "n": 1118,
           "ci": [
-            0.481,
+            0.484,
             0.543
           ]
         }
       },
       "hit rate vs line": {
         "50\u201356%": {
-          "hits": 83,
-          "misses": 85,
-          "rate": 0.494,
-          "n": 168,
+          "hits": 87,
+          "misses": 90,
+          "rate": 0.492,
+          "n": 177,
           "ci": [
             0.419,
-            0.569
+            0.565
           ]
         },
         "<50%": {
-          "hits": 180,
-          "misses": 186,
-          "rate": 0.492,
-          "n": 366,
+          "hits": 192,
+          "misses": 204,
+          "rate": 0.485,
+          "n": 396,
           "ci": [
-            0.441,
-            0.543
+            0.436,
+            0.534
           ]
         },
         "no line-based hit rate": {
-          "hits": 54,
-          "misses": 53,
-          "rate": 0.505,
-          "n": 107,
+          "hits": 60,
+          "misses": 58,
+          "rate": 0.508,
+          "n": 118,
           "ci": [
-            0.411,
-            0.598
+            0.419,
+            0.597
           ]
         },
         "\u226556%": {
-          "hits": 235,
-          "misses": 206,
-          "rate": 0.533,
-          "n": 441,
+          "hits": 278,
+          "misses": 237,
+          "rate": 0.54,
+          "n": 515,
           "ci": [
-            0.486,
-            0.579
+            0.497,
+            0.582
           ]
         }
       },
       "season average vs line": {
         "average against the pick": {
-          "hits": 222,
-          "misses": 207,
-          "rate": 0.517,
-          "n": 429,
+          "hits": 233,
+          "misses": 221,
+          "rate": 0.513,
+          "n": 454,
           "ci": [
-            0.47,
-            0.564
+            0.467,
+            0.559
           ]
         },
         "average favors the pick": {
-          "hits": 313,
-          "misses": 310,
-          "rate": 0.502,
-          "n": 623,
+          "hits": 361,
+          "misses": 350,
+          "rate": 0.508,
+          "n": 711,
           "ci": [
-            0.463,
-            0.542
+            0.471,
+            0.544
           ]
         },
         "n/a": {
-          "hits": 17,
-          "misses": 13,
-          "rate": 0.567,
-          "n": 30,
+          "hits": 23,
+          "misses": 18,
+          "rate": 0.561,
+          "n": 41,
           "ci": [
-            0.392,
-            0.726
+            0.41,
+            0.701
           ]
         }
       }
     },
-    "note": "shadow mode: 4.9/10 effective nights; beats the market price by -5.2% on unseen nights (needs 1%); its EV rule would have cost units on past picks",
-    "base_rate": 0.511,
+    "note": "shadow mode: 5.7/10 effective nights; beats the market price by -4.8% on unseen nights (needs 1%); its EV rule would have cost units on past picks",
+    "base_rate": 0.512,
     "postmortem": {
-      "date": "2026-10-28",
+      "date": "2026-10-29",
       "published": {
-        "total_picks": 15,
-        "hits": 5,
-        "misses": 10,
+        "total_picks": 9,
+        "hits": 2,
+        "misses": 7,
         "voided": 0,
-        "units": -5.988
+        "units": -4.138
       },
       "all_props": {
-        "hits": 206,
-        "misses": 197,
-        "rate": 0.511,
-        "n": 403,
+        "hits": 65,
+        "misses": 59,
+        "rate": 0.524,
+        "n": 124,
         "ci": [
-          0.462,
-          0.56
+          0.437,
+          0.61
         ]
       },
       "scope": "segments cover every prop with a line that night, not only the published picks",
       "went_right": [
         {
-          "segment": "edge band: 1.5\u20133 pts",
-          "hits": 32,
-          "misses": 21,
-          "rate": 0.604,
-          "n": 53,
+          "segment": "stat: reb+ast",
+          "hits": 5,
+          "misses": 0,
+          "rate": 1.0,
+          "n": 5,
           "ci": [
-            0.469,
-            0.724
+            0.566,
+            1.0
           ]
         },
         {
           "segment": "price band: \u2212121 or worse",
-          "hits": 71,
-          "misses": 48,
-          "rate": 0.597,
-          "n": 119,
+          "hits": 24,
+          "misses": 12,
+          "rate": 0.667,
+          "n": 36,
           "ci": [
-            0.507,
-            0.68
+            0.503,
+            0.798
           ]
         },
         {
-          "segment": "season average vs line: average against the pick",
-          "hits": 63,
-          "misses": 45,
-          "rate": 0.583,
-          "n": 108,
+          "segment": "edge: under",
+          "hits": 22,
+          "misses": 13,
+          "rate": 0.629,
+          "n": 35,
           "ci": [
-            0.489,
-            0.672
+            0.463,
+            0.768
           ]
         }
       ],
       "went_wrong": [
         {
-          "segment": "edge band: \u22656 pts",
-          "hits": 50,
-          "misses": 60,
-          "rate": 0.455,
-          "n": 110,
+          "segment": "hit rate vs line: <50%",
+          "hits": 12,
+          "misses": 18,
+          "rate": 0.4,
+          "n": 30,
           "ci": [
-            0.365,
-            0.548
+            0.246,
+            0.577
           ]
         },
         {
-          "segment": "stat: points",
-          "hits": 63,
-          "misses": 73,
-          "rate": 0.463,
-          "n": 136,
+          "segment": "season average vs line: average against the pick",
+          "hits": 11,
+          "misses": 14,
+          "rate": 0.44,
+          "n": 25,
           "ci": [
-            0.382,
-            0.547
+            0.267,
+            0.629
           ]
         },
         {
-          "segment": "edge: over",
-          "hits": 99,
-          "misses": 115,
-          "rate": 0.463,
-          "n": 214,
+          "segment": "hit rate vs line: 50\u201356%",
+          "hits": 4,
+          "misses": 5,
+          "rate": 0.444,
+          "n": 9,
           "ci": [
-            0.397,
-            0.529
+            0.189,
+            0.733
           ]
         }
       ],
       "biggest_misses": [
         {
-          "player": "Trey Murphy III",
+          "player": "Jrue Holiday",
           "stat": "points",
           "edge": "over",
-          "line": 20.5,
+          "line": 15.5,
           "actual": 6.0
         },
         {
-          "player": "Trey Murphy III",
-          "stat": "pts+reb",
+          "player": "Evan Mobley",
+          "stat": "points",
           "edge": "over",
-          "line": 21.5,
-          "actual": 7.0
+          "line": 16.5,
+          "actual": 11.0
         },
         {
-          "player": "Fred VanVleet",
-          "stat": "points",
-          "edge": "under",
-          "line": 12.5,
-          "actual": 24.0
+          "player": "Jrue Holiday",
+          "stat": "pra",
+          "edge": "over",
+          "line": 20.5,
+          "actual": 16.0
         },
         {
           "player": "Donovan Mitchell",
           "stat": "points",
           "edge": "over",
-          "line": 29.5,
-          "actual": 19.0
+          "line": 23.5,
+          "actual": 22.0
         },
         {
-          "player": "CJ McCollum",
+          "player": "Jarrett Allen",
           "stat": "points",
           "edge": "over",
-          "line": 16.5,
-          "actual": 13.0
+          "line": 15.5,
+          "actual": 14.0
         }
       ],
-      "near_misses": 1,
+      "near_misses": 0,
       "picks_cut_by_model": 0,
       "published_segments": {
         "stat": {
           "points": {
-            "hits": 3,
-            "misses": 8,
-            "rate": 0.273,
-            "n": 11,
-            "ci": [
-              0.097,
-              0.566
-            ]
-          },
-          "pts+reb": {
-            "hits": 2,
-            "misses": 2,
-            "rate": 0.5,
-            "n": 4,
-            "ci": [
-              0.15,
-              0.85
-            ]
-          }
-        },
-        "edge": {
-          "over": {
-            "hits": 3,
-            "misses": 9,
-            "rate": 0.25,
-            "n": 12,
-            "ci": [
-              0.089,
-              0.532
-            ]
-          },
-          "under": {
-            "hits": 2,
-            "misses": 1,
-            "rate": 0.667,
-            "n": 3,
-            "ci": [
-              0.208,
-              0.939
-            ]
-          }
-        },
-        "price band": {
-          "better than \u2212121": {
-            "hits": 4,
-            "misses": 9,
-            "rate": 0.308,
-            "n": 13,
-            "ci": [
-              0.127,
-              0.576
-            ]
-          },
-          "\u2212121 or worse": {
             "hits": 1,
-            "misses": 1,
-            "rate": 0.5,
-            "n": 2,
+            "misses": 5,
+            "rate": 0.167,
+            "n": 6,
             "ci": [
-              0.095,
-              0.905
-            ]
-          }
-        },
-        "books": {
-          "1\u20132 books": {
-            "hits": 1,
-            "misses": 6,
-            "rate": 0.143,
-            "n": 7,
-            "ci": [
-              0.026,
-              0.513
+              0.03,
+              0.564
             ]
           },
-          "3\u20135 books": {
-            "hits": 3,
-            "misses": 2,
-            "rate": 0.6,
-            "n": 5,
-            "ci": [
-              0.231,
-              0.882
-            ]
-          },
-          "6+ books": {
-            "hits": 1,
-            "misses": 2,
-            "rate": 0.333,
-            "n": 3,
-            "ci": [
-              0.061,
-              0.792
-            ]
-          }
-        },
-        "edge band": {
-          "\u22656 pts": {
-            "hits": 5,
-            "misses": 10,
-            "rate": 0.333,
-            "n": 15,
-            "ci": [
-              0.152,
-              0.583
-            ]
-          }
-        },
-        "line size": {
-          ">3.5": {
-            "hits": 5,
-            "misses": 10,
-            "rate": 0.333,
-            "n": 15,
-            "ci": [
-              0.152,
-              0.583
-            ]
-          }
-        },
-        "line source": {
-          "sportsbooks": {
-            "hits": 5,
-            "misses": 10,
-            "rate": 0.333,
-            "n": 15,
-            "ci": [
-              0.152,
-              0.583
-            ]
-          }
-        },
-        "hit rate vs line": {
-          "50\u201356%": {
-            "hits": 0,
-            "misses": 2,
-            "rate": 0.0,
-            "n": 2,
-            "ci": [
-              0.0,
-              0.658
-            ]
-          },
-          "<50%": {
+          "pra": {
             "hits": 0,
             "misses": 1,
             "rate": 0.0,
@@ -4037,17 +3903,29 @@
               0.793
             ]
           },
-          "no line-based hit rate": {
-            "hits": 3,
-            "misses": 1,
-            "rate": 0.75,
-            "n": 4,
+          "pts+reb": {
+            "hits": 1,
+            "misses": 0,
+            "rate": 1.0,
+            "n": 1,
             "ci": [
-              0.301,
-              0.954
+              0.207,
+              1.0
             ]
           },
-          "\u226556%": {
+          "rebounds": {
+            "hits": 0,
+            "misses": 1,
+            "rate": 0.0,
+            "n": 1,
+            "ci": [
+              0.0,
+              0.793
+            ]
+          }
+        },
+        "edge": {
+          "over": {
             "hits": 2,
             "misses": 6,
             "rate": 0.25,
@@ -4055,6 +3933,128 @@
             "ci": [
               0.071,
               0.591
+            ]
+          },
+          "under": {
+            "hits": 0,
+            "misses": 1,
+            "rate": 0.0,
+            "n": 1,
+            "ci": [
+              0.0,
+              0.793
+            ]
+          }
+        },
+        "price band": {
+          "better than \u2212121": {
+            "hits": 2,
+            "misses": 7,
+            "rate": 0.222,
+            "n": 9,
+            "ci": [
+              0.063,
+              0.547
+            ]
+          }
+        },
+        "books": {
+          "1\u20132 books": {
+            "hits": 1,
+            "misses": 4,
+            "rate": 0.2,
+            "n": 5,
+            "ci": [
+              0.036,
+              0.624
+            ]
+          },
+          "3\u20135 books": {
+            "hits": 1,
+            "misses": 2,
+            "rate": 0.333,
+            "n": 3,
+            "ci": [
+              0.061,
+              0.792
+            ]
+          },
+          "6+ books": {
+            "hits": 0,
+            "misses": 1,
+            "rate": 0.0,
+            "n": 1,
+            "ci": [
+              0.0,
+              0.793
+            ]
+          }
+        },
+        "edge band": {
+          "\u22656 pts": {
+            "hits": 2,
+            "misses": 7,
+            "rate": 0.222,
+            "n": 9,
+            "ci": [
+              0.063,
+              0.547
+            ]
+          }
+        },
+        "line size": {
+          ">3.5": {
+            "hits": 2,
+            "misses": 7,
+            "rate": 0.222,
+            "n": 9,
+            "ci": [
+              0.063,
+              0.547
+            ]
+          }
+        },
+        "line source": {
+          "sportsbooks": {
+            "hits": 2,
+            "misses": 7,
+            "rate": 0.222,
+            "n": 9,
+            "ci": [
+              0.063,
+              0.547
+            ]
+          }
+        },
+        "hit rate vs line": {
+          "50\u201356%": {
+            "hits": 0,
+            "misses": 1,
+            "rate": 0.0,
+            "n": 1,
+            "ci": [
+              0.0,
+              0.793
+            ]
+          },
+          "<50%": {
+            "hits": 0,
+            "misses": 2,
+            "rate": 0.0,
+            "n": 2,
+            "ci": [
+              0.0,
+              0.658
+            ]
+          },
+          "\u226556%": {
+            "hits": 2,
+            "misses": 4,
+            "rate": 0.333,
+            "n": 6,
+            "ci": [
+              0.097,
+              0.7
             ]
           }
         },
@@ -4071,41 +4071,31 @@
           },
           "average favors the pick": {
             "hits": 2,
-            "misses": 8,
-            "rate": 0.2,
-            "n": 10,
+            "misses": 6,
+            "rate": 0.25,
+            "n": 8,
             "ci": [
-              0.057,
-              0.51
-            ]
-          },
-          "n/a": {
-            "hits": 3,
-            "misses": 1,
-            "rate": 0.75,
-            "n": 4,
-            "ci": [
-              0.301,
-              0.954
+              0.071,
+              0.591
             ]
           }
         }
       },
       "live_model": {
-        "n": 403,
-        "avg_p_on_hits": 0.556,
-        "avg_p_on_misses": 0.519
+        "n": 124,
+        "avg_p_on_hits": 0.53,
+        "avg_p_on_misses": 0.476
       }
     }
   },
   "season_record": {
     "season": "2026-27",
-    "nights": 9,
-    "hits": 107,
-    "misses": 124,
-    "units": -24.98,
-    "rate": 0.463,
-    "record": "107\u2013124",
+    "nights": 10,
+    "hits": 109,
+    "misses": 131,
+    "units": -29.12,
+    "rate": 0.454,
+    "record": "109\u2013131",
     "voided": 3,
     "breakeven": 0.524,
     "min_sample": 8,
@@ -4122,38 +4112,38 @@
       "side:under": {
         "label": "Unders",
         "hits": 40,
-        "misses": 47,
-        "units": -13.18,
-        "n": 87,
-        "rate": 0.46,
-        "record": "40\u201347"
+        "misses": 48,
+        "units": -14.18,
+        "n": 88,
+        "rate": 0.455,
+        "record": "40\u201348"
       },
       "kind:single": {
         "label": "Single stats",
-        "hits": 87,
-        "misses": 102,
-        "units": -22.14,
-        "n": 189,
-        "rate": 0.46,
-        "record": "87\u2013102"
+        "hits": 88,
+        "misses": 108,
+        "units": -26.24,
+        "n": 196,
+        "rate": 0.449,
+        "record": "88\u2013108"
       },
       "stat:rebounds": {
         "label": "Rebounds",
         "hits": 35,
-        "misses": 39,
-        "units": -5.81,
-        "n": 74,
-        "rate": 0.473,
-        "record": "35\u201339"
+        "misses": 40,
+        "units": -6.81,
+        "n": 75,
+        "rate": 0.467,
+        "record": "35\u201340"
       },
       "grade:A+": {
         "label": "Grade A+",
-        "hits": 66,
-        "misses": 77,
-        "units": -18.88,
-        "n": 143,
-        "rate": 0.462,
-        "record": "66\u201377"
+        "hits": 68,
+        "misses": 84,
+        "units": -23.02,
+        "n": 152,
+        "rate": 0.447,
+        "record": "68\u201384"
       },
       "stat:assists": {
         "label": "Assists",
@@ -4166,21 +4156,21 @@
       },
       "kind:combo": {
         "label": "Combos",
-        "hits": 20,
-        "misses": 22,
-        "units": -2.84,
-        "n": 42,
-        "rate": 0.476,
-        "record": "20\u201322"
+        "hits": 21,
+        "misses": 23,
+        "units": -2.88,
+        "n": 44,
+        "rate": 0.477,
+        "record": "21\u201323"
       },
       "stat:pts+reb": {
         "label": "PTS+REB",
-        "hits": 6,
+        "hits": 7,
         "misses": 7,
-        "units": -1.4,
-        "n": 13,
-        "rate": 0.462,
-        "record": "6\u20137"
+        "units": -0.44,
+        "n": 14,
+        "rate": 0.5,
+        "record": "7\u20137"
       },
       "stat:reb+ast": {
         "label": "REB+AST",
@@ -4193,21 +4183,21 @@
       },
       "side:over": {
         "label": "Overs",
-        "hits": 67,
-        "misses": 77,
-        "units": -11.81,
-        "n": 144,
-        "rate": 0.465,
-        "record": "67\u201377"
+        "hits": 69,
+        "misses": 83,
+        "units": -14.94,
+        "n": 152,
+        "rate": 0.454,
+        "record": "69\u201383"
       },
       "stat:points": {
         "label": "Points",
-        "hits": 16,
-        "misses": 18,
-        "units": -3.57,
-        "n": 34,
-        "rate": 0.471,
-        "record": "16\u201318"
+        "hits": 17,
+        "misses": 23,
+        "units": -6.67,
+        "n": 40,
+        "rate": 0.425,
+        "record": "17\u201323"
       },
       "stat:pts+ast": {
         "label": "PTS+AST",
@@ -4221,11 +4211,11 @@
       "stat:pra": {
         "label": "PRA",
         "hits": 1,
-        "misses": 1,
-        "units": -0.09,
-        "n": 2,
-        "rate": 0.5,
-        "record": "1\u20131"
+        "misses": 2,
+        "units": -1.09,
+        "n": 3,
+        "rate": 0.333,
+        "record": "1\u20132"
       }
     },
     "highlights": [
@@ -4248,19 +4238,19 @@
       "record": "8\u20134"
     },
     "last_night": {
-      "date": "2026-10-28",
-      "hits": 5,
-      "misses": 10,
-      "units": -5.99,
-      "rate": 0.333,
-      "record": "5\u201310"
+      "date": "2026-10-29",
+      "hits": 2,
+      "misses": 7,
+      "units": -4.14,
+      "rate": 0.222,
+      "record": "2\u20137"
     },
-    "streak": -4,
+    "streak": -5,
     "clv": {
-      "n": 27,
-      "avg_line": -0.111,
+      "n": 36,
+      "avg_line": -0.222,
       "beat_close": 0.333,
-      "avg_prob": 0.0263
+      "avg_prob": 0.0321
     }
   },
   "model_results": [
@@ -4411,6 +4401,17 @@
       "voided": 0,
       "units": -5.988,
       "clv_avg_line": -0.067,
+      "clv_beat": 0.333
+    },
+    {
+      "date": "2026-10-29",
+      "season": "2026-27",
+      "total_picks": 9,
+      "hits": 2,
+      "misses": 7,
+      "voided": 0,
+      "units": -4.138,
+      "clv_avg_line": -0.556,
       "clv_beat": 0.333
     }
   ]
