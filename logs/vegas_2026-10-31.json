@@ -1,0 +1,604 @@
+{
+ "date": "2026-10-31",
+ "events": {
+  "067d97a124c10ea2d206546384500c5e": {
+   "commence_time": "2026-10-31T22:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "CHA",
+    "PHI"
+   ]
+  },
+  "06a03fb0ce0f81a970c6000fb71fdc6d": {
+   "commence_time": "2026-11-01T00:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "MIN",
+    "SAS"
+   ]
+  },
+  "6d7e1e0af6d568f4435d35a1763a3622": {
+   "commence_time": "2026-11-01T00:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "CLE",
+    "MIL"
+   ]
+  },
+  "77270837bc694d198c10f42937690d75": {
+   "commence_time": "2026-10-31T23:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "ATL",
+    "NOP"
+   ]
+  },
+  "863ae1092be42c6b563b2c4f099a3eb3": {
+   "commence_time": "2026-11-01T00:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "MEM",
+    "SAC"
+   ]
+  },
+  "d47417c3b1a2cd427cce74c9d00f1046": {
+   "commence_time": "2026-10-31T19:10:00Z",
+   "markets": {
+    "player_assists": "2026-10-31T02:38:00Z",
+    "player_points": "2026-10-31T02:38:00Z",
+    "player_rebounds": "2026-10-31T02:38:00Z"
+   },
+   "teams": [
+    "POR",
+    "UTA"
+   ]
+  }
+ },
+ "lines": {
+  "cedric coward|rebounds": {
+   "books": 1,
+   "event_id": "863ae1092be42c6b563b2c4f099a3eb3",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 6.5,
+   "offers": {
+    "Fanatics": {
+     "line": 6.5,
+     "over": "+105",
+     "under": "-140"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "+105",
+   "player": "Cedric Coward",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-140"
+  },
+  "cj mccollum|points": {
+   "books": 1,
+   "event_id": "77270837bc694d198c10f42937690d75",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 16.5,
+   "offers": {
+    "Fanatics": {
+     "line": 16.5,
+     "over": "-120",
+     "under": "-110"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-120",
+   "player": "C.J. McCollum",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-110"
+  },
+  "damian lillard|assists": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 5.5,
+   "offers": {
+    "FanDuel": {
+     "line": 5.5,
+     "over": "+118",
+     "under": "-158"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "+118",
+   "player": "Damian Lillard",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-158"
+  },
+  "damian lillard|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 22.5,
+   "offers": {
+    "DraftKings": {
+     "line": 22.5,
+     "over": "-120",
+     "under": "-106"
+    },
+    "FanDuel": {
+     "line": 22.5,
+     "over": "-125",
+     "under": "-106"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-120",
+   "player": "Damian Lillard",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-106"
+  },
+  "damian lillard|rebounds": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 3.5,
+   "offers": {
+    "FanDuel": {
+     "line": 3.5,
+     "over": "-158",
+     "under": "+118"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-158",
+   "player": "Damian Lillard",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+118"
+  },
+  "darius acuff jr|assists": {
+   "books": 1,
+   "event_id": "863ae1092be42c6b563b2c4f099a3eb3",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 5.5,
+   "offers": {
+    "Fanatics": {
+     "line": 5.5,
+     "over": "-130",
+     "under": "+100"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-130",
+   "player": "Darius Acuff Jr.",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "+100"
+  },
+  "deni avdija|assists": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 6.5,
+   "offers": {
+    "FanDuel": {
+     "line": 6.5,
+     "over": "-132",
+     "under": "+100"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-132",
+   "player": "Deni Avdija",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+100"
+  },
+  "deni avdija|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 24.5,
+   "offers": {
+    "DraftKings": {
+     "line": 24.5,
+     "over": "-109",
+     "under": "-117"
+    },
+    "FanDuel": {
+     "line": 24.5,
+     "over": "-112",
+     "under": "-118"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-109",
+   "player": "Deni Avdija",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-117"
+  },
+  "deni avdija|rebounds": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 7.5,
+   "offers": {
+    "FanDuel": {
+     "line": 7.5,
+     "over": "+102",
+     "under": "-136"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "+102",
+   "player": "Deni Avdija",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-136"
+  },
+  "donovan clingan|assists": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 1.5,
+   "offers": {
+    "FanDuel": {
+     "line": 1.5,
+     "over": "-200",
+     "under": "+148"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-200",
+   "player": "Donovan Clingan",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+148"
+  },
+  "donovan clingan|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 11.5,
+   "offers": {
+    "DraftKings": {
+     "line": 11.5,
+     "over": "-114",
+     "under": "-111"
+    },
+    "FanDuel": {
+     "line": 11.5,
+     "over": "+102",
+     "under": "-136"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "+102",
+   "player": "Donovan Clingan",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-111"
+  },
+  "donovan clingan|rebounds": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 11.5,
+   "offers": {
+    "FanDuel": {
+     "line": 11.5,
+     "over": "-112",
+     "under": "-118"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-112",
+   "player": "Donovan Clingan",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-118"
+  },
+  "dyson daniels|assists": {
+   "books": 1,
+   "event_id": "77270837bc694d198c10f42937690d75",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 4.5,
+   "offers": {
+    "Fanatics": {
+     "line": 4.5,
+     "over": "-145",
+     "under": "+110"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-145",
+   "player": "Dyson Daniels",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "+110"
+  },
+  "dyson daniels|rebounds": {
+   "books": 1,
+   "event_id": "77270837bc694d198c10f42937690d75",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 6.5,
+   "offers": {
+    "Fanatics": {
+     "line": 6.5,
+     "over": "+115",
+     "under": "-150"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "+115",
+   "player": "Dyson Daniels",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-150"
+  },
+  "jaylen wells|points": {
+   "books": 1,
+   "event_id": "863ae1092be42c6b563b2c4f099a3eb3",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 12.5,
+   "offers": {
+    "Fanatics": {
+     "line": 12.5,
+     "over": "-105",
+     "under": "-125"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-105",
+   "player": "Jaylen Wells",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-125"
+  },
+  "jrue holiday|assists": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 4.5,
+   "offers": {
+    "FanDuel": {
+     "line": 4.5,
+     "over": "-166",
+     "under": "+124"
+    },
+    "Fanatics": {
+     "line": 4.5,
+     "over": "-145",
+     "under": "+110"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-145",
+   "player": "Jrue Holiday",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+124"
+  },
+  "jrue holiday|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 13.5,
+   "offers": {
+    "DraftKings": {
+     "line": 13.5,
+     "over": "-117",
+     "under": "-109"
+    },
+    "FanDuel": {
+     "line": 13.5,
+     "over": "-136",
+     "under": "+102"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-117",
+   "player": "Jrue Holiday",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+102"
+  },
+  "jrue holiday|rebounds": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 4.5,
+   "offers": {
+    "FanDuel": {
+     "line": 4.5,
+     "over": "+104",
+     "under": "-138"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "+104",
+   "player": "Jrue Holiday",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-138"
+  },
+  "scoot henderson|assists": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 3.5,
+   "offers": {
+    "FanDuel": {
+     "line": 3.5,
+     "over": "-114",
+     "under": "-114"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-114",
+   "player": "Scoot Henderson",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-114"
+  },
+  "scoot henderson|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 14.5,
+   "offers": {
+    "DraftKings": {
+     "line": 14.5,
+     "over": "-107",
+     "under": "-119"
+    },
+    "FanDuel": {
+     "line": 14.5,
+     "over": "-102",
+     "under": "-130"
+    },
+    "Fanatics": {
+     "line": 13.5,
+     "over": "-125",
+     "under": "-105"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-102",
+   "player": "Scoot Henderson",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-119"
+  },
+  "scoot henderson|rebounds": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 2.5,
+   "offers": {
+    "FanDuel": {
+     "line": 2.5,
+     "over": "-186",
+     "under": "+136"
+    },
+    "Fanatics": {
+     "line": 2.5,
+     "over": "-175",
+     "under": "+125"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-175",
+   "player": "Scoot Henderson",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+136"
+  },
+  "toumani camara|assists": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 1.5,
+   "offers": {
+    "FanDuel": {
+     "line": 1.5,
+     "over": "-182",
+     "under": "+136"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-182",
+   "player": "Toumani Camara",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+136"
+  },
+  "toumani camara|points": {
+   "books": 2,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 12.5,
+   "offers": {
+    "DraftKings": {
+     "line": 12.5,
+     "over": "-112",
+     "under": "-114"
+    },
+    "FanDuel": {
+     "line": 12.5,
+     "over": "-114",
+     "under": "-114"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-112",
+   "player": "Toumani Camara",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-114"
+  },
+  "toumani camara|rebounds": {
+   "books": 1,
+   "event_id": "d47417c3b1a2cd427cce74c9d00f1046",
+   "fetched_at": "2026-10-31T02:38:00Z",
+   "line": 4.5,
+   "offers": {
+    "FanDuel": {
+     "line": 4.5,
+     "over": "-118",
+     "under": "-112"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-118",
+   "player": "Toumani Camara",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-112"
+  }
+ }
+}
