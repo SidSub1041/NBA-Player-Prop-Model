@@ -4,12 +4,12 @@
   "067d97a124c10ea2d206546384500c5e": {
    "commence_time": "2026-10-31T22:10:00Z",
    "markets": {
-    "player_assists": "2026-10-31T21:09:41Z",
-    "player_points": "2026-10-31T21:09:41Z",
-    "player_points_assists": "2026-10-31T13:21:18Z",
-    "player_points_rebounds": "2026-10-31T17:08:29Z",
-    "player_rebounds": "2026-10-31T21:09:41Z",
-    "player_rebounds_assists": "2026-10-31T13:21:18Z"
+    "player_assists": "2026-10-31T21:49:32Z",
+    "player_points": "2026-10-31T21:49:32Z",
+    "player_points_assists": "2026-10-31T21:49:32Z",
+    "player_points_rebounds": "2026-10-31T21:49:32Z",
+    "player_rebounds": "2026-10-31T21:49:32Z",
+    "player_rebounds_assists": "2026-10-31T21:49:32Z"
    },
    "teams": [
     "CHA",
@@ -622,114 +622,129 @@
    "under_odds": "-148"
   },
   "adem bona|points": {
-   "books": 6,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 6.5,
    "offers": {
     "BetMGM": {
      "line": 6.5,
-     "over": "-115",
-     "under": "-115"
+     "over": "+100",
+     "under": null
     },
     "BetOnline.ag": {
-     "line": 6.5,
-     "over": "-111",
-     "under": "-116"
-    },
-    "BetRivers": {
      "line": 6.5,
      "over": "-105",
-     "under": "-130"
-    },
-    "Bovada": {
-     "line": 9.5,
-     "over": "+210",
-     "under": "-290"
-    },
-    "DraftKings": {
-     "line": 6.5,
-     "over": "-126",
-     "under": "-101"
-    },
-    "FanDuel": {
-     "line": 6.5,
-     "over": "-111",
-     "under": "-115"
-    }
-   },
-   "over_book": "BetRivers",
-   "over_odds": "-105",
-   "player": "Adem Bona",
-   "stat": "points",
-   "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+100"
-  },
-  "adem bona|pts+reb": {
-   "books": 1,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 13.5,
-   "offers": {
-    "FanDuel": {
-     "line": 13.5,
-     "over": "-118",
-     "under": "-112"
-    }
-   },
-   "over_book": "FanDuel",
-   "over_odds": "-118",
-   "player": "Adem Bona",
-   "stat": "pts+reb",
-   "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-112"
-  },
-  "adem bona|rebounds": {
-   "books": 6,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
-   "line": 6.5,
-   "offers": {
-    "BetMGM": {
-     "line": 6.5,
-     "over": "-135",
-     "under": "+100"
-    },
-    "BetOnline.ag": {
-     "line": 6.5,
-     "over": "-122",
-     "under": "-106"
+     "under": "-123"
     },
     "BetRivers": {
      "line": 6.5,
-     "over": "-121",
-     "under": "-113"
+     "over": "-108",
+     "under": "-127"
     },
     "Bovada": {
      "line": 7.5,
-     "over": "+125",
-     "under": "-165"
+     "over": "+155",
+     "under": "-210"
     },
     "DraftKings": {
      "line": 6.5,
-     "over": "-137",
-     "under": "+104"
-    },
-    "FanDuel": {
-     "line": 6.5,
-     "over": "-118",
-     "under": "-108"
+     "over": "+108",
+     "under": "-138"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-118",
+   "over_book": "Bovada",
+   "over_odds": "+110",
+   "player": "Adem Bona",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "BetOnline.ag",
+   "under_odds": "-123"
+  },
+  "adem bona|pts+reb": {
+   "books": 3,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 12.5,
+   "offers": {
+    "BetMGM": {
+     "line": 12.5,
+     "over": "-120",
+     "under": "-111"
+    },
+    "BetRivers": {
+     "line": 13.5,
+     "over": "-103",
+     "under": null
+    },
+    "Bovada": {
+     "line": 13.5,
+     "over": "+115",
+     "under": "-150"
+    },
+    "DraftKings": {
+     "line": 12.5,
+     "over": "-114",
+     "under": "-116"
+    },
+    "FanDuel": {
+     "line": 11.5,
+     "over": "-115",
+     "under": "-111"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-114",
+   "player": "Adem Bona",
+   "stat": "pts+reb",
+   "tier": "books",
+   "under_book": "BetMGM",
+   "under_odds": "-111"
+  },
+  "adem bona|rebounds": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 6.5,
+   "offers": {
+    "BetMGM": {
+     "line": 6.5,
+     "over": "+105",
+     "under": "-145"
+    },
+    "BetOnline.ag": {
+     "line": 6.5,
+     "over": "+113",
+     "under": "-147"
+    },
+    "BetRivers": {
+     "line": 6.5,
+     "over": "-103",
+     "under": "-132"
+    },
+    "Bovada": {
+     "line": 7.5,
+     "over": "+200",
+     "under": "-275"
+    },
+    "DraftKings": {
+     "line": 5.5,
+     "over": "-150",
+     "under": "+114"
+    },
+    "FanDuel": {
+     "line": 5.5,
+     "over": "-138",
+     "under": "+108"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "+115",
    "player": "Adem Bona",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+105"
+   "under_book": "BetRivers",
+   "under_odds": "-132"
   },
   "aj green|points": {
    "books": 7,
@@ -1677,20 +1692,15 @@
    "under_odds": "-136"
   },
   "anfernee simons|assists": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 1.5,
    "offers": {
-    "BetMGM": {
-     "line": 1.5,
-     "over": "-150",
-     "under": "+110"
-    },
     "BetOnline.ag": {
-     "line": 2.5,
-     "over": "+132",
-     "under": "-172"
+     "line": 1.5,
+     "over": "-172",
+     "under": "+133"
     },
     "BetRivers": {
      "line": 1.5,
@@ -1699,33 +1709,33 @@
     },
     "Bovada": {
      "line": 2.5,
-     "over": "+125",
-     "under": "-165"
+     "over": "+165",
+     "under": "-220"
     },
     "DraftKings": {
-     "line": 2.5,
-     "over": "+124",
-     "under": "-163"
+     "line": 1.5,
+     "over": "-176",
+     "under": "+133"
     }
    },
-   "over_book": "BetMGM",
-   "over_odds": "-150",
+   "over_book": "BetOnline.ag",
+   "over_odds": "-172",
    "player": "Anfernee Simons",
    "stat": "assists",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+175"
+   "under_book": "BetRivers",
+   "under_odds": "+140"
   },
   "anfernee simons|points": {
    "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 12.5,
    "offers": {
     "BetMGM": {
-     "line": 12.5,
-     "over": "-115",
-     "under": "-115"
+     "line": 11.5,
+     "over": "-120",
+     "under": "-110"
     },
     "BetOnline.ag": {
      "line": 12.5,
@@ -1734,97 +1744,172 @@
     },
     "BetRivers": {
      "line": 12.5,
-     "over": "-110",
-     "under": "-124"
+     "over": "-118",
+     "under": "-114"
     },
     "Bovada": {
      "line": 15.5,
-     "over": "+155",
-     "under": "-210"
+     "over": "+205",
+     "under": "-280"
     },
     "Caesars": {
      "line": 12.5,
-     "over": "-122",
-     "under": "-111"
+     "over": "-120",
+     "under": "-112"
     },
     "DraftKings": {
-     "line": 13.5,
-     "over": "-105",
-     "under": "-122"
+     "line": 12.5,
+     "over": "-103",
+     "under": "-124"
     },
     "FanDuel": {
      "line": 12.5,
+     "over": "-111",
+     "under": "-115"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-103",
+   "player": "Anfernee Simons",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "Caesars",
+   "under_odds": "-112"
+  },
+  "anfernee simons|pts+ast": {
+   "books": 2,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 14.5,
+   "offers": {
+    "BetRivers": {
+     "line": 15.5,
+     "over": "+104",
+     "under": null
+    },
+    "Bovada": {
+     "line": 14.5,
+     "over": "-110",
+     "under": "-120"
+    },
+    "DraftKings": {
+     "line": 14.5,
+     "over": "-108",
+     "under": "-122"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-108",
+   "player": "Anfernee Simons",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "Bovada",
+   "under_odds": "-120"
+  },
+  "anfernee simons|pts+reb": {
+   "books": 3,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 15.5,
+   "offers": {
+    "BetRivers": {
+     "line": 15.5,
+     "over": "-110",
+     "under": null
+    },
+    "Bovada": {
+     "line": 15.5,
+     "over": "+105",
+     "under": "-135"
+    },
+    "DraftKings": {
+     "line": 14.5,
+     "over": "-126",
+     "under": "-105"
+    },
+    "FanDuel": {
+     "line": 15.5,
      "over": "-106",
      "under": "-120"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-106",
-   "player": "Anfernee Simons",
-   "stat": "points",
-   "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+105"
-  },
-  "anfernee simons|pts+reb": {
-   "books": 1,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 14.5,
-   "offers": {
-    "FanDuel": {
-     "line": 14.5,
-     "over": "-102",
-     "under": "-130"
-    }
-   },
-   "over_book": "FanDuel",
-   "over_odds": "-102",
+   "over_book": "Bovada",
+   "over_odds": "+105",
    "player": "Anfernee Simons",
    "stat": "pts+reb",
    "tier": "books",
    "under_book": "FanDuel",
-   "under_odds": "-130"
+   "under_odds": "-120"
+  },
+  "anfernee simons|reb+ast": {
+   "books": 3,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 4.5,
+   "offers": {
+    "BetRivers": {
+     "line": 4.5,
+     "over": "-120",
+     "under": null
+    },
+    "Bovada": {
+     "line": 5.5,
+     "over": "+145",
+     "under": "-190"
+    },
+    "DraftKings": {
+     "line": 4.5,
+     "over": "-128",
+     "under": "-103"
+    }
+   },
+   "over_book": "BetRivers",
+   "over_odds": "-120",
+   "player": "Anfernee Simons",
+   "stat": "reb+ast",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-103"
   },
   "anfernee simons|rebounds": {
    "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 2.5,
    "offers": {
     "BetOnline.ag": {
      "line": 2.5,
-     "over": "-105",
-     "under": "-123"
+     "over": "-118",
+     "under": "-110"
     },
     "BetRivers": {
      "line": 2.5,
-     "over": "-124",
-     "under": "-110"
+     "over": "-110",
+     "under": "-124"
     },
     "Bovada": {
      "line": 3.5,
-     "over": "+200",
-     "under": "-275"
+     "over": "+190",
+     "under": "-260"
     },
     "DraftKings": {
      "line": 2.5,
-     "over": "-114",
-     "under": "-116"
+     "over": "-120",
+     "under": "-109"
     },
     "FanDuel": {
      "line": 2.5,
-     "over": "+100",
-     "under": "-128"
+     "over": "-120",
+     "under": "-106"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "+100",
+   "over_book": "BetRivers",
+   "over_odds": "-110",
    "player": "Anfernee Simons",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetRivers",
-   "under_odds": "-110"
+   "under_book": "FanDuel",
+   "under_odds": "-106"
   },
   "ayo dosunmu|assists": {
    "books": 6,
@@ -2279,13 +2364,13 @@
   "brandon miller|assists": {
    "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 3.5,
    "offers": {
     "BetMGM": {
      "line": 3.5,
-     "over": "+120",
-     "under": "-160"
+     "over": "+130",
+     "under": "-175"
     },
     "BetOnline.ag": {
      "line": 2.5,
@@ -2295,47 +2380,47 @@
     "BetRivers": {
      "line": 2.5,
      "over": "-157",
-     "under": "+115"
+     "under": "+114"
     },
     "Bovada": {
      "line": 3.5,
-     "over": "+140",
-     "under": "-185"
+     "over": "+130",
+     "under": "-170"
     },
     "Caesars": {
      "line": 3.5,
-     "over": "+131",
-     "under": "-176"
+     "over": "+132",
+     "under": "-179"
     },
     "DraftKings": {
      "line": 3.5,
-     "over": "+133",
-     "under": "-176"
+     "over": "+132",
+     "under": "-174"
     },
     "FanDuel": {
      "line": 3.5,
-     "over": "+130",
-     "under": "-166"
+     "over": "+132",
+     "under": "-170"
     }
    },
-   "over_book": "Bovada",
-   "over_odds": "+140",
+   "over_book": "FanDuel",
+   "over_odds": "+132",
    "player": "Brandon Miller",
    "stat": "assists",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-160"
+   "under_book": "FanDuel",
+   "under_odds": "-170"
   },
   "brandon miller|points": {
-   "books": 6,
+   "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 25.5,
    "offers": {
     "BetMGM": {
-     "line": 26.5,
-     "over": "-110",
-     "under": "-120"
+     "line": 25.5,
+     "over": "-125",
+     "under": null
     },
     "BetOnline.ag": {
      "line": 25.5,
@@ -2344,13 +2429,13 @@
     },
     "BetRivers": {
      "line": 26.5,
-     "over": "-109",
-     "under": "-125"
+     "over": "-106",
+     "under": "-129"
     },
     "Bovada": {
      "line": 30.5,
-     "over": "+215",
-     "under": "-295"
+     "over": "+200",
+     "under": "-275"
     },
     "Caesars": {
      "line": 25.5,
@@ -2359,8 +2444,8 @@
     },
     "DraftKings": {
      "line": 25.5,
-     "over": "-117",
-     "under": "-109"
+     "over": "-122",
+     "under": "-104"
     },
     "FanDuel": {
      "line": 25.5,
@@ -2369,8 +2454,8 @@
     },
     "Fanatics": {
      "line": 25.5,
-     "over": "-125",
-     "under": "-105"
+     "over": "-120",
+     "under": "-110"
     }
    },
    "over_book": "BetOnline.ag",
@@ -2382,149 +2467,169 @@
    "under_odds": "-104"
   },
   "brandon miller|pts+ast": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 30.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 29.5,
    "offers": {
     "BetRivers": {
-     "line": 30.5,
-     "over": "-121",
-     "under": null
-    },
-    "DraftKings": {
-     "line": 30.5,
-     "over": "-119",
-     "under": "-111"
-    },
-    "FanDuel": {
-     "line": 30.5,
+     "line": 29.5,
      "over": "-106",
-     "under": "-125"
-    }
-   },
-   "over_book": "FanDuel",
-   "over_odds": "-106",
-   "player": "Brandon Miller",
-   "stat": "pts+ast",
-   "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-111"
-  },
-  "brandon miller|pts+reb": {
-   "books": 3,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 33.5,
-   "offers": {
-    "BetRivers": {
-     "line": 33.5,
-     "over": "-120",
      "under": null
     },
     "Bovada": {
-     "line": 33.5,
+     "line": 29.5,
      "over": "-110",
      "under": "-120"
     },
     "DraftKings": {
-     "line": 33.5,
-     "over": "-111",
-     "under": "-119"
+     "line": 29.5,
+     "over": "-108",
+     "under": "-121"
     },
     "FanDuel": {
-     "line": 32.5,
-     "over": "-112",
-     "under": "-118"
+     "line": 29.5,
+     "over": "-108",
+     "under": "-122"
     }
    },
-   "over_book": "Bovada",
-   "over_odds": "-110",
+   "over_book": "BetRivers",
+   "over_odds": "-106",
+   "player": "Brandon Miller",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "Bovada",
+   "under_odds": "-120"
+  },
+  "brandon miller|pts+reb": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 31.5,
+   "offers": {
+    "BetMGM": {
+     "line": 31.5,
+     "over": "-120",
+     "under": "-110"
+    },
+    "BetRivers": {
+     "line": 32.5,
+     "over": "-106",
+     "under": null
+    },
+    "Bovada": {
+     "line": 32.5,
+     "over": "+100",
+     "under": "-130"
+    },
+    "DraftKings": {
+     "line": 31.5,
+     "over": "-120",
+     "under": "-109"
+    },
+    "FanDuel": {
+     "line": 31.5,
+     "over": "-120",
+     "under": "-106"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-120",
    "player": "Brandon Miller",
    "stat": "pts+reb",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-119"
+   "under_book": "FanDuel",
+   "under_odds": "-106"
   },
   "brandon miller|reb+ast": {
-   "books": 2,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 8.5,
    "offers": {
+    "BetMGM": {
+     "line": 8.5,
+     "over": "-140",
+     "under": "+105"
+    },
     "BetRivers": {
-     "line": 9.5,
-     "over": "+112",
+     "line": 8.5,
+     "over": "-125",
      "under": null
+    },
+    "Bovada": {
+     "line": 9.5,
+     "over": "+125",
+     "under": "-165"
     },
     "DraftKings": {
      "line": 8.5,
-     "over": "-143",
-     "under": "+109"
+     "over": "-125",
+     "under": "-105"
     },
     "FanDuel": {
      "line": 8.5,
      "over": "-140",
-     "under": "+106"
+     "under": "+110"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-140",
+   "over_book": "DraftKings",
+   "over_odds": "-125",
    "player": "Brandon Miller",
    "stat": "reb+ast",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "+109"
+   "under_book": "FanDuel",
+   "under_odds": "+110"
   },
   "brandon miller|rebounds": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
      "line": 5.5,
-     "over": "-145",
-     "under": "+105"
+     "over": "-130",
+     "under": "-105"
     },
     "BetOnline.ag": {
      "line": 5.5,
-     "over": "-132",
-     "under": "+102"
+     "over": "-123",
+     "under": "-104"
     },
     "BetRivers": {
      "line": 5.5,
-     "over": "-129",
-     "under": "-105"
+     "over": "-125",
+     "under": "-108"
     },
     "Bovada": {
-     "line": 7.5,
-     "over": "+210",
-     "under": "-290"
+     "line": 6.5,
+     "over": "+155",
+     "under": "-210"
     },
     "Caesars": {
      "line": 5.5,
-     "over": "-128",
-     "under": "-105"
+     "over": "-127",
+     "under": "-107"
     },
     "DraftKings": {
      "line": 5.5,
-     "over": "-150",
-     "under": "+114"
+     "over": "-115",
+     "under": "-115"
     },
     "FanDuel": {
      "line": 5.5,
-     "over": "-125",
-     "under": "-102"
+     "over": "-122",
+     "under": "-104"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-125",
+   "over_book": "DraftKings",
+   "over_odds": "-115",
    "player": "Brandon Miller",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "+114"
+   "under_book": "FanDuel",
+   "under_odds": "-104"
   },
   "brice sensabaugh|points": {
    "books": 3,
@@ -4109,23 +4214,23 @@
   "dean wade|points": {
    "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
      "line": 5.5,
-     "over": "-140",
-     "under": null
+     "over": "-120",
+     "under": "-110"
     },
     "BetOnline.ag": {
      "line": 5.5,
-     "over": "-122",
-     "under": "-106"
+     "over": "-119",
+     "under": "-109"
     },
     "BetRivers": {
      "line": 5.5,
-     "over": "-109",
-     "under": "-125"
+     "over": "-114",
+     "under": "-118"
     },
     "Bovada": {
      "line": 7.5,
@@ -4134,48 +4239,68 @@
     },
     "DraftKings": {
      "line": 5.5,
-     "over": "-113",
-     "under": "-113"
+     "over": "-103",
+     "under": "-124"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-109",
+   "over_book": "DraftKings",
+   "over_odds": "-103",
    "player": "Dean Wade",
    "stat": "points",
    "tier": "books",
    "under_book": "BetOnline.ag",
-   "under_odds": "-106"
+   "under_odds": "-109"
   },
   "dean wade|pts+reb": {
-   "books": 1,
+   "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 11.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 10.5,
    "offers": {
-    "FanDuel": {
+    "BetMGM": {
      "line": 11.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "BetRivers": {
+     "line": 11.5,
+     "over": "+100",
+     "under": null
+    },
+    "Bovada": {
+     "line": 11.5,
+     "over": "+105",
+     "under": "-135"
+    },
+    "DraftKings": {
+     "line": 10.5,
      "over": "-122",
-     "under": "-110"
+     "under": "-108"
+    },
+    "FanDuel": {
+     "line": 10.5,
+     "over": "-120",
+     "under": "-106"
     }
    },
    "over_book": "FanDuel",
-   "over_odds": "-122",
+   "over_odds": "-120",
    "player": "Dean Wade",
    "stat": "pts+reb",
    "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-110"
+   "under_book": "Bovada",
+   "under_odds": "+100"
   },
   "dean wade|rebounds": {
-   "books": 5,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
-     "line": 4.5,
-     "over": "-160",
-     "under": "+120"
+     "line": 5.5,
+     "over": "-105",
+     "under": "-125"
     },
     "BetOnline.ag": {
      "line": 5.5,
@@ -4184,32 +4309,32 @@
     },
     "BetRivers": {
      "line": 5.5,
-     "over": "+106",
-     "under": "-143"
+     "over": "+102",
+     "under": "-137"
     },
     "Bovada": {
-     "line": 5.5,
-     "over": "+110",
-     "under": "-145"
+     "line": 6.5,
+     "over": "+190",
+     "under": "-260"
     },
     "DraftKings": {
      "line": 5.5,
-     "over": "+109",
-     "under": "-144"
+     "over": "+104",
+     "under": "-137"
     },
     "FanDuel": {
      "line": 5.5,
-     "over": "+116",
-     "under": "-148"
+     "over": "+104",
+     "under": "-132"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "+116",
+   "over_book": "BetOnline.ag",
+   "over_odds": "+110",
    "player": "Dean Wade",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetRivers",
-   "under_odds": "-143"
+   "under_book": "BetMGM",
+   "under_odds": "-125"
   },
   "deandre hunter|assists": {
    "books": 5,
@@ -4862,30 +4987,30 @@
    "under_odds": "-130"
   },
   "dennis schroder|assists": {
-   "books": 7,
+   "books": 8,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
-     "line": 6.5,
-     "over": "+110",
-     "under": "-150"
+     "line": 5.5,
+     "over": "-155",
+     "under": "+115"
     },
     "BetOnline.ag": {
      "line": 5.5,
-     "over": "-139",
-     "under": "+107"
+     "over": "-137",
+     "under": "+106"
     },
     "BetRivers": {
      "line": 5.5,
-     "over": "-134",
-     "under": "-103"
+     "over": "-129",
+     "under": "-106"
     },
     "Bovada": {
      "line": 6.5,
-     "over": "+150",
-     "under": "-200"
+     "over": "+140",
+     "under": "-185"
     },
     "Caesars": {
      "line": 5.5,
@@ -4908,34 +5033,34 @@
      "under": "+105"
     }
    },
-   "over_book": "Bovada",
-   "over_odds": "-125",
+   "over_book": "BetRivers",
+   "over_odds": "-129",
    "player": "Dennis Schroder",
    "stat": "assists",
    "tier": "books",
-   "under_book": "Caesars",
-   "under_odds": "+107"
+   "under_book": "BetMGM",
+   "under_odds": "+115"
   },
   "dennis schroder|points": {
-   "books": 6,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
-   "line": 14.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 13.5,
    "offers": {
     "BetMGM": {
      "line": 14.5,
-     "over": "-115",
-     "under": "-115"
+     "over": "-105",
+     "under": "-125"
     },
     "BetOnline.ag": {
-     "line": 14.5,
-     "over": "-101",
-     "under": "-128"
+     "line": 13.5,
+     "over": "-118",
+     "under": "-110"
     },
     "BetRivers": {
      "line": 14.5,
-     "over": "-105",
-     "under": "-130"
+     "over": "-104",
+     "under": "-132"
     },
     "Bovada": {
      "line": 16.5,
@@ -4943,144 +5068,164 @@
      "under": "-240"
     },
     "Caesars": {
-     "line": 14.5,
-     "over": "-108",
-     "under": "-124"
+     "line": 13.5,
+     "over": "-124",
+     "under": "-108"
     },
     "DraftKings": {
      "line": 13.5,
-     "over": "-118",
-     "under": "-108"
+     "over": "-117",
+     "under": "-109"
     },
     "FanDuel": {
-     "line": 14.5,
-     "over": "+100",
-     "under": "-128"
+     "line": 13.5,
+     "over": "-113",
+     "under": "-113"
     }
    },
-   "over_book": "Bovada",
-   "over_odds": "+110",
+   "over_book": "FanDuel",
+   "over_odds": "-113",
    "player": "Dennis Schroder",
    "stat": "points",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-115"
+   "under_book": "Caesars",
+   "under_odds": "-108"
   },
   "dennis schroder|pts+ast": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 20.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 19.5,
    "offers": {
     "BetRivers": {
      "line": 20.5,
-     "over": "-107",
+     "over": "-103",
      "under": null
     },
-    "DraftKings": {
+    "Bovada": {
      "line": 20.5,
-     "over": "-124",
-     "under": "-106"
+     "over": "+105",
+     "under": "-135"
+    },
+    "DraftKings": {
+     "line": 19.5,
+     "over": "-121",
+     "under": "-108"
     },
     "FanDuel": {
-     "line": 20.5,
-     "over": "-122",
-     "under": "-106"
+     "line": 19.5,
+     "over": "-112",
+     "under": "-118"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-107",
+   "over_book": "FanDuel",
+   "over_odds": "-112",
    "player": "Dennis Schroder",
    "stat": "pts+ast",
    "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-106"
+   "under_book": "DraftKings",
+   "under_odds": "-108"
   },
   "dennis schroder|pts+reb": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 17.5,
    "offers": {
+    "BetMGM": {
+     "line": 17.5,
+     "over": "-120",
+     "under": "-111"
+    },
     "BetRivers": {
      "line": 17.5,
      "over": "-120",
      "under": null
     },
     "Bovada": {
-     "line": 18.5,
-     "over": "-110",
-     "under": "-120"
+     "line": 17.5,
+     "over": "-105",
+     "under": "-125"
     },
     "DraftKings": {
-     "line": 18.5,
-     "over": "-108",
-     "under": "-122"
+     "line": 17.5,
+     "over": "-106",
+     "under": "-124"
     },
     "FanDuel": {
-     "line": 17.5,
-     "over": "-130",
-     "under": "-102"
+     "line": 16.5,
+     "over": "-128",
+     "under": "+100"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-120",
+   "over_book": "Bovada",
+   "over_odds": "-105",
    "player": "Dennis Schroder",
    "stat": "pts+reb",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+105"
+   "under_book": "BetMGM",
+   "under_odds": "-111"
   },
   "dennis schroder|reb+ast": {
-   "books": 3,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 9.5,
    "offers": {
+    "BetMGM": {
+     "line": 9.5,
+     "over": "-105",
+     "under": "-125"
+    },
     "BetRivers": {
      "line": 9.5,
-     "over": "+102",
+     "over": "+100",
      "under": null
+    },
+    "Bovada": {
+     "line": 9.5,
+     "over": "+100",
+     "under": "-130"
     },
     "DraftKings": {
      "line": 9.5,
-     "over": "+102",
-     "under": "-134"
+     "over": "+100",
+     "under": "-132"
     },
     "FanDuel": {
      "line": 9.5,
-     "over": "-110",
-     "under": "-120"
+     "over": "+108",
+     "under": "-138"
     }
    },
-   "over_book": "DraftKings",
-   "over_odds": "+102",
+   "over_book": "FanDuel",
+   "over_odds": "+108",
    "player": "Dennis Schroder",
    "stat": "reb+ast",
    "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-120"
+   "under_book": "BetMGM",
+   "under_odds": "-125"
   },
   "dennis schroder|rebounds": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 3.5,
    "offers": {
     "BetMGM": {
      "line": 3.5,
-     "over": "+105",
-     "under": "-140"
+     "over": "+115",
+     "under": "-155"
     },
     "BetOnline.ag": {
      "line": 3.5,
-     "over": "+112",
-     "under": "-145"
+     "over": "+113",
+     "under": "-147"
     },
     "BetRivers": {
      "line": 3.5,
-     "over": "-104",
-     "under": "-130"
+     "over": "-103",
+     "under": "-132"
     },
     "Bovada": {
      "line": 3.5,
@@ -5094,8 +5239,8 @@
     },
     "DraftKings": {
      "line": 3.5,
-     "over": "+112",
-     "under": "-147"
+     "over": "+107",
+     "under": "-141"
     },
     "FanDuel": {
      "line": 3.5,
@@ -5103,13 +5248,13 @@
      "under": "-146"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "+114",
+   "over_book": "BetMGM",
+   "over_odds": "+115",
    "player": "Dennis Schroder",
    "stat": "rebounds",
    "tier": "books",
    "under_book": "BetRivers",
-   "under_odds": "-130"
+   "under_odds": "-132"
   },
   "derik queen|assists": {
    "books": 5,
@@ -7012,30 +7157,35 @@
    "under_odds": "-135"
   },
   "grayson allen|assists": {
-   "books": 5,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 2.5,
    "offers": {
     "BetMGM": {
      "line": 2.5,
-     "over": "-165",
-     "under": "+125"
+     "over": "-160",
+     "under": "+120"
     },
     "BetOnline.ag": {
      "line": 2.5,
-     "over": "-149",
-     "under": "+115"
+     "over": "-145",
+     "under": "+112"
     },
     "BetRivers": {
      "line": 2.5,
      "over": "-159",
      "under": "+116"
     },
+    "Bovada": {
+     "line": 3.5,
+     "over": "+165",
+     "under": "-220"
+    },
     "DraftKings": {
      "line": 2.5,
-     "over": "-153",
-     "under": "+116"
+     "over": "-145",
+     "under": "+110"
     },
     "FanDuel": {
      "line": 2.5,
@@ -7049,18 +7199,18 @@
    "stat": "assists",
    "tier": "books",
    "under_book": "BetMGM",
-   "under_odds": "+125"
+   "under_odds": "+120"
   },
   "grayson allen|points": {
-   "books": 5,
+   "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 13.5,
    "offers": {
     "BetMGM": {
      "line": 13.5,
-     "over": "-111",
-     "under": "-118"
+     "over": "-110",
+     "under": "-120"
     },
     "BetOnline.ag": {
      "line": 13.5,
@@ -7069,8 +7219,13 @@
     },
     "BetRivers": {
      "line": 13.5,
-     "over": "-106",
-     "under": "-129"
+     "over": "-105",
+     "under": "-130"
+    },
+    "Bovada": {
+     "line": 16.5,
+     "over": "+200",
+     "under": "-275"
     },
     "Caesars": {
      "line": 13.5,
@@ -7078,53 +7233,163 @@
      "under": "-129"
     },
     "DraftKings": {
-     "line": 12.5,
-     "over": "-126",
-     "under": "-101"
+     "line": 13.5,
+     "over": "-105",
+     "under": "-122"
     },
     "FanDuel": {
      "line": 13.5,
-     "over": "+106",
-     "under": "-136"
+     "over": "+104",
+     "under": "-132"
     }
    },
    "over_book": "FanDuel",
-   "over_odds": "+106",
+   "over_odds": "+104",
    "player": "Grayson Allen",
    "stat": "points",
    "tier": "books",
    "under_book": "BetMGM",
-   "under_odds": "-118"
+   "under_odds": "-120"
   },
-  "grayson allen|rebounds": {
+  "grayson allen|pts+ast": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
-   "line": 2.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 16.5,
    "offers": {
-    "BetOnline.ag": {
-     "line": 2.5,
-     "over": "-127",
-     "under": "-102"
-    },
     "BetRivers": {
-     "line": 2.5,
-     "over": "-127",
-     "under": "-108"
+     "line": 16.5,
+     "over": "-109",
+     "under": null
+    },
+    "Bovada": {
+     "line": 16.5,
+     "over": "-105",
+     "under": "-125"
     },
     "DraftKings": {
-     "line": 2.5,
-     "over": "-132",
+     "line": 16.5,
+     "over": "-107",
+     "under": "-123"
+    },
+    "FanDuel": {
+     "line": 15.5,
+     "over": "-125",
+     "under": "-106"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "-105",
+   "player": "Grayson Allen",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-123"
+  },
+  "grayson allen|pts+reb": {
+   "books": 3,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 16.5,
+   "offers": {
+    "BetRivers": {
+     "line": 16.5,
+     "over": "-103",
+     "under": null
+    },
+    "Bovada": {
+     "line": 16.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "DraftKings": {
+     "line": 16.5,
+     "over": "-104",
+     "under": "-126"
+    },
+    "FanDuel": {
+     "line": 15.5,
+     "over": "-128",
      "under": "+100"
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "-127",
+   "over_odds": "-103",
+   "player": "Grayson Allen",
+   "stat": "pts+reb",
+   "tier": "books",
+   "under_book": "Bovada",
+   "under_odds": "-125"
+  },
+  "grayson allen|reb+ast": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 5.5,
+   "offers": {
+    "BetRivers": {
+     "line": 5.5,
+     "over": "-124",
+     "under": null
+    },
+    "Bovada": {
+     "line": 6.5,
+     "over": "+140",
+     "under": "-185"
+    },
+    "DraftKings": {
+     "line": 5.5,
+     "over": "-122",
+     "under": "-107"
+    },
+    "FanDuel": {
+     "line": 5.5,
+     "over": "-128",
+     "under": "+100"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-122",
+   "player": "Grayson Allen",
+   "stat": "reb+ast",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "+100"
+  },
+  "grayson allen|rebounds": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 2.5,
+   "offers": {
+    "BetOnline.ag": {
+     "line": 2.5,
+     "over": "-145",
+     "under": "+112"
+    },
+    "BetRivers": {
+     "line": 2.5,
+     "over": "-125",
+     "under": "-109"
+    },
+    "Bovada": {
+     "line": 3.5,
+     "over": "+175",
+     "under": "-240"
+    },
+    "DraftKings": {
+     "line": 2.5,
+     "over": "-133",
+     "under": "+101"
+    }
+   },
+   "over_book": "BetRivers",
+   "over_odds": "-125",
    "player": "Grayson Allen",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "+100"
+   "under_book": "BetOnline.ag",
+   "under_odds": "+112"
   },
   "herb jones|points": {
    "books": 5,
@@ -9604,28 +9869,28 @@
   "jaylen brown|assists": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 4.5,
    "offers": {
     "BetMGM": {
      "line": 4.5,
-     "over": "-111",
-     "under": "-118"
+     "over": "+100",
+     "under": "-135"
     },
     "BetOnline.ag": {
      "line": 4.5,
-     "over": "+104",
-     "under": "-135"
+     "over": "+103",
+     "under": "-133"
     },
     "BetRivers": {
      "line": 4.5,
      "over": "+125",
-     "under": "-175"
+     "under": "-167"
     },
     "Bovada": {
      "line": 5.5,
-     "over": "+210",
-     "under": "-290"
+     "over": "+200",
+     "under": "-275"
     },
     "Caesars": {
      "line": 4.5,
@@ -9634,8 +9899,8 @@
     },
     "DraftKings": {
      "line": 4.5,
-     "over": "-101",
-     "under": "-131"
+     "over": "+101",
+     "under": "-132"
     },
     "FanDuel": {
      "line": 4.5,
@@ -9648,13 +9913,13 @@
    "player": "Jaylen Brown",
    "stat": "assists",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-118"
+   "under_book": "Bovada",
+   "under_odds": "-130"
   },
   "jaylen brown|points": {
    "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 22.5,
    "offers": {
     "BetMGM": {
@@ -9664,13 +9929,13 @@
     },
     "BetOnline.ag": {
      "line": 22.5,
-     "over": "-123",
-     "under": "-104"
+     "over": "-120",
+     "under": "-108"
     },
     "BetRivers": {
      "line": 22.5,
-     "over": "-120",
-     "under": "-114"
+     "over": "-125",
+     "under": "-109"
     },
     "Bovada": {
      "line": 27.5,
@@ -9679,52 +9944,147 @@
     },
     "Caesars": {
      "line": 23.5,
-     "over": "-107",
-     "under": "-124"
+     "over": "-105",
+     "under": "-127"
     },
     "DraftKings": {
      "line": 22.5,
-     "over": "-123",
-     "under": "-104"
+     "over": "-113",
+     "under": "-113"
     },
     "FanDuel": {
      "line": 22.5,
-     "over": "-125",
-     "under": "-102"
+     "over": "-122",
+     "under": "-104"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-120",
+   "over_book": "DraftKings",
+   "over_odds": "-113",
    "player": "Jaylen Brown",
    "stat": "points",
    "tier": "books",
    "under_book": "FanDuel",
-   "under_odds": "-102"
+   "under_odds": "-104"
   },
-  "jaylen brown|pts+reb": {
-   "books": 1,
+  "jaylen brown|pts+ast": {
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 29.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 27.5,
    "offers": {
+    "BetRivers": {
+     "line": 27.5,
+     "over": "-109",
+     "under": null
+    },
+    "Bovada": {
+     "line": 27.5,
+     "over": "-110",
+     "under": "-120"
+    },
+    "DraftKings": {
+     "line": 27.5,
+     "over": "-108",
+     "under": "-122"
+    },
     "FanDuel": {
-     "line": 29.5,
-     "over": "-128",
-     "under": "-104"
+     "line": 27.5,
+     "over": "-112",
+     "under": "-118"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-128",
+   "over_book": "DraftKings",
+   "over_odds": "-108",
+   "player": "Jaylen Brown",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-118"
+  },
+  "jaylen brown|pts+reb": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 29.5,
+   "offers": {
+    "BetMGM": {
+     "line": 29.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "BetRivers": {
+     "line": 29.5,
+     "over": "-113",
+     "under": null
+    },
+    "Bovada": {
+     "line": 29.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "DraftKings": {
+     "line": 28.5,
+     "over": "-123",
+     "under": "-107"
+    },
+    "FanDuel": {
+     "line": 29.5,
+     "over": "-106",
+     "under": "-120"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "-105",
    "player": "Jaylen Brown",
    "stat": "pts+reb",
    "tier": "books",
    "under_book": "FanDuel",
+   "under_odds": "-120"
+  },
+  "jaylen brown|reb+ast": {
+   "books": 5,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 10.5,
+   "offers": {
+    "BetMGM": {
+     "line": 10.5,
+     "over": "-120",
+     "under": "-110"
+    },
+    "BetRivers": {
+     "line": 10.5,
+     "over": "-112",
+     "under": null
+    },
+    "Bovada": {
+     "line": 11.5,
+     "over": "+120",
+     "under": "-160"
+    },
+    "DraftKings": {
+     "line": 10.5,
+     "over": "-126",
+     "under": "-104"
+    },
+    "FanDuel": {
+     "line": 10.5,
+     "over": "-113",
+     "under": "-113"
+    }
+   },
+   "over_book": "BetRivers",
+   "over_odds": "-112",
+   "player": "Jaylen Brown",
+   "stat": "reb+ast",
+   "tier": "books",
+   "under_book": "DraftKings",
    "under_odds": "-104"
   },
   "jaylen brown|rebounds": {
-   "books": 8,
+   "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 6.5,
    "offers": {
     "BetMGM": {
@@ -9734,13 +10094,13 @@
     },
     "BetOnline.ag": {
      "line": 6.5,
-     "over": "+110",
-     "under": "-143"
+     "over": "+112",
+     "under": "-145"
     },
     "BetRivers": {
      "line": 6.5,
-     "over": "+105",
-     "under": "-141"
+     "over": "+102",
+     "under": "-137"
     },
     "Bovada": {
      "line": 7.5,
@@ -9754,18 +10114,13 @@
     },
     "DraftKings": {
      "line": 6.5,
-     "over": "+102",
-     "under": "-135"
+     "over": "+106",
+     "under": "-140"
     },
     "FanDuel": {
      "line": 6.5,
      "over": "+116",
      "under": "-148"
-    },
-    "Fanatics": {
-     "line": 6.5,
-     "over": "+105",
-     "under": "-140"
     }
    },
    "over_book": "FanDuel",
@@ -9773,7 +10128,7 @@
    "player": "Jaylen Brown",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "DraftKings",
+   "under_book": "Bovada",
    "under_odds": "-135"
   },
   "jaylen wells|assists": {
@@ -11602,64 +11957,114 @@
    "under_odds": "-122"
   },
   "kentavious caldwell pope|points": {
-   "books": 3,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 6.5,
    "offers": {
+    "BetMGM": {
+     "line": 6.5,
+     "over": "-135",
+     "under": "+100"
+    },
     "BetOnline.ag": {
      "line": 6.5,
-     "over": "-128",
-     "under": "-101"
+     "over": "-123",
+     "under": "-104"
+    },
+    "Bovada": {
+     "line": 8.5,
+     "over": "+165",
+     "under": "-220"
+    },
+    "Caesars": {
+     "line": 6.5,
+     "over": "-127",
+     "under": "-106"
     },
     "DraftKings": {
      "line": 6.5,
-     "over": "-117",
-     "under": "-109"
+     "over": "-115",
+     "under": "-110"
     },
     "FanDuel": {
      "line": 6.5,
-     "over": "-122",
-     "under": "-104"
+     "over": "-130",
+     "under": "+102"
     }
    },
    "over_book": "DraftKings",
-   "over_odds": "-117",
+   "over_odds": "-115",
    "player": "Kentavious Caldwell-Pope",
    "stat": "points",
    "tier": "books",
-   "under_book": "BetOnline.ag",
-   "under_odds": "-101"
+   "under_book": "FanDuel",
+   "under_odds": "+102"
   },
-  "kentavious caldwell pope|rebounds": {
+  "kentavious caldwell pope|pts+reb": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 9.5,
+   "offers": {
+    "Bovada": {
+     "line": 9.5,
+     "over": "+100",
+     "under": "-130"
+    },
+    "DraftKings": {
+     "line": 9.5,
+     "over": "-101",
+     "under": "-130"
+    },
+    "FanDuel": {
+     "line": 9.5,
+     "over": "-113",
+     "under": "-113"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "+100",
+   "player": "Kentavious Caldwell-Pope",
+   "stat": "pts+reb",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-113"
+  },
+  "kentavious caldwell pope|rebounds": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 2.5,
    "offers": {
     "BetOnline.ag": {
      "line": 2.5,
-     "over": "+113",
-     "under": "-147"
+     "over": "+107",
+     "under": "-139"
+    },
+    "Bovada": {
+     "line": 2.5,
+     "over": "+115",
+     "under": "-150"
     },
     "DraftKings": {
      "line": 2.5,
-     "over": "+112",
-     "under": "-148"
+     "over": "+115",
+     "under": "-152"
     },
     "FanDuel": {
      "line": 2.5,
-     "over": "+118",
-     "under": "-150"
+     "over": "+100",
+     "under": "-128"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "+118",
+   "over_book": "DraftKings",
+   "over_odds": "+115",
    "player": "Kentavious Caldwell-Pope",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetOnline.ag",
-   "under_odds": "-147"
+   "under_book": "FanDuel",
+   "under_odds": "-128"
   },
   "kevin durant|assists": {
    "books": 7,
@@ -13196,56 +13601,6 @@
    "under_book": "Bovada",
    "under_odds": "-150"
   },
-  "lebron james|pts+ast": {
-   "books": 2,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 27.5,
-   "offers": {
-    "BetRivers": {
-     "line": 27.5,
-     "over": "-107",
-     "under": null
-    },
-    "FanDuel": {
-     "line": 27.5,
-     "over": "-122",
-     "under": "-108"
-    }
-   },
-   "over_book": "BetRivers",
-   "over_odds": "-107",
-   "player": "LeBron James",
-   "stat": "pts+ast",
-   "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-108"
-  },
-  "lebron james|reb+ast": {
-   "books": 2,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 15.5,
-   "offers": {
-    "BetRivers": {
-     "line": 15.5,
-     "over": "-103",
-     "under": null
-    },
-    "FanDuel": {
-     "line": 15.5,
-     "over": "-118",
-     "under": "-112"
-    }
-   },
-   "over_book": "BetRivers",
-   "over_odds": "-103",
-   "player": "LeBron James",
-   "stat": "reb+ast",
-   "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-112"
-  },
   "luguentz dort|points": {
    "books": 7,
    "event_id": "77270837bc694d198c10f42937690d75",
@@ -13534,18 +13889,18 @@
   "moussa diabate|assists": {
    "books": 2,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 1.5,
    "offers": {
     "BetOnline.ag": {
      "line": 1.5,
      "over": "-147",
-     "under": "+114"
+     "under": "+113"
     },
     "BetRivers": {
      "line": 1.5,
-     "over": "-165",
-     "under": "+120"
+     "over": "-159",
+     "under": "+117"
     }
    },
    "over_book": "BetOnline.ag",
@@ -13554,28 +13909,28 @@
    "stat": "assists",
    "tier": "books",
    "under_book": "BetRivers",
-   "under_odds": "+120"
+   "under_odds": "+117"
   },
   "moussa diabate|points": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 8.5,
    "offers": {
     "BetMGM": {
      "line": 8.5,
-     "over": "-105",
+     "over": "+100",
      "under": null
     },
     "BetOnline.ag": {
      "line": 8.5,
-     "over": "-119",
-     "under": "-109"
+     "over": "-120",
+     "under": "-108"
     },
     "BetRivers": {
      "line": 8.5,
-     "over": "-113",
-     "under": "-121"
+     "over": "-110",
+     "under": "-124"
     },
     "Bovada": {
      "line": 11.5,
@@ -13589,37 +13944,37 @@
     },
     "DraftKings": {
      "line": 8.5,
-     "over": "-124",
-     "under": "-103"
+     "over": "-125",
+     "under": "-102"
     },
     "FanDuel": {
      "line": 8.5,
      "over": "-115",
-     "under": "-111"
+     "under": "-108"
     }
    },
    "over_book": "BetMGM",
-   "over_odds": "-105",
+   "over_odds": "+100",
    "player": "Moussa Diabate",
    "stat": "points",
    "tier": "books",
    "under_book": "DraftKings",
-   "under_odds": "-103"
+   "under_odds": "-102"
   },
   "moussa diabate|pts+ast": {
    "books": 1,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 11.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 10.5,
    "offers": {
     "BetRivers": {
-     "line": 11.5,
-     "over": "+105",
+     "line": 10.5,
+     "over": "-115",
      "under": null
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "+105",
+   "over_odds": "-115",
    "player": "Moussa Diabate",
    "stat": "pts+ast",
    "tier": "books",
@@ -13627,54 +13982,59 @@
    "under_odds": null
   },
   "moussa diabate|pts+reb": {
-   "books": 2,
+   "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 18.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 19.5,
    "offers": {
+    "BetMGM": {
+     "line": 18.5,
+     "over": "-120",
+     "under": "-110"
+    },
     "BetRivers": {
-     "line": 20.5,
-     "over": "+102",
+     "line": 19.5,
+     "over": "-107",
      "under": null
     },
     "Bovada": {
-     "line": 19.5,
-     "over": "-110",
-     "under": "-120"
+     "line": 20.5,
+     "over": "+110",
+     "under": "-145"
     },
     "DraftKings": {
      "line": 19.5,
-     "over": "-109",
-     "under": "-121"
+     "over": "-114",
+     "under": "-116"
     },
     "FanDuel": {
      "line": 18.5,
-     "over": "-125",
-     "under": "-104"
+     "over": "-120",
+     "under": "-106"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-125",
+   "over_book": "BetRivers",
+   "over_odds": "-107",
    "player": "Moussa Diabate",
    "stat": "pts+reb",
    "tier": "books",
    "under_book": "Bovada",
-   "under_odds": "+105"
+   "under_odds": "-115"
   },
   "moussa diabate|reb+ast": {
    "books": 1,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 12.5,
    "offers": {
     "BetRivers": {
      "line": 12.5,
-     "over": "-127",
+     "over": "-108",
      "under": null
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "-127",
+   "over_odds": "-108",
    "player": "Moussa Diabate",
    "stat": "reb+ast",
    "tier": "books",
@@ -13684,13 +14044,13 @@
   "moussa diabate|rebounds": {
    "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 10.5,
    "offers": {
     "BetMGM": {
      "line": 10.5,
-     "over": "-115",
-     "under": "-115"
+     "over": "-105",
+     "under": "-125"
     },
     "BetOnline.ag": {
      "line": 10.5,
@@ -13703,9 +14063,9 @@
      "under": "-125"
     },
     "Bovada": {
-     "line": 11.5,
-     "over": "+145",
-     "under": "-190"
+     "line": 12.5,
+     "over": "+215",
+     "under": "-295"
     },
     "Caesars": {
      "line": 10.5,
@@ -13714,13 +14074,13 @@
     },
     "DraftKings": {
      "line": 10.5,
-     "over": "-104",
-     "under": "-126"
+     "over": "-108",
+     "under": "-122"
     },
     "FanDuel": {
      "line": 9.5,
-     "over": "-138",
-     "under": "+108"
+     "over": "-146",
+     "under": "+114"
     }
    },
    "over_book": "BetOnline.ag",
@@ -13728,8 +14088,8 @@
    "player": "Moussa Diabate",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-115"
+   "under_book": "Bovada",
+   "under_odds": "-120"
   },
   "myles turner|assists": {
    "books": 5,
@@ -13944,22 +14304,22 @@
   "naz reid|assists": {
    "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 2.5,
    "offers": {
     "BetMGM": {
      "line": 2.5,
-     "over": "+115",
-     "under": "-155"
+     "over": "+120",
+     "under": "-160"
     },
     "BetOnline.ag": {
      "line": 2.5,
-     "over": "+124",
-     "under": "-161"
+     "over": "+126",
+     "under": "-164"
     },
     "BetRivers": {
      "line": 2.5,
-     "over": "+138",
+     "over": "+140",
      "under": "-195"
     },
     "Bovada": {
@@ -13974,28 +14334,28 @@
     },
     "FanDuel": {
      "line": 2.5,
-     "over": "+134",
-     "under": "-172"
+     "over": "+132",
+     "under": "-170"
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "+138",
+   "over_odds": "+140",
    "player": "Naz Reid",
    "stat": "assists",
    "tier": "books",
    "under_book": "BetMGM",
-   "under_odds": "-155"
+   "under_odds": "-160"
   },
   "naz reid|points": {
    "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 17.5,
    "offers": {
     "BetMGM": {
      "line": 17.5,
-     "over": "-120",
-     "under": "-110"
+     "over": "-111",
+     "under": "-118"
     },
     "BetOnline.ag": {
      "line": 17.5,
@@ -14004,7 +14364,7 @@
     },
     "BetRivers": {
      "line": 17.5,
-     "over": "-112",
+     "over": "-113",
      "under": "-121"
     },
     "Bovada": {
@@ -14019,8 +14379,8 @@
     },
     "DraftKings": {
      "line": 18.5,
-     "over": "-110",
-     "under": "-116"
+     "over": "-106",
+     "under": "-120"
     },
     "FanDuel": {
      "line": 17.5,
@@ -14039,42 +14399,52 @@
   "naz reid|pts+ast": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 20.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 19.5,
    "offers": {
     "BetRivers": {
-     "line": 20.5,
-     "over": "-103",
+     "line": 19.5,
+     "over": "-118",
      "under": null
+    },
+    "Bovada": {
+     "line": 21.5,
+     "over": "+105",
+     "under": "-135"
     },
     "DraftKings": {
      "line": 20.5,
      "over": "-116",
-     "under": "-114"
+     "under": "-113"
     },
     "FanDuel": {
-     "line": 20.5,
-     "over": "-114",
-     "under": "-114"
+     "line": 19.5,
+     "over": "-122",
+     "under": "-108"
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "-103",
+   "over_odds": "-118",
    "player": "Naz Reid",
    "stat": "pts+ast",
    "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-114"
+   "under_book": "Bovada",
+   "under_odds": "+115"
   },
   "naz reid|pts+reb": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 26.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 25.5,
    "offers": {
+    "BetMGM": {
+     "line": 25.5,
+     "over": "-120",
+     "under": "-110"
+    },
     "BetRivers": {
-     "line": 26.5,
-     "over": "+100",
+     "line": 25.5,
+     "over": "-120",
      "under": null
     },
     "Bovada": {
@@ -14085,42 +14455,52 @@
     "DraftKings": {
      "line": 26.5,
      "over": "-122",
-     "under": "-108"
+     "under": "-107"
     },
     "FanDuel": {
      "line": 25.5,
-     "over": "-114",
-     "under": "-114"
+     "over": "-120",
+     "under": "-106"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "+100",
+   "over_book": "FanDuel",
+   "over_odds": "-120",
    "player": "Naz Reid",
    "stat": "pts+reb",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-108"
+   "under_book": "Bovada",
+   "under_odds": "+115"
   },
   "naz reid|reb+ast": {
-   "books": 3,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 10.5,
    "offers": {
+    "BetMGM": {
+     "line": 10.5,
+     "over": "-120",
+     "under": "-110"
+    },
     "BetRivers": {
      "line": 10.5,
      "over": "+100",
      "under": null
     },
+    "Bovada": {
+     "line": 11.5,
+     "over": "+130",
+     "under": "-170"
+    },
     "DraftKings": {
      "line": 10.5,
-     "over": "-110",
-     "under": "-120"
+     "over": "-114",
+     "under": "-115"
     },
     "FanDuel": {
      "line": 10.5,
-     "over": "-112",
-     "under": "-118"
+     "over": "-111",
+     "under": "-115"
     }
    },
    "over_book": "BetRivers",
@@ -14128,19 +14508,19 @@
    "player": "Naz Reid",
    "stat": "reb+ast",
    "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-118"
+   "under_book": "BetMGM",
+   "under_odds": "-110"
   },
   "naz reid|rebounds": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 8.5,
    "offers": {
     "BetMGM": {
      "line": 8.5,
-     "over": "-105",
-     "under": "-125"
+     "over": "+100",
+     "under": "-135"
     },
     "BetOnline.ag": {
      "line": 8.5,
@@ -14149,8 +14529,8 @@
     },
     "BetRivers": {
      "line": 8.5,
-     "over": "+110",
-     "under": "-150"
+     "over": "+112",
+     "under": "-152"
     },
     "Bovada": {
      "line": 9.5,
@@ -14164,13 +14544,18 @@
     },
     "DraftKings": {
      "line": 8.5,
-     "over": "+103",
+     "over": "+102",
      "under": "-135"
     },
     "FanDuel": {
      "line": 8.5,
      "over": "+112",
      "under": "-142"
+    },
+    "Fanatics": {
+     "line": 7.5,
+     "over": "-145",
+     "under": "+110"
     }
    },
    "over_book": "FanDuel",
@@ -14178,8 +14563,8 @@
    "player": "Naz Reid",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-125"
+   "under_book": "DraftKings",
+   "under_odds": "-135"
   },
   "nickeil alexander walker|assists": {
    "books": 6,
@@ -15362,54 +15747,89 @@
    "under_odds": "-108"
   },
   "ryan kalkbrenner|points": {
-   "books": 2,
+   "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 4.5,
    "offers": {
     "BetOnline.ag": {
      "line": 4.5,
-     "over": "-119",
-     "under": "-109"
+     "over": "-112",
+     "under": "-115"
+    },
+    "Bovada": {
+     "line": 6.5,
+     "over": "+200",
+     "under": "-275"
     },
     "DraftKings": {
      "line": 4.5,
-     "over": "-120",
-     "under": "-106"
+     "over": "-106",
+     "under": "-120"
     }
    },
-   "over_book": "BetOnline.ag",
-   "over_odds": "-119",
+   "over_book": "DraftKings",
+   "over_odds": "-106",
    "player": "Ryan Kalkbrenner",
    "stat": "points",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-106"
+   "under_book": "BetOnline.ag",
+   "under_odds": "-115"
   },
-  "ryan kalkbrenner|rebounds": {
+  "ryan kalkbrenner|pts+reb": {
    "books": 2,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 9.5,
+   "offers": {
+    "Bovada": {
+     "line": 9.5,
+     "over": "+100",
+     "under": "-130"
+    },
+    "DraftKings": {
+     "line": 9.5,
+     "over": "-101",
+     "under": "-130"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "+100",
+   "player": "Ryan Kalkbrenner",
+   "stat": "pts+reb",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-130"
+  },
+  "ryan kalkbrenner|rebounds": {
+   "books": 3,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 4.5,
    "offers": {
     "BetOnline.ag": {
      "line": 4.5,
-     "over": "+112",
-     "under": "-145"
+     "over": "+109",
+     "under": "-141"
+    },
+    "Bovada": {
+     "line": 5.5,
+     "over": "+200",
+     "under": "-275"
     },
     "DraftKings": {
      "line": 4.5,
-     "over": "+106",
+     "over": "+105",
      "under": "-139"
     }
    },
    "over_book": "BetOnline.ag",
-   "over_odds": "+112",
+   "over_odds": "+109",
    "player": "Ryan Kalkbrenner",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-139"
+   "under_book": "Bovada",
+   "under_odds": "-135"
   },
   "ryan rollins|assists": {
    "books": 7,
@@ -16549,13 +16969,13 @@
   "sion james|assists": {
    "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 2.5,
    "offers": {
     "BetMGM": {
      "line": 2.5,
-     "over": "-155",
-     "under": "+115"
+     "over": "-150",
+     "under": "+110"
     },
     "BetOnline.ag": {
      "line": 2.5,
@@ -16564,8 +16984,8 @@
     },
     "BetRivers": {
      "line": 2.5,
-     "over": "-152",
-     "under": "+112"
+     "over": "-150",
+     "under": "+110"
     },
     "Bovada": {
      "line": 3.5,
@@ -16579,12 +16999,12 @@
     },
     "FanDuel": {
      "line": 3.5,
-     "over": "+136",
-     "under": "-174"
+     "over": "+140",
+     "under": "-180"
     }
    },
    "over_book": "BetRivers",
-   "over_odds": "-152",
+   "over_odds": "-150",
    "player": "Sion James",
    "stat": "assists",
    "tier": "books",
@@ -16594,28 +17014,28 @@
   "sion james|points": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
      "line": 5.5,
-     "over": "-140",
-     "under": "+105"
+     "over": "-135",
+     "under": "+100"
     },
     "BetOnline.ag": {
      "line": 5.5,
      "over": "-130",
-     "under": "+101"
+     "under": "+100"
     },
     "BetRivers": {
      "line": 5.5,
      "over": "-132",
-     "under": "-103"
+     "under": "-104"
     },
     "Bovada": {
-     "line": 8.5,
-     "over": "+210",
-     "under": "-290"
+     "line": 7.5,
+     "over": "+160",
+     "under": "-215"
     },
     "Caesars": {
      "line": 5.5,
@@ -16624,108 +17044,148 @@
     },
     "DraftKings": {
      "line": 5.5,
-     "over": "-134",
-     "under": "+105"
+     "over": "-130",
+     "under": "+102"
     },
     "FanDuel": {
      "line": 5.5,
-     "over": "-128",
-     "under": "+100"
+     "over": "-122",
+     "under": "-104"
     }
    },
    "over_book": "FanDuel",
-   "over_odds": "-128",
+   "over_odds": "-122",
    "player": "Sion James",
    "stat": "points",
    "tier": "books",
    "under_book": "DraftKings",
-   "under_odds": "+105"
+   "under_odds": "+102"
   },
   "sion james|pts+ast": {
-   "books": 1,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 10.5,
-   "offers": {
-    "BetRivers": {
-     "line": 10.5,
-     "over": "+105",
-     "under": null
-    }
-   },
-   "over_book": "BetRivers",
-   "over_odds": "+105",
-   "player": "Sion James",
-   "stat": "pts+ast",
-   "tier": "books",
-   "under_book": null,
-   "under_odds": null
-  },
-  "sion james|pts+reb": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 9.5,
    "offers": {
     "BetRivers": {
+     "line": 9.5,
+     "over": "+104",
+     "under": null
+    },
+    "Bovada": {
+     "line": 9.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "DraftKings": {
+     "line": 9.5,
+     "over": "-104",
+     "under": "-126"
+    },
+    "FanDuel": {
+     "line": 8.5,
+     "over": "-132",
+     "under": "+100"
+    }
+   },
+   "over_book": "BetRivers",
+   "over_odds": "+104",
+   "player": "Sion James",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "Bovada",
+   "under_odds": "-125"
+  },
+  "sion james|pts+reb": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 9.5,
+   "offers": {
+    "BetMGM": {
+     "line": 9.5,
+     "over": "-115",
+     "under": "-115"
+    },
+    "BetRivers": {
      "line": 10.5,
-     "over": "-110",
+     "over": "+112",
      "under": null
     },
     "Bovada": {
      "line": 10.5,
-     "over": "+110",
-     "under": "-145"
+     "over": "+105",
+     "under": "-135"
     },
     "DraftKings": {
      "line": 9.5,
-     "over": "-125",
-     "under": "-106"
+     "over": "-129",
+     "under": "-102"
     },
     "FanDuel": {
      "line": 9.5,
-     "over": "-106",
-     "under": "-125"
+     "over": "-111",
+     "under": "-115"
     }
    },
    "over_book": "FanDuel",
-   "over_odds": "-106",
+   "over_odds": "-111",
    "player": "Sion James",
    "stat": "pts+reb",
    "tier": "books",
    "under_book": "Bovada",
-   "under_odds": "-105"
+   "under_odds": "+100"
   },
   "sion james|reb+ast": {
-   "books": 1,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 6.5,
    "offers": {
+    "BetMGM": {
+     "line": 6.5,
+     "over": "-105",
+     "under": "-125"
+    },
     "BetRivers": {
      "line": 6.5,
-     "over": "-118",
+     "over": "-117",
      "under": null
+    },
+    "Bovada": {
+     "line": 7.5,
+     "over": "+120",
+     "under": "-160"
+    },
+    "DraftKings": {
+     "line": 6.5,
+     "over": "-134",
+     "under": "+102"
+    },
+    "FanDuel": {
+     "line": 6.5,
+     "over": "-125",
+     "under": "-102"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-118",
+   "over_book": "BetMGM",
+   "over_odds": "-105",
    "player": "Sion James",
    "stat": "reb+ast",
    "tier": "books",
-   "under_book": null,
-   "under_odds": null
+   "under_book": "Bovada",
+   "under_odds": "+105"
   },
   "sion james|rebounds": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 3.5,
    "offers": {
     "BetMGM": {
      "line": 3.5,
-     "over": "-115",
-     "under": "-115"
+     "over": "-105",
+     "under": "-125"
     },
     "BetOnline.ag": {
      "line": 3.5,
@@ -16734,23 +17194,23 @@
     },
     "BetRivers": {
      "line": 3.5,
-     "over": "-118",
-     "under": "-115"
+     "over": "-115",
+     "under": "-117"
     },
     "Bovada": {
      "line": 4.5,
-     "over": "+165",
-     "under": "-220"
+     "over": "+155",
+     "under": "-210"
     },
     "Caesars": {
      "line": 3.5,
-     "over": "-118",
-     "under": "-113"
+     "over": "-122",
+     "under": "-108"
     },
     "DraftKings": {
      "line": 3.5,
-     "over": "-128",
-     "under": "-103"
+     "over": "-129",
+     "under": "-102"
     },
     "FanDuel": {
      "line": 3.5,
@@ -16758,13 +17218,13 @@
      "under": "-113"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-113",
+   "over_book": "BetMGM",
+   "over_odds": "-105",
    "player": "Sion James",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-103"
+   "under_book": "Bovada",
+   "under_odds": "+100"
   },
   "stephon castle|assists": {
    "books": 7,
@@ -18327,9 +18787,9 @@
    "under_odds": "+110"
   },
   "tyrese maxey|assists": {
-   "books": 7,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 5.5,
    "offers": {
     "BetMGM": {
@@ -18339,13 +18799,13 @@
     },
     "BetOnline.ag": {
      "line": 5.5,
-     "over": "-147",
-     "under": "+114"
+     "over": "-130",
+     "under": "+100"
     },
     "BetRivers": {
      "line": 5.5,
-     "over": "-148",
-     "under": "+108"
+     "over": "-155",
+     "under": "+114"
     },
     "Bovada": {
      "line": 6.5,
@@ -18354,22 +18814,22 @@
     },
     "Caesars": {
      "line": 5.5,
-     "over": "-140",
-     "under": "+110"
+     "over": "-137",
+     "under": "+102"
     },
     "DraftKings": {
      "line": 5.5,
-     "over": "-151",
-     "under": "+115"
+     "over": "-141",
+     "under": "+107"
     },
     "FanDuel": {
-     "line": 5.5,
-     "over": "-128",
-     "under": "+100"
+     "line": 6.5,
+     "over": "+124",
+     "under": "-160"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-128",
+   "over_book": "BetOnline.ag",
+   "over_odds": "-130",
    "player": "Tyrese Maxey",
    "stat": "assists",
    "tier": "books",
@@ -18377,15 +18837,15 @@
    "under_odds": "+120"
   },
   "tyrese maxey|points": {
-   "books": 4,
+   "books": 5,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 27.5,
    "offers": {
     "BetMGM": {
-     "line": 28.5,
-     "over": "-115",
-     "under": "-115"
+     "line": 26.5,
+     "over": "-125",
+     "under": null
     },
     "BetOnline.ag": {
      "line": 27.5,
@@ -18394,163 +18854,188 @@
     },
     "BetRivers": {
      "line": 27.5,
-     "over": "-112",
-     "under": "-122"
+     "over": "-107",
+     "under": "-127"
     },
     "Bovada": {
-     "line": 32.5,
-     "over": "+190",
-     "under": "-260"
+     "line": 30.5,
+     "over": "+180",
+     "under": "-245"
     },
     "Caesars": {
-     "line": 28.5,
-     "over": "-107",
-     "under": "-125"
+     "line": 27.5,
+     "over": "-112",
+     "under": "-120"
     },
     "DraftKings": {
-     "line": 28.5,
-     "over": "-105",
-     "under": "-121"
+     "line": 26.5,
+     "over": "-113",
+     "under": "-113"
     },
     "FanDuel": {
      "line": 27.5,
-     "over": "-108",
-     "under": "-118"
+     "over": "-111",
+     "under": "-115"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-108",
+   "over_book": "Bovada",
+   "over_odds": "+105",
    "player": "Tyrese Maxey",
    "stat": "points",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "-105"
+   "under_book": "BetOnline.ag",
+   "under_odds": "-114"
   },
   "tyrese maxey|pts+ast": {
-   "books": 2,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 34.5,
-   "offers": {
-    "BetRivers": {
-     "line": 34.5,
-     "over": "-113",
-     "under": null
-    },
-    "DraftKings": {
-     "line": 34.5,
-     "over": "-120",
-     "under": "-110"
-    },
-    "FanDuel": {
-     "line": 35.5,
-     "over": "-112",
-     "under": "-118"
-    }
-   },
-   "over_book": "BetRivers",
-   "over_odds": "-113",
-   "player": "Tyrese Maxey",
-   "stat": "pts+ast",
-   "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-110"
-  },
-  "tyrese maxey|pts+reb": {
    "books": 3,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 33.5,
    "offers": {
+    "BetRivers": {
+     "line": 33.5,
+     "over": "-112",
+     "under": null
+    },
     "Bovada": {
-     "line": 34.5,
+     "line": 33.5,
      "over": "+100",
      "under": "-130"
     },
     "DraftKings": {
-     "line": 33.5,
-     "over": "-121",
+     "line": 32.5,
+     "over": "-120",
      "under": "-109"
     },
     "FanDuel": {
      "line": 33.5,
-     "over": "-114",
-     "under": "-114"
+     "over": "-122",
+     "under": "-108"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-114",
+   "over_book": "Bovada",
+   "over_odds": "+100",
+   "player": "Tyrese Maxey",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-108"
+  },
+  "tyrese maxey|pts+reb": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 31.5,
+   "offers": {
+    "BetMGM": {
+     "line": 31.5,
+     "over": "-115",
+     "under": "-115"
+    },
+    "BetRivers": {
+     "line": 31.5,
+     "over": "-120",
+     "under": null
+    },
+    "Bovada": {
+     "line": 31.5,
+     "over": "+100",
+     "under": "-130"
+    },
+    "DraftKings": {
+     "line": 30.5,
+     "over": "-121",
+     "under": "-109"
+    },
+    "FanDuel": {
+     "line": 31.5,
+     "over": "-120",
+     "under": "-106"
+    }
+   },
+   "over_book": "Bovada",
+   "over_odds": "+100",
    "player": "Tyrese Maxey",
    "stat": "pts+reb",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-109"
+   "under_book": "FanDuel",
+   "under_odds": "-106"
   },
   "tyrese maxey|reb+ast": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 10.5,
    "offers": {
+    "BetMGM": {
+     "line": 10.5,
+     "over": "+105",
+     "under": "-140"
+    },
     "BetRivers": {
      "line": 10.5,
-     "over": "+105",
+     "over": "-117",
      "under": null
     },
-    "DraftKings": {
+    "Bovada": {
      "line": 10.5,
      "over": "+105",
-     "under": "-138"
+     "under": "-135"
+    },
+    "DraftKings": {
+     "line": 9.5,
+     "over": "-144",
+     "under": "+109"
     },
     "FanDuel": {
      "line": 10.5,
-     "over": "+102",
-     "under": "-136"
+     "over": "-108",
+     "under": "-118"
     }
    },
-   "over_book": "DraftKings",
+   "over_book": "Bovada",
    "over_odds": "+105",
    "player": "Tyrese Maxey",
    "stat": "reb+ast",
    "tier": "books",
    "under_book": "FanDuel",
-   "under_odds": "-136"
+   "under_odds": "-118"
   },
   "tyrese maxey|rebounds": {
-   "books": 7,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 4.5,
    "offers": {
     "BetMGM": {
      "line": 4.5,
-     "over": "-105",
-     "under": "-125"
+     "over": "+100",
+     "under": "-135"
     },
     "BetOnline.ag": {
      "line": 4.5,
-     "over": "+109",
-     "under": "-141"
+     "over": "+113",
+     "under": "-147"
     },
     "BetRivers": {
      "line": 4.5,
-     "over": "-106",
-     "under": "-129"
+     "over": "-107",
+     "under": "-127"
     },
     "Bovada": {
-     "line": 5.5,
-     "over": "+210",
-     "under": "-290"
+     "line": 4.5,
+     "over": "+125",
+     "under": "-165"
     },
     "Caesars": {
      "line": 4.5,
-     "over": "+109",
-     "under": "-145"
+     "over": "+113",
+     "under": "-152"
     },
     "DraftKings": {
-     "line": 4.5,
-     "over": "+111",
-     "under": "-147"
+     "line": 3.5,
+     "over": "-162",
+     "under": "+123"
     },
     "FanDuel": {
      "line": 4.5,
@@ -18558,13 +19043,13 @@
      "under": "-146"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "+114",
+   "over_book": "Bovada",
+   "over_odds": "+125",
    "player": "Tyrese Maxey",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "BetMGM",
-   "under_odds": "-125"
+   "under_book": "BetRivers",
+   "under_odds": "-127"
   },
   "victor wembanyama|assists": {
    "books": 5,
@@ -18862,200 +19347,225 @@
    "under_odds": "-125"
   },
   "vj edgecombe|assists": {
-   "books": 7,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 3.5,
    "offers": {
-    "BetMGM": {
-     "line": 3.5,
-     "over": "-120",
-     "under": "-111"
-    },
     "BetOnline.ag": {
      "line": 3.5,
-     "over": "-133",
-     "under": "+103"
+     "over": "-137",
+     "under": "+106"
     },
     "BetRivers": {
      "line": 3.5,
-     "over": "-117",
-     "under": "-117"
+     "over": "-150",
+     "under": "+110"
     },
     "Bovada": {
      "line": 4.5,
-     "over": "+145",
-     "under": "-190"
+     "over": "+150",
+     "under": "-200"
     },
     "Caesars": {
      "line": 3.5,
-     "over": "-139",
-     "under": "+104"
+     "over": "-143",
+     "under": "+108"
     },
     "DraftKings": {
      "line": 3.5,
-     "over": "-148",
-     "under": "+113"
+     "over": "-143",
+     "under": "+108"
     },
     "FanDuel": {
      "line": 3.5,
-     "over": "-136",
-     "under": "+106"
+     "over": "-164",
+     "under": "+128"
     }
    },
-   "over_book": "BetRivers",
-   "over_odds": "-117",
+   "over_book": "BetOnline.ag",
+   "over_odds": "-137",
    "player": "VJ Edgecombe",
    "stat": "assists",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "+115"
+   "under_book": "FanDuel",
+   "under_odds": "+128"
   },
   "vj edgecombe|points": {
-   "books": 7,
+   "books": 6,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 16.5,
    "offers": {
     "BetMGM": {
-     "line": 16.5,
-     "over": "-115",
-     "under": "-115"
+     "line": 15.5,
+     "over": "-120",
+     "under": "-111"
     },
     "BetOnline.ag": {
      "line": 16.5,
-     "over": "-114",
-     "under": "-114"
+     "over": "-108",
+     "under": "-120"
     },
     "BetRivers": {
      "line": 16.5,
-     "over": "-129",
-     "under": "-107"
+     "over": "-121",
+     "under": "-113"
     },
     "Bovada": {
-     "line": 20.5,
-     "over": "+215",
-     "under": "-295"
+     "line": 19.5,
+     "over": "+180",
+     "under": "-245"
     },
     "Caesars": {
      "line": 16.5,
-     "over": "-124",
-     "under": "-108"
+     "over": "-113",
+     "under": "-118"
     },
     "DraftKings": {
      "line": 16.5,
-     "over": "-114",
-     "under": "-111"
+     "over": "-106",
+     "under": "-120"
     },
     "FanDuel": {
      "line": 16.5,
-     "over": "-120",
-     "under": "-106"
-    }
-   },
-   "over_book": "DraftKings",
-   "over_odds": "-114",
-   "player": "VJ Edgecombe",
-   "stat": "points",
-   "tier": "books",
-   "under_book": "FanDuel",
-   "under_odds": "-106"
-  },
-  "vj edgecombe|pts+ast": {
-   "books": 2,
-   "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
-   "line": 20.5,
-   "offers": {
-    "BetRivers": {
-     "line": 21.5,
      "over": "-104",
-     "under": null
-    },
-    "DraftKings": {
-     "line": 20.5,
-     "over": "-125",
-     "under": "-105"
-    },
-    "FanDuel": {
-     "line": 20.5,
-     "over": "-125",
-     "under": "-106"
+     "under": "-122"
     }
    },
    "over_book": "FanDuel",
-   "over_odds": "-125",
+   "over_odds": "-104",
    "player": "VJ Edgecombe",
-   "stat": "pts+ast",
+   "stat": "points",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-105"
+   "under_book": "BetRivers",
+   "under_odds": "-113"
   },
-  "vj edgecombe|pts+reb": {
-   "books": 2,
+  "vj edgecombe|pts+ast": {
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T17:08:29Z",
-   "line": 24.5,
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 20.5,
    "offers": {
+    "BetRivers": {
+     "line": 20.5,
+     "over": "-122",
+     "under": null
+    },
+    "Bovada": {
+     "line": 21.5,
+     "over": "+110",
+     "under": "-145"
+    },
     "DraftKings": {
-     "line": 24.5,
-     "over": "-107",
-     "under": "-122"
+     "line": 20.5,
+     "over": "-113",
+     "under": "-116"
     },
     "FanDuel": {
-     "line": 24.5,
-     "over": "-122",
-     "under": "-106"
+     "line": 20.5,
+     "over": "-114",
+     "under": "-114"
     }
    },
    "over_book": "DraftKings",
-   "over_odds": "-107",
+   "over_odds": "-113",
+   "player": "VJ Edgecombe",
+   "stat": "pts+ast",
+   "tier": "books",
+   "under_book": "FanDuel",
+   "under_odds": "-114"
+  },
+  "vj edgecombe|pts+reb": {
+   "books": 4,
+   "event_id": "067d97a124c10ea2d206546384500c5e",
+   "fetched_at": "2026-10-31T21:49:32Z",
+   "line": 23.5,
+   "offers": {
+    "BetMGM": {
+     "line": 22.5,
+     "over": "-110",
+     "under": "-120"
+    },
+    "BetRivers": {
+     "line": 23.5,
+     "over": "-109",
+     "under": null
+    },
+    "Bovada": {
+     "line": 23.5,
+     "over": "-105",
+     "under": "-125"
+    },
+    "DraftKings": {
+     "line": 23.5,
+     "over": "-104",
+     "under": "-127"
+    },
+    "FanDuel": {
+     "line": 23.5,
+     "over": "-102",
+     "under": "-125"
+    }
+   },
+   "over_book": "FanDuel",
+   "over_odds": "-102",
    "player": "VJ Edgecombe",
    "stat": "pts+reb",
    "tier": "books",
    "under_book": "FanDuel",
-   "under_odds": "-106"
+   "under_odds": "-125"
   },
   "vj edgecombe|reb+ast": {
-   "books": 3,
+   "books": 4,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T13:21:18Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 10.5,
    "offers": {
+    "BetMGM": {
+     "line": 9.5,
+     "over": "-140",
+     "under": "+105"
+    },
     "BetRivers": {
      "line": 10.5,
-     "over": "-125",
+     "over": "-103",
      "under": null
+    },
+    "Bovada": {
+     "line": 10.5,
+     "over": "-110",
+     "under": "-120"
     },
     "DraftKings": {
      "line": 10.5,
-     "over": "-124",
-     "under": "-106"
+     "over": "-112",
+     "under": "-117"
     },
     "FanDuel": {
      "line": 10.5,
-     "over": "-122",
-     "under": "-108"
+     "over": "-125",
+     "under": "-102"
     }
    },
-   "over_book": "FanDuel",
-   "over_odds": "-122",
+   "over_book": "BetRivers",
+   "over_odds": "-103",
    "player": "VJ Edgecombe",
    "stat": "reb+ast",
    "tier": "books",
-   "under_book": "DraftKings",
-   "under_odds": "-106"
+   "under_book": "FanDuel",
+   "under_odds": "-102"
   },
   "vj edgecombe|rebounds": {
    "books": 7,
    "event_id": "067d97a124c10ea2d206546384500c5e",
-   "fetched_at": "2026-10-31T21:09:41Z",
+   "fetched_at": "2026-10-31T21:49:32Z",
    "line": 6.5,
    "offers": {
     "BetMGM": {
      "line": 6.5,
-     "over": "-120",
-     "under": "-111"
+     "over": "-110",
+     "under": "-120"
     },
     "BetOnline.ag": {
      "line": 6.5,
@@ -19064,13 +19574,13 @@
     },
     "BetRivers": {
      "line": 6.5,
-     "over": "-107",
-     "under": "-127"
+     "over": "+102",
+     "under": "-141"
     },
     "Bovada": {
      "line": 7.5,
-     "over": "+145",
-     "under": "-190"
+     "over": "+155",
+     "under": "-210"
     },
     "Caesars": {
      "line": 6.5,
@@ -19079,13 +19589,13 @@
     },
     "DraftKings": {
      "line": 6.5,
-     "over": "-118",
-     "under": "-112"
+     "over": "-108",
+     "under": "-121"
     },
     "FanDuel": {
      "line": 6.5,
-     "over": "+102",
-     "under": "-130"
+     "over": "-115",
+     "under": "-111"
     }
    },
    "over_book": "BetOnline.ag",
@@ -19093,8 +19603,8 @@
    "player": "VJ Edgecombe",
    "stat": "rebounds",
    "tier": "books",
-   "under_book": "Bovada",
-   "under_odds": "-110"
+   "under_book": "FanDuel",
+   "under_odds": "-111"
   },
   "zach edey|points": {
    "books": 6,
