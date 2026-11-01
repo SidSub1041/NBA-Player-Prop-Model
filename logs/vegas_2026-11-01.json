@@ -1,0 +1,723 @@
+{
+ "date": "2026-11-01",
+ "events": {
+  "31fc89cbf3846e545e8e41a543a71d24": {
+   "commence_time": "2026-11-02T02:10:00Z",
+   "markets": {
+    "player_assists": "2026-11-01T02:36:55Z",
+    "player_points": "2026-11-01T02:36:55Z",
+    "player_rebounds": "2026-11-01T02:36:55Z"
+   },
+   "teams": [
+    "LAL",
+    "TOR"
+   ]
+  },
+  "e8559eaac12af915cfe6597644620c13": {
+   "commence_time": "2026-11-01T20:40:00Z",
+   "markets": {
+    "player_assists": "2026-11-01T02:36:55Z",
+    "player_points": "2026-11-01T02:36:55Z",
+    "player_rebounds": "2026-11-01T02:36:55Z"
+   },
+   "teams": [
+    "BOS",
+    "ORL"
+   ]
+  },
+  "fc3e945a5be88d3f933456bc512c956d": {
+   "commence_time": "2026-11-01T22:10:00Z",
+   "markets": {
+    "player_assists": "2026-11-01T02:36:55Z",
+    "player_points": "2026-11-01T02:36:55Z",
+    "player_rebounds": "2026-11-01T02:36:55Z"
+   },
+   "teams": [
+    "BKN",
+    "IND"
+   ]
+  }
+ },
+ "lines": {
+  "anthony black|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-115",
+     "under": "-114"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-115",
+   "player": "Anthony Black",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-114"
+  },
+  "anthony black|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 13.5,
+   "offers": {
+    "DraftKings": {
+     "line": 13.5,
+     "over": "-108",
+     "under": "-119"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-108",
+   "player": "Anthony Black",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-119"
+  },
+  "anthony black|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-153",
+     "under": "+116"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-153",
+   "player": "Anthony Black",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+116"
+  },
+  "derrick white|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 4.5,
+   "offers": {
+    "DraftKings": {
+     "line": 4.5,
+     "over": "-140",
+     "under": "+106"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-140",
+   "player": "Derrick White",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+106"
+  },
+  "derrick white|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 14.5,
+   "offers": {
+    "DraftKings": {
+     "line": 14.5,
+     "over": "-104",
+     "under": "-123"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-104",
+   "player": "Derrick White",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-123"
+  },
+  "derrick white|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-118",
+     "under": "-111"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-118",
+   "player": "Derrick White",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-111"
+  },
+  "desmond bane|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-115",
+     "under": "-114"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-115",
+   "player": "Desmond Bane",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-114"
+  },
+  "desmond bane|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 18.5,
+   "offers": {
+    "DraftKings": {
+     "line": 18.5,
+     "over": "-114",
+     "under": "-112"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-114",
+   "player": "Desmond Bane",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-112"
+  },
+  "desmond bane|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 4.5,
+   "offers": {
+    "DraftKings": {
+     "line": 4.5,
+     "over": "+116",
+     "under": "-153"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+116",
+   "player": "Desmond Bane",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-153"
+  },
+  "franz wagner|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 5.5,
+   "offers": {
+    "DraftKings": {
+     "line": 5.5,
+     "over": "-137",
+     "under": "+104"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-137",
+   "player": "Franz Wagner",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+104"
+  },
+  "franz wagner|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 22.5,
+   "offers": {
+    "DraftKings": {
+     "line": 22.5,
+     "over": "-109",
+     "under": "-117"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-109",
+   "player": "Franz Wagner",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-117"
+  },
+  "franz wagner|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 5.5,
+   "offers": {
+    "DraftKings": {
+     "line": 5.5,
+     "over": "-152",
+     "under": "+115"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-152",
+   "player": "Franz Wagner",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+115"
+  },
+  "jase richardson|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 2.5,
+   "offers": {
+    "DraftKings": {
+     "line": 2.5,
+     "over": "+114",
+     "under": "-151"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+114",
+   "player": "Jase Richardson",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-151"
+  },
+  "jase richardson|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 8.5,
+   "offers": {
+    "DraftKings": {
+     "line": 8.5,
+     "over": "-112",
+     "under": "-113"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-112",
+   "player": "Jase Richardson",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-113"
+  },
+  "jase richardson|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 2.5,
+   "offers": {
+    "DraftKings": {
+     "line": 2.5,
+     "over": "-170",
+     "under": "+128"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-170",
+   "player": "Jase Richardson",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+128"
+  },
+  "jayson tatum|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 6.5,
+   "offers": {
+    "DraftKings": {
+     "line": 6.5,
+     "over": "-122",
+     "under": "-108"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-122",
+   "player": "Jayson Tatum",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-108"
+  },
+  "jayson tatum|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 26.5,
+   "offers": {
+    "DraftKings": {
+     "line": 26.5,
+     "over": "-115",
+     "under": "-111"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-115",
+   "player": "Jayson Tatum",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-111"
+  },
+  "jayson tatum|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 8.5,
+   "offers": {
+    "DraftKings": {
+     "line": 8.5,
+     "over": "+104",
+     "under": "-137"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+104",
+   "player": "Jayson Tatum",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-137"
+  },
+  "jordan walsh|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 4.5,
+   "offers": {
+    "DraftKings": {
+     "line": 4.5,
+     "over": "-109",
+     "under": "-117"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-109",
+   "player": "Jordan Walsh",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-117"
+  },
+  "jordan walsh|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-108",
+     "under": "-121"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-108",
+   "player": "Jordan Walsh",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-121"
+  },
+  "mitchell robinson|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 6.5,
+   "offers": {
+    "DraftKings": {
+     "line": 6.5,
+     "over": "+104",
+     "under": "-132"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+104",
+   "player": "Mitchell Robinson",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-132"
+  },
+  "mitchell robinson|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 6.5,
+   "offers": {
+    "DraftKings": {
+     "line": 6.5,
+     "over": "-141",
+     "under": "+107"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-141",
+   "player": "Mitchell Robinson",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+107"
+  },
+  "paul george|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "+118",
+     "under": "-155"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+118",
+   "player": "Paul George",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-155"
+  },
+  "paul george|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 17.5,
+   "offers": {
+    "DraftKings": {
+     "line": 17.5,
+     "over": "-117",
+     "under": "-109"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-117",
+   "player": "Paul George",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-109"
+  },
+  "paul george|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 4.5,
+   "offers": {
+    "DraftKings": {
+     "line": 4.5,
+     "over": "-104",
+     "under": "-127"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-104",
+   "player": "Paul George",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-127"
+  },
+  "payton pritchard|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 4.5,
+   "offers": {
+    "DraftKings": {
+     "line": 4.5,
+     "over": "+121",
+     "under": "-159"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+121",
+   "player": "Payton Pritchard",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-159"
+  },
+  "payton pritchard|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 15.5,
+   "offers": {
+    "DraftKings": {
+     "line": 15.5,
+     "over": "-113",
+     "under": "-113"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-113",
+   "player": "Payton Pritchard",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-113"
+  },
+  "payton pritchard|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "+123",
+     "under": "-162"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "+123",
+   "player": "Payton Pritchard",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-162"
+  },
+  "tristan da silva|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 1.5,
+   "offers": {
+    "DraftKings": {
+     "line": 1.5,
+     "over": "-112",
+     "under": "-117"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-112",
+   "player": "Tristan da Silva",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-117"
+  },
+  "tristan da silva|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 9.5,
+   "offers": {
+    "DraftKings": {
+     "line": 9.5,
+     "over": "-111",
+     "under": "-115"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-111",
+   "player": "Tristan da Silva",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-115"
+  },
+  "tristan da silva|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 3.5,
+   "offers": {
+    "DraftKings": {
+     "line": 3.5,
+     "over": "-105",
+     "under": "-125"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-105",
+   "player": "Tristan da Silva",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-125"
+  },
+  "wendell carter jr|assists": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 1.5,
+   "offers": {
+    "DraftKings": {
+     "line": 1.5,
+     "over": "-174",
+     "under": "+132"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-174",
+   "player": "Wendell Carter Jr",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+132"
+  },
+  "wendell carter jr|points": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 11.5,
+   "offers": {
+    "DraftKings": {
+     "line": 11.5,
+     "over": "-109",
+     "under": "-117"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-109",
+   "player": "Wendell Carter Jr",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "-117"
+  },
+  "wendell carter jr|rebounds": {
+   "books": 1,
+   "event_id": "e8559eaac12af915cfe6597644620c13",
+   "fetched_at": "2026-11-01T02:36:55Z",
+   "line": 7.5,
+   "offers": {
+    "DraftKings": {
+     "line": 7.5,
+     "over": "-138",
+     "under": "+105"
+    }
+   },
+   "over_book": "DraftKings",
+   "over_odds": "-138",
+   "player": "Wendell Carter Jr",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "DraftKings",
+   "under_odds": "+105"
+  }
+ }
+}
