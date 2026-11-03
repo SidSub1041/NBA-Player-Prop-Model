@@ -1,0 +1,119 @@
+{
+ "date": "2026-11-04",
+ "events": {
+  "38fdb396939e8aabebd93cb509618927": {
+   "commence_time": "2026-11-05T01:10:00Z",
+   "markets": {
+    "player_assists": "2026-11-03T09:57:15Z",
+    "player_points": "2026-11-03T09:57:15Z",
+    "player_rebounds": "2026-11-03T09:57:15Z"
+   },
+   "teams": [
+    "CLE",
+    "OKC"
+   ]
+  },
+  "6b25f3932db93d4c5ad7658def2645bf": {
+   "commence_time": "2026-11-05T02:40:00Z",
+   "markets": {},
+   "teams": [
+    "DAL",
+    "SAS"
+   ]
+  },
+  "6b33f8632d4dd100cba8453db82213fa": {
+   "commence_time": "2026-11-05T00:40:00Z",
+   "markets": {
+    "player_assists": "2026-11-03T09:57:15Z",
+    "player_points": "2026-11-03T09:57:15Z",
+    "player_rebounds": "2026-11-03T09:57:15Z"
+   },
+   "teams": [
+    "BKN",
+    "CHA"
+   ]
+  },
+  "91df86557819598ca270ba35410cfcfa": {
+   "commence_time": "2026-11-05T00:10:00Z",
+   "markets": {
+    "player_assists": "2026-11-03T09:57:15Z",
+    "player_points": "2026-11-03T09:57:15Z",
+    "player_rebounds": "2026-11-03T09:57:15Z"
+   },
+   "teams": [
+    "DET",
+    "PHI"
+   ]
+  },
+  "b2557f74f4d7675ed3b76a4a064e0bc9": {
+   "commence_time": "2026-11-05T01:40:00Z",
+   "markets": {},
+   "teams": [
+    "HOU",
+    "MIN"
+   ]
+  }
+ },
+ "lines": {
+  "jaylen brown|points": {
+   "books": 1,
+   "event_id": "91df86557819598ca270ba35410cfcfa",
+   "fetched_at": "2026-11-03T09:57:15Z",
+   "line": 19.5,
+   "offers": {
+    "Fanatics": {
+     "line": 19.5,
+     "over": "-115",
+     "under": "-115"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-115",
+   "player": "Jaylen Brown",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-115"
+  },
+  "lebron james|assists": {
+   "books": 1,
+   "event_id": "91df86557819598ca270ba35410cfcfa",
+   "fetched_at": "2026-11-03T09:57:15Z",
+   "line": 6.5,
+   "offers": {
+    "Fanatics": {
+     "line": 6.5,
+     "over": "-115",
+     "under": "-115"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-115",
+   "player": "LeBron James",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-115"
+  },
+  "lebron james|rebounds": {
+   "books": 1,
+   "event_id": "91df86557819598ca270ba35410cfcfa",
+   "fetched_at": "2026-11-03T09:57:15Z",
+   "line": 6.5,
+   "offers": {
+    "Fanatics": {
+     "line": 6.5,
+     "over": "+105",
+     "under": "-140"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "+105",
+   "player": "LeBron James",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-140"
+  }
+ }
+}
