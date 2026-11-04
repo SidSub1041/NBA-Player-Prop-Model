@@ -72042,7 +72042,7 @@
   "learning": {
     "mode": "shadow",
     "trusted": false,
-    "trained_at": "2026-11-03T17:14:44Z",
+    "trained_at": "2026-11-04T17:24:55Z",
     "n_rows": 2979,
     "n_days": 41,
     "cv": {
@@ -72111,7 +72111,7 @@
       {
         "feature": "log_minutes",
         "label": "projected minutes",
-        "weight": -0.364,
+        "weight": -0.362,
         "effect": "more misses"
       },
       {
@@ -72123,13 +72123,13 @@
       {
         "feature": "edge",
         "label": "the model's edge over the market",
-        "weight": -0.211,
+        "weight": -0.21,
         "effect": "more misses"
       },
       {
         "feature": "p_model",
         "label": "the model's probability of the pick",
-        "weight": 0.194,
+        "weight": 0.193,
         "effect": "more hits"
       },
       {
