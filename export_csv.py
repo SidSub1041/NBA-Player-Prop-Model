@@ -22,7 +22,11 @@ import glob
 import json
 import os
 import re
+import sys
 from datetime import date as _date
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from src.lines import alt_of, main_line  # noqa: E402  — the regular line a pick is shown and graded on
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
@@ -64,10 +68,13 @@ PICK_FIELDS = [
     "dvp_z", "matchup_z", "guards", "paused", "cap_note", "model_version",
     # round 19 — assists from passing: the source, potential assists a game and the conversion projected
     "proj_source", "pot_ast", "ast_conv",
+    # round 20 — the other number one book hangs for the pick's side (never the graded line)
+    "alt_line", "alt_odds", "alt_book",
 ]
 
 # graded picks also carry the close (closing_line) and the closing-line value against it
-GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units", "closing_line", "clv_line", "clv_prob"]
+# result / units are on the regular line; alt_result / alt_units are the alternate's own outcome, for reference only
+GRADED_FIELDS = PICK_FIELDS + ["actual_value", "result", "units", "closing_line", "clv_line", "clv_prob", "alt_result", "alt_units"]
 
 # clv_avg_line / clv_beat: the night's mean closing-line value and the share of picks that beat the close
 RESULT_FIELDS = ["date", "total_picks", "hits", "misses", "voided", "units", "season", "clv_avg_line", "clv_beat"]
@@ -164,11 +171,12 @@ def _flatten_prop(prop, date):
         "vegas_under_odds": prop.get("vegas_under_odds"),
         "vegas_book": prop.get("vegas_book"),
         "vegas_books": prop.get("vegas_books"),
-        "line": prop.get("line", prop.get("ud_line")),
+        # the regular line (src.lines.main_line): a shopped number on an older board moves to the alt_* columns
+        "line": main_line(prop)["line"],
         "line_source": prop.get("line_source") or ("underdog" if prop.get("ud_line") is not None else None),
-        "line_book": prop.get("line_book"),
-        "over_odds": prop.get("over_odds", prop.get("ud_over_odds")),
-        "under_odds": prop.get("under_odds", prop.get("ud_under_odds")),
+        "line_book": prop.get("vegas_book") if main_line(prop)["from_alt"] else prop.get("line_book"),
+        "over_odds": main_line(prop)["over_odds"],
+        "under_odds": main_line(prop)["under_odds"],
         "p_hit": prop.get("p_hit"),
         "ev": prop.get("ev"),
         "rank": prop.get("rank"),
@@ -186,6 +194,9 @@ def _flatten_prop(prop, date):
         "cap_note": prop.get("cap_note"),
         # boards before round 18 never stored a version: they were the filter
         "model_version": prop.get("model_version") or ("edge-1" if prop.get("p_model") is not None else "filter-0"),
+        "alt_line": (alt_of(prop) or {}).get("line"),
+        "alt_odds": (alt_of(prop) or {}).get("price"),
+        "alt_book": (alt_of(prop) or {}).get("book"),
         "proj_source": prop.get("proj_source"),
         "pot_ast": (prop.get("passing") or {}).get("pot_ast"),
         "ast_conv": (prop.get("passing") or {}).get("conv"),
@@ -225,6 +236,9 @@ def export_graded(graded_days):
             row["closing_line"] = pick.get("closing_line")
             row["clv_line"] = pick.get("clv_line")
             row["clv_prob"] = pick.get("clv_prob")
+            alt = pick.get("alt_line") if isinstance(pick.get("alt_line"), dict) else {}
+            row["alt_result"] = alt.get("result")
+            row["alt_units"] = alt.get("units")
             rows.append(row)
     _write_csv(os.path.join(DATA_DIR, "graded_picks.csv"), GRADED_FIELDS, rows)
 

@@ -68,9 +68,12 @@ export interface PropPick {
   breakeven_price?: number | null;
   market_basis?: "pick" | "shifted" | null;
   consensus_line?: number | null;
-  /** books at the consensus line when the pick's number was shopped from one book */
+  /** books at the consensus line when the pick's number was shopped from one book (boards before round 20) */
   consensus_books?: number | null;
+  /** boards before round 20: the pick was published on a shopped number; its regular line is vegas_line */
   line_shopped?: boolean;
+  /** round 20: a better number one book hangs for the same side, shown under the pick (never graded) */
+  alt_line?: AltLine | null;
   p_model?: number | null;
   /** de-vigged market probability of the pick side at the pick line (shifted when the market moved) */
   p_market?: number | null;
@@ -97,6 +100,23 @@ export interface PropPick {
   /** the box-score projection the passing one replaced, for comparison */
   proj_mu_box?: number | null;
   passing?: PassingPieces | null;
+}
+
+/** Another number for the pick's side at one book: a book's alternate ladder, or its main line off the consensus */
+export interface AltLine {
+  book: string | null;
+  line: number | null;
+  price: string | null;
+  /** "alternate" (a book's alt ladder), "lagging" (a book's own main line off the consensus), "shopped" (older boards) */
+  kind: "alternate" | "lagging" | "shopped" | string | null;
+  p_model: number | null;
+  p_market: number | null;
+  p_hat: number | null;
+  breakeven: number | null;
+  edge: number | null;
+  /** graded files only: the alternate's own result, for display (never in the record) */
+  result?: "hit" | "miss" | null;
+  units?: number | null;
 }
 
 /** The passing projection's pieces, per game at the projected minutes (src/passing.py) */

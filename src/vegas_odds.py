@@ -3,8 +3,12 @@ Sportsbook ("Vegas") and DFS-app lines from The Odds API (https://the-odds-api.c
 — the model's line source. Sportsbooks first; the DFS pick'em apps are the backup.
 
 For each player prop the books hang, the model's line is the one most books
-hang (the consensus), and each side carries the best price any book offers at
-that line and which book has it. A prop no sportsbook lists falls back to the
+hang as their MAIN line (the consensus), and each side carries the best price
+any book offers at that line and which book has it. Some books (Bovada) list a
+whole ladder of alternate lines inside the main market — the same player at
+10.5, 12.5, 13.5 … priced from -280 to +210. A book's main line is the one
+whose two prices are closest to even (its pick'em line); the rest are kept as
+"alts" and never decide the line (round 20). A prop no sportsbook lists falls back to the
 DFS apps (PrizePicks, Underdog, DraftKings Pick6, Betr, Dabble — The Odds API's
 `us_dfs` region): the line most of them hang, labelled as a DFS backup.
 
@@ -194,21 +198,60 @@ def parse_event_odds(data: dict) -> dict:
     return found
 
 
+def _implied(price) -> float | None:
+    """American odds -> implied probability (vig in); None when unpriced."""
+    try:
+        o = float(str(price).replace("+", ""))
+    except (TypeError, ValueError):
+        return None
+    if abs(o) < 100:
+        return None
+    return 100.0 / (o + 100.0) if o > 0 else -o / (-o + 100.0)
+
+
+def main_lines(offers: dict) -> dict:
+    """
+    {book: its main line} from one prop's offers {(book, point): {"Over", "Under"}}.
+
+    A book that lists one number has that number. A book that lists several
+    (an alternate-line ladder in the main market) has as its main line the
+    number whose two prices are closest to even — its pick'em line; a number
+    priced on one side only counts as fully lopsided. Ties go to the number
+    nearest the median of all the books' numbers, then the lower one.
+    """
+    by_book: dict = defaultdict(list)
+    for (book, point), sides in offers.items():
+        by_book[book].append((point, sides))
+    mid = statistics.median(point for (_, point) in offers) if offers else 0.0
+    out = {}
+    for book, entries in by_book.items():
+        def lopsided(entry):
+            po, pu = _implied(entry[1].get("Over")), _implied(entry[1].get("Under"))
+            return abs(po - pu) if (po is not None and pu is not None) else 1.0
+        out[book] = min(entries, key=lambda e: (lopsided(e), abs(e[0] - mid), e[0]))[0]
+    return out
+
+
 def consensus(offers: dict) -> dict:
     """
     One prop's offers (from the sportsbooks, or from the DFS apps) -> the
     model's line and prices.
 
-    The line is the one most books hang (ties go to the line nearest the
-    median of all books' lines). Each side gets the best price any book offers
-    at that line — the highest American odds — and the book offering it.
+    The line is the main line most books hang — one vote per book, for its
+    main line (main_lines): a book's ladder of alternates never outvotes the
+    market (ties go to the line nearest the median of the books' main lines).
+    Each side gets the best price any book offers at that number — the
+    highest American odds, from a book's main line or one of its alternates
+    at the same number — and the book offering it; "books" counts the books
+    that list the number at all.
     """
     if not offers:
         return {}
-    points = Counter(point for (_, point) in offers)
+    mains = main_lines(offers)
+    points = Counter(mains.values())
     top = max(points.values())
     tied = sorted(p for p, n in points.items() if n == top)
-    mid = statistics.median(point for (_, point) in offers)
+    mid = statistics.median(mains.values())
     line = min(tied, key=lambda p: (abs(p - mid), p))
     at_line = {book: sides for (book, point), sides in offers.items() if point == line}
 
@@ -530,11 +573,16 @@ class VegasLines:
                         continue
                     c = consensus(entry["offers"])
                     if c:
+                        mains = main_lines(entry["offers"])
+                        offers, alts = {}, []
+                        for (book, point), sides in sorted(entry["offers"].items(), key=lambda kv: (kv[0][0], kv[0][1])):
+                            o = {"line": point, "over": _fmt_american(sides.get("Over")), "under": _fmt_american(sides.get("Under"))}
+                            if mains.get(book) == point:
+                                offers[book] = o                    # each book's main (pick'em) line
+                            else:
+                                alts.append({"book": book, **o})    # its alternate ladder, kept apart
                         fresh[key] = {**c, "player": entry["player"], "stat": stat, "tier": tier,
-                                      "event_id": ev_id, "fetched_at": stamp,
-                                      "offers": {book: {"line": point, "over": _fmt_american(sides.get("Over")),
-                                                        "under": _fmt_american(sides.get("Under"))}
-                                                 for (book, point), sides in entry["offers"].items()}}
+                                      "event_id": ev_id, "fetched_at": stamp, "offers": offers, "alts": alts}
             # Fill mode: a locked pick keeps ITS line on the board (src/lines.resolve), but the
             # cache always reflects the market now, so the day's line history records the move.
             for k in before - set(fresh):

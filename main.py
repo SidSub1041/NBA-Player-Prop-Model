@@ -121,8 +121,9 @@ def _uses_assists(stat: str) -> bool:
 def _guards(prop: PropScore) -> list[str]:
     """
     Which guards a priced prop fails: price / books / line_size / minutes /
-    passing. The books guard is about the market's depth: a shopped number
-    (one book lagging the consensus) is judged by the consensus it lags. The
+    passing. The books guard is about the market's depth (a pick carried from
+    a board before round 20 on a shopped number is judged by the consensus
+    it was shopped from). The
     passing guard holds back an assists prop (or a combo with assists) whose
     assists could not be projected from passing (src/passing.py): the
     box-score fallback is what the assists pause was about.
@@ -187,59 +188,50 @@ def _decide(stat: str, proj: dict, line, over_odds, under_odds, current: dict | 
     return out
 
 
-def _shop_line(prop: PropScore, stat: str, proj: dict, current: dict, res) -> None:
+def _alt_line(prop: PropScore, stat: str, proj: dict, current: dict, res) -> None:
     """
-    Line shopping. The consensus is the number most books hang; a book that
-    lags a move (or shades the other way) may offer a better number for the
-    pick's side. Evaluate every book's (line, price) against the market
-    probability shifted from the consensus, and take the one with the most
-    edge when it beats the consensus by at least half a point of probability.
-    Locked picks (fill mode) and non-sportsbook lines are left alone.
+    The best other number for the pick's side, kept beside the pick — never
+    in place of it (round 20).
+
+    The pick is made, priced and graded on the consensus main line: the
+    regular "pick'em" number most books hang. Other numbers exist: a book
+    whose own main line lags or leads the consensus ("lagging"), and the
+    alternate ladders some books list in the main market ("alternate": the
+    same player three points higher at +200, or lower at -250). Each is read
+    like the pick — the market shifted from the consensus to that number, the
+    model at that number, the price's break-even — and the best, when its
+    edge beats the main line's by half a point of probability, is stored as
+    prop.alt_line = {"book", "line", "price", "kind", "p_model", "p_market",
+    "p_hat", "breakeven", "edge"}: shown under the pick, never published or
+    graded. Locked picks (fill mode) and non-sportsbook lines get none.
     """
     if getattr(res, "locked", False) or (prop.line_info or {}).get("source") != "vegas":
         return
-    offers = (current or {}).get("offers") or {}
     cons_line = (current or {}).get("line")
     mkt = market_prob(current.get("over_odds"), current.get("under_odds")) if current else None
-    if not offers or cons_line is None or mkt is None or prop.p_model is None or prop.edge_value is None:
+    if cons_line is None or mkt is None or prop.line is None or prop.p_model is None or prop.edge_value is None:
         return
     side = prop.edge
+    candidates = [(book, o, "lagging") for book, o in ((current or {}).get("offers") or {}).items()]
+    candidates += [(a.get("book"), a, "alternate") for a in ((current or {}).get("alts") or [])]
     best = None
-    for book, o in offers.items():
-        try:
-            bl = float(o.get("line"))
-        except (TypeError, ValueError):
-            continue
+    for book, o, kind in candidates:
+        bl = _float(o.get("line"))
         price = o.get("over") if side == "over" else o.get("under")
-        if price in (None, ""):
+        if bl is None or bl == float(prop.line) or price in (None, ""):
             continue
         d = _decide(stat, proj, bl, o.get("over"), o.get("under"), current)
-        # the side is fixed by the consensus decision; read that side's numbers at this book's line
+        # the side is the main line's; read that side's numbers at this book's number
         pm, pk = d[f"p_model_{side}"], d[f"p_market_{side}"]
         be = implied_prob(price)
         if pm is None or pk is None or be is None:
             continue
-        e = MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk - be
-        if best is None or e > best[0]:
-            best = (e, book, bl, price, pm, pk, be)
-    if best is None or best[0] < prop.edge_value + 0.005 or best[2] == prop.line:
-        return
-    e, book, bl, price, pm, pk, be = best
-    other = "under" if side == "over" else "over"
-    at_line = [(bk, o) for bk, o in offers.items() if _float(o.get("line")) == bl]
-    other_prices = [(float(str(o.get(other)).replace("+", "")), bk) for bk, o in at_line if _price_num(o.get(other)) is not None]
-    other_price, other_book = (max(other_prices) if other_prices else (None, None))
-    info = dict(prop.line_info)
-    info.update({"line": bl, "consensus_line": cons_line, "consensus_books": info.get("books"), "shopped": True,
-                 "books": len(at_line),
-                 f"{side}_odds": price, f"{side}_book": book,
-                 f"{other}_odds": (f"+{int(other_price)}" if other_price and other_price > 0 else (str(int(other_price)) if other_price is not None else None)),
-                 f"{other}_book": other_book})
-    prop.line_info = info
-    prop.p_model, prop.p_market, prop.edge_value = pm, pk, e
-    po, pu, pp = p_sides(stat, proj["mu"], proj["sd"], bl)   # a push loses either side on this board
-    prop.projection = {**prop.projection, "p_over": po, "p_under": pu, "p_push": pp,
-                       "p_hat": MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk, "breakeven": be, "shopped_from": prop.line}
+        p_hat = MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk
+        if best is None or p_hat - be > best["edge"]:
+            best = {"book": book, "line": bl, "price": price, "kind": kind, "p_model": pm, "p_market": pk,
+                    "p_hat": p_hat, "breakeven": be, "edge": p_hat - be}
+    if best is not None and best["edge"] >= prop.edge_value + 0.005:
+        prop.alt_line = best
 
 
 def _player_frames(season_now: str, season_prev: str) -> dict[str, "object"]:
@@ -374,6 +366,7 @@ def _prop_from_board(d: dict) -> PropScore:
         p.line_info["consensus_books"] = d.get("consensus_books")
     p.p_model, p.p_market, p.edge_value = d.get("p_model"), d.get("p_market"), d.get("edge_value")
     p.open_line, p.line_move = d.get("open_line"), d.get("line_move")
+    p.alt_line = d.get("alt_line")
     p.dvp_z, p.matchup_z, p.teammate_out = d.get("dvp_z"), d.get("matchup_z"), d.get("teammate_out") or 0
     p.paused, p.guards = bool(d.get("paused")), list(d.get("guards") or [])
     p.hitrate_data = {"hitrate": d.get("hitrate") if d.get("hitrate") is not None else -1, "source": d.get("hitrate_source"),
@@ -466,6 +459,16 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         return
 
     season_now, season_prev = SEASON, previous_season(SEASON)
+
+    # Picks are graded on their regular line: graded files from before that rule are re-settled once
+    # (src/grader.regrade_main_lines; idempotent), so the season record this run publishes is on regular lines.
+    try:
+        from src.grader import regrade_main_lines
+        redone = regrade_main_lines()
+        if redone:
+            logger.info(f"  Re-settled on the regular line: {', '.join(redone)}")
+    except Exception as e:
+        logger.warning(f"  Re-grade on the regular line skipped ({type(e).__name__}: {e})")
 
     # ── Step 2: Defense vs Position — numeric, by position ───────────
     logger.info("Step 2: Fetching Defense vs Position (numeric)...")
@@ -684,7 +687,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
             prop.zone_score = {"points": 0, "total": zs.get("n", 0), "details": zs.get("details", [])}
         if ps:
             prop.playtype_score = {"points": 0, "total": ps.get("n", 0), "details": ps.get("details", [])}
-        _shop_line(prop, stat, proj, current, res)   # a lagging book's number beats the consensus? take it
+        _alt_line(prop, stat, proj, current, res)    # a better number at one book: shown under the pick, never instead of it
         line = prop.line
         mv = movement(date, key, side, history=history)
         if mv:

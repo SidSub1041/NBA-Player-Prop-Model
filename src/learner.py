@@ -152,11 +152,15 @@ def profit_per_unit(odds) -> float:
 
 
 def prop_line(p: dict):
-    """(line, pick-side price) from a board prop — current boards or pre-Oct-22 Underdog-only boards."""
+    """
+    (line, pick-side price) from a board prop: its regular line
+    (src.lines.main_line) — the consensus main line, never a shopped
+    alternate — on current boards and pre-Oct-22 Underdog-only boards alike.
+    """
+    from src.lines import main_line
     over = str(p.get("edge", "")).lower() != "under"
-    if "line" in p:
-        return p.get("line"), (p.get("over_odds") if over else p.get("under_odds"))
-    return p.get("ud_line"), (p.get("ud_over_odds") if over else p.get("ud_under_odds"))
+    m = main_line(p)
+    return m["line"], (m["over_odds"] if over else m["under_odds"])
 
 
 def _raw_pass_rate(p: dict) -> float:
@@ -303,7 +307,7 @@ def save_labels(date: str, rows: list[dict], incomplete: bool = False, attempts:
     os.makedirs(TRAIN_DIR, exist_ok=True)
     tmp = _labels_path(date) + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
-        json.dump({"date": date, "rows": rows, "incomplete": incomplete, "attempts": attempts}, f, indent=1)
+        json.dump({"date": date, "rows": rows, "incomplete": incomplete, "attempts": attempts, "line_basis": "main"}, f, indent=1)
     os.replace(tmp, _labels_path(date))
 
 
@@ -320,6 +324,60 @@ def load_all_rows() -> list[dict]:
             continue
         rows.extend(data.get("rows", []))
     return rows
+
+
+def relabel_main_lines() -> int:
+    """
+    Once: training rows labeled on a shopped number (boards before round 20
+    published a book's alternate line in place of the consensus) are
+    re-labeled on the regular line from that night's board — line, price,
+    hit, the stored snapshot and features; a row that lands exactly on the
+    regular line is a push and is dropped, as label_props does. Files are
+    marked "line_basis": "main". Returns the rows changed.
+    """
+    from src.lines import main_line
+    changed = 0
+    for path in sorted(glob.glob(os.path.join(TRAIN_DIR, "labels_*.json"))):
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, dict) or data.get("line_basis") == "main":
+            continue
+        date = data.get("date")
+        try:
+            with open(os.path.join(LOGS_DIR, f"props_{date}.json"), encoding="utf-8") as f:
+                board = {(p.get("player_name"), p.get("stat")): p for p in json.load(f).get("all_props", []) or []}
+        except (OSError, ValueError, TypeError):
+            board = {}
+        rows, n = [], 0
+        for r in data.get("rows", []) or []:
+            bp = board.get((r.get("player"), r.get("stat")))
+            m = main_line(bp) if bp else None
+            if not m or not m["from_alt"] or m["line"] is None:
+                rows.append(r)
+                continue
+            n += 1
+            line = float(m["line"])
+            if r.get("actual") is None or float(r["actual"]) == line:
+                continue                      # a push on the regular line: not a label
+            over = str(r.get("edge", "")).lower() != "under"
+            odds = m["over_odds"] if over else m["under_odds"]
+            snap = {**(r.get("prop") or {}), "line": m["line"], "over_odds": m["over_odds"], "under_odds": m["under_odds"]}
+            f = featurize(snap)
+            rows.append({**r, "line": line, "odds": odds, "hit": int(r["actual"] > line if over else r["actual"] < line),
+                         "prop": snap, "features": f if f is not None else r.get("features")})
+        changed += n
+        data["rows"] = rows
+        data["line_basis"] = "main"
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=1)
+        os.replace(tmp, path)
+    if changed:
+        logger.info(f"  Re-labeled {changed} training row(s) on the regular line")
+    return changed
 
 
 def label_date(date: str, fetch_box, fetch_ok=None) -> list[dict] | None:
@@ -827,6 +885,10 @@ def nightly_update(date: str, graded: dict | None, fetch_box, fetch_ok=None) -> 
     """Grading-run hook: label last night, backfill older boards, retrain, write the post-mortem, refresh the site."""
     model = None
     try:
+        try:
+            relabel_main_lines()      # once: rows labeled on a shopped number move to the regular line
+        except Exception as e:
+            logger.warning(f"  Re-label on the regular line skipped ({type(e).__name__}: {e})")
         rows = label_date(date, fetch_box, fetch_ok)
         backfill(fetch_box, before=date, max_dates=int(os.environ.get("LEARN_BACKFILL_MAX_DATES", "40")), fetch_ok=fetch_ok)
         model = train()   # weights anchored to today, whatever date was graded

@@ -342,7 +342,8 @@ def _edge_fields(p) -> dict:
         "market_basis": (getattr(p, "projection", None) or {}).get("market_basis"),
         "consensus_line": (p.line_info or {}).get("consensus_line"),
         "consensus_books": (p.line_info or {}).get("consensus_books"),
-        "line_shopped": bool((p.line_info or {}).get("shopped")),
+        "line_shopped": bool((p.line_info or {}).get("shopped")),          # boards before round 20 only
+        "alt_line": _alt_fields(getattr(p, "alt_line", None)),
         "p_model": p_model,
         "p_market": _num_or_none(getattr(p, "p_market", None), 4),
         "edge_value": _num_or_none(getattr(p, "edge_value", None), 4),
@@ -360,6 +361,16 @@ def _edge_fields(p) -> dict:
         "proj_mu_box": _num_or_none(proj.get("mu_box"), 2),
         "passing": _passing_fields(proj.get("passing")),
     }
+
+
+def _alt_fields(alt) -> dict | None:
+    """The alternate number beside a pick (round 20): book, line, price, kind and its probabilities and edge; None without one."""
+    if not isinstance(alt, dict):
+        return None
+    out = {"book": alt.get("book"), "line": _num_or_none(alt.get("line")), "price": alt.get("price"), "kind": alt.get("kind")}
+    for k in ("p_model", "p_market", "p_hat", "breakeven", "edge"):
+        out[k] = _num_or_none(alt.get(k), 4)
+    return out
 
 
 def _passing_fields(pieces) -> dict | None:

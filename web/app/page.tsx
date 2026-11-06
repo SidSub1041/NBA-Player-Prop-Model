@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import type { PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv } from "@/lib/types";
+import type { AltLine, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -257,20 +257,47 @@ function EmptyState({ title, body }: { title: string; body: string }) {
 
 /* ── The line a pick is measured against: sportsbooks first, DFS apps as backup ── */
 
+/** A pick published on a shopped number (boards before round 20): its regular line is the consensus it was shopped from. */
+function shoppedOld(pick: PropPick): boolean {
+  return !!pick.line_shopped && pick.vegas_line != null && pick.vegas_line !== pick.line;
+}
+
+/** The regular ("pick'em") line a pick is shown and graded on — never an alternate number. */
 function pickLine(pick: PropPick): number | null {
+  if (shoppedOld(pick)) return pick.vegas_line ?? null;
   return pick.line !== undefined ? pick.line ?? null : pick.ud_line;
 }
 
 function pickPrice(pick: PropPick, edge: string): string | null {
+  if (shoppedOld(pick)) return (edge === "under" ? pick.vegas_under_odds : pick.vegas_over_odds) ?? null;
   if (pick.line !== undefined) return (edge === "under" ? pick.under_odds : pick.over_odds) ?? null;
   return (edge === "under" ? pick.ud_under_odds : pick.ud_over_odds) ?? null;
+}
+
+/** The other number beside a pick: round 20's alt_line, or the shopped number an older board published. */
+function pickAlt(pick: PropPick, edge: string): AltLine | null {
+  if (pick.alt_line && pick.alt_line.line != null) return pick.alt_line;
+  if (!shoppedOld(pick)) return null;
+  return {
+    book: (edge === "under" ? pick.under_book : pick.over_book) ?? null,
+    line: pick.line ?? null,
+    price: (edge === "under" ? pick.under_odds : pick.over_odds) ?? null,
+    kind: "shopped",
+    p_model: pick.p_model ?? null,
+    p_market: pick.p_market ?? null,
+    p_hat: pick.p_hat ?? null,
+    breakeven: pick.breakeven_price ?? null,
+    edge: pick.edge_value ?? null,
+  };
 }
 
 function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
   const price = pickPrice(pick, edge);
   const fromBooks = pick.line_source === "vegas";
   const fromDfs = pick.line_source === "dfs";
-  const book = pick.line_book ?? (pick.line_source === "underdog" || pick.line === undefined ? "Underdog" : null);
+  const book = shoppedOld(pick)
+    ? pick.vegas_book ?? null
+    : pick.line_book ?? (pick.line_source === "underdog" || pick.line === undefined ? "Underdog" : null);
   const udPrice = edge === "under" ? pick.ud_under_odds : pick.ud_over_odds;
   return (
     <div className="ml-auto flex flex-col items-end gap-1">
@@ -404,6 +431,37 @@ function guardLabel(guard: string, pick: PropPick, edge: string): string {
   }
 }
 
+/** The alternate number beside the pick: shown for reference, never the line the pick is published or graded on. */
+function AltRow({ pick }: { pick: PropPick }) {
+  const edge = pick.edge.toLowerCase();
+  const alt = pickAlt(pick, edge);
+  if (!alt || alt.line == null) return null;
+  const where = alt.kind === "alternate" ? "alternate" : alt.kind === "lagging" ? "off the consensus" : "shopped";
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">ALT LINE</div>
+      <div className="text-sm font-semibold text-[var(--text)] whitespace-nowrap" title="the same side at another number one book hangs">
+        {edge === "under" ? "U" : "O"} {alt.line} {alt.price ?? "—"}
+      </div>
+      <div className="text-sm text-[var(--text-muted)] whitespace-nowrap">
+        · {alt.book ?? "one book"} {where}
+      </div>
+      {alt.p_model != null && <div className="text-sm text-[var(--text-muted)] whitespace-nowrap">· MODEL {fmtPct(alt.p_model)}</div>}
+      {alt.edge != null && (
+        <div className="text-sm font-semibold whitespace-nowrap" style={{ color: edgeColor(alt.edge) }} title="the same edge math at this number and price">
+          · EDGE {fmtEdgePts(alt.edge)}
+        </div>
+      )}
+      <span
+        className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap"
+        title="the pick, its grade and its result are on the regular line above"
+      >
+        for reference · graded on {pickLine(pick) ?? "the regular line"}
+      </span>
+    </div>
+  );
+}
+
 /** A factor vs the league as a signed percentage: 1.034 -> "+3%". */
 function fmtFactor(f: number): string {
   const pct = Math.round((f - 1) * 100);
@@ -481,12 +539,6 @@ function EdgeRow({ pick }: { pick: PropPick }) {
             · EDGE {fmtEdgePts(e)}
           </div>
         )}
-        {pick.line_shopped && pick.consensus_line != null && (
-          <span className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap" title="one book hangs a better number than the consensus for this side; the price shown is that book's">
-            shopped · {pick.line_books ?? 1} {pick.line_books === 1 ? "book" : "books"} · consensus {pick.consensus_line}
-            {pick.consensus_books != null ? ` (${pick.consensus_books})` : ""}
-          </span>
-        )}
         {moved && pick.open_line != null && line != null && (
           <span
             className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap"
@@ -500,6 +552,7 @@ function EdgeRow({ pick }: { pick: PropPick }) {
         )}
       </div>
       <PassingRow pick={pick} />
+      <AltRow pick={pick} />
       {guards.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 sm:pl-[92px]">
           {guards.map((g) => (

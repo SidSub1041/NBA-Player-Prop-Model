@@ -20,8 +20,17 @@ market was re-bought within CLOSE_WINDOW_MINUTES before tip and the books
 still hung the prop at that re-price. Otherwise the pick's CLV fields stay
 None, its "close_reason" says why, and the day's CLV counts it as
 "unverified", never as a 0.0 close.
+
+Every pick is settled on its REGULAR line — the consensus main ("pick'em")
+line and its price (src.lines.main_line) — never on an alternate number.
+Boards before round 20 could publish a shopped number (often a book's
+alternate at +200 or -250); those picks are settled at the consensus line
+they were shopped from, and the shopped number is kept as "alt_line" with
+its own result for display only. regrade_main_lines() re-settles graded
+files written before this rule, once.
 """
 
+import glob
 import json
 import logging
 import os
@@ -33,6 +42,7 @@ from nba_api.stats.static import players as nba_players
 
 from src import line_history
 from src.config import CLOSE_WINDOW_MINUTES, NBA_TEAM_IDS, season_for_date
+from src.lines import alt_of, main_line
 from src.underdog import norm_name, norm_name_base
 from src.vegas_odds import MARKETS
 
@@ -400,7 +410,7 @@ def grade_picks(date: str) -> dict:
         return {
             "date": date,
             "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
-            "total_picks": 0, "hits": 0, "misses": 0, "voided": 0, "units": 0.0,
+            "total_picks": 0, "hits": 0, "misses": 0, "voided": 0, "units": 0.0, "line_basis": "main",
             "clv": clv_summary([]),
             "graded_picks": [],
         }
@@ -433,9 +443,13 @@ def grade_picks(date: str) -> dict:
         name = pick["player_name"]
         stat = pick["stat"]
         edge = pick["edge"]
-        # The line the pick was made against (sportsbooks; DFS apps or Underdog's feed on older boards).
+        # The regular line the pick is settled on (src.lines.main_line): the consensus main line and its
+        # price — a shopped alternate on an older board is settled at the consensus it came from.
         # Boards from before Oct 22, 2026 only carry Underdog's line.
-        line = pick.get("line") if "line" in pick else pick.get("ud_line")
+        main = main_line(pick)
+        line = main["line"]
+        pick_odds = main["over_odds"] if edge == "over" else main["under_odds"]
+        alt = alt_of(pick)
 
         name_lower = name.lower()
         actual = (
@@ -444,21 +458,18 @@ def grade_picks(date: str) -> dict:
             or stats_by_norm.get(norm_name_base(name))
         )
 
-        # Determine which odds apply to this pick's edge
-        if "line" in pick:
-            pick_odds = pick.get("over_odds") if edge == "over" else pick.get("under_odds")
-        else:
-            pick_odds = pick.get("ud_over_odds") if edge == "over" else pick.get("ud_under_odds")
-
         result_entry = {
-            **pick,
+            **_on_main_line(pick),
             "actual_value": None,
             "result": "pending",
             "units": 0.0,
             "void_reason": None,
             **{k: None for k in CLV_KEYS},
             "close_reason": None,
+            "line_basis": "main",
         }
+        if alt is not None:
+            result_entry["alt_line"] = dict(alt)
 
         def void(reason: str) -> None:
             result_entry["result"] = "void"
@@ -502,11 +513,13 @@ def grade_picks(date: str) -> dict:
             actual_value = actual[stat_key]
         result_entry["actual_value"] = actual_value
 
-        # Determine if pick hit
-        if edge == "over":
-            hit = actual_value > line
-        else:
-            hit = actual_value < line
+        # Determine if pick hit (on the regular line; a push loses)
+        hit = _hit(edge, actual_value, line)
+        if alt is not None and alt.get("line") is not None:
+            # the alternate's own result, for display only: never in the record
+            alt_hit = _hit(edge, actual_value, float(alt["line"]))
+            result_entry["alt_line"]["result"] = "hit" if alt_hit else "miss"
+            result_entry["alt_line"]["units"] = round(_american_odds_to_profit(alt.get("price")), 3) if alt_hit else -1.0
 
         if hit:
             profit = round(_american_odds_to_profit(pick_odds), 3)
@@ -530,7 +543,7 @@ def grade_picks(date: str) -> dict:
 
         # Closing-line value: where the books closed this prop versus where the pick took it
         try:
-            result_entry.update(_clv_for_pick(pick, line, edge, pick_odds, events, cached_lines, history, date))
+            result_entry.update(_clv_for_pick(result_entry, line, edge, pick_odds, events, cached_lines, history, date))
         except Exception as e:   # never lets the history break grading
             result_entry.update({**{k: None for k in CLV_KEYS}, "close_reason": f"CLV error ({type(e).__name__})"})
             logger.warning(f"  CLV not computed for {name} | {stat} ({type(e).__name__}: {e})")
@@ -552,6 +565,7 @@ def grade_picks(date: str) -> dict:
         "voided": voided_count,
         "units": round(units, 3),
         "clv": clv,
+        "line_basis": "main",        # every pick settled on its regular line (src.lines.main_line)
         "graded_picks": graded,
     }
 
@@ -566,6 +580,144 @@ def grade_picks(date: str) -> dict:
 
 
 # ── Persist results ──────────────────────────────────────────────────────────
+
+def _hit(edge: str, actual, line) -> bool:
+    """Did the pick clear its line? A push (actual == line) is a loss on either side."""
+    return actual > line if edge == "over" else actual < line
+
+
+def _on_main_line(pick: dict) -> dict:
+    """
+    The pick as settled: its line, prices and books set to the regular line
+    (src.lines.main_line). A pick published on a shopped number (boards
+    before round 20) gets the consensus line, its prices and book, with the
+    shopped number moved to "alt_line"; anything else is returned unchanged.
+    """
+    main = main_line(pick)
+    if not main["from_alt"]:
+        return dict(pick)
+    side_book = "under_book" if pick.get("edge") == "under" else "over_book"
+    other_book = "over_book" if side_book == "under_book" else "under_book"
+    return {**pick, "line": main["line"], "over_odds": main["over_odds"], "under_odds": main["under_odds"],
+            side_book: pick.get("vegas_book"), other_book: None, "line_book": pick.get("vegas_book"),
+            "line_books": pick.get("vegas_books"), "line_shopped": False, "alt_line": alt_of(pick)}
+
+
+def regrade_main_lines(logs_dir: str | None = None) -> list[str]:
+    """
+    Re-settle, once, every graded file written before picks were settled on
+    the regular line: a pick that had been settled on a shopped number is
+    re-settled on the consensus line and price it was shopped from (its
+    actual value is on file, so no box score is needed), its closing-line
+    value is recomputed against that line from the day's logs, and the
+    shopped number's own result is kept under "alt_line" for display. The
+    day's totals, CLV summary and results history entry are rewritten.
+    Idempotent: a re-settled pick is on its regular line, so a second pass
+    finds nothing; a file with nothing to re-settle is left untouched.
+    Returns the dates changed.
+    """
+    logs_dir = logs_dir or LOGS_DIR
+    changed = []
+    for path in sorted(glob.glob(os.path.join(logs_dir, "graded_*.json"))):
+        try:
+            with open(path, encoding="utf-8") as f:
+                g = json.load(f)
+        except (OSError, ValueError) as e:
+            logger.warning(f"  Re-grade: skipping {path} ({e})")
+            continue
+        if not isinstance(g, dict) or g.get("line_basis") == "main":
+            continue
+        date = g.get("date")
+        day = None            # the day's priced events and line history, read only if a pick needs them
+        n = 0
+        for i, e in enumerate(g.get("graded_picks") or []):
+            if not (isinstance(e, dict) and main_line(e)["from_alt"]):
+                continue
+            new = _on_main_line(e)
+            new["line_basis"] = "main"
+            line, edge = float(new["line"]), new.get("edge")
+            if e.get("result") in ("hit", "miss") and e.get("actual_value") is not None:
+                actual = e["actual_value"]
+                new["alt_line"] = {**(new.get("alt_line") or {}), "result": e["result"], "units": e.get("units")}
+                odds = new["over_odds"] if edge == "over" else new["under_odds"]
+                hit = _hit(edge, actual, line)
+                new["result"] = "hit" if hit else "miss"
+                new["units"] = round(_american_odds_to_profit(odds), 3) if hit else -1.0
+                try:
+                    if day is None:
+                        day = (*_priced_day(date), line_history.load(date, logs_dir))
+                    new.update(_clv_for_pick(new, line, edge, odds, day[0], day[1], day[2], date))
+                except Exception as ex:
+                    new.update({**{k: None for k in CLV_KEYS}, "close_reason": f"CLV error ({type(ex).__name__})"})
+            g["graded_picks"][i] = new
+            n += 1
+        if n:
+            g["line_basis"] = "main"
+            decided = [p for p in g["graded_picks"] if p.get("result") in ("hit", "miss")]
+            g["hits"] = sum(1 for p in decided if p["result"] == "hit")
+            g["misses"] = sum(1 for p in decided if p["result"] == "miss")
+            g["total_picks"] = len(decided)
+            g["units"] = round(sum(float(p.get("units") or 0.0) for p in decided), 3)
+            g["clv"] = clv_summary(g["graded_picks"])
+            changed.append(date)
+            logger.info(f"  Re-graded {n} pick(s) on {date} at the regular line: {g['hits']}-{g['misses']}, {g['units']:+.2f}u")
+        if not n:
+            continue          # nothing settled on a shopped number: the file is left as it is
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(g, f, indent=2)
+        os.replace(tmp, path)
+        if os.path.abspath(logs_dir) == os.path.abspath(LOGS_DIR):
+            _update_history(g)
+    return changed
+
+
+def _summary(day_result: dict) -> dict:
+    """The results-history entry for a graded day (no per-pick details)."""
+    date = day_result["date"]
+    summary = {
+        "date": date,
+        "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
+        "total_picks": day_result["total_picks"],
+        "hits": day_result["hits"],
+        "misses": day_result["misses"],
+        "voided": day_result.get("voided", 0),
+        "units": day_result.get("units", 0.0),
+    }
+    clv = day_result.get("clv") or {}
+    if clv.get("n"):   # closing-line value, when the night had closes on file
+        summary["clv_avg_line"] = clv.get("avg_line")
+        summary["clv_beat"] = clv.get("beat_close")
+    return summary
+
+
+def _update_history(day_result: dict) -> None:
+    """Replace the day's entry in results_history.json and latest.json's model_results."""
+    date = day_result["date"]
+    os.makedirs(WEB_DATA_DIR, exist_ok=True)
+    history = []
+    if os.path.exists(RESULTS_FILE):
+        with open(RESULTS_FILE) as f:
+            history = json.load(f)
+
+    # Replace existing entry for this date if re-grading
+    history = [h for h in history if h["date"] != date]
+    history.append(_summary(day_result))
+    history.sort(key=lambda x: x["date"])
+
+    with open(RESULTS_FILE, "w") as f:
+        json.dump(history, f, indent=2)
+    logger.info(f"Results history updated ({len(history)} days)")
+
+    latest_path = os.path.join(WEB_DATA_DIR, "latest.json")
+    if os.path.exists(latest_path):
+        with open(latest_path) as f:
+            latest = json.load(f)
+        latest["model_results"] = history
+        with open(latest_path, "w") as f:
+            json.dump(latest, f, indent=2)
+        logger.info("Updated latest.json with model_results")
+
 
 def save_graded_results(day_result: dict):
     """
@@ -586,43 +738,5 @@ def save_graded_results(day_result: dict):
         json.dump(day_result, f, indent=2)
     logger.info(f"Graded results saved to {graded_path}")
 
-    # 2. Update results history
-    os.makedirs(WEB_DATA_DIR, exist_ok=True)
-    history = []
-    if os.path.exists(RESULTS_FILE):
-        with open(RESULTS_FILE) as f:
-            history = json.load(f)
-
-    # Summary entry (no per-pick details)
-    summary = {
-        "date": date,
-        "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
-        "total_picks": day_result["total_picks"],
-        "hits": day_result["hits"],
-        "misses": day_result["misses"],
-        "voided": day_result.get("voided", 0),
-        "units": day_result.get("units", 0.0),
-    }
-    clv = day_result.get("clv") or {}
-    if clv.get("n"):   # closing-line value, when the night had closes on file
-        summary["clv_avg_line"] = clv.get("avg_line")
-        summary["clv_beat"] = clv.get("beat_close")
-
-    # Replace existing entry for this date if re-grading
-    history = [h for h in history if h["date"] != date]
-    history.append(summary)
-    history.sort(key=lambda x: x["date"])
-
-    with open(RESULTS_FILE, "w") as f:
-        json.dump(history, f, indent=2)
-    logger.info(f"Results history updated ({len(history)} days)")
-
-    # 3. Update latest.json with model_results
-    latest_path = os.path.join(WEB_DATA_DIR, "latest.json")
-    if os.path.exists(latest_path):
-        with open(latest_path) as f:
-            latest = json.load(f)
-        latest["model_results"] = history
-        with open(latest_path, "w") as f:
-            json.dump(latest, f, indent=2)
-        logger.info("Updated latest.json with model_results")
+    # 2. and 3. results_history.json and latest.json's model_results
+    _update_history(day_result)

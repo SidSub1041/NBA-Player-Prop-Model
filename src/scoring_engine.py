@@ -87,6 +87,7 @@ class PropScore:
         self.edge_value = None    # p_model − p_market
         self.open_line = None     # first line seen today (line history)
         self.line_move = None     # latest line − opening line, signed toward the pick (+ = market moved our way)
+        self.alt_line = None      # round 20: a better number at one book, shown beside the pick (never graded)
         self.dvp_z = None         # opponent's by-position stat allowed, z-score (+ = allows more)
         self.matchup_z = None     # points: zone + playtype continuous score (+ = favourable for over)
         self.teammate_out = 0     # OUT starters on the player's own team

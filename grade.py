@@ -38,8 +38,15 @@ def main():
         date = (datetime.strptime(slate_today(), "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 
     logging.info(f"Grading picks for {date}")
-    from src.grader import clear_box_cache
+    from src.grader import clear_box_cache, regrade_main_lines
     clear_box_cache()
+    # Picks are settled on their regular line; graded files from before that rule are re-settled once
+    try:
+        redone = regrade_main_lines()
+        if redone:
+            logging.info(f"Re-settled on the regular line: {', '.join(redone)}")
+    except Exception as e:
+        logging.warning(f"Re-grade on the regular line skipped ({type(e).__name__}: {e})")
     result = grade_picks(date)
 
     if result:

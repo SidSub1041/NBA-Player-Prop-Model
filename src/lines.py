@@ -40,6 +40,44 @@ class Resolution:
     extra: dict = field(default_factory=dict)
 
 
+def main_line(pick: dict) -> dict:
+    """
+    The regular ("pick'em") line a board prop is published and graded on:
+    {"line", "over_odds", "under_odds", "from_alt"}.
+
+    Since round 20 a prop's own line IS the consensus main line, and a better
+    number at one book is shown beside it as "alt_line" without replacing it.
+    Boards before that could publish a shopped number — often a book's
+    alternate line at +200 or -250 — with the consensus kept in
+    consensus_line / vegas_*: for those the consensus line and its prices are
+    the regular line (from_alt True). Pre-Oct-22 Underdog-only boards carry
+    ud_line. A prop with no line returns line None.
+    """
+    if "line" not in pick:
+        return {"line": pick.get("ud_line"), "over_odds": pick.get("ud_over_odds"),
+                "under_odds": pick.get("ud_under_odds"), "from_alt": False}
+    if pick.get("line_shopped") and pick.get("vegas_line") is not None:
+        return {"line": pick.get("vegas_line"), "over_odds": pick.get("vegas_over_odds"),
+                "under_odds": pick.get("vegas_under_odds"), "from_alt": True}
+    return {"line": pick.get("line"), "over_odds": pick.get("over_odds"),
+            "under_odds": pick.get("under_odds"), "from_alt": False}
+
+
+def alt_of(pick: dict) -> dict | None:
+    """
+    The alternate number a board prop carries, or None: the round-20
+    "alt_line" dict, or — on an older board that published a shopped number —
+    that number ({"book", "line", "price"}).
+    """
+    if isinstance(pick.get("alt_line"), dict):
+        return pick["alt_line"]
+    if pick.get("line_shopped") and pick.get("vegas_line") is not None and pick.get("line") != pick.get("vegas_line"):
+        under = str(pick.get("edge", "")).lower() == "under"
+        return {"book": pick.get("under_book") if under else pick.get("over_book"), "line": pick.get("line"),
+                "price": pick.get("under_odds") if under else pick.get("over_odds"), "kind": "shopped"}
+    return None
+
+
 def lock_key(player: str, stat: str) -> tuple[str, str]:
     return (norm_name(player), stat)
 
