@@ -10,6 +10,14 @@ whole ladder of alternate lines inside the main market — the same player at
 whose two prices are closest to even (its pick'em line); the rest are kept as
 "alts" and never decide the line (round 20).
 
+Game spreads (round 26): ensure_spreads() asks for every game's point spread
+in ONE request (the bulk odds endpoint, 1 credit per region — not one per
+game) and keeps the median across books with the day's prices
+(cache["spreads"]), re-bought on the props' own refresh clock and never once
+a game has tipped. spread_for(team) is that team's spread: −13.5 for a
+13.5-point favourite, +13.5 for its opponent. A large spread means a likely
+blowout — starters sit the fourth quarter — so main.py takes no over there.
+
 The full market is archived (round 22): every purchase writes every
 (player, stat, book, number) rung with both prices, the event's home and
 away teams and its tip time to logs/odds/{date}/{HHMMSS}-{pid}.jsonl.gz —
@@ -357,13 +365,14 @@ class VegasLines:
         self.events_failed = False
         self.unpriced_teams: set[str] = set()   # games this run wanted but could not (fully) price
         self.pulled: set[tuple] = set()          # props taken down pre-tip on a re-price
-        self.cache = {"date": date, "events": {}, "lines": {}}
+        self.cache = {"date": date, "events": {}, "lines": {}, "spreads": {}}
         try:
             with open(self.path, encoding="utf-8") as f:
                 loaded = json.load(f)
             if isinstance(loaded, dict) and loaded.get("date") == date:
                 self.cache["events"] = loaded.get("events") or {}
                 self.cache["lines"] = loaded.get("lines") or {}
+                self.cache["spreads"] = loaded.get("spreads") or {}
         except (OSError, ValueError):
             pass
         if self.api_key:
@@ -600,6 +609,90 @@ class VegasLines:
                 return str(ev["commence_time"])
         return None
 
+    def ensure_spreads(self) -> int:
+        """
+        Every untipped game's point spread, in one request (1 credit per
+        region), kept in cache["spreads"][event_id] = {"home", "away",
+        "home_spread" (the median across books of the home team's number:
+        negative = the home team is favoured), "books", "low", "high",
+        "commence_time", "fetched_at"}. Served from the cache inside the
+        refresh window; a game that has tipped keeps its last pre-game number.
+        Returns the number of games with a spread on file. Never raises.
+        """
+        spreads = self.cache.setdefault("spreads", {})
+        live = [ev for ev in self.events if not _started(ev)]
+        if not self.api_key or not live:
+            return len(spreads)
+        now = _now()
+        window = self.fill_refresh if self.fill else self.refresh
+
+        def fresh(ev) -> bool:
+            ts = _parse_ts((spreads.get(str(ev.get("id"))) or {}).get("fetched_at"))
+            return ts is not None and now - ts < window
+        if all(fresh(ev) for ev in live):
+            return len(spreads)
+        cost = len(self.regions.split(",")) or 1
+        if self.stopped or self.spent + cost > self.max_per_run or (self.remaining is not None and self.remaining - cost < self.min_remaining):
+            logger.warning("  Vegas: game spreads not refreshed (saving credits)")
+            return len(spreads)
+        try:
+            day = datetime.strptime(self.date, "%Y-%m-%d").date()
+            start = datetime.combine(day, time(0, 0), EASTERN).astimezone(timezone.utc)
+            data, headers = _get("/odds", {
+                "apiKey": self.api_key, "regions": self.regions, "markets": "spreads", "oddsFormat": "american", "dateFormat": "iso",
+                "commenceTimeFrom": start.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "commenceTimeTo": (start + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            })
+        except Exception as e:
+            logger.warning(f"  Vegas: game spreads unavailable ({type(e).__name__}: {e})")
+            if "401" in str(e) or "429" in str(e):
+                self.stopped = True
+            return len(spreads)
+        self.spent += cost
+        r = _remaining(headers)
+        self.remaining = r if r is not None else self.remaining
+        stamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        wanted = {str(ev.get("id")) for ev in live}
+        got = 0
+        for ev in data if isinstance(data, list) else []:
+            if not isinstance(ev, dict) or str(ev.get("id")) not in wanted:
+                continue                                        # another day's game, or one that has tipped (in-game number)
+            home, away = _team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))
+            points, rungs = [], []
+            for book in ev.get("bookmakers") or []:
+                for market in book.get("markets") or []:
+                    if market.get("key") != "spreads":
+                        continue
+                    by_team = {_team_abbrev(o.get("name")): o for o in market.get("outcomes") or [] if isinstance(o, dict)}
+                    try:
+                        point = float(by_team[home]["point"])
+                    except (KeyError, TypeError, ValueError):
+                        continue
+                    points.append(point)
+                    rungs.append([home, "spread", book.get("title") or book.get("key"), point,
+                                  _fmt_american(by_team[home].get("price")), _fmt_american((by_team.get(away) or {}).get("price"))])
+            if not home or not away or not points:
+                continue
+            spreads[str(ev.get("id"))] = {"home": home, "away": away, "home_spread": statistics.median(points), "books": len(points),
+                                          "low": min(points), "high": max(points), "commence_time": ev.get("commence_time"), "fetched_at": stamp}
+            self._pending.append({"t": stamp, "event_id": str(ev.get("id")), "home": home, "away": away, "commence_time": ev.get("commence_time"),
+                                  "tier": "books", "markets": ["spreads"], "rungs": rungs})
+            got += 1
+        logger.info(f"  Vegas: game spreads for {got} game(s)" + (": " + ", ".join(
+            f"{v['away']} @ {v['home']} {v['home_spread']:+g}" for k, v in sorted(spreads.items()) if k in wanted) if got else ""))
+        return len(spreads)
+
+    def spread_for(self, team: str) -> float | None:
+        """The team's own point spread tonight (negative = favoured), or None when no spread is on file for its game."""
+        for sp in (self.cache.get("spreads") or {}).values():
+            if not isinstance(sp, dict) or sp.get("home_spread") is None:
+                continue
+            if team == sp.get("home"):
+                return float(sp["home_spread"])
+            if team == sp.get("away"):
+                return -float(sp["home_spread"])
+        return None
+
     def home_away(self, team: str) -> tuple[str | None, str | None]:
         """(home, away) of the cached or live event that includes `team`; (None, None) when unknown."""
         for ev in self.cache["events"].values():
@@ -652,7 +745,7 @@ class VegasLines:
             self.cache["events"][ev_id]["markets"][market] = stamp
 
     def save(self) -> None:
-        if not self.cache["lines"] and not self.cache["events"]:
+        if not self.cache["lines"] and not self.cache["events"] and not self.cache.get("spreads"):
             return
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         tmp = self.path + ".tmp"

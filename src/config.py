@@ -134,6 +134,7 @@ WATCH_PRICE_EDGE = _env_float("WATCH_PRICE_EDGE", -0.01)    # within a point of 
 STRONG_PRICE_EDGE = _env_float("STRONG_PRICE_EDGE", 0.02)   # A+: two points better than fair
 UNDER_MIN_SUPPORT = _env_int("UNDER_MIN_SUPPORT", 1)    # net checks (for − against) an under needs
 OVER_MIN_SUPPORT = _env_int("OVER_MIN_SUPPORT", 2)      # ... and an over: overs have been overpriced, so the checks must outweigh it
+BLOWOUT_SPREAD = _env_float("BLOWOUT_SPREAD", 12.5)    # no overs in a game whose spread is this large (round 26): starters sit
 ADJUST_SHRINK = _env_float("ADJUST_SHRINK", 0.5)        # share of a passed check's fitted weight that moves the probability
 SNAPSHOT_WINDOW_MINUTES = _env_int("SNAPSHOT_WINDOW_MINUTES", 45)   # --snapshot: re-price games tipping within this (runs every 30 min)
 CLOSE_WINDOW_MINUTES = _env_int("CLOSE_WINDOW_MINUTES", 90)         # a close counts only if the market was re-priced this close to tip

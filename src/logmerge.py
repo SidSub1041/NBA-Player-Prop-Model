@@ -79,7 +79,13 @@ def merge_cache(a: dict, b: dict) -> dict:
         else:
             pick = ea if (eb is None or (ea is not None and _newer(ea.get("fetched_at"), eb.get("fetched_at")) == ea.get("fetched_at"))) else eb
             lines[key] = pick
-    return {"date": a.get("date") or b.get("date"), "events": events, "lines": lines}
+    spreads: dict = {}
+    for src in (a.get("spreads") or {}, b.get("spreads") or {}):
+        for ev_id, sp in src.items():
+            cur = spreads.get(ev_id)
+            if cur is None or _newer(cur.get("fetched_at"), sp.get("fetched_at")) != cur.get("fetched_at"):
+                spreads[ev_id] = sp
+    return {"date": a.get("date") or b.get("date"), "events": events, "lines": lines, "spreads": spreads}
 
 
 def _price(s: dict) -> tuple:

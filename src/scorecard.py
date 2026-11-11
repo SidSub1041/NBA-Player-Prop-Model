@@ -74,7 +74,7 @@ from datetime import date as _date, datetime, timezone
 import numpy as np
 
 from src.checklist import BARS as CHECK_BARS, LABELS as CHECK_LABELS
-from src.config import SEASON, season_for_date
+from src.config import BLOWOUT_SPREAD, SEASON, season_for_date
 from src.lines import on_main_line
 from src.projection import implied_prob, market_prob, p_sides
 
@@ -316,6 +316,7 @@ def _row(raw: dict, d: str, actual, rest) -> dict | None:
         "injury": bool(p.get("injury")), "line_rise": toward(_num(p.get("line_move"))),
         "is_home": p.get("is_home"), "rest": rest(p.get("team"), d), "opp_rest": rest(p.get("opponent"), d),
         "fair_over": fair, "checks": checks, "proj_source": raw.get("proj_source"), "proj_mu": mu,
+        "spread": _num(raw.get("spread")),      # round 26: his team's point spread (negative = favoured)
         "chk_net": (sum(1 for c in counted if c["lean"] == "over") - sum(1 for c in counted if c["lean"] == "under")) if raw.get("checks") else None,
     }
 
@@ -513,6 +514,7 @@ def signals(rows: list[dict]) -> list[dict]:
     zone = np.where(is_points, _col(rows, "zone_z"), np.nan)
     play = np.where(is_points, _col(rows, "playtype_z"), np.nan)
     tag = np.array([1.0 if r["injury"] else 0.0 for r in rows])
+    spread = _col(rows, "spread")       # NaN where the board carried none: "+ spread * 0" keeps those rows missing
 
     def s(key, label, family, values):
         return {"key": key, "label": label, "family": family, "values": np.asarray(values, dtype=float)}
@@ -535,6 +537,11 @@ def signals(rows: list[dict]) -> list[dict]:
         s("similar_opp", "Similar players: every prop vs this opponent, same stat", "Similar players", _prior_rates(rows, lambda r: (r["opponent"], r["stat"])) * 10),
         s("similar_opp_pos", "Similar players: same position group vs this opponent", "Similar players", _prior_rates(rows, lambda r: (r["opponent"], r["pos"], r["stat"])) * 10),
         s("similar_league_7d", "Same position and stat league-wide, last 7 days", "Similar players", _prior_rates(rows, lambda r: (r["pos"], r["stat"]), window_days=7) * 10),
+        # boards from round 26 on: the game's point spread (a likely blowout takes no over)
+        s("blowout", f"Game spread of {BLOWOUT_SPREAD:g} or more, toward the under", "Situation", -(np.abs(spread) >= BLOWOUT_SPREAD).astype(float) + spread * 0),
+        s("heavy_underdog", f"His team an underdog by {BLOWOUT_SPREAD:g} or more, toward the under", "Situation", -(spread >= BLOWOUT_SPREAD).astype(float) + spread * 0),
+        s("heavy_favourite", f"His team favoured by {BLOWOUT_SPREAD:g} or more, toward the under", "Situation", -(spread <= -BLOWOUT_SPREAD).astype(float) + spread * 0),
+        s("spread_size", "Size of the game's spread, toward the under", "Situation", -np.abs(spread) / 10.0),
         # boards from round 23 on: what the model publishes from
         s("fair_gap", "The books' median fair price against the best prices' own", "The market", _logit(_col(rows, "fair_over")) - _logit(pm)),
         s("checklist", "The checklist's net lean (checks for the over minus checks against)", "The checklist", _col(rows, "chk_net")),

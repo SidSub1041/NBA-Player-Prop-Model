@@ -12,7 +12,7 @@ from tabulate import tabulate
 
 from src.config import (
     CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, MAX_PER_GAME, MAX_PICKS, MAX_PRICE,
-    MIN_BOOKS, MIN_EDGE, MIN_FAIR_BOOKS, MIN_LINE, MIN_PRICE_EDGE, MIN_PROJ_MINUTES, OVER_MIN_SUPPORT, PAUSED_STATS,
+    BLOWOUT_SPREAD, MIN_BOOKS, MIN_EDGE, MIN_FAIR_BOOKS, MIN_LINE, MIN_PRICE_EDGE, MIN_PROJ_MINUTES, OVER_MIN_SUPPORT, PAUSED_STATS,
     STRONG_EDGE, STRONG_PRICE_EDGE, UNDER_MIN_SUPPORT, season_for_date, slate_today,
 )
 from src.season import stats_season, stats_season_reason
@@ -386,6 +386,8 @@ def _edge_fields(p) -> dict:
         # round 22: where and when the game is played (home/away was never on the boards before)
         "is_home": getattr(p, "is_home", None),
         "tip_utc": getattr(p, "tip_utc", None),
+        # round 26: his team's point spread (negative = favoured); an over is never published at BLOWOUT_SPREAD or more
+        "spread": _num_or_none(getattr(p, "spread", None), 1),
         "proj_source": proj.get("source") or None,
         "proj_mu_box": _num_or_none(proj.get("mu_box"), 2),
         "passing": _passing_fields(proj.get("passing")),
@@ -548,6 +550,7 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
             "under_min_support": UNDER_MIN_SUPPORT,
             "over_min_support": OVER_MIN_SUPPORT,
             "min_fair_books": MIN_FAIR_BOOKS,
+            "blowout_spread": BLOWOUT_SPREAD,
         },
         "valid_picks": _ranked_dicts(valid),
         "watchlist": _ranked_dicts(watchlist),

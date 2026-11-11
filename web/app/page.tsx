@@ -426,6 +426,8 @@ function guardLabel(guard: string, pick: PropPick, edge: string): string {
       return pick.proj_minutes != null ? `${Math.round(pick.proj_minutes)} min` : "minutes";
     case "passing":
       return "no passing data";
+    case "blowout":
+      return pick.spread != null ? `blowout risk · spread ${Math.abs(pick.spread)}` : "blowout risk";
     default:
       return guard;
   }
@@ -645,7 +647,7 @@ function MarketRows({ pick }: { pick: PropPick }) {
             <span
               key={g}
               className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text-muted)] whitespace-nowrap"
-              title={`guard: ${g}`}
+              title={g === "blowout" ? "no overs in a game with a spread this large: starters sit the fourth quarter of a blowout" : `guard: ${g}`}
             >
               {guardLabel(g, pick, edge)}
             </span>
@@ -1420,7 +1422,7 @@ const SYSTEM_STEPS_MARKET = [
   { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side. A pick needs it to be at least the fair price — the board never pays more than fair." },
   { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line overall and at home or on the road, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
   { n: "04", title: "SCORE EVERY CHECK", body: "Each night every check is tested against the price on every graded prop. A check moves a probability only after it beats the price on 25 nights; one that points the wrong way stops counting." },
-  { n: "05", title: "CAP & CLOSE", body: "__PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
+  { n: "05", title: "CAP & CLOSE", body: "No overs in a game with a spread of __BLOWOUT__ or more: starters sit in a blowout. __PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
 ];
 
 const SYSTEM_STEPS_EDGE = [
@@ -1507,6 +1509,48 @@ function positives(rec: SeasonRecord | null | undefined, lastSeason: { season: s
     });
   }
   return out.slice(0, 8);
+}
+
+/* ── What's new: the rebuilt model, announced under the hero (round 25) ── */
+const WHATS_NEW = [
+  { n: "01", title: "STARTS FROM THE PRICE", body: "Every pick begins at the sportsbooks' own fair price: each book's two-way price with the vig taken out, then the median across books. No projection moves it." },
+  { n: "02", title: "NEVER PAYS MORE THAN FAIR", body: "A pick needs the best price any book offers to be at least that fair price. Most props fail this; the board is shorter for it." },
+  { n: "03", title: "THE CHECKLIST ON EVERY CARD", body: "Defense vs. position, shot zones and playtypes, hit rate, the home/away split, minutes, similar players, rest. An under needs one more check for than against; an over two." },
+  { n: "04", title: "EVERY CHECK, TESTED NIGHTLY", body: "Two seasons of box scores are on file, and each check is scored against the price on every graded prop since opening week. A check that points the wrong way stops counting." },
+];
+
+function WhatsNew({ hasScorecard }: { hasScorecard: boolean }) {
+  return (
+    <div className="flex flex-col gap-4 px-6 lg:px-16 pt-10" aria-label="What's new">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <div className="flex items-center gap-3">
+          <span className="font-display text-base tracking-widest px-2.5 py-0.5 bg-[var(--accent)] text-[var(--bg)]">NEW</span>
+          <div className="font-display text-3xl sm:text-4xl tracking-wide leading-none">THE MODEL, REBUILT</div>
+        </div>
+        <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+          SINCE NOVEMBER 11 · PICKS START FROM THE MARKET&apos;S PRICE, NOT A PROJECTION
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {WHATS_NEW.map((t) => (
+          <div key={t.n} className="bg-[var(--card)] border border-[var(--border)] border-t-[3px] border-t-[var(--accent)] px-6 py-5 flex flex-col gap-2">
+            <div className="flex items-baseline gap-3">
+              <span className="font-display text-2xl leading-none text-[var(--accent)]">{t.n}</span>
+              <span className="text-xs font-bold tracking-[2px] text-[var(--text)]">{t.title}</span>
+            </div>
+            <div className="text-sm leading-snug text-[var(--text-muted)]">{t.body}</div>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-x-6 gap-y-1 text-[12px] font-semibold tracking-wider">
+        <a href="#board" className="text-[var(--accent)] hover:underline">TONIGHT&apos;S BOARD ↓</a>
+        {hasScorecard && (
+          <a href="#scorecard" className="text-[var(--accent)] hover:underline">THE SCORECARD ↓</a>
+        )}
+        <a href="#system" className="text-[var(--accent)] hover:underline">HOW A PICK IS MADE ↓</a>
+      </div>
+    </div>
+  );
 }
 
 function WhatsWorking({ rec, items }: { rec: SeasonRecord | null | undefined; items: Positive[] }) {
@@ -1618,6 +1662,7 @@ export default function Home() {
   const systemSteps = (marketBoard ? SYSTEM_STEPS_MARKET : edgeBoard ? SYSTEM_STEPS_EDGE : SYSTEM_STEPS).map((s) => ({
     ...s,
     body: s.body
+      .replace("__BLOWOUT__", String(data.thresholds?.blowout_spread ?? 12.5))
       .replace("__UNDER__", String(data.thresholds?.under_min_support ?? 1))
       .replace("__OVER__", String(data.thresholds?.over_min_support ?? 2))
       .replace("__HR__", String(Math.round(hrThreshold * 100)))
@@ -1800,6 +1845,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* What's new: the rebuilt model */}
+      {boardState !== "last-season" && data.model_version === "market-2" && <WhatsNew hasScorecard={!!data.scorecard?.market} />}
+
       {/* Where it's ahead: the positives, every one with its sample size */}
       {boardState !== "last-season" && <WhatsWorking rec={rec} items={working} />}
 
@@ -1924,7 +1972,7 @@ export default function Home() {
 
       {/* The Scorecard: every check against the price */}
       {data.scorecard?.market && boardState !== "last-season" && (
-        <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
+        <div id="scorecard" className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
           <SectionHead title="THE SCORECARD" tag="EVERY CHECK. AGAINST THE PRICE." />
           <ScorecardPanel card={data.scorecard} />
         </div>
@@ -1960,7 +2008,7 @@ export default function Home() {
       </div>
 
       {/* The System */}
-      <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-10">
+      <div id="system" className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-10">
         <SectionHead title="THE SYSTEM" tag="NO GUESSWORK" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {systemSteps.map((s) => (

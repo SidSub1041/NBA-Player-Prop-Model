@@ -99,6 +99,7 @@ class PropScore:
         self.fair = None          # {"p", "books", "basis", "low", "high", "adjustments"}: the market's fair probability of the pick side
         self.checks = None        # the checklist's readings, each pointed toward the over
         self.support = None       # {"for", "against", "net", "need"} for the pick side; set = graded by the market model
+        self.spread = None        # round 26: his team's point spread tonight (negative = favoured); None when unknown
         self.guards = []          # guard names that failed: price / books / line_size / minutes
 
     # ── designated line helpers ──────────────────────────────────────
@@ -141,7 +142,8 @@ class PropScore:
         B   one gate                         C   neither
         A pick is valid only when it is A+/A, every guard passes (a
         STRONG_PRICE_EDGE price may override the price and line-size guards;
-        never books or minutes), the stat is not paused and no cap dropped it.
+        never books, minutes or blowout — no over in a game with a spread of
+        BLOWOUT_SPREAD or more), the stat is not paused and no cap dropped it.
 
         Before round 23 (no `support`: a pick carried from an older board):
         A+ edge ≥ STRONG_EDGE, A ≥ MIN_EDGE, B+ ≥ WATCH_EDGE, B > 0, C ≤ 0,
@@ -159,7 +161,7 @@ class PropScore:
         if e is None:
             self.final_grade = "D"
             return
-        hard = [g for g in self.guards if g in ("books", "minutes", "passing")]
+        hard = [g for g in self.guards if g in ("books", "minutes", "passing", "blowout")]
         soft = [g for g in self.guards if g in ("price", "line_size")]
         if self.support is not None:
             net, need = int(self.support.get("net", 0)), int(self.support.get("need", 1))

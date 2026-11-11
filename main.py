@@ -67,7 +67,7 @@ from src.scoring_engine import PropScore, COMBO_DEFS
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import (
     SEASON, previous_season, EDGE_STATS, PAUSED_STATS, MIN_CANDIDATE_MPG, MIN_BOOKS, MIN_LINE,
-    MIN_PROJ_MINUTES, MAX_PRICE, SEASON_TYPE, MIN_PRICE_EDGE,
+    MIN_PROJ_MINUTES, MAX_PRICE, SEASON_TYPE, MIN_PRICE_EDGE, BLOWOUT_SPREAD,
 )
 from src import fair as fair_model, checklist as checklist_model
 from src.season import stats_season
@@ -121,7 +121,11 @@ def _uses_assists(stat: str) -> bool:
 
 def _guards(prop: PropScore) -> list[str]:
     """
-    Which guards a priced prop fails: price / books / line_size / minutes.
+    Which guards a priced prop fails: price / books / line_size / minutes /
+    blowout. The blowout guard (round 26) takes every OVER off the board in a
+    game whose point spread is BLOWOUT_SPREAD (12.5) or more, either team: in
+    a blowout the starters sit the fourth quarter and overs die with their
+    minutes. Unders are untouched.
     The books guard is about the market's depth: the line must come from the
     sportsbooks, at least MIN_BOOKS of them must list the number, and the
     fair price must rest on MIN_FAIR_BOOKS two-sided prices (a fair price
@@ -141,20 +145,31 @@ def _guards(prop: PropScore) -> list[str]:
     minutes = (prop.projection or {}).get("minutes")
     if minutes is not None and minutes < MIN_PROJ_MINUTES:
         out.append("minutes")
+    if prop.edge == "over" and _blowout(getattr(prop, "spread", None)):
+        out.append("blowout")
     return out
 
 
-def _pick_side(dec: dict, checks: list) -> str:
+def _blowout(spread) -> bool:
+    """Is the game likely to be a blowout: a point spread of BLOWOUT_SPREAD or more, either way?"""
+    return spread is not None and abs(float(spread)) >= BLOWOUT_SPREAD
+
+
+def _pick_side(dec: dict, checks: list, spread=None) -> str:
     """
     The side a prop is read on: the one that clears more of the two gates
     (the best price at least fair; the checklist behind it), then the one the
-    checklist favours, then the better price.
+    checklist favours, then the better price. In a likely blowout (round 26)
+    an over can never be published, so it counts as clearing one gate at
+    most: an under that clears both is the side shown.
     """
     best = None
     for side in ("over", "under"):
         e = dec.get(f"edge_{side}")
         sup = checklist_model.support(checks, side)
         gates = int(e is not None and e >= MIN_PRICE_EDGE) + int(sup["net"] >= sup["need"])
+        if side == "over" and _blowout(spread):
+            gates = min(gates, 1)
         key = (gates, sup["net"] - sup["need"], e if e is not None else float("-inf"))
         if best is None or key > best[0]:
             best = (key, side)
@@ -473,6 +488,7 @@ def _prop_from_board(d: dict) -> PropScore:
     p.total_points, p.total_conditions = d.get("total_points") or 0, d.get("total_conditions") or 0
     p.injury = d.get("injury")
     p.is_home, p.tip_utc = d.get("is_home"), d.get("tip_utc")
+    p.spread = d.get("spread")
     if d.get("support") is not None:      # a round-23 board: the fair price and the checklist ride along
         p.checks, p.support = d.get("checks"), d.get("support")
         p.fair = {"p": d.get("p_fair"), "over": d.get("fair_over"), "books": d.get("fair_books"), "basis": d.get("fair_basis"),
@@ -656,6 +672,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         vegas.dfs_regions = ""     # a DFS-only line can never be a pick: don't buy them for tomorrow
     wants = {t: {s: None for s in EDGE_STATS} for t in teams_playing}   # everyone, every single-stat market
     vegas.ensure(wants)
+    vegas.ensure_spreads()        # round 26: every game's point spread, one request (a likely blowout takes no over)
     vegas.save()
     logger.info(f"  {vegas.report()}")
     book_lines = sum(1 for v in vegas.cache["lines"].values() if v.get("tier", "books") == "books")
@@ -805,9 +822,11 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
                               hr_over=hr_over, minutes=(sample.get("this") or {}).get("minutes"), n_out=n_out, is_home=is_home,
                               passing=(probs[0], proj["mu"]) if (stat == "assists" and proj.get("source") == "passing" and line is not None) else None
                               ) if line is not None else []
-        side = _pick_side(dec, checks) if line is not None else "over"
+        spread = vegas.spread_for(team)
+        side = _pick_side(dec, checks, spread) if line is not None else "over"
 
         prop = PropScore(name, team, opponent, position, stat, side)
+        prop.spread = spread
         apply_line(prop, res)
         prop.projection = {**proj, "p_over": probs[0], "p_under": probs[1], "p_push": probs[2], "adjustments": mult}
         prop.minutes_log = (sample.get("this") or {}).get("minutes")      # for a combo's minutes check
@@ -894,6 +913,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         dec = fair_model.decide(line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current,
                                 p_push=probs[2], card=cl["card"]) if line is not None else {}
         combo = PropScore(name, team, comps[0].opponent, comps[0].position, combo_stat, side)   # the combo's side is its singles' side
+        combo.spread = comps[0].spread
         apply_line(combo, res)
         combo.projection = {**proj, "p_over": probs[0], "p_under": probs[1], "p_push": probs[2]}
         combo.dvp_z = comps[0].dvp_z
