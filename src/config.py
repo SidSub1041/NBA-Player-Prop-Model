@@ -130,7 +130,13 @@ PAUSED_STATS = {s.strip() for s in os.environ.get("PAUSED_STATS", "").split(",")
 # on offer to be at least that fair price, and the checklist behind it.
 MIN_FAIR_BOOKS = _env_int("MIN_FAIR_BOOKS", 3)          # books with both sides priced at the consensus line
 MIN_PRICE_EDGE = _env_float("MIN_PRICE_EDGE", 0.0)      # fair probability − the best price's break-even: never pay more than fair
-WATCH_PRICE_EDGE = _env_float("WATCH_PRICE_EDGE", -0.01)    # within a point of fair: the watchlist
+NEAR_PRICE_EDGE = _env_float("NEAR_PRICE_EDGE", -0.005)     # within half a point of fair: an A-
+WATCH_PRICE_EDGE = _env_float("WATCH_PRICE_EDGE", -0.01)    # within a point of fair: a B+
+LOW_PRICE_EDGE = _env_float("LOW_PRICE_EDGE", -0.02)        # within two points of fair: a B
+# Round 28: the board shows every graded play down to this grade (A+, A, A-, B+ or B); the grade says how far the
+# price is from fair and how much of the checklist is behind it. PUBLISH_FLOOR=A restores the strict board.
+PUBLISH_FLOOR = os.environ.get("PUBLISH_FLOOR", "B").strip().upper() or "B"
+GRADE_RANK = {"A+": 7, "A": 6, "A-": 5, "B+": 4, "B": 3, "C": 2, "D": 1, "F": 0}
 STRONG_PRICE_EDGE = _env_float("STRONG_PRICE_EDGE", 0.02)   # A+: two points better than fair
 UNDER_MIN_SUPPORT = _env_int("UNDER_MIN_SUPPORT", 1)    # net checks (for − against) an under needs
 OVER_MIN_SUPPORT = _env_int("OVER_MIN_SUPPORT", 2)      # ... and an over: overs have been overpriced, so the checks must outweigh it

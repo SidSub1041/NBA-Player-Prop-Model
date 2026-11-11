@@ -150,6 +150,46 @@ def _guards(prop: PropScore) -> list[str]:
     return out
 
 
+def _published_today(date: str) -> dict:
+    """
+    Every pick published on any board of the day: {lock key: its board dict},
+    read from the day's archived boards (logs/boards/{date}/*.json.gz, oldest
+    first) and the current board, the most recent publication of each pick
+    winning. Round 27: a pick that has been published stays published — the
+    price it went up at is the price it is graded at — whatever a later run
+    finds the market doing (it is withdrawn only when the player is ruled
+    OUT, or for an over when the game becomes a likely blowout).
+    """
+    import glob
+    import gzip
+    import json
+    out: dict = {}
+    files = sorted(glob.glob(os.path.join("logs", "boards", date, "*.json.gz"))) + [os.path.join("logs", f"props_{date}.json")]
+    for path in files:
+        try:
+            with (gzip.open(path, "rt", encoding="utf-8") if path.endswith(".gz") else open(path, encoding="utf-8")) as f:
+                board = json.load(f)
+        except (OSError, ValueError, EOFError):
+            continue
+        if not isinstance(board, dict) or board.get("date") != date:
+            continue
+        stamp = board.get("run_at_iso")
+        for p in board.get("all_props") or []:
+            if not isinstance(p, dict) or not p.get("is_valid") or p.get("line") is None or not p.get("player_name") or not p.get("stat"):
+                continue
+            lk = lock_key(p["player_name"], p["stat"])
+            first = (out.get(lk) or {}).get("published_at") or p.get("published_at") or stamp
+            out[lk] = {**p, "published_at": first}
+    return out
+
+
+def _line_of(d: dict) -> dict:
+    """The line a board dict was published on, in the shape the resolver locks (src.lines.load_board_lines)."""
+    return {"line": d["line"], "source": d.get("line_source") or "vegas", "books": d.get("line_books"),
+            "over_odds": d.get("over_odds"), "over_book": d.get("over_book"),
+            "under_odds": d.get("under_odds"), "under_book": d.get("under_book")}
+
+
 def _blowout(spread) -> bool:
     """Is the game likely to be a blowout: a point spread of BLOWOUT_SPREAD or more, either way?"""
     return spread is not None and abs(float(spread)) >= BLOWOUT_SPREAD
@@ -489,6 +529,7 @@ def _prop_from_board(d: dict) -> PropScore:
     p.injury = d.get("injury")
     p.is_home, p.tip_utc = d.get("is_home"), d.get("tip_utc")
     p.spread = d.get("spread")
+    p.published_at = d.get("published_at")
     if d.get("support") is not None:      # a round-23 board: the fair price and the checklist ride along
         p.checks, p.support = d.get("checks"), d.get("support")
         p.fair = {"p": d.get("p_fair"), "over": d.get("fair_over"), "books": d.get("fair_books"), "basis": d.get("fair_basis"),
@@ -666,6 +707,17 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         except (OSError, ValueError):
             board_meta = {}
         logger.info(f"  Fill mode: {len(locked)} line(s) locked from the {date} board" if locked else f"  Fill mode: no board for {date} yet — building it from scratch")
+    # Round 27: a pick published on ANY earlier board of the day stays published, on the line and price it went up
+    # at — in a full run too (which re-prices and re-reads everything else), and even if a later board dropped it.
+    published = _published_today(date)
+    restored = [lk for lk, d in published.items() if not (board_meta.get(lk) or {}).get("is_valid")]
+    for lk, d in published.items():
+        if not fill_holds or lk in restored:
+            board_meta[lk] = d
+            locked[lk] = _line_of(d)
+    if published:
+        logger.info(f"  {len(published)} pick(s) already published for {date} stay on the board"
+                    + (f" ({len(restored)} restored from an earlier board of the day)" if restored and fill_holds else ""))
     vegas = VegasLines(date, locked={f"{n}|{s}" for (n, s) in locked}, fill=fill_holds)
     future = date > slate_today()
     if future:
@@ -762,6 +814,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         except Exception as e:
             logger.warning(f"  Box-score backfill skipped ({type(e).__name__}: {e})")
     cl = _checklist_context(date)
+    withdrawn_blowout: list[str] = []
     repriced: list[tuple] = []        # (prop, its market entry, the projection's side probabilities) for every prop priced this run
     prop_scores: list[PropScore] = []
     projections: dict[tuple, dict] = {}
@@ -770,10 +823,18 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         if not opponent:
             continue
         key = c["hist_key"]
-        locked_pick = board_meta.get(lk) if fill_holds and lk in locked else None
+        locked_pick = board_meta.get(lk) if lk in locked else None
         if locked_pick:
             prop = _prop_from_board(locked_pick)
             prop.injury = injury_label(injuries, name) or prop.injury
+            now_spread = vegas.spread_for(team)
+            if now_spread is not None:
+                prop.spread = now_spread
+            if prop.pinned and prop.edge == "over" and _blowout(prop.spread):
+                # a published over in a game that is now a likely blowout: taken off the board, shown with the reason
+                prop.pinned = prop.is_valid = False
+                prop.guards = sorted(set(prop.guards) | {"blowout"})
+                withdrawn_blowout.append(f"{name} {stat}")
             mv = movement(date, key, prop.edge, history=history)
             if mv:
                 prop.open_line, prop.line_move = mv.get("open_line"), mv.get("move")
@@ -859,6 +920,8 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
     _assert_stats_reachable("projections")
     _log_passing_vs_box(prop_scores)
     _apply_passed_checks(prop_scores, repriced, cl, date)
+    if withdrawn_blowout:
+        logger.warning(f"  Withdrawn — an over in a game that is now a likely blowout: {', '.join(sorted(withdrawn_blowout))}")
 
     # ── Step 6: Combos — players with two A-grade singles on one side ─
     logger.info("Step 6: Building combo props...")
@@ -867,8 +930,9 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         if p.stat in EDGE_STATS and p.final_grade in ("A+", "A") and not p.paused:
             by_player.setdefault((p.player_name, p.team, p.edge), {})[p.stat] = p
     carried: set = set()
-    if fill_holds:
-        # Every combo on the earlier board keeps its line, edge and grade, whatever its singles do now
+    if board_meta:
+        # Every combo on the earlier board (fill mode), and every combo published earlier today (any mode), keeps its
+        # line, edge and grade, whatever its singles do now
         for lk, d in board_meta.items():
             if lk[1] not in COMBO_DEFS or lk not in locked:
                 continue

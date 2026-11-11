@@ -17,6 +17,7 @@ board", "cap: 1 per player") so the board can list it below the picks.
 import logging
 
 from src.config import MAX_PER_GAME, MAX_PER_PLAYER, MAX_PICKS
+from src.config import GRADE_RANK
 from src.underdog import norm_name
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,8 @@ def _edge_order_key(p) -> tuple:
     # round 23: between two equal price edges, the play with more checks to spare comes first
     sup = getattr(p, "support", None) or {}
     spare = float(sup.get("net", 0) - sup.get("need", 0)) if sup else 0.0
-    return (-edge, -spare, -float(books), -p_model)
+    grade = GRADE_RANK.get(getattr(p, "final_grade", None), 0)      # round 28: the board holds several grades — the better one first
+    return (-grade, -edge, -spare, -float(books), -p_model)
 
 
 def _player_key(p) -> str:

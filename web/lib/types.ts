@@ -74,6 +74,8 @@ export interface PropPick {
   line_shopped?: boolean;
   /** round 20: a better number one book hangs for the same side, shown under the pick (never graded) */
   alt_line?: AltLine | null;
+  /** round 27: when the pick first went up (ISO); a published pick stays on the board at that line and price */
+  published_at?: string | null;
   /** round 26: his team's point spread tonight (negative = favoured); an over is never published at 12.5 or more */
   spread?: number | null;
   /** round 23, the market-anchored model: the books' fair probability of the pick side, and what it rests on */
@@ -278,6 +280,8 @@ export interface PropsData {
     over_min_support?: number;
     min_fair_books?: number;
     blowout_spread?: number;
+    /** round 28: the lowest grade the board shows (A+, A, A-, B+ or B) */
+    publish_floor?: string;
   };
   valid_picks: PropPick[];
   watchlist: PropPick[];

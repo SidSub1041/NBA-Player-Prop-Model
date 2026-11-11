@@ -188,6 +188,7 @@ function GradeBadge({ grade, small }: { grade: string; small?: boolean }) {
   const cls: Record<string, string> = {
     "A+": "grade-a-plus",
     A: "grade-a",
+    "A-": "grade-a-minus",
     "B+": "grade-b-plus",
     B: "grade-b",
     C: "grade-c",
@@ -198,7 +199,7 @@ function GradeBadge({ grade, small }: { grade: string; small?: boolean }) {
     <span
       className={`inline-block font-bold ${small ? "px-2 py-0.5 text-xs" : "px-3 py-1.5 text-sm"} ${cls[grade] ?? "grade-d"}`}
     >
-      {grade}
+      {grade.replace("-", "−")}
     </span>
   );
 }
@@ -312,6 +313,11 @@ function LineOdds({ pick, edge }: { pick: PropPick; edge: string }) {
                 ? `${book ?? "DFS"} · dfs backup`
                 : "underdog backup"}
         </div>
+        {pick.is_valid && pick.published_at && fmtRunTime(pick.published_at) && (
+          <div className="text-[11px] text-[var(--text-faint)] whitespace-nowrap" title="the line and price are as they were when the pick went up; a published pick stays on the board">
+            posted {fmtRunTime(pick.published_at)}
+          </div>
+        )}
       </div>
       {fromBooks && pick.ud_line != null && (
         <div className="text-right">
@@ -1419,7 +1425,7 @@ const SYSTEM_STEPS = [
 /** The edge model (round 18): a projection turned into a probability, priced against the market. */
 const SYSTEM_STEPS_MARKET = [
   { n: "01", title: "START FROM THE PRICE", body: "Every sportsbook's two-way price on the regular line, vig taken out, and the median across books: the market's own fair probability. No projection moves it." },
-  { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side. A pick needs it to be at least the fair price — the board never pays more than fair." },
+  { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side, against that fair price. At least fair is an A; within half a point an A−, a point a B+, two points a B. Nothing further from fair is shown." },
   { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line overall and at home or on the road, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
   { n: "04", title: "SCORE EVERY CHECK", body: "Each night every check is tested against the price on every graded prop. A check moves a probability only after it beats the price on 25 nights; one that points the wrong way stops counting." },
   { n: "05", title: "CAP & CLOSE", body: "No overs in a game with a spread of __BLOWOUT__ or more: starters sit in a blowout. __PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
@@ -1436,7 +1442,7 @@ const SYSTEM_STEPS_EDGE = [
 /* ── Grade ranking for deduplication ──────────────────────────────── */
 
 const GRADE_RANK: Record<string, number> = {
-  "A+": 6, A: 5, "B+": 4, B: 3, C: 2, D: 1, F: 0,
+  "A+": 7, A: 6, "A-": 5, "B+": 4, B: 3, C: 2, D: 1, F: 0,
 };
 
 /** Best pick first: grade, then the edge over the market, then EV (learner ACTIVE only) or hit rate vs the line, conditions met, books on the line. */
@@ -1511,10 +1517,19 @@ function positives(rec: SeasonRecord | null | undefined, lastSeason: { season: s
   return out.slice(0, 8);
 }
 
+/** Round 28: what a grade says on a market-model board — how far the price is from fair, how much of the checklist is behind it. */
+const GRADE_NOTE: Record<string, string> = {
+  "A+": "PRICE 2+ POINTS BETTER THAN FAIR · A CHECK TO SPARE",
+  A: "PRICE AT LEAST FAIR · CHECKLIST MET",
+  "A-": "CHECKLIST MET · PRICE WITHIN ½ POINT OF FAIR",
+  "B+": "CHECKLIST MET, PRICE WITHIN 1 POINT — OR FAIR PRICE, ONE CHECK SHORT",
+  B: "CHECKLIST MET, PRICE WITHIN 2 POINTS — OR FAIR PRICE, CHECKLIST NEUTRAL",
+};
+
 /* ── What's new: the rebuilt model, announced under the hero (round 25) ── */
 const WHATS_NEW = [
   { n: "01", title: "STARTS FROM THE PRICE", body: "Every pick begins at the sportsbooks' own fair price: each book's two-way price with the vig taken out, then the median across books. No projection moves it." },
-  { n: "02", title: "NEVER PAYS MORE THAN FAIR", body: "A pick needs the best price any book offers to be at least that fair price. Most props fail this; the board is shorter for it." },
+  { n: "02", title: "GRADED AGAINST THE FAIR PRICE", body: "An A needs the best price any book offers to be at least fair. A−, B+ and B sit within half a point, one point and two points of it. The grade says how far." },
   { n: "03", title: "THE CHECKLIST ON EVERY CARD", body: "Defense vs. position, shot zones and playtypes, hit rate, the home/away split, minutes, similar players, rest. An under needs one more check for than against; an over two." },
   { n: "04", title: "EVERY CHECK, TESTED NIGHTLY", body: "Two seasons of box scores are on file, and each check is scored against the price on every graded prop since opening week. A check that points the wrong way stops counting." },
 ];
@@ -1656,7 +1671,7 @@ export default function Home() {
   const maxPerGame = data.thresholds?.max_per_game ?? caps?.limits?.max_per_game ?? null;
   const capsLine =
     caps && caps.dropped > 0
-      ? `${caps.kept} of ${caps.kept + caps.dropped} A-grade plays shown${maxPerGame != null ? ` (${maxPerGame} per game)` : ""}`
+      ? `${caps.kept} of ${caps.kept + caps.dropped} graded plays shown${maxPerGame != null ? ` (${maxPerGame} per game)` : ""}`
       : null;
   const marketBoard = data.model_version === "market-2";
   const systemSteps = (marketBoard ? SYSTEM_STEPS_MARKET : edgeBoard ? SYSTEM_STEPS_EDGE : SYSTEM_STEPS).map((s) => ({
@@ -1903,7 +1918,7 @@ export default function Home() {
         ) : boardPicks.length === 0 ? (
           <EmptyState
             title="NO PLAYS TONIGHT."
-            body="The model found no A-grade edges today. Passing is a position."
+            body="Nothing cleared the bar today. Passing is a position."
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1914,15 +1929,15 @@ export default function Home() {
                   {(i === 0 || boardPicks[i - 1].grade !== p.grade) && (
                     <div className="lg:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-1 pt-2">
                       <GradeBadge grade={p.grade} />
-                      <div className="text-[12px] font-bold tracking-wider text-[var(--text-muted)] whitespace-nowrap">
-                        {boardPicks.filter((q) => q.grade === p.grade).length} PLAYS · BEST FIRST
+                      <div className="text-[12px] font-bold tracking-wider text-[var(--text-muted)] min-w-0 flex-1 basis-[240px]">
+                        {boardPicks.filter((q) => q.grade === p.grade).length} {boardPicks.filter((q) => q.grade === p.grade).length === 1 ? "PLAY" : "PLAYS"}
+                        {marketBoard && GRADE_NOTE[p.grade] ? ` · ${GRADE_NOTE[p.grade]}` : " · BEST FIRST"}
                         {seg && seg.n > 0 && (
                           <span className="font-semibold text-[var(--text-faint)]">
                             {" "}· THIS SEASON {seg.record} · {fmtUnits(seg.units)}
                           </span>
                         )}
                       </div>
-                      <div className="court-rule h-1 flex-grow hidden sm:block" />
                       {i === 0 && (
                         <div className="text-[11px] text-[var(--text-faint)]">
                           {edgeBoard
@@ -1945,7 +1960,7 @@ export default function Home() {
         {boardState !== "last-season" && (
           <CompactPanel
             title="BELOW THE CAP"
-            tag="A-GRADE EDGES THE BOARD CAPS DROPPED · STRONGEST EDGES FIRST"
+            tag="GRADED PLAYS THE BOARD CAPS DROPPED · BEST FIRST"
             picks={deduplicatePicks(data.capped ?? [])}
             prefix="cap"
             note={(p) => p.cap_note ?? "capped"}

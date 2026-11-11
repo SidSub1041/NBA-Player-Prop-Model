@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 LOGS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
 
-GRADE_RANK = {"A+": 6, "A": 5, "B+": 4, "B": 3, "C": 2, "D": 1, "F": 0}
+from src.config import GRADE_RANK, PUBLISH_FLOOR      # A+ > A > A- > B+ > B > C > D > F
 
 # The JSON key for the modelled edge is edge_value (p_model − p_market, pick
 # side): "edge" has always been the side (over/under) in every board, CSV and
@@ -125,9 +125,9 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
         "=" * 72,
         "",
         f"  Candidates analyzed : {len(prop_scores)}",
-        f"  Valid picks (A/A+)  : {len(valid)}",
+        f"  Picks on the board  : {len(valid)}",
         f"  On hold (no line)   : {len(on_hold)}",
-        f"  Watchlist (B/B+)    : {len(watchlist)}",
+        f"  Graded, not shown   : {len(watchlist)}",
     ]
     if with_edge:
         lines += [
@@ -388,6 +388,8 @@ def _edge_fields(p) -> dict:
         "tip_utc": getattr(p, "tip_utc", None),
         # round 26: his team's point spread (negative = favoured); an over is never published at BLOWOUT_SPREAD or more
         "spread": _num_or_none(getattr(p, "spread", None), 1),
+        # round 27: when the pick first went up; save_json_report stamps a pick that is published for the first time
+        "published_at": getattr(p, "published_at", None),
         "proj_source": proj.get("source") or None,
         "proj_mu_box": _num_or_none(proj.get("mu_box"), 2),
         "passing": _passing_fields(proj.get("passing")),
@@ -478,6 +480,11 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
     paused = rank_picks([p for p in prop_scores if getattr(p, "paused", False) and p.final_grade in ("A+", "A")], active)
     capped = rank_picks([p for p in prop_scores if getattr(p, "cap_note", "")], active)
 
+    now_utc = datetime.now(timezone.utc)
+    for p in prop_scores:      # round 27: a pick published for the first time gets its time; it keeps it on every later board
+        if p.is_valid and not getattr(p, "published_at", None):
+            p.published_at = now_utc.isoformat(timespec="seconds")
+
     # One dict per prop, shared by every list it appears in, so the rank tagged
     # on a board list is on the same row in all_props (and so in picks.csv).
     dicts = {id(p): _prop_to_dict(p) for p in prop_scores}
@@ -508,7 +515,6 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
         },
     }
 
-    now_utc = datetime.now(timezone.utc)
     payload = {
         "date": date,
         "season": season_for_date(datetime.strptime(date, "%Y-%m-%d").date()),
@@ -551,6 +557,7 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
             "over_min_support": OVER_MIN_SUPPORT,
             "min_fair_books": MIN_FAIR_BOOKS,
             "blowout_spread": BLOWOUT_SPREAD,
+            "publish_floor": PUBLISH_FLOOR,
         },
         "valid_picks": _ranked_dicts(valid),
         "watchlist": _ranked_dicts(watchlist),

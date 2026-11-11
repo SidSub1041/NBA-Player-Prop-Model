@@ -61,6 +61,9 @@ body {
   .grade-a {
     @apply bg-green-500/20 text-green-400 border border-green-500/30;
   }
+  .grade-a-minus {
+    @apply bg-lime-500/20 text-lime-400 border border-lime-500/30;
+  }
   .grade-b-plus {
     @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
   }

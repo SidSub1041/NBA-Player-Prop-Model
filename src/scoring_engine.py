@@ -99,6 +99,7 @@ class PropScore:
         self.fair = None          # {"p", "books", "basis", "low", "high", "adjustments"}: the market's fair probability of the pick side
         self.checks = None        # the checklist's readings, each pointed toward the over
         self.support = None       # {"for", "against", "net", "need"} for the pick side; set = graded by the market model
+        self.published_at = None  # round 27: when the pick first went up (ISO); a published pick stays, at that price
         self.spread = None        # round 26: his team's point spread tonight (negative = favoured); None when unknown
         self.guards = []          # guard names that failed: price / books / line_size / minutes
 
@@ -131,26 +132,32 @@ class PropScore:
         """
         The grade, and whether the pick is published.
 
-        Round 23 (a prop with `support` set — the market-anchored model):
+        The market-anchored model (a prop with `support` set; rounds 23, 28):
         `edge_value` is the PRICE edge, the market's fair probability of the
         side minus the break-even of the best price on offer, and `support`
-        is the checklist behind the side. Two gates:
-          price    edge ≥ MIN_PRICE_EDGE — the best price is at least fair
-          support  net checks ≥ need (UNDER_MIN_SUPPORT / OVER_MIN_SUPPORT)
-        A+  both gates, a price two points better than fair and a check to spare
-        A   both gates                       B+  one gate, the other close
-        B   one gate                         C   neither
-        A pick is valid only when it is A+/A, every guard passes (a
-        STRONG_PRICE_EDGE price may override the price and line-size guards;
-        never books, minutes or blowout — no over in a game with a spread of
-        BLOWOUT_SPREAD or more), the stat is not paused and no cap dropped it.
+        is the checklist behind the side (net = checks for − checks against,
+        need = 1 for an under, 2 for an over). The grade says how far the
+        price is from fair and how much of the checklist is behind the pick:
+          A+  price two points better than fair, a check to spare
+          A   price at least fair, the checklist met
+          A-  the checklist met, price within half a point of fair
+          B+  the checklist met, price within a point of fair —
+              or price at least fair, the checklist one check short
+          B   the checklist met, price within two points of fair —
+              or price at least fair and the checklist not against it
+          C   anything else
+        A pick is published when its grade is PUBLISH_FLOOR (B) or better,
+        every guard passes (a STRONG_PRICE_EDGE price may override the price
+        and line-size guards; never books, minutes or blowout — no over in a
+        game with a spread of BLOWOUT_SPREAD or more), the stat is not paused
+        and no cap dropped it.
 
         Before round 23 (no `support`: a pick carried from an older board):
         A+ edge ≥ STRONG_EDGE, A ≥ MIN_EDGE, B+ ≥ WATCH_EDGE, B > 0, C ≤ 0,
         with the same guard rules. HOLD without a line either way.
         """
-        from src.config import (MIN_EDGE, MIN_PRICE_EDGE, STRONG_EDGE, STRONG_PRICE_EDGE, WATCH_EDGE,
-                                WATCH_PRICE_EDGE)
+        from src.config import (GRADE_RANK, LOW_PRICE_EDGE, MIN_EDGE, MIN_PRICE_EDGE, NEAR_PRICE_EDGE, PUBLISH_FLOOR,
+                                STRONG_EDGE, STRONG_PRICE_EDGE, WATCH_EDGE, WATCH_PRICE_EDGE)
         self.is_valid = False
         self.on_hold = False
         if self.line is None:
@@ -168,13 +175,21 @@ class PropScore:
             price_ok, support_ok = e >= MIN_PRICE_EDGE, net >= need
             if price_ok and support_ok:
                 self.final_grade = "A+" if (e >= STRONG_PRICE_EDGE and net >= need + 1) else "A"
+            elif support_ok and e >= NEAR_PRICE_EDGE:
+                self.final_grade = "A-"
             elif (support_ok and e >= WATCH_PRICE_EDGE) or (price_ok and net >= need - 1):
                 self.final_grade = "B+"
-            elif price_ok or support_ok:
+            elif (support_ok and e >= LOW_PRICE_EDGE) or (price_ok and net >= 0):
                 self.final_grade = "B"
             else:
                 self.final_grade = "C"
             strong = e >= STRONG_PRICE_EDGE
+            floor = GRADE_RANK.get(PUBLISH_FLOOR, GRADE_RANK["B"])
+            self.is_valid = (
+                GRADE_RANK.get(self.final_grade, 0) >= max(floor, GRADE_RANK["B"]) and not hard and (not soft or strong)
+                and not self.paused and not self.cap_note
+            )
+            return
         else:
             if e >= STRONG_EDGE:
                 self.final_grade = "A+"
