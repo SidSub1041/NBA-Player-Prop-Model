@@ -17,10 +17,14 @@ actions/cache) holding a compact table
 
     {"season": "2026-27", "fetched_through": "2026-10-26" | null, "complete": bool,
      "columns": [PLAYER_ID, PLAYER_NAME, TEAM_ABBREVIATION, GAME_ID, GAME_DATE,
-                 MIN, PTS, REB, AST, FG3M, STL, BLK, TOV],
+                 MIN, PTS, REB, AST, FG3M, STL, BLK, TOV, HOME, OPP],
+     "venue": true,
      "rows": [[...], ...]}
 
-GAME_DATE is YYYY-MM-DD, MIN is float minutes, newest game first.
+GAME_DATE is YYYY-MM-DD, MIN is float minutes, newest game first. HOME (1 at
+home, 0 on the road) and OPP (the opponent) come from the endpoint's MATCHUP
+("BOS vs. DET" / "BOS @ DET"); a table saved before round 24 has neither and
+is fetched whole once more ("venue" marks a table that has been).
 "complete" marks a table fetched after its season ended: only then is it
 final (a table saved during the season is topped up once after the season
 rolls over, so the last few days of the regular season are never lost).
@@ -49,7 +53,7 @@ _REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE_DIR = os.environ.get("GAMELOG_CACHE_DIR") or os.path.join(_REPO, "cache", "gamelogs")
 
 COLUMNS = ["PLAYER_ID", "PLAYER_NAME", "TEAM_ABBREVIATION", "GAME_ID", "GAME_DATE", "MIN",
-           "PTS", "REB", "AST", "FG3M", "STL", "BLK", "TOV"]
+           "PTS", "REB", "AST", "FG3M", "STL", "BLK", "TOV", "HOME", "OPP"]
 STAT_COLUMNS = ["PTS", "REB", "AST", "FG3M", "STL", "BLK", "TOV"]
 
 _frames: dict[str, pd.DataFrame | None] = {}   # season -> this run's table (None: unavailable this run)
@@ -69,6 +73,15 @@ def cache_path(season: str) -> str:
 
 
 # ── table shape ──────────────────────────────────────────────────────────
+
+def _venue(matchup) -> tuple:
+    """(HOME, OPP) from the endpoint's MATCHUP: "BOS vs. DET" -> (1, "DET"), "BOS @ DET" -> (0, "DET"); (None, None) otherwise."""
+    s = str(matchup) if matchup is not None and matchup == matchup else ""
+    for sep, home in ((" vs. ", 1), (" @ ", 0)):
+        if sep in s:
+            return home, (s.split(sep, 1)[1].strip() or None)
+    return None, None
+
 
 def _compact(raw: pd.DataFrame) -> pd.DataFrame:
     """
@@ -94,9 +107,16 @@ def _compact(raw: pd.DataFrame) -> pd.DataFrame:
     out["MIN"] = [round(parse_minutes(m), 2) for m in minutes]
     for col in STAT_COLUMNS:
         out[col] = pd.to_numeric(raw[col], errors="coerce") if col in raw.columns else float("nan")
+    if "HOME" in raw.columns and "OPP" in raw.columns:       # a table read back from disk
+        out["HOME"] = pd.Series([None if v is None or v != v else int(bool(v)) for v in raw["HOME"]], index=raw.index, dtype=object)
+        out["OPP"] = pd.Series([str(v) if v is not None and v == v and str(v) != "" else None for v in raw["OPP"]], index=raw.index, dtype=object)
+    else:                                                    # the endpoint's frame
+        venue = [_venue(m) for m in (raw["MATCHUP"] if "MATCHUP" in raw.columns else [None] * len(raw))]
+        out["HOME"] = pd.Series([v[0] for v in venue], index=raw.index, dtype=object)
+        out["OPP"] = pd.Series([v[1] for v in venue], index=raw.index, dtype=object)
     out = out[out["PLAYER_ID"].notna() & out["GAME_ID"].notna()]
     out = out.astype({"PLAYER_ID": "int64", "MIN": "float64", **{c: "float64" for c in STAT_COLUMNS}})
-    for col in ("PLAYER_NAME", "TEAM_ABBREVIATION", "GAME_ID", "GAME_DATE"):
+    for col in ("PLAYER_NAME", "TEAM_ABBREVIATION", "GAME_ID", "GAME_DATE", "HOME", "OPP"):
         out[col] = out[col].astype(object).where(out[col].notna(), None)   # None, never NaN, for a missing text
     return _sorted(out)
 
@@ -165,7 +185,7 @@ def _load(season: str) -> dict | None:
         logger.warning(f"  Game-log cache {path} unreadable ({type(e).__name__}: {e}) — ignoring it")
         return None
     return {"frame": frame, "fetched_through": blob.get("fetched_through") or _fetched_through(frame),
-            "complete": bool(blob.get("complete"))}
+            "complete": bool(blob.get("complete")), "venue": bool(blob.get("venue"))}
 
 
 def _save(season: str, df: pd.DataFrame, complete: bool) -> None:
@@ -176,6 +196,7 @@ def _save(season: str, df: pd.DataFrame, complete: bool) -> None:
         "season": season,
         "fetched_through": _fetched_through(df),
         "complete": bool(complete),
+        "venue": True,
         "columns": COLUMNS,
         "rows": [[_cell(v) for v in row] for row in df[COLUMNS].itertuples(index=False, name=None)],
     }
@@ -219,13 +240,15 @@ def league_logs(season: str) -> pd.DataFrame | None:
         return _frames[season]
     cached = _load(season)
     completed = season < config.SEASON
-    if cached is not None and completed and cached["complete"]:
+    # a table saved before round 24 has no home/away: it is fetched whole once more (the new rows win the merge)
+    needs_venue = cached is not None and not cached["venue"]
+    if cached is not None and completed and cached["complete"] and not needs_venue:
         logger.info(f"  Game logs {season}: {len(cached['frame'])} rows from disk (season complete, no request)")
         _frames[season] = cached["frame"]
         return cached["frame"]
 
     since = cached["fetched_through"] if cached is not None else None
-    date_from = _mmddyyyy(since) if since else ""
+    date_from = _mmddyyyy(since) if (since and not needs_venue) else ""
     try:
         from nba_api.stats.endpoints import playergamelogs
 

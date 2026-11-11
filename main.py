@@ -193,8 +193,14 @@ def _back_to_backs(date: str) -> dict:
 
 
 def _checklist_context(date: str) -> dict:
-    """What the checklist needs once per run: the scorecard's verdicts, the season's similar-player results, yesterday's teams."""
-    ctx = {"card": None, "verdicts": {}, "similar": {}, "b2b": None}
+    """What the checklist needs once per run: the scorecard's verdicts, the season's similar-player results, the box-score
+    history (hit rates, home/away splits, minutes, who played yesterday) and, as a fallback for that last one, yesterday's board."""
+    ctx = {"card": None, "verdicts": {}, "similar": {}, "b2b": None, "history": None, "date": date}
+    try:
+        from src import boxlog
+        ctx["history"] = boxlog.History() or None      # logs/box: every player's games, as of any date (round 24)
+    except Exception as e:
+        logger.warning(f"  Checklist: box-score history unavailable ({type(e).__name__}: {e})")
     try:
         from src import scorecard
         ctx["card"] = scorecard.load()
@@ -206,19 +212,41 @@ def _checklist_context(date: str) -> dict:
     return ctx
 
 
-def _read_checks(cl: dict, *, stat, line, team, opponent, position, dvp_z, zs, ps, hr_over, minutes, n_out, passing=None) -> list:
-    """The checklist for one prop (src/checklist.read), from what the run already knows."""
+def _read_checks(cl: dict, *, name=None, stat, line, team, opponent, position, dvp_z, zs, ps, hr_over, minutes, n_out, is_home=None, passing=None) -> list:
+    """
+    The checklist for one prop (src/checklist.read), from what the run already knows.
+
+    The player's own history — games over the line, the same at tonight's
+    venue, his minutes, whether either team played yesterday — is read from
+    the box-score history (src/boxlog.py) when it knows him: the same code
+    the scorecard replays on past boards, so the evidence it gathers is about
+    exactly this reading. Without it, the run's own game log and yesterday's
+    board stand in (and the home/away split has no reading).
+    """
+    from src import boxlog
     group = _pos_group(position)
     sim = cl["similar"].get((opponent, group, stat))
-    b2b = cl["b2b"]
+    date, hist = cl.get("date"), cl.get("history")
     counted = hr_over.get("hitrate", -1) is not None and hr_over.get("hitrate", -1) >= 0 and hr_over.get("source") == "gamelog_vs_line"
+    own = {"over_games": hr_over.get("games_hit") if counted else None, "games": hr_over.get("games_played") if counted else None,
+           "split_over": None, "split_games": None, "minutes": minutes}
+    b2b = cl["b2b"]
+    own_b2b = None if b2b is None else bool(b2b.get(team))
+    opp_b2b = None if b2b is None else bool(b2b.get(opponent))
+    if hist and date and name:
+        games = hist.games(name, date, team)
+        if games is not None:
+            own = boxlog.readings(games, stat, line, date, is_home)
+        y = (datetime.strptime(date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+        if hist.played(team, y) is not None:
+            own_b2b, opp_b2b = hist.played(team, y), hist.played(opponent, y)
     return checklist_model.read({
         "stat": stat, "line": line, "opponent": opponent, "pos_group": group, "dvp_z": dvp_z,
         "zone_z": zs.get("z") if zs and zs.get("n") else None, "playtype_z": ps.get("z") if ps and ps.get("n") else None,
-        "over_games": hr_over.get("games_hit") if counted else None, "games": hr_over.get("games_played") if counted else None,
-        "minutes": minutes, "similar_over": sim[0] if sim else None, "similar_n": sim[1] if sim else None,
-        "own_b2b": None if b2b is None else bool(b2b.get(team)), "opp_b2b": None if b2b is None else bool(b2b.get(opponent)),
-        "teammate_out": n_out,
+        "over_games": own["over_games"], "games": own["games"],
+        "split_over": own["split_over"], "split_games": own["split_games"], "is_home": is_home,
+        "minutes": own["minutes"], "similar_over": sim[0] if sim else None, "similar_n": sim[1] if sim else None,
+        "own_b2b": own_b2b, "opp_b2b": opp_b2b, "teammate_out": n_out,
         "passing_p_over": passing[0] if passing else None, "passing_mu": passing[1] if passing else None,
     }, cl["verdicts"])
 
@@ -706,6 +734,16 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
 
     # ── Step 5: Price, check, grade ──────────────────────────────────
     logger.info("Step 5: Pricing every candidate against the market's fair price and reading the checklist...")
+    if not fill_holds:
+        # Round 24: every night in the league game-log tables that has no box-score file yet gets one (both seasons,
+        # written once), before the checklist reads the history. Nights from the day before yesterday back:
+        # yesterday's is the grading run's to write. The tables are the ones the projections load anyway.
+        try:
+            from src import boxlog, gamelogs
+            cutoff = (datetime.strptime(min(date, slate_today()), "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+            boxlog.backfill([gamelogs.league_logs(season_prev), gamelogs.league_logs(season_now)], before=cutoff)
+        except Exception as e:
+            logger.warning(f"  Box-score backfill skipped ({type(e).__name__}: {e})")
     cl = _checklist_context(date)
     repriced: list[tuple] = []        # (prop, its market entry, the projection's side probabilities) for every prop priced this run
     prop_scores: list[PropScore] = []
@@ -761,8 +799,10 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         dec = fair_model.decide(line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current,
                                 p_push=probs[2], card=cl["card"]) if line is not None else {}
         hr_over = get_player_hitrate(name, stat, line, "over", before=date)
-        checks = _read_checks(cl, stat=stat, line=line, team=team, opponent=opponent, position=position, dvp_z=z, zs=zs, ps=ps,
-                              hr_over=hr_over, minutes=(sample.get("this") or {}).get("minutes"), n_out=n_out,
+        home, _away = vegas.home_away(team)
+        is_home = (home == team) if home else None
+        checks = _read_checks(cl, name=name, stat=stat, line=line, team=team, opponent=opponent, position=position, dvp_z=z, zs=zs, ps=ps,
+                              hr_over=hr_over, minutes=(sample.get("this") or {}).get("minutes"), n_out=n_out, is_home=is_home,
                               passing=(probs[0], proj["mu"]) if (stat == "assists" and proj.get("source") == "passing" and line is not None) else None
                               ) if line is not None else []
         side = _pick_side(dec, checks) if line is not None else "over"
@@ -789,8 +829,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         prop.guards = _guards(prop) if line is not None else []
         prop.compute_edge_grade()
         prop.injury = injury_label(injuries, name)
-        home, _away = vegas.home_away(team)
-        prop.is_home = (home == team) if home else None
+        prop.is_home = is_home
         prop.tip_utc = vegas.tip_for_team(team)
         if prop.on_hold:
             prop.hold_reason = hold_reason(stat, res, prop.injury)
@@ -861,9 +900,9 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         combo.teammate_out = comps[0].teammate_out
         hr_over = get_player_hitrate(name, combo_stat, line, "over", before=date)
         if line is not None:
-            checks = _read_checks(cl, stat=combo_stat, line=line, team=team, opponent=comps[0].opponent, position=comps[0].position,
+            checks = _read_checks(cl, name=name, stat=combo_stat, line=line, team=team, opponent=comps[0].opponent, position=comps[0].position,
                                   dvp_z=comps[0].dvp_z, zs=None, ps=None, hr_over=hr_over,
-                                  minutes=getattr(comps[0], "minutes_log", None), n_out=comps[0].teammate_out)
+                                  minutes=getattr(comps[0], "minutes_log", None), n_out=comps[0].teammate_out, is_home=comps[0].is_home)
             _apply_decision(combo, dec, checks, probs)
         mv = movement(date, _hist_key(name, combo_stat, history), side, history=history)
         if mv:

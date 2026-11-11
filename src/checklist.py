@@ -3,7 +3,8 @@ The checklist (round 23): the checks behind a pick, read one prop at a time.
 
 These are the checks the picks are cross-checked against by hand — defense
 vs position, where and how the player scores against what the opponent
-allows, his hit rate against tonight's line, his minutes trend, how similar
+allows, his hit rate against tonight's line (overall and at tonight's venue,
+home or road), his minutes trend, how similar
 players did against this opponent, and the situation (rest, starters out) —
 plus, for assists, the passing projection. Each is read as a lean toward the
 OVER, toward the UNDER, or neither, with the number behind it in plain words.
@@ -32,6 +33,7 @@ CHECKS = (
     ("zones", "Shooting zones", ("zone_fit", "chk_zones")),
     ("playtypes", "Play types", ("playtype_fit", "chk_playtypes")),
     ("hit_rate", "Hit rate vs the line", ("hit_rate_weighted", "chk_hit_rate")),
+    ("split", "Home/away split", ("chk_split",)),
     ("minutes", "Minutes trend", ("chk_minutes",)),
     ("similar", "Similar players vs this opponent", ("similar_opp_pos", "chk_similar")),
     ("situation", "Situation", ("chk_situation",)),
@@ -41,7 +43,8 @@ LABELS = {key: label for key, label, _ in CHECKS}
 
 # A reading leans only past its bar. Each bar leaves a check neutral on a little over half of the props (measured on
 # this season's boards), so a lean says something.
-BARS = {"dvp": 0.75, "zones": 0.5, "playtypes": 0.5, "hit_rate": 0.06, "minutes": 3.0, "similar": 0.06, "situation": 0.5, "passing": 0.07}
+BARS = {"dvp": 0.75, "zones": 0.5, "playtypes": 0.5, "hit_rate": 0.06, "split": 0.06, "minutes": 3.0, "similar": 0.06, "situation": 0.5,
+        "passing": 0.07}
 HIT_RATE_K = 20.0        # a hit rate over n games counts n / (n + 20) of itself
 MIN_HIT_GAMES = 5
 MIN_TREND_GAMES = 5      # games this season before a minutes trend is read (the last 3 against the ones before)
@@ -73,6 +76,7 @@ def read(ctx: dict, verdicts: dict | None = None) -> list[dict]:
     ctx: {"stat", "line", "opponent", "pos_group",
           "dvp_z", "zone_z", "playtype_z",
           "over_games", "games"            — games over tonight's line / games,
+          "split_over", "split_games", "is_home" — the same at tonight's venue (home or road), both seasons,
           "minutes"                        — this season's minutes, newest first,
           "similar_over", "similar_n"      — earlier props by his position group vs this opponent that went over / all,
           "own_b2b", "opp_b2b", "teammate_out",
@@ -108,6 +112,13 @@ def read(ctx: dict, verdicts: dict | None = None) -> list[dict]:
         add("hit_rate", (rate - 0.5) * games / (games + HIT_RATE_K), f"Over {ctx.get('line')} in {int(over_games)} of {int(games)} games")
     else:
         add("hit_rate", None, None)
+
+    sg, so = _num(ctx.get("split_games")), _num(ctx.get("split_over"))
+    if sg and sg >= MIN_HIT_GAMES and so is not None and ctx.get("is_home") is not None:
+        where = "home" if ctx.get("is_home") else "road"
+        add("split", (so / sg - 0.5) * sg / (sg + HIT_RATE_K), f"Over {ctx.get('line')} in {int(so)} of {int(sg)} {where} games")
+    else:
+        add("split", None, None)
 
     trend = minutes_trend(ctx.get("minutes"))
     if trend:

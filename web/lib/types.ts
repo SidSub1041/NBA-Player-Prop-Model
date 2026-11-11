@@ -363,6 +363,8 @@ export interface Scorecard {
     nights: number;
   } | null;
   published?: { n: number; hit: number; per_bet: number | null };
+  /** props whose checklist was read back from the box-score history (boards from before the checklist) */
+  replayed?: number;
   signals: ScorecardSignal[];
 }
 

@@ -1141,6 +1141,10 @@ function ScorecardPanel({ card }: { card: Scorecard }) {
           price. A check may move a pick&apos;s probability only after it beats the price on {card.bar.pass_min_nights} nights and{" "}
           {card.bar.pass_min_rows.toLocaleString()} props; until then the checklist only helps choose among fairly priced props, and a check
           that points the wrong way stops counting.
+          {card.replayed != null && card.replayed > 0 && (
+            <> For {card.replayed.toLocaleString()} props from boards older than the checklist, its checks were read back from that night&apos;s
+            records.</>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           {families.map((fam) => (
@@ -1414,7 +1418,7 @@ const SYSTEM_STEPS = [
 const SYSTEM_STEPS_MARKET = [
   { n: "01", title: "START FROM THE PRICE", body: "Every sportsbook's two-way price on the regular line, vig taken out, and the median across books: the market's own fair probability. No projection moves it." },
   { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side. A pick needs it to be at least the fair price — the board never pays more than fair." },
-  { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
+  { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line overall and at home or on the road, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
   { n: "04", title: "SCORE EVERY CHECK", body: "Each night every check is tested against the price on every graded prop. A check moves a probability only after it beats the price on 25 nights; one that points the wrong way stops counting." },
   { n: "05", title: "CAP & CLOSE", body: "__PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
 ];

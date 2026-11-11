@@ -8,6 +8,18 @@ An edge model for NBA player props (points, rebounds, assists and their combos):
 
 The model used to be a filter: a FantasyPros defense-vs-position colour created candidates, points props got top/bottom-10 rank conditions, and the gate was the share of **last** season's games that cleared tonight's line. Measured on the 893 props it had labeled with a line (524 this season, 369 last spring), none of that predicted anything. The published picks hit 48.0% (179 labeled, −14.0u) while the props left on the board hit 51.9%. The hit-rate gate was flat: props with a hit rate ≥ 56% hit 49.3%, props below it 51.8%, and no band above 56% beat 50%. The DvP colour was non-directional (50/50). The conditions were inert. And price was never consulted: the whole deficit sat on picks priced −121 or worse (40.8%, 71 picks, −21.7u) while picks priced better than −121 were ahead (53.3%, 107 picks, +8.7u) — a high hit rate against a line mostly flagged a line the books had already moved away from last season's numbers, and the model paid the worst price for it. Round 18 replaces the filter with a projection, a probability, the market price and closing-line value, below.
 
+## What changed in round 24 and why
+
+The third step of the rebuild: **history**. The checklist arrived in round 23, so each of its checks would have started with no evidence and needed weeks to earn or lose its place. But everything a check reads was on file on the night: the board's own matchup numbers, the results of earlier props, and the players' game logs. Round 24 puts those game logs on file for good and reads the checklist back:
+
+- **Home and away in the game logs.** The league game-log tables (`src/gamelogs.py`) now keep where each game was played and against whom. A table saved before this round is fetched whole once more (two requests, once), then served from disk as before.
+- **A box score for every night of both seasons** (`logs/box/{date}.json`, `src/boxlog.py`). The grading run already archives last night's full box score (round 22); every older night without a file is now written once from the league tables — free NBA data, both seasons. One reader, `boxlog.History`, answers anything about a player's past **as of any date**: how often he has gone over tonight's line, at home or on the road, his minutes lately, whether his team played yesterday.
+- **A new check: the home/away split** — games over tonight's line at tonight's venue (home or road), over both seasons, weighted like the hit rate; at least 5 games.
+- **The live checklist reads the same history** for the hit rate, the split, the minutes trend and back-to-backs, so what the scorecard measures is exactly what a card shows.
+- **The checklist replayed on past boards.** For every labeled prop from a board older than the checklist, the scorecard reads each check as it would have read that night — nothing from that night's game or later — and scores it (`scorecard._replay_checks`). Each check, and the checklist's net lean, has evidence from the season's first sportsbook board (Oct 22) instead of from the day it was written; *Playing at home* is filled in the same way.
+
+Picks are made exactly as in round 23, with the one added check.
+
 ## What changed in round 23 and why
 
 The second step of the rebuild: **the way a pick is made**. The projection no longer decides anything. A pick now starts from the sportsbooks' own **fair price**, has to be offered at a price at least that good, and has to have the **checklist** behind it — the checks the picks were being cross-checked against by hand (defense vs position, shot zones and playtypes against what the opponent allows, hit rate against tonight's line, minutes trend, how similar players did against this opponent, rest and starters out, and the passing projection for assists). Each check is shown on the card with the number behind it. None of them moves the probability until it has beaten the price on the scorecard; until then they decide which fairly priced props are worth publishing. **Overs are still on the board, with a higher bar**: overs have won 47% against a price of 49% this season, so an over needs two more checks for it than against it, an under one. See *How a pick is made* below. This is a model that has not yet proved itself — the board says so — and the scorecard now also scores every check, the checklist as a whole and the fair price itself, every night.
@@ -38,10 +50,12 @@ Assists were paused after a losing start (36–45 on labeled props), but a few m
 3. **The checklist** (`src/checklist.py`). Each check reads as a lean to the over, a lean to the under, or neither; it leans only past a bar that leaves it neutral on a little over half of all props:
    - *Defense vs position* — the opponent's by-position z-score, ±0.75.
    - *Shooting zones* and *Play types* (points) — the share-weighted z-score of what the opponent allows where and how the player scores, ±0.5.
-   - *Hit rate vs the line* — games over tonight's line, weighted by the games behind it (a rate over *n* games counts *n / (n + 20)* of itself), ±0.06; at least 5 games.
+   - *Hit rate vs the line* — games over tonight's line this season (last season's too while this one has fewer than 5), weighted by the games behind it (a rate over *n* games counts *n / (n + 20)* of itself), ±0.06; at least 5 games.
+   - *Home/away split* — the same count at tonight's venue, home or road, over both seasons, weighted the same way, ±0.06; at least 5 games.
    - *Minutes trend* — the last 3 games against the earlier ones this season, ±3 minutes; at least 5 games.
    - *Similar players vs this opponent* — every earlier prop this season by the same position group against tonight's opponent, same stat: the share that went over, shrunk toward half, ±0.06; at least 8 props.
    - *Situation* — the opponent on a back-to-back or starters out on his own team (toward the over), his own team on a back-to-back (toward the under).
+   The player's own history (hit rate, split, minutes, who played yesterday) is read from the box-score history (`logs/box/`, `src/boxlog.py`), as of tonight.
    - *Passing projection* (assists) — the passing model's probability of the over (*2a*), ±7 points from even.
    **Support** for a side is the checks leaning to it minus the checks leaning against it. An **under needs 1** (`UNDER_MIN_SUPPORT`), an **over needs 2** (`OVER_MIN_SUPPORT`): the over has been overpriced, so the checks have to outweigh that. A check the scorecard has found pointing the wrong way (verdict *negative*) is still shown, struck through, and not counted.
 4. **The grade.** Two gates — the price and the checklist. **A**: both. **A+**: both, a price two points better than fair and a check to spare. **B+**: one gate and the other close (the watchlist). **B**: one. **C**: neither. A+/A publish, subject to the guards and caps (*5*). The side shown for a prop is the one that clears more gates, then the one the checklist favours, then the better price.
@@ -288,6 +302,7 @@ NBA-Player-Prop-Model/
 │   ├── record.py        # The season's graded record, its cuts and its CLV
 │   ├── scorecard.py     # The signal scorecard: every check scored against the price, walk-forward, nightly
 │   ├── fair.py          # The market-anchored probability: per-book fair price, passed-check adjustments, price edge
+│   ├── boxlog.py        # The box-score history: one file per night (both seasons), each player's games as of any date
 │   ├── checklist.py     # The checks behind a pick, read per prop; support for each side
 │   ├── scoring_engine.py# PropScore and the edge grade
 │   └── output.py        # Report formatting, the board JSON (paused / capped lists, thresholds)

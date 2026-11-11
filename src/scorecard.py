@@ -49,6 +49,12 @@ are out of reach for a few weeks of data on purpose. About twenty signals are
 tested, so one may pass by luck: a passing signal is re-tested every night
 and loses its place the night it stops passing.
 
+The checklist (src/checklist.py) is scored the same way: each check's
+reading and the checklist's net lean are signals. Boards from round 23 on
+carry their readings; for earlier boards they are replayed from what was on
+file that night (_replay_checks), so a check has evidence from the first
+sportsbook board of the season rather than from the day it was written.
+
 The market itself is summarised too: how favourites and underdogs did against
 their prices, and what betting every over or every under returned by stat.
 
@@ -309,7 +315,7 @@ def _row(raw: dict, d: str, actual, rest) -> dict | None:
         "minutes": _num(p.get("proj_minutes")), "teammate_out": _num(p.get("teammate_out")),
         "injury": bool(p.get("injury")), "line_rise": toward(_num(p.get("line_move"))),
         "is_home": p.get("is_home"), "rest": rest(p.get("team"), d), "opp_rest": rest(p.get("opponent"), d),
-        "fair_over": fair, "checks": checks,
+        "fair_over": fair, "checks": checks, "proj_source": raw.get("proj_source"), "proj_mu": mu,
         "chk_net": (sum(1 for c in counted if c["lean"] == "over") - sum(1 for c in counted if c["lean"] == "under")) if raw.get("checks") else None,
     }
 
@@ -363,7 +369,70 @@ def build_rows(logs_dir: str | None = None, season: str | None = None) -> list[d
             row = _row(raw, d, a, rest)
             if row is not None and a != row["line"]:
                 rows.append(row)
+    _replay_checks(rows, logs_dir)
     return rows
+
+
+def _replay_checks(rows: list[dict], logs_dir: str) -> int:
+    """
+    Read the checklist for the rows whose board did not carry it, as it would
+    have read that night (round 24).
+
+    The checklist arrived in round 23, so earlier boards have no readings and
+    each check would start with no evidence. But everything a check reads is
+    on file as of any date: the board's own matchup numbers, the results of
+    earlier props (similar players — only nights before the row's), and the
+    box-score history (src/boxlog.py: games over the line, the same at the
+    night's venue, minutes, who played the day before). Rows are filled in
+    place: "checks" ({key: value toward the over}), "chk_net" (every check
+    counting), "is_home" where the board did not record it. A round-23 board
+    lacks only the home/away split; that one reading is added. Rows are in
+    date order; returns how many were replayed in full.
+    """
+    from datetime import timedelta
+    from src import boxlog, checklist
+    hist = boxlog.History(logs_dir)
+    if not hist:
+        return 0
+    similar: dict = defaultdict(lambda: [0, 0])
+    replayed, i = 0, 0
+    while i < len(rows):
+        j, d = i, rows[i]["date"]
+        while j < len(rows) and rows[j]["date"] == d:
+            j += 1
+        y = (_date.fromisoformat(d) - timedelta(days=1)).isoformat()
+        for r in rows[i:j]:
+            if r["is_home"] is None:
+                r["is_home"] = hist.home_on(r["player"], d, r["team"])
+            if r["checks"] and "split" in r["checks"]:
+                continue                                    # the board carried its whole checklist
+            own = boxlog.readings(hist.games(r["player"], d, r["team"]), r["stat"], r["line"], d, r["is_home"])
+            if r["checks"]:                                 # a round-23 board: only the split is missing
+                one = checklist.read({"stat": r["stat"], "line": r["line"], "split_over": own["split_over"], "split_games": own["split_games"],
+                                      "is_home": r["is_home"]})
+                r["checks"]["split"] = next(c["value"] for c in one if c["key"] == "split")
+                continue
+            sim = similar.get((r["opponent"], r["pos"], r["stat"]))
+            passing = r["stat"] == "assists" and r.get("proj_source") == "passing" and r["p_model_over"] is not None
+            checks = checklist.read({
+                "stat": r["stat"], "line": r["line"], "opponent": r["opponent"], "pos_group": r["pos"], "dvp_z": r["dvp_z"],
+                "zone_z": r["zone_z"], "playtype_z": r["playtype_z"], "over_games": own["over_games"], "games": own["games"],
+                "split_over": own["split_over"], "split_games": own["split_games"], "is_home": r["is_home"], "minutes": own["minutes"],
+                "similar_over": sim[0] if sim else None, "similar_n": sim[1] if sim else None,
+                "own_b2b": hist.played(r["team"], y), "opp_b2b": hist.played(r["opponent"], y), "teammate_out": r["teammate_out"],
+                "passing_p_over": r["p_model_over"] if passing else None, "passing_mu": r.get("proj_mu") if passing else None,
+            })
+            r["checks"] = {c["key"]: c["value"] for c in checks}
+            r["chk_net"] = checklist.net_over(checks)
+            r["replayed"] = True
+            replayed += 1
+        for r in rows[i:j]:
+            if r["over_hit"] is not None:
+                cell = similar[(r["opponent"], r["pos"], r["stat"])]
+                cell[0] += r["over_hit"]
+                cell[1] += 1
+        i = j
+    return replayed
 
 
 def similar_index(rows: list[dict]) -> dict:
@@ -389,6 +458,7 @@ def today_values(props: list[dict], date: str, logs_dir: str | None = None, seas
     boards = {d: b for d, b in _season_boards(logs_dir, season).items() if d < date}
     rest = _rest_fn(boards, {date: props})
     tonight = [r for r in (_row(p, date, None, rest) for p in props) if r is not None]
+    _replay_checks(tonight, logs_dir)       # a board without its checklist is read the same way
     rows = history + tonight
     out: dict = {(r["player"], r["stat"]): {} for r in tonight}
     for sig in signals(rows):
@@ -606,6 +676,7 @@ def build(logs_dir: str | None = None, season: str | None = None) -> dict:
     if len(rows) < MIN_ROWS:
         return out
     out["market"] = market_summary(rows)
+    out["replayed"] = sum(1 for r in rows if r.get("replayed"))      # rows whose checklist was read back from the history (round 24)
     pub = [r for r in rows if r["published"]]
     if pub:
         odds = [r["over_odds"] if r["side"] == "over" else r["under_odds"] for r in pub]
