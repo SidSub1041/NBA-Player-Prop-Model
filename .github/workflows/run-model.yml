@@ -213,7 +213,7 @@ jobs:
         if: ${{ !cancelled() && steps.model.outcome == 'failure' }}
         run: |
           bash scripts/commit_data.sh "chore: keep sportsbook prices from an aborted run $(date -u +'%Y-%m-%d %H:%M UTC')" \
-            "logs/vegas_*.json" "logs/lines_*.json"
+            "logs/vegas_*.json" "logs/lines_*.json" "logs/odds"
 
       - name: Commit updated data
         # Never commit the output of a failed model/grade step (a board built
@@ -222,8 +222,8 @@ jobs:
         run: |
           STAMP="$(date -u +'%Y-%m-%d %H:%M UTC')"
           if [ "${{ steps.task.outputs.model_args }}" = "--snapshot" ]; then
-            # a snapshot only adds closing prices: commit the day's cache and line history alone
-            bash scripts/commit_data.sh "chore: closing-line snapshot $STAMP" "logs/vegas_*.json" "logs/lines_*.json"
+            # a snapshot only adds closing prices: commit the day's cache, line history and odds archive alone
+            bash scripts/commit_data.sh "chore: closing-line snapshot $STAMP" "logs/vegas_*.json" "logs/lines_*.json" "logs/odds"
           else
             bash scripts/commit_data.sh "chore: update props data $STAMP" \
               web/public/data/latest.json web/public/data/results_history.json \

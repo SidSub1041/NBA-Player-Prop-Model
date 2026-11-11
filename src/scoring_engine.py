@@ -93,6 +93,8 @@ class PropScore:
         self.teammate_out = 0     # OUT starters on the player's own team
         self.paused = False       # stat paused by PAUSED_STATS: evaluated and shown, never published
         self.cap_note = ""        # dropped by the board caps (MAX_PICKS / MAX_PER_GAME / MAX_PER_PLAYER)
+        self.is_home = None       # round 22: is the player's team the home team tonight (None when unknown)
+        self.tip_utc = None       # the game's tip time, ISO UTC
         self.guards = []          # guard names that failed: price / books / line_size / minutes
 
     # ── designated line helpers ──────────────────────────────────────

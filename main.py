@@ -373,6 +373,7 @@ def _prop_from_board(d: dict) -> PropScore:
                       "line": d.get("line"), "season_avg": d.get("season_avg"), "games_played": d.get("games_played"), "games_hit": d.get("games_hit")}
     p.total_points, p.total_conditions = d.get("total_points") or 0, d.get("total_conditions") or 0
     p.injury = d.get("injury")
+    p.is_home, p.tip_utc = d.get("is_home"), d.get("tip_utc")
     p.zone_score = {"points": 0, "total": 0, "details": d.get("zone_details") or []}
     p.playtype_score = {"points": 0, "total": 0, "details": d.get("playtype_details") or []}
     p.final_grade = d.get("grade") or "D"
@@ -461,14 +462,16 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
     season_now, season_prev = SEASON, previous_season(SEASON)
 
     # Picks are graded on their regular line: graded files from before that rule are re-settled once
-    # (src/grader.regrade_main_lines; idempotent), so the season record this run publishes is on regular lines.
-    try:
-        from src.grader import regrade_main_lines
-        redone = regrade_main_lines()
-        if redone:
-            logger.info(f"  Re-settled on the regular line: {', '.join(redone)}")
-    except Exception as e:
-        logger.warning(f"  Re-grade on the regular line skipped ({type(e).__name__}: {e})")
+    # (src/grader.regrade_main_lines), so the season record this run publishes is on regular lines. The
+    # sentinel is checked here first so a board run never imports the grader once the migration has run.
+    if not os.path.exists(os.path.join("logs", "main_lines_migrated.json")):
+        try:
+            from src.grader import regrade_main_lines
+            redone = regrade_main_lines()
+            if redone:
+                logger.info(f"  Re-settled on the regular line: {', '.join(redone)}")
+        except Exception as e:
+            logger.warning(f"  Re-grade on the regular line skipped ({type(e).__name__}: {e})")
 
     # ── Step 2: Defense vs Position — numeric, by position ───────────
     logger.info("Step 2: Fetching Defense vs Position (numeric)...")
@@ -697,6 +700,9 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         prop.guards = _guards(prop) if line is not None else []
         prop.compute_edge_grade()
         prop.injury = injury_label(injuries, name)
+        home, _away = vegas.home_away(team)
+        prop.is_home = (home == team) if home else None
+        prop.tip_utc = vegas.tip_for_team(team)
         if prop.on_hold:
             prop.hold_reason = hold_reason(stat, res, prop.injury)
         prop_scores.append(prop)
@@ -777,6 +783,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         combo.zone_score = {"points": 0, "total": 0, "details": [f"  Combo: {cdef_label(combo_stat)} = " + " + ".join(f"{c.stat.upper()} (edge {c.edge_value:+.3f})" for c in comps)]}
         combo.compute_edge_grade()
         combo.injury = injury_label(injuries, name)
+        combo.is_home, combo.tip_utc = comps[0].is_home, comps[0].tip_utc
         if combo.on_hold:
             combo.hold_reason = hold_reason(combo_stat, res, combo.injury)
         prop_scores.append(combo)

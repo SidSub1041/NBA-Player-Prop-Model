@@ -8,7 +8,14 @@ any book offers at that line and which book has it. Some books (Bovada) list a
 whole ladder of alternate lines inside the main market — the same player at
 10.5, 12.5, 13.5 … priced from -280 to +210. A book's main line is the one
 whose two prices are closest to even (its pick'em line); the rest are kept as
-"alts" and never decide the line (round 20). A prop no sportsbook lists falls back to the
+"alts" and never decide the line (round 20).
+
+The full market is archived (round 22): every purchase writes every
+(player, stat, book, number) rung with both prices, the event's home and
+away teams and its tip time to logs/odds/{date}/{HHMMSS}-{pid}.jsonl.gz —
+one file per run, so two runs never write the same file. The cache above
+holds the latest state; the archive holds what the market said at every
+moment it was asked, which is what a backtest and a true closing line need. A prop no sportsbook lists falls back to the
 DFS apps (PrizePicks, Underdog, DraftKings Pick6, Betr, Dabble — The Odds API's
 `us_dfs` region): the line most of them hang, labelled as a DFS backup.
 
@@ -56,6 +63,7 @@ value) when the market was re-priced within CLOSE_WINDOW_MINUTES of tip. A snaps
 about to tip, the DFS region only for a market no sportsbook has posted.
 """
 
+import gzip
 import json
 import logging
 import os
@@ -325,6 +333,8 @@ class VegasLines:
         self.date = date
         self.logs_dir = logs_dir or LOGS_DIR
         self.path = os.path.join(self.logs_dir, f"vegas_{date}.json")
+        self._pending: list[dict] = []     # purchases of this run not yet in the odds archive
+        self._archive_path: str | None = None      # this run's archive file, named at its first write
         self.api_key = os.environ.get("ODDS_API_KEY", "").strip()
         self.refresh = timedelta(minutes=_env_int("ODDS_API_REFRESH_MINUTES", 150))
         self.near_tip_refresh = timedelta(minutes=_env_int("ODDS_API_NEAR_TIP_REFRESH_MINUTES", 45))
@@ -417,7 +427,43 @@ class VegasLines:
         self.bought[tier] += len(markets)
         r = _remaining(headers)
         self.remaining = r if r is not None else self.remaining
-        return parse_event_odds(data)
+        found = parse_event_odds(data)
+        self._archive(ev, markets, tier, found)
+        return found
+
+    def _archive(self, ev: dict, markets: list[str], tier: str, found: dict) -> None:
+        """Queue this purchase's full market for the day's archive (written by save())."""
+        rungs = []
+        for (_pname, stat), entry in found.items():
+            for (book, point), sides in entry["offers"].items():
+                rungs.append([entry["player"], stat, book, point, _fmt_american(sides.get("Over")), _fmt_american(sides.get("Under"))])
+        self._pending.append({
+            "t": _now().strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": str(ev.get("id")),
+            "home": _team_abbrev(ev.get("home_team")), "away": _team_abbrev(ev.get("away_team")),
+            "commence_time": ev.get("commence_time"), "tier": tier, "markets": list(markets), "rungs": rungs,
+        })
+
+    def _write_archive(self) -> str | None:
+        """
+        Append the queued purchases to this run's archive file,
+        logs/odds/{date}/{HHMMSS}-{pid}.jsonl.gz — one JSON object per line,
+        one gzip member per save (gzip readers read the members as one
+        stream). The name is fixed at the run's first write, so no two runs
+        ever write the same file. None when nothing is queued.
+        """
+        if not self._pending:
+            return None
+        if self._archive_path is None:
+            folder = os.path.join(self.logs_dir, "odds", self.date)
+            os.makedirs(folder, exist_ok=True)
+            self._archive_path = os.path.join(folder, f"{_now().strftime('%H%M%S')}-{os.getpid()}.jsonl.gz")
+        with gzip.open(self._archive_path, "at", encoding="utf-8") as f:
+            for rec in self._pending:
+                f.write(json.dumps(rec, separators=(",", ":")) + "\n")
+        n = sum(len(r["rungs"]) for r in self._pending)
+        self._pending = []
+        logger.info(f"  Odds archive: {n} rungs added to {os.path.relpath(self._archive_path, self.logs_dir)}")
+        return self._archive_path
 
     def ensure(self, wants: dict) -> None:
         """
@@ -442,6 +488,7 @@ class VegasLines:
             ev_id = str(ev.get("id"))
             ev_cache = self.cache["events"].setdefault(ev_id, {"teams": sorted(teams), "markets": {}})
             ev_cache["commence_time"] = ev.get("commence_time")
+            ev_cache["home"], ev_cache["away"] = _team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))
             # Within NEAR_TIP_HOURS of tip-off, prices are re-bought sooner, so the
             # last pre-tip run sees late injury pulls and late postings.
             tip = _parse_ts(ev.get("commence_time"))
@@ -519,6 +566,7 @@ class VegasLines:
             ev_id = str(ev.get("id"))
             ev_cache = self.cache["events"].setdefault(ev_id, {"teams": sorted(teams), "markets": {}})
             ev_cache["commence_time"] = ev.get("commence_time")
+            ev_cache["home"], ev_cache["away"] = _team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))
             wanted = {s: None for s in stats if s in MARKETS}
             wanted.update({STAT_FOR_MARKET[m]: None for m in ev_cache["markets"] if m in STAT_FOR_MARKET})
             due = sorted(MARKETS[s] for s in wanted)
@@ -551,6 +599,17 @@ class VegasLines:
             if team in {_team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))} and ev.get("commence_time"):
                 return str(ev["commence_time"])
         return None
+
+    def home_away(self, team: str) -> tuple[str | None, str | None]:
+        """(home, away) of the cached or live event that includes `team`; (None, None) when unknown."""
+        for ev in self.cache["events"].values():
+            if isinstance(ev, dict) and team in (ev.get("teams") or []) and ev.get("home"):
+                return ev.get("home"), ev.get("away")
+        for ev in self.events:
+            h, a = _team_abbrev(ev.get("home_team")), _team_abbrev(ev.get("away_team"))
+            if team in (h, a):
+                return h, a
+        return None, None
 
     @staticmethod
     def _missing(found: dict, stat: str, players: set | None) -> bool:
@@ -600,6 +659,10 @@ class VegasLines:
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.cache, f, indent=1, sort_keys=True)
         os.replace(tmp, self.path)
+        try:      # the full market as bought (every rung, both prices, home/away) — never lets a failure break the save
+            self._write_archive()
+        except Exception as e:
+            logger.warning(f"  Odds archive not written ({type(e).__name__}: {e})")
         # The day's line history (open / moves / close) — never lets a failure break the save
         try:
             appended = line_history.record(self.date, self.cache["lines"], _now(), self.logs_dir)

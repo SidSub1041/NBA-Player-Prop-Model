@@ -26,7 +26,7 @@ import sys
 from datetime import date as _date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.lines import alt_of, main_line  # noqa: E402  — the regular line a pick is shown and graded on
+from src.lines import main_line, on_main_line  # noqa: E402  — the regular line a pick is shown and graded on
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
@@ -126,6 +126,9 @@ def _bucket(prop):
 
 def _flatten_prop(prop, date):
     """One prop dict -> one flat CSV row. Tolerates older-schema files."""
+    prop = on_main_line(prop)      # a pick published on a shopped alternate: the regular line, its numbers re-derived there
+    alt = prop.get("alt_line") if isinstance(prop.get("alt_line"), dict) else {}
+    regular = main_line(prop)      # pre-Oct-22 boards: Underdog's line
     zones = prop.get("zone_details") or []
     plays = prop.get("playtype_details") or []
     details = " | ".join(s.strip() for s in (zones + plays) if s and s.strip())
@@ -171,12 +174,12 @@ def _flatten_prop(prop, date):
         "vegas_under_odds": prop.get("vegas_under_odds"),
         "vegas_book": prop.get("vegas_book"),
         "vegas_books": prop.get("vegas_books"),
-        # the regular line (src.lines.main_line): a shopped number on an older board moves to the alt_* columns
-        "line": main_line(prop)["line"],
+        # the regular line (src.lines.on_main_line): a shopped number on an older board moves to the alt_* columns
+        "line": regular["line"],
         "line_source": prop.get("line_source") or ("underdog" if prop.get("ud_line") is not None else None),
-        "line_book": prop.get("vegas_book") if main_line(prop)["from_alt"] else prop.get("line_book"),
-        "over_odds": main_line(prop)["over_odds"],
-        "under_odds": main_line(prop)["under_odds"],
+        "line_book": prop.get("line_book"),
+        "over_odds": regular["over_odds"],
+        "under_odds": regular["under_odds"],
         "p_hit": prop.get("p_hit"),
         "ev": prop.get("ev"),
         "rank": prop.get("rank"),
@@ -194,9 +197,9 @@ def _flatten_prop(prop, date):
         "cap_note": prop.get("cap_note"),
         # boards before round 18 never stored a version: they were the filter
         "model_version": prop.get("model_version") or ("edge-1" if prop.get("p_model") is not None else "filter-0"),
-        "alt_line": (alt_of(prop) or {}).get("line"),
-        "alt_odds": (alt_of(prop) or {}).get("price"),
-        "alt_book": (alt_of(prop) or {}).get("book"),
+        "alt_line": alt.get("line"),
+        "alt_odds": alt.get("price"),
+        "alt_book": alt.get("book"),
         "proj_source": prop.get("proj_source"),
         "pot_ast": (prop.get("passing") or {}).get("pot_ast"),
         "ast_conv": (prop.get("passing") or {}).get("conv"),

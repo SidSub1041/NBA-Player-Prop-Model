@@ -35,7 +35,7 @@ git pull --rebase --autostash --quiet origin main \
 if [ "${MODEL_ARGS:-}" = "--snapshot" ]; then
     # Closing-line snapshot only: re-price the games about to tip, commit the day's logs.
     "$PYTHON" main.py --snapshot || echo "main.py --snapshot: failed"
-    git add logs/vegas_*.json logs/lines_*.json 2>/dev/null || true
+    git add logs/vegas_*.json logs/lines_*.json logs/odds 2>/dev/null || true
     git diff --cached --quiet && { echo "No new prices."; exit 0; }
     git commit --quiet -m "chore: closing-line snapshot $STAMP (local runner)" || exit 1
     git push --quiet origin main || { git pull --rebase --quiet origin main && git push --quiet origin main; } || echo "warning: push failed"

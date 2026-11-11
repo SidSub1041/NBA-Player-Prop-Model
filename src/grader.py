@@ -27,7 +27,8 @@ Boards before round 20 could publish a shopped number (often a book's
 alternate at +200 or -250); those picks are settled at the consensus line
 they were shopped from, and the shopped number is kept as "alt_line" with
 its own result for display only. regrade_main_lines() re-settles graded
-files written before this rule, once.
+files written before this rule, once (a sentinel file records that the
+migration ran, so later runs cost one stat call).
 """
 
 import glob
@@ -42,7 +43,7 @@ from nba_api.stats.static import players as nba_players
 
 from src import line_history
 from src.config import CLOSE_WINDOW_MINUTES, NBA_TEAM_IDS, season_for_date
-from src.lines import alt_of, main_line
+from src.lines import alt_of, main_line, on_main_line, repair_main_line_fields
 from src.underdog import norm_name, norm_name_base
 from src.vegas_odds import MARKETS
 
@@ -136,6 +137,7 @@ def _fetch_box_scores_uncached(date: str) -> dict[str, dict]:
         return {}
     player_stats: dict[str, dict] = {}
     failed = 0
+    archive = {"date": date, "games": [], "players": []}     # the full box score, kept by player id (logs/box/{date}.json)
 
     for gid in game_ids:
         time.sleep(0.6)
@@ -145,6 +147,8 @@ def _fetch_box_scores_uncached(date: str) -> dict[str, dict]:
 
             # The v3 endpoint nests player stats under boxScoreTraditional → ...
             bs = data.get("boxScoreTraditional", data)
+            tri = {side: (bs.get(side, {}) or {}).get("teamTricode") for side in ("homeTeam", "awayTeam")}
+            archive["games"].append({"game_id": str(gid), "home": tri["homeTeam"], "away": tri["awayTeam"]})
             for side in ("homeTeam", "awayTeam"):
                 team_data = bs.get(side, {})
                 for p in team_data.get("players", []):
@@ -163,14 +167,58 @@ def _fetch_box_scores_uncached(date: str) -> dict[str, dict]:
                         "min": minutes,
                         "dnp": minutes == 0,
                     }
+                    archive["players"].append(_box_row(p, stats, name, minutes, gid, tri, side))
         except Exception as e:
             failed += 1
             logger.warning(f"Box-score fetch failed for game {gid}: {e}")
 
     _BOX_STATUS[date] = {"games": len(game_ids), "failed": failed}
+    if game_ids and not failed:
+        _save_box_archive(archive)
     logger.info(f"Fetched box-score data for {len(player_stats)} players"
                 + (f" ({failed}/{len(game_ids)} games FAILED — their picks will be voided)" if failed else ""))
     return player_stats
+
+
+def _box_row(p: dict, stats: dict, name: str, minutes: float, gid, tri: dict, side: str) -> dict:
+    """One player's line for the box-score archive: who, where, and the counting stats a signal may need."""
+    def i(key):
+        try:
+            return int(stats.get(key, 0) or 0)
+        except (TypeError, ValueError):
+            return 0
+    home = side == "homeTeam"
+    return {
+        "player_id": p.get("personId"), "name": name, "game_id": str(gid),
+        "team": tri["homeTeam" if home else "awayTeam"], "opponent": tri["awayTeam" if home else "homeTeam"], "home": home,
+        "starter": bool(str(p.get("position") or "").strip()), "position": (str(p.get("position") or "").strip() or None),
+        "min": minutes, "pts": i("points"), "reb": i("reboundsTotal"), "ast": i("assists"), "fg3m": i("threePointersMade"),
+        "stl": i("steals"), "blk": i("blocks"), "tov": i("turnovers"), "fgm": i("fieldGoalsMade"), "fga": i("fieldGoalsAttempted"),
+        "fg3a": i("threePointersAttempted"), "ftm": i("freeThrowsMade"), "fta": i("freeThrowsAttempted"),
+        "oreb": i("reboundsOffensive"), "dreb": i("reboundsDefensive"), "pf": i("foulsPersonal"), "plus_minus": i("plusMinusPoints"),
+    }
+
+
+def _save_box_archive(archive: dict) -> None:
+    """
+    Keep the night's full box score (logs/box/{date}.json), written only when
+    every game came back: every player by NBA id with team, opponent, home or
+    away, starter, minutes and counting stats. Grading itself reads only
+    points, rebounds and assists; this file is what hit rates against a line,
+    minutes and usage trends and home/away splits are computed from later,
+    point in time, without asking NBA.com again. Never raises.
+    """
+    try:
+        folder = os.path.join(LOGS_DIR, "box")
+        os.makedirs(folder, exist_ok=True)
+        path = os.path.join(folder, f"{archive['date']}.json")
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(archive, f, separators=(",", ":"))
+        os.replace(tmp, path)
+        logger.info(f"Box-score archive: {len(archive['players'])} players, {len(archive['games'])} games -> {path}")
+    except Exception as e:
+        logger.warning(f"Box-score archive not written ({type(e).__name__}: {e})")
 
 
 def _parse_minutes(minutes_val) -> float:
@@ -217,7 +265,7 @@ def _ts(value) -> datetime | None:
     return ts.astimezone(timezone.utc) if ts.tzinfo else ts.replace(tzinfo=timezone.utc)
 
 
-def _priced_day(date: str) -> tuple[dict, dict]:
+def _priced_day(date: str, logs_dir: str | None = None) -> tuple[dict, dict]:
     """
     The day's sportsbook cache (logs/vegas_{date}.json), read once per
     grading run, as ({team abbreviation: event}, {prop key: last price
@@ -228,7 +276,7 @@ def _priced_day(date: str) -> tuple[dict, dict]:
     it saw. Both empty without a readable file.
     """
     try:
-        with open(os.path.join(LOGS_DIR, f"vegas_{date}.json"), encoding="utf-8") as f:
+        with open(os.path.join(logs_dir or LOGS_DIR, f"vegas_{date}.json"), encoding="utf-8") as f:
             cache = json.load(f)
     except (OSError, ValueError):
         return {}, {}
@@ -587,20 +635,41 @@ def _hit(edge: str, actual, line) -> bool:
 
 
 def _on_main_line(pick: dict) -> dict:
-    """
-    The pick as settled: its line, prices and books set to the regular line
-    (src.lines.main_line). A pick published on a shopped number (boards
-    before round 20) gets the consensus line, its prices and book, with the
-    shopped number moved to "alt_line"; anything else is returned unchanged.
-    """
-    main = main_line(pick)
-    if not main["from_alt"]:
-        return dict(pick)
-    side_book = "under_book" if pick.get("edge") == "under" else "over_book"
-    other_book = "over_book" if side_book == "under_book" else "under_book"
-    return {**pick, "line": main["line"], "over_odds": main["over_odds"], "under_odds": main["under_odds"],
-            side_book: pick.get("vegas_book"), other_book: None, "line_book": pick.get("vegas_book"),
-            "line_books": pick.get("vegas_books"), "line_shopped": False, "alt_line": alt_of(pick)}
+    """The pick as settled, on its regular line with every number re-derived there (src.lines.on_main_line)."""
+    return on_main_line(pick)
+
+
+MIGRATION_MARKER = "main_lines_migrated.json"
+MIGRATION_VERSION = 2     # 1: picks re-settled on the regular line; 2: their probabilities, edge and grade re-derived there
+
+
+def migration_done(logs_dir: str | None = None, version: int = MIGRATION_VERSION) -> bool:
+    """Has the regular-line migration (at least `version`) run over this logs directory? One stat call."""
+    path = os.path.join(logs_dir or LOGS_DIR, MIGRATION_MARKER)
+    try:
+        with open(path, encoding="utf-8") as f:
+            return int(json.load(f).get("version", 0)) >= version
+    except (OSError, ValueError, TypeError):
+        return False
+
+
+def _sync_postmortem(date: str, g: dict, logs_dir: str) -> None:
+    """The night's post-mortem (logs/postmortem_{date}.json) carries the published record: keep it equal to the graded file's."""
+    path = os.path.join(logs_dir, f"postmortem_{date}.json")
+    if not os.path.exists(path):
+        return
+    try:
+        with open(path, encoding="utf-8") as f:
+            pm = json.load(f)
+        if not isinstance(pm, dict):
+            return
+        pm["published"] = {k: g.get(k) for k in ("total_picks", "hits", "misses", "voided", "units")}
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(pm, f, indent=2)
+        os.replace(tmp, path)
+    except (OSError, ValueError) as e:
+        logger.warning(f"  Re-grade: post-mortem for {date} not updated ({e})")
 
 
 def regrade_main_lines(logs_dir: str | None = None) -> list[str]:
@@ -610,65 +679,85 @@ def regrade_main_lines(logs_dir: str | None = None) -> list[str]:
     re-settled on the consensus line and price it was shopped from (its
     actual value is on file, so no box score is needed), its closing-line
     value is recomputed against that line from the day's logs, and the
-    shopped number's own result is kept under "alt_line" for display. The
-    day's totals, CLV summary and results history entry are rewritten.
-    Idempotent: a re-settled pick is on its regular line, so a second pass
-    finds nothing; a file with nothing to re-settle is left untouched.
-    Returns the dates changed.
+    shopped number's own result is kept under "alt_line" for display. Every
+    such pick — including one an earlier pass already re-settled — gets its
+    probabilities, break-even, edge and grade re-derived at the regular line
+    (src.lines.repair_main_line_fields). The day's totals, CLV summary,
+    results history entry and post-mortem record are rewritten.
+
+    A sentinel (logs/main_lines_migrated.json, MIGRATION_VERSION) records
+    that the migration ran, so later runs return after one file check; it is
+    written only when every graded file was read. Returns the dates changed.
     """
     logs_dir = logs_dir or LOGS_DIR
-    changed = []
+    if migration_done(logs_dir):
+        return []
+    changed, all_read = [], True
     for path in sorted(glob.glob(os.path.join(logs_dir, "graded_*.json"))):
         try:
             with open(path, encoding="utf-8") as f:
                 g = json.load(f)
         except (OSError, ValueError) as e:
             logger.warning(f"  Re-grade: skipping {path} ({e})")
+            all_read = False
             continue
-        if not isinstance(g, dict) or g.get("line_basis") == "main":
+        if not isinstance(g, dict):
             continue
         date = g.get("date")
         day = None            # the day's priced events and line history, read only if a pick needs them
-        n = 0
+        resettled = repaired = 0
         for i, e in enumerate(g.get("graded_picks") or []):
-            if not (isinstance(e, dict) and main_line(e)["from_alt"]):
+            if not isinstance(e, dict):
                 continue
-            new = _on_main_line(e)
-            new["line_basis"] = "main"
-            line, edge = float(new["line"]), new.get("edge")
-            if e.get("result") in ("hit", "miss") and e.get("actual_value") is not None:
-                actual = e["actual_value"]
-                new["alt_line"] = {**(new.get("alt_line") or {}), "result": e["result"], "units": e.get("units")}
-                odds = new["over_odds"] if edge == "over" else new["under_odds"]
-                hit = _hit(edge, actual, line)
-                new["result"] = "hit" if hit else "miss"
-                new["units"] = round(_american_odds_to_profit(odds), 3) if hit else -1.0
-                try:
-                    if day is None:
-                        day = (*_priced_day(date), line_history.load(date, logs_dir))
-                    new.update(_clv_for_pick(new, line, edge, odds, day[0], day[1], day[2], date))
-                except Exception as ex:
-                    new.update({**{k: None for k in CLV_KEYS}, "close_reason": f"CLV error ({type(ex).__name__})"})
-            g["graded_picks"][i] = new
-            n += 1
-        if n:
-            g["line_basis"] = "main"
+            if main_line(e)["from_alt"]:
+                new = _on_main_line(e)
+                new["line_basis"] = "main"
+                line, edge = float(new["line"]), new.get("edge")
+                if e.get("result") in ("hit", "miss") and e.get("actual_value") is not None:
+                    actual = e["actual_value"]
+                    new["alt_line"] = {**(new.get("alt_line") or {}), "result": e["result"], "units": e.get("units")}
+                    odds = new["over_odds"] if edge == "over" else new["under_odds"]
+                    hit = _hit(edge, actual, line)
+                    new["result"] = "hit" if hit else "miss"
+                    new["units"] = round(_american_odds_to_profit(odds), 3) if hit else -1.0
+                    try:
+                        if day is None:
+                            day = (*_priced_day(date, logs_dir), line_history.load(date, logs_dir))
+                        new.update(_clv_for_pick(new, line, edge, odds, day[0], day[1], day[2], date))
+                    except Exception as ex:
+                        new.update({**{k: None for k in CLV_KEYS}, "close_reason": f"CLV error ({type(ex).__name__})"})
+                g["graded_picks"][i] = new
+                resettled += 1
+            elif (e.get("alt_line") or {}).get("kind") == "shopped" and e.get("vegas_line") is not None:
+                g["graded_picks"][i] = repair_main_line_fields(e)      # re-settled earlier: fix the numbers beside the line
+                repaired += 1
+        if not (resettled or repaired):
+            continue          # nothing was ever shopped on this night: the file is left as it is
+        g["line_basis"] = "main"
+        if resettled:
             decided = [p for p in g["graded_picks"] if p.get("result") in ("hit", "miss")]
             g["hits"] = sum(1 for p in decided if p["result"] == "hit")
             g["misses"] = sum(1 for p in decided if p["result"] == "miss")
             g["total_picks"] = len(decided)
             g["units"] = round(sum(float(p.get("units") or 0.0) for p in decided), 3)
             g["clv"] = clv_summary(g["graded_picks"])
-            changed.append(date)
-            logger.info(f"  Re-graded {n} pick(s) on {date} at the regular line: {g['hits']}-{g['misses']}, {g['units']:+.2f}u")
-        if not n:
-            continue          # nothing settled on a shopped number: the file is left as it is
+            logger.info(f"  Re-graded {resettled} pick(s) on {date} at the regular line: {g['hits']}-{g['misses']}, {g['units']:+.2f}u")
+        if repaired:
+            logger.info(f"  Re-derived the numbers of {repaired} re-settled pick(s) on {date} at the regular line")
+        changed.append(date)
         tmp = path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(g, f, indent=2)
         os.replace(tmp, path)
-        if os.path.abspath(logs_dir) == os.path.abspath(LOGS_DIR):
+        _sync_postmortem(date, g, logs_dir)
+        if resettled and os.path.abspath(logs_dir) == os.path.abspath(LOGS_DIR):
             _update_history(g)
+    if all_read:
+        try:
+            with open(os.path.join(logs_dir, MIGRATION_MARKER), "w", encoding="utf-8") as f:
+                json.dump({"version": MIGRATION_VERSION, "dates": changed}, f, indent=2)
+        except OSError as e:
+            logger.warning(f"  Re-grade: could not write {MIGRATION_MARKER} ({e})")
     return changed
 
 

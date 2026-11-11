@@ -285,6 +285,57 @@ export interface PropsData {
   model_results?: DayResult[];
   learning?: Learning | null;
   season_record?: SeasonRecord | null;
+  scorecard?: Scorecard | null;
+}
+
+/** Round 22: every candidate signal scored against the sportsbooks' price (src/scorecard.py). */
+export interface ScorecardSignal {
+  key: string;
+  label: string;
+  family: string;
+  n: number;
+  nights?: number;
+  n_oos?: number;
+  oos_nights?: number;
+  coef?: number;
+  ci?: [number, number];
+  dll?: number;
+  dll_ci?: [number, number] | null;
+  dll_vs_posted?: number;
+  bets?: { n: number; overs?: number; unders?: number; hit_rate: number | null; per_bet: number | null; ci: [number, number] | null };
+  slope?: number;
+  slope_ci?: [number, number];
+  verdict: "beats the price" | "leans right" | "no evidence" | "negative" | "too little data";
+  passes: boolean;
+}
+
+export interface ScorecardSides {
+  n: number;
+  over_hit: number;
+  over_priced: number;
+  over_per_bet: number | null;
+  over_ci: [number, number] | null;
+  under_per_bet: number | null;
+  under_ci: [number, number] | null;
+}
+
+export interface Scorecard {
+  generated_at: string;
+  season: string;
+  n_props: number;
+  nights: number;
+  first_date: string | null;
+  last_date: string | null;
+  bar: { bet_margin: number; pass_min_nights: number; pass_min_rows: number };
+  market: {
+    favourite: { n: number; hit: number | null; priced: number | null };
+    over_under: (ScorecardSides & { stat: string; label: string })[];
+    all: ScorecardSides | null;
+    overs_trailed_nights: number;
+    nights: number;
+  } | null;
+  published?: { n: number; hit: number; per_bet: number | null };
+  signals: ScorecardSignal[];
 }
 
 export interface SegmentRecord {

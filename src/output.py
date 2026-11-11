@@ -357,6 +357,9 @@ def _edge_fields(p) -> dict:
         "guards": [str(g) for g in guards],
         "model_version": MODEL_VERSION_EDGE if p_model is not None else MODEL_VERSION_FILTER,
         # round 19: "passing" when the assists came from passing (src/passing.py), with its pieces per game
+        # round 22: where and when the game is played (home/away was never on the boards before)
+        "is_home": getattr(p, "is_home", None),
+        "tip_utc": getattr(p, "tip_utc", None),
         "proj_source": proj.get("source") or None,
         "proj_mu_box": _num_or_none(proj.get("mu_box"), 2),
         "passing": _passing_fields(proj.get("passing")),
@@ -383,6 +386,37 @@ def _passing_fields(pieces) -> dict | None:
     out["gp_this"] = _num_or_none(pieces.get("gp_this"))
     out["gp_last"] = _num_or_none(pieces.get("gp_last"))
     return out
+
+
+# Board lists that repeat props already in all_props, and season-long blocks that every board would repeat
+_ARCHIVE_SKIP = ("valid_picks", "watchlist", "valid_combos", "watchlist_combos", "on_hold", "demoted", "paused", "capped",
+                 "model_results", "learning", "season_record", "hitrate_summary", "scorecard")
+
+
+def _archive_board(payload: dict, date: str) -> str | None:
+    """
+    Keep this run's board as it was written: logs/boards/{date}/{HHMMSS}.json.gz
+    (UTC). props_{date}.json is overwritten by every later run of the day, so
+    without this only the day's last board survives; a backtest needs the
+    board as it stood at each run. Every prop is kept once (all_props, with
+    its is_valid / watchlist flags); the published order is kept as
+    [player, stat] pairs. Never raises.
+    """
+    import gzip
+    try:
+        slim = {k: v for k, v in payload.items() if k not in _ARCHIVE_SKIP}
+        for key in ("valid_picks", "valid_combos"):
+            slim[f"{key}_order"] = [[p.get("player_name"), p.get("stat")] for p in payload.get(key) or []]
+        folder = os.path.join(LOGS_DIR, "boards", date)
+        os.makedirs(folder, exist_ok=True)
+        path = os.path.join(folder, f"{datetime.now(timezone.utc).strftime('%H%M%S')}.json.gz")
+        with gzip.open(path + ".tmp", "wt", encoding="utf-8") as f:
+            json.dump(slim, f, separators=(",", ":"))
+        os.replace(path + ".tmp", path)
+        return path
+    except Exception as e:      # an archive must never cost a board
+        logger.warning(f"Board archive not written ({type(e).__name__}: {e})")
+        return None
 
 
 def save_json_report(prop_scores: list, date: str | None = None, run_mode: str = "full", lines_locked: int = 0,
@@ -522,9 +556,18 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
     path = os.path.join(LOGS_DIR, f"props_{date}.json")
     with open(path, "w") as f:
         json.dump(payload, f, indent=2)
+    _archive_board(payload, date)
     logger.info(f"JSON report saved to {path}")
 
-    # Also save as latest.json for the web dashboard
+    # Also save as latest.json for the web dashboard, with the signal scorecard
+    # the last grading run wrote (site only: the day's board file stays a board)
+    try:
+        from src.scorecard import load as load_scorecard
+        card = load_scorecard()
+        if card:
+            payload["scorecard"] = card
+    except Exception as e:
+        logger.warning(f"Scorecard unavailable ({e})")
     os.makedirs(web_data_dir, exist_ok=True)
     latest_path = os.path.join(web_data_dir, "latest.json")
     with open(latest_path, "w") as f:

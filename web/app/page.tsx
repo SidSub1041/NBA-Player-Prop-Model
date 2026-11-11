@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import type { AltLine, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv } from "@/lib/types";
+import type { AltLine, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv, Scorecard, ScorecardSignal, ScorecardSides } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -431,7 +431,25 @@ function guardLabel(guard: string, pick: PropPick, edge: string): string {
   }
 }
 
-/** The alternate number beside the pick: shown for reference, never the line the pick is published or graded on. */
+/** American odds -> implied probability (vig in); null when unpriced. */
+function impliedOf(price: string | null | undefined): number | null {
+  if (price == null) return null;
+  const o = Number(String(price).replace("+", ""));
+  if (!Number.isFinite(o) || Math.abs(o) < 100) return null;
+  return o > 0 ? 100 / (o + 100) : -o / (-o + 100);
+}
+
+/** The de-vigged market probability of the pick's side at its regular line, from the consensus prices an older shopped board kept. */
+function marketAtRegular(pick: PropPick, edge: string): number | null {
+  const po = impliedOf(pick.vegas_over_odds);
+  const pu = impliedOf(pick.vegas_under_odds);
+  if (po == null && pu == null) return null;
+  const a = po ?? pu!;
+  const b = pu ?? po!;
+  return (edge === "under" ? b : a) / (a + b);
+}
+
+/** The alternate number beside the pick: the number and price only — no model verdict, never the line the pick is published or graded on. */
 function AltRow({ pick }: { pick: PropPick }) {
   const edge = pick.edge.toLowerCase();
   const alt = pickAlt(pick, edge);
@@ -446,18 +464,28 @@ function AltRow({ pick }: { pick: PropPick }) {
       <div className="text-sm text-[var(--text-muted)] whitespace-nowrap">
         · {alt.book ?? "one book"} {where}
       </div>
-      {alt.p_model != null && <div className="text-sm text-[var(--text-muted)] whitespace-nowrap">· MODEL {fmtPct(alt.p_model)}</div>}
-      {alt.edge != null && (
-        <div className="text-sm font-semibold whitespace-nowrap" style={{ color: edgeColor(alt.edge) }} title="the same edge math at this number and price">
-          · EDGE {fmtEdgePts(alt.edge)}
-        </div>
-      )}
       <span
         className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap"
         title="the pick, its grade and its result are on the regular line above"
       >
         for reference · graded on {pickLine(pick) ?? "the regular line"}
       </span>
+    </div>
+  );
+}
+
+/** Shown while the model's probabilities do not predict results — the season record, in its own words. */
+function CalibrationWarning({ rec }: { rec: SeasonRecord | null }) {
+  if (!rec || rec.rate == null || rec.hits + rec.misses < 50) return null;
+  const units = `${rec.units >= 0 ? "+" : ""}${rec.units.toFixed(1)}u`;
+  return (
+    <div className="mt-3 max-w-2xl border-2 border-[var(--under)] bg-[var(--bg)] text-[var(--text)] px-4 py-3" role="note">
+      <div className="text-[11px] font-bold tracking-widest text-[var(--under)]">CALIBRATION WARNING</div>
+      <div className="text-sm leading-snug mt-1">
+        This season&apos;s picks are {rec.record} ({Math.round(rec.rate * 100)}%, {units}). The model&apos;s probabilities have not predicted
+        results, and a market-anchored rebuild is under way: the scorecard below tests every check against the sportsbooks&apos; price each
+        night. Treat the board as a watchlist, not a bet sheet, and cross-check every pick.
+      </div>
     </div>
   );
 }
@@ -518,23 +546,27 @@ function EdgeRow({ pick }: { pick: PropPick }) {
   const move = pick.line_move ?? 0;
   const moveColor = move > 0 ? "var(--over)" : move < 0 ? "#f87171" : "var(--text-muted)";
   const guards = pick.guards ?? [];
+  // an older board that published a shopped number stored its probabilities at THAT number: at the regular line only the market and the price are known
+  const old = shoppedOld(pick);
+  const market = old ? marketAtRegular(pick, edge) : pick.p_market;
+  const needs = old ? impliedOf(pickPrice(pick, edge)) : pick.breakeven_price;
   return (
     <div className="flex flex-col gap-2 -mt-2">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">EDGE</div>
-        <div className="text-sm font-bold text-[var(--text)] whitespace-nowrap">MODEL {fmtPct(pick.p_model)}</div>
-        <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap">· MARKET {fmtPct(pick.p_market)}</div>
-        {pick.p_hat != null && (
+        {!old && <div className="text-sm font-bold text-[var(--text)] whitespace-nowrap">MODEL {fmtPct(pick.p_model)}</div>}
+        <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap">{old ? "" : "· "}MARKET {fmtPct(market)}</div>
+        {!old && pick.p_hat != null && (
           <div className="text-sm font-semibold text-[var(--text)] whitespace-nowrap" title="the probability the pick is judged on: model and market blended">
             · BLEND {fmtPct(pick.p_hat)}
           </div>
         )}
-        {pick.breakeven_price != null && (
+        {needs != null && (
           <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap" title="the break-even probability of the price taken">
-            · NEEDS {fmtPct(pick.breakeven_price)}
+            · NEEDS {fmtPct(needs)}
           </div>
         )}
-        {e != null && (
+        {!old && e != null && (
           <div className="text-sm font-bold whitespace-nowrap" style={{ color: edgeColor(e) }} title="the blended probability (model and market) minus the price's break-even, in points">
             · EDGE {fmtEdgePts(e)}
           </div>
@@ -873,6 +905,132 @@ function ShotChart({ results }: { results: DayResult[] }) {
             ))}
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── The Scorecard: every check, against the sportsbooks' price (round 22) ── */
+const VERDICT_STYLE: Record<string, { text: string; color: string }> = {
+  "beats the price": { text: "BEATS THE PRICE", color: "var(--over)" },
+  "leans right": { text: "LEANS RIGHT", color: "var(--text)" },
+  "no evidence": { text: "NO EVIDENCE", color: "var(--text-muted)" },
+  negative: { text: "POINTS THE WRONG WAY", color: "#f87171" },
+  "too little data": { text: "TOO LITTLE DATA", color: "var(--text-faint)" },
+};
+
+function fmtPerBet(v: number | null | undefined): string {
+  if (v == null) return "—";
+  return `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)}%`;
+}
+
+function SidesRow({ label, row }: { label: string; row: ScorecardSides }) {
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)_64px_64px] items-baseline gap-3 text-sm">
+      <span className="min-w-0 text-[var(--text)]">
+        {label} <span className="text-[var(--text-faint)] text-xs">{row.n.toLocaleString()}</span>
+      </span>
+      <span className="font-bold text-right" style={{ color: unitsColor(row.over_per_bet ?? 0) }}>{fmtPerBet(row.over_per_bet)}</span>
+      <span className="font-bold text-right" style={{ color: unitsColor(row.under_per_bet ?? 0) }}>{fmtPerBet(row.under_per_bet)}</span>
+    </div>
+  );
+}
+
+/** The re-fitted price says which side has been overpriced once its interval clears zero. */
+function verdictOf(sig: ScorecardSignal): { text: string; color: string } {
+  if (sig.passes) return { text: "IN USE", color: "var(--over)" };
+  if (sig.key === "price_refit" && sig.verdict === "leans right" && sig.ci) {
+    return { text: sig.ci[1] < 0 ? "OVERS OVERPRICED" : "UNDERS OVERPRICED", color: "var(--text)" };
+  }
+  return VERDICT_STYLE[sig.verdict] ?? VERDICT_STYLE["no evidence"];
+}
+
+function SignalRow({ sig }: { sig: ScorecardSignal }) {
+  const v = verdictOf(sig);
+  const tested = sig.n_oos != null && sig.oos_nights != null;
+  const showBets = sig.verdict === "beats the price" || sig.verdict === "leans right";
+  return (
+    <div className="flex flex-col gap-0.5 py-2 border-t border-[var(--border)] first:border-t-0">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-sm text-[var(--text)] min-w-0">{sig.label}</span>
+        <span className="text-[11px] font-bold tracking-widest whitespace-nowrap" style={{ color: v.color }}>
+          {v.text}
+        </span>
+      </div>
+      <div className="text-xs text-[var(--text-faint)]">
+        {tested ? (
+          <>
+            {sig.n.toLocaleString()} props · tested forward on {sig.oos_nights} {sig.oos_nights === 1 ? "night" : "nights"}
+            {showBets && sig.bets && sig.bets.n > 0 && sig.bets.per_bet != null && (
+              <> · betting it: {sig.bets.n} bets, {fmtPerBet(sig.bets.per_bet)} each</>
+            )}
+          </>
+        ) : sig.n > 0 ? (
+          <>{sig.n.toLocaleString()} props so far — not enough to test</>
+        ) : (
+          <>recorded from now on</>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ScorecardPanel({ card }: { card: Scorecard }) {
+  const m = card.market;
+  if (!m || !m.all) return null;
+  const families: string[] = [];
+  for (const s of card.signals) if (!families.includes(s.family)) families.push(s.family);
+  const inUse = card.signals.filter((s) => s.passes).length;
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 items-start">
+      <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-5">
+        <div className="font-display text-2xl tracking-wide">THE PRICE TO BEAT</div>
+        <div className="text-sm text-[var(--text-muted)]">
+          <span className="font-bold text-[var(--text)]">{card.n_props.toLocaleString()}</span> props with a line and a result over{" "}
+          <span className="font-bold text-[var(--text)]">{card.nights}</span> nights, each on its regular line. The side the
+          sportsbooks favoured won <span className="font-bold text-[var(--text)]">{fmtPct(m.favourite.hit)}</span> against a price of{" "}
+          {fmtPct(m.favourite.priced)}; overs won <span className="font-bold text-[var(--text)]">{fmtPct(m.all.over_hit)}</span> against a
+          price of {fmtPct(m.all.over_priced)}, and trailed their price on {m.overs_trailed_nights} of {m.nights} nights.
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <div className="grid grid-cols-[minmax(0,1fr)_64px_64px] gap-3 text-[11px] font-bold tracking-widest text-[var(--text-muted)]">
+            <span>RETURN PER BET, BETTING EVERY PROP</span>
+            <span className="text-right">OVER</span>
+            <span className="text-right">UNDER</span>
+          </div>
+          <SidesRow label="Every prop" row={m.all} />
+          {m.over_under.map((r) => (
+            <SidesRow key={r.stat} label={r.label} row={r} />
+          ))}
+        </div>
+        {card.published && (
+          <div className="text-xs text-[var(--text-faint)]">
+            The picks this board published: {card.published.n} decided, {fmtPct(card.published.hit)} won, {fmtPerBet(card.published.per_bet)} per bet.
+          </div>
+        )}
+      </div>
+      <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
+        <div className="flex items-baseline justify-between gap-3">
+          <div className="font-display text-2xl tracking-wide">THE CHECKS</div>
+          <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">
+            {inUse} OF {card.signals.length} IN USE
+          </div>
+        </div>
+        <div className="text-sm text-[var(--text-muted)]">
+          Each check answers one question — did the prop go over? — fitted on earlier nights and scored on later ones, beside the
+          price. A check may move a pick only after it beats the price on {card.bar.pass_min_nights} nights and{" "}
+          {card.bar.pass_min_rows.toLocaleString()} props; until then it is shown, not used.
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+          {families.map((fam) => (
+            <div key={fam} className="flex flex-col">
+              <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] pb-1">{fam.toUpperCase()}</div>
+              {card.signals.filter((s) => s.family === fam).map((s) => (
+                <SignalRow key={s.key} sig={s} />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -1490,6 +1648,7 @@ export default function Home() {
             {boardState === "last-season" &&
               `${currentSeason} picks post the morning of each game day. Last season's record is archived below.`}
           </div>
+          {boardState !== "last-season" && <CalibrationWarning rec={rec} />}
           <div className="flex items-center gap-4 mt-2">
             <a
               href="#board"
@@ -1624,6 +1783,14 @@ export default function Home() {
         <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
           <SectionHead title="THE FILM ROOM" tag="LEARNS FROM EVERY PICK" />
           <FilmRoom learning={data.learning} />
+        </div>
+      )}
+
+      {/* The Scorecard: every check against the price */}
+      {data.scorecard?.market && boardState !== "last-season" && (
+        <div className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
+          <SectionHead title="THE SCORECARD" tag="EVERY CHECK. AGAINST THE PRICE." />
+          <ScorecardPanel card={data.scorecard} />
         </div>
       )}
 

@@ -17,6 +17,7 @@ import os
 from dataclasses import dataclass, field
 
 from src.underdog import get_line_for_prop, norm_name
+from src.config import MIN_EDGE, MODEL_TRUST, STRONG_EDGE, WATCH_EDGE
 
 STAT_LABELS = {
     "points": "PTS", "rebounds": "REB", "assists": "AST", "pra": "PRA",
@@ -76,6 +77,99 @@ def alt_of(pick: dict) -> dict | None:
         return {"book": pick.get("under_book") if under else pick.get("over_book"), "line": pick.get("line"),
                 "price": pick.get("under_odds") if under else pick.get("over_odds"), "kind": "shopped"}
     return None
+
+
+def grade_for_edge(edge) -> str | None:
+    """The letter grade an edge earns (the rule in PropScore.compute_edge_grade); None without an edge."""
+    try:
+        e = float(edge)
+    except (TypeError, ValueError):
+        return None
+    if e != e:
+        return None
+    if e >= STRONG_EDGE:
+        return "A+"
+    if e >= MIN_EDGE:
+        return "A"
+    if e >= WATCH_EDGE:
+        return "B+"
+    return "B" if e > 0 else "C"
+
+
+def repair_main_line_fields(entry: dict) -> dict:
+    """
+    Re-derive every per-pick number of a prop dict AT ITS OWN LINE AND PRICES
+    (in place, and returned): p_model from proj_mu / proj_sd / the stat's
+    distribution, p_market from the de-vigged prices (a push taken out of
+    both at an integer line), breakeven_price from the side's price, p_hat
+    (MODEL_TRUST blend), edge_value and the grade from those; market_basis
+    "pick". The hit rate was measured against another number, so it is
+    cleared (hitrate None, hitrate_source "unavailable", games_hit None).
+    Used when a pick that was published on a shopped alternate (boards before
+    round 20) is moved to its regular line, so the numbers beside the line
+    describe that line. Idempotent. Without a projection the probability
+    fields are left as they are.
+    """
+    from src.projection import implied_prob, market_prob, p_sides
+    side = str(entry.get("edge", "")).lower()
+    try:
+        line = float(entry.get("line"))
+    except (TypeError, ValueError):
+        return entry
+    under = side == "under"
+    side_odds = entry.get("under_odds") if under else entry.get("over_odds")
+    be = implied_prob(side_odds)
+    mu, sd = entry.get("proj_mu"), entry.get("proj_sd")
+    p_model = p_push = None
+    try:
+        if mu is not None and sd:
+            po, pu, p_push = p_sides(entry.get("stat", ""), float(mu), float(sd), line)
+            p_model = pu if under else po
+    except (TypeError, ValueError):
+        p_model = p_push = None
+    mp = market_prob(entry.get("over_odds"), entry.get("under_odds"))
+    p_market = None
+    if mp is not None:
+        p_market = (mp[1] if under else mp[0]) * (1.0 - (p_push or 0.0))
+    entry["breakeven_price"] = round(be, 4) if be is not None else None
+    entry["hitrate"], entry["games_hit"], entry["hitrate_source"] = None, None, "unavailable"
+    entry["market_basis"] = "pick" if mp is not None else None
+    if p_model is None:
+        return entry
+    entry["p_model"] = round(p_model, 4)
+    if p_market is not None:
+        p_hat = MODEL_TRUST * p_model + (1.0 - MODEL_TRUST) * p_market
+        entry["p_market"] = round(p_market, 4)
+        entry["p_hat"] = round(p_hat, 4)
+        if be is not None:
+            entry["edge_value"] = round(p_hat - be, 4)
+            entry["grade"] = grade_for_edge(entry["edge_value"]) or entry.get("grade")
+    return entry
+
+
+def on_main_line(pick: dict) -> dict:
+    """
+    The prop as a dict on its REGULAR line. A pick published on a shopped
+    alternate (boards before round 20: line_shopped with vegas_*) gets the
+    consensus line, its prices, the side's book and book count, the shopped
+    number under "alt_line" (alt_of) and every per-pick number re-derived at
+    that line (repair_main_line_fields). Anything else comes back as a
+    shallow copy (its alt_line copied too, so callers may annotate it).
+    Shared by the grader, the learner's snapshots and the CSV export, so the
+    three agree field for field.
+    """
+    out = dict(pick)
+    if isinstance(out.get("alt_line"), dict):
+        out["alt_line"] = dict(out["alt_line"])
+    m = main_line(pick)
+    if not m["from_alt"]:
+        return out
+    under = str(pick.get("edge", "")).lower() == "under"
+    side_book, other_book = ("under_book", "over_book") if under else ("over_book", "under_book")
+    out.update({"line": m["line"], "over_odds": m["over_odds"], "under_odds": m["under_odds"],
+                side_book: pick.get("vegas_book"), other_book: None, "line_book": pick.get("vegas_book"),
+                "line_books": pick.get("vegas_books"), "line_shopped": False, "alt_line": alt_of(pick)})
+    return repair_main_line_fields(out)
 
 
 def lock_key(player: str, stat: str) -> tuple[str, str]:

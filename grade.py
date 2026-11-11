@@ -64,6 +64,14 @@ def main():
     except Exception as e:
         logging.warning(f"Learning loop skipped ({type(e).__name__}: {e})")
 
+    # The signal scorecard (round 22): every candidate signal scored against the
+    # sportsbooks' price on every labeled prop of the season. Reads files only.
+    try:
+        from src.scorecard import run as run_scorecard
+        run_scorecard()
+    except Exception as e:
+        logging.warning(f"Scorecard skipped ({type(e).__name__}: {e})")
+
     if not result:
         return
 

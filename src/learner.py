@@ -268,10 +268,12 @@ def actual_value(name: str, stat: str, idx: dict):
 
 def label_props(date: str, props_data: dict, box: dict) -> list[dict]:
     """Every prop with a line on that night's board -> a labeled training row (pushes and DNPs skipped)."""
+    from src.lines import on_main_line
     idx = _box_index(box)
     rows = []
     for p in props_data.get("all_props", []) or []:
-        f = featurize(p)
+        p = on_main_line(p)      # a pick published on a shopped alternate (boards before round 20) is labeled, featurized
+        f = featurize(p)         # and snapshotted on its regular line, with its numbers re-derived there
         if f is None:
             continue
         actual = actual_value(p.get("player_name", ""), p.get("stat"), idx)
@@ -326,48 +328,72 @@ def load_all_rows() -> list[dict]:
     return rows
 
 
+MIGRATION_MARKER = "main_lines_migrated.json"
+MIGRATION_VERSION = 2     # 1: rows moved to the regular line; 2: their snapshots re-derived there (probabilities, edge, books, hit rate)
+
+
+def _migration_done(version: int = MIGRATION_VERSION) -> bool:
+    try:
+        with open(os.path.join(TRAIN_DIR, MIGRATION_MARKER), encoding="utf-8") as f:
+            return int(json.load(f).get("version", 0)) >= version
+    except (OSError, ValueError, TypeError):
+        return False
+
+
 def relabel_main_lines() -> int:
     """
-    Once: training rows labeled on a shopped number (boards before round 20
-    published a book's alternate line in place of the consensus) are
-    re-labeled on the regular line from that night's board — line, price,
-    hit, the stored snapshot and features; a row that lands exactly on the
-    regular line is a push and is dropped, as label_props does. Files are
-    marked "line_basis": "main". Returns the rows changed.
+    Once: training rows whose board prop was published on a shopped number
+    (boards before round 20 put a book's alternate line in place of the
+    consensus) are rebuilt from that night's board on the regular line
+    (src.lines.on_main_line): line, price, hit, and a snapshot whose
+    probabilities, edge, book count and hit rate describe that line, so the
+    features match the label. A row that lands exactly on the regular line
+    is a push and is dropped, as label_props does. Rows from boards without
+    shopping are untouched; a night whose board cannot be read is skipped
+    (and retried next time). A sentinel in logs/training records that the
+    migration ran, so later nights return after one file check. Returns the
+    rows changed.
     """
-    from src.lines import main_line
-    changed = 0
+    from src.lines import main_line, on_main_line
+    if _migration_done():
+        return 0
+    changed, all_ok = 0, True
     for path in sorted(glob.glob(os.path.join(TRAIN_DIR, "labels_*.json"))):
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
         except (OSError, ValueError):
+            all_ok = False
             continue
-        if not isinstance(data, dict) or data.get("line_basis") == "main":
+        if not isinstance(data, dict):
             continue
         date = data.get("date")
         try:
             with open(os.path.join(LOGS_DIR, f"props_{date}.json"), encoding="utf-8") as f:
                 board = {(p.get("player_name"), p.get("stat")): p for p in json.load(f).get("all_props", []) or []}
         except (OSError, ValueError, TypeError):
-            board = {}
+            logger.warning(f"  Re-label: board for {date} unreadable — its rows are left for the next run")
+            all_ok = False
+            continue
         rows, n = [], 0
         for r in data.get("rows", []) or []:
             bp = board.get((r.get("player"), r.get("stat")))
-            m = main_line(bp) if bp else None
-            if not m or not m["from_alt"] or m["line"] is None:
+            if not bp or not main_line(bp)["from_alt"]:
                 rows.append(r)
                 continue
             n += 1
-            line = float(m["line"])
+            p = on_main_line(bp)
+            line = float(p["line"])
             if r.get("actual") is None or float(r["actual"]) == line:
                 continue                      # a push on the regular line: not a label
             over = str(r.get("edge", "")).lower() != "under"
-            odds = m["over_odds"] if over else m["under_odds"]
-            snap = {**(r.get("prop") or {}), "line": m["line"], "over_odds": m["over_odds"], "under_odds": m["under_odds"]}
+            odds = p.get("over_odds") if over else p.get("under_odds")
+            snap = {k: p.get(k) for k in SNAPSHOT_KEYS if k in p}
             f = featurize(snap)
             rows.append({**r, "line": line, "odds": odds, "hit": int(r["actual"] > line if over else r["actual"] < line),
-                         "prop": snap, "features": f if f is not None else r.get("features")})
+                         "grade": p.get("grade"), "prop": snap, "features": f if f is not None else r.get("features")})
+        if not n:
+            continue                          # nothing shopped that night: the file is left as it is
         changed += n
         data["rows"] = rows
         data["line_basis"] = "main"
@@ -375,6 +401,13 @@ def relabel_main_lines() -> int:
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=1)
         os.replace(tmp, path)
+    if all_ok:
+        try:
+            os.makedirs(TRAIN_DIR, exist_ok=True)
+            with open(os.path.join(TRAIN_DIR, MIGRATION_MARKER), "w", encoding="utf-8") as f:
+                json.dump({"version": MIGRATION_VERSION, "rows": changed}, f, indent=2)
+        except OSError as e:
+            logger.warning(f"  Re-label: could not write {MIGRATION_MARKER} ({e})")
     if changed:
         logger.info(f"  Re-labeled {changed} training row(s) on the regular line")
     return changed
