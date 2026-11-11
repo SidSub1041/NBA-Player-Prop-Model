@@ -35,7 +35,10 @@ def _edge_order_key(p) -> tuple:
     books = (getattr(p, "line_info", None) or {}).get("books") or 0
     p_model = getattr(p, "p_model", None)
     p_model = float(p_model) if isinstance(p_model, (int, float)) else float("-inf")
-    return (-edge, -float(books), -p_model)
+    # round 23: between two equal price edges, the play with more checks to spare comes first
+    sup = getattr(p, "support", None) or {}
+    spare = float(sup.get("net", 0) - sup.get("need", 0)) if sup else 0.0
+    return (-edge, -spare, -float(books), -p_model)
 
 
 def _player_key(p) -> str:

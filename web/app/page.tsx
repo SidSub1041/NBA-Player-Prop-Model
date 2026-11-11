@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import type { AltLine, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv, Scorecard, ScorecardSignal, ScorecardSides } from "@/lib/types";
+import type { AltLine, CheckReading, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv, Scorecard, ScorecardSignal, ScorecardSides } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -475,9 +475,21 @@ function AltRow({ pick }: { pick: PropPick }) {
 }
 
 /** Shown while the model's probabilities do not predict results — the season record, in its own words. */
-function CalibrationWarning({ rec }: { rec: SeasonRecord | null }) {
+function CalibrationWarning({ rec, market }: { rec: SeasonRecord | null; market?: boolean }) {
   if (!rec || rec.rate == null || rec.hits + rec.misses < 50) return null;
   const units = `${rec.units >= 0 ? "+" : ""}${rec.units.toFixed(1)}u`;
+  if (market) {
+    return (
+      <div className="mt-3 max-w-2xl border-2 border-[var(--under)] bg-[var(--bg)] text-[var(--text)] px-4 py-3" role="note">
+        <div className="text-[11px] font-bold tracking-widest text-[var(--under)]">REBUILT MODEL · NOT YET PROVEN</div>
+        <div className="text-sm leading-snug mt-1">
+          This season&apos;s picks are {rec.record} ({Math.round(rec.rate * 100)}%, {units}), nearly all from the old projection model, which did
+          not predict results. Picks now start from the sportsbooks&apos; own fair price and need the checklist behind them; no check has yet
+          proved it beats that price (see the scorecard below). Treat the board as a shortlist and cross-check every pick.
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="mt-3 max-w-2xl border-2 border-[var(--under)] bg-[var(--bg)] text-[var(--text)] px-4 py-3" role="note">
       <div className="text-[11px] font-bold tracking-widest text-[var(--under)]">CALIBRATION WARNING</div>
@@ -537,7 +549,115 @@ function PassingRow({ pick }: { pick: PropPick }) {
 }
 
 /** The edge model's row: model vs market at the pick's line, the line's move since it opened, failed guards. */
+/** One check as a chip: ▲ behind the pick's side, ▼ against it, — neutral or no reading. */
+function CheckChip({ check, side }: { check: CheckReading; side: string }) {
+  const behind = check.lean === side;
+  const against = check.lean != null && check.lean !== side;
+  const color = !check.counts ? "var(--text-faint)" : behind ? "var(--over)" : against ? "#f87171" : "var(--text-muted)";
+  const mark = behind ? "▲" : against ? "▼" : "–";
+  const says = behind ? "behind the pick" : against ? "against the pick" : check.value == null ? "no reading" : "neutral";
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border)] whitespace-nowrap"
+      style={{ color, textDecoration: check.counts ? "none" : "line-through" }}
+      title={`${check.label}: ${says}${check.detail ? ` — ${check.detail}` : ""}${check.counts ? "" : " (not counted: the scorecard says this check has pointed the wrong way)"}`}
+    >
+      <span aria-hidden="true">{mark}</span>
+      {check.label}
+      <span className="sr-only"> {says}</span>
+    </span>
+  );
+}
+
+/** Round 23: the market-anchored pick — the books' fair price against the best price, and the checklist behind the side. */
+function MarketRows({ pick }: { pick: PropPick }) {
+  const edge = pick.edge.toLowerCase();
+  const e = pick.edge_value ?? null;
+  const line = pickLine(pick);
+  const sup = pick.support;
+  const checks = pick.checks ?? [];
+  const moved = pick.open_line != null && line != null && pick.open_line !== line;
+  const move = pick.line_move ?? 0;
+  const moveColor = move > 0 ? "var(--over)" : move < 0 ? "#f87171" : "var(--text-muted)";
+  const guards = pick.guards ?? [];
+  const supportOk = sup != null && sup.net >= sup.need;
+  const readings = checks.filter((c) => c.value != null);
+  return (
+    <div className="flex flex-col gap-2 -mt-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">PRICE</div>
+        <div
+          className="text-sm font-bold text-[var(--text)] whitespace-nowrap"
+          title={`the sportsbooks' own probability with the vig taken out: the median of ${pick.fair_books ?? 0} books`}
+        >
+          FAIR {fmtPct(pick.p_fair)}
+        </div>
+        {pick.breakeven_price != null && (
+          <div className="text-sm font-semibold text-[var(--text-muted)] whitespace-nowrap" title="the break-even probability of the best price on offer">
+            · NEEDS {fmtPct(pick.breakeven_price)}
+          </div>
+        )}
+        {e != null && (
+          <div
+            className="text-sm font-bold whitespace-nowrap"
+            style={{ color: e >= 0 ? "var(--over)" : "#f87171" }}
+            title="the fair probability minus the price's break-even, in points: positive means the best price beats the market's own fair price"
+          >
+            · EDGE {fmtEdgePts(e)}
+          </div>
+        )}
+        {moved && pick.open_line != null && line != null && (
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border-strong)] text-[var(--text-muted)] whitespace-nowrap"
+            title={move > 0 ? "the market moved toward the pick since it opened" : move < 0 ? "the market moved against the pick since it opened" : "line moved"}
+          >
+            opened {pick.open_line} → {line}
+            <span style={{ color: moveColor }} aria-label={move > 0 ? "toward the pick" : move < 0 ? "against the pick" : "moved"}>
+              {line > pick.open_line ? "↑" : "↓"}
+            </span>
+          </span>
+        )}
+      </div>
+      {sup != null && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">CHECKS</div>
+          <div className="text-sm font-bold whitespace-nowrap" style={{ color: supportOk ? "var(--over)" : "var(--text-muted)" }}>
+            {sup.for} FOR · {sup.against} AGAINST
+          </div>
+          <div className="text-xs text-[var(--text-faint)] whitespace-nowrap">
+            {edge === "over" ? "an over" : "an under"} needs {sup.need} more for than against
+          </div>
+          <div className="basis-full h-0" />
+          <div className="flex flex-wrap items-center gap-1.5 sm:pl-[92px]">
+            {readings.length > 0 ? (
+              readings.map((c) => <CheckChip key={c.key} check={c} side={edge} />)
+            ) : (
+              <span className="text-xs text-[var(--text-faint)]">no check has a reading for this prop</span>
+            )}
+          </div>
+        </div>
+      )}
+      <PassingRow pick={pick} />
+      <AltRow pick={pick} />
+      {guards.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 sm:pl-[92px]">
+          {guards.map((g) => (
+            <span
+              key={g}
+              className="text-[11px] font-semibold tracking-wider px-1.5 py-0.5 bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text-muted)] whitespace-nowrap"
+              title={`guard: ${g}`}
+            >
+              {guardLabel(g, pick, edge)}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EdgeRow({ pick }: { pick: PropPick }) {
+  if (pick.support != null) return <MarketRows pick={pick} />;
   if (pick.p_model == null) return null;
   const edge = pick.edge.toLowerCase();
   const e = pickEdge(pick);
@@ -717,7 +837,7 @@ function PickCard({ pick, hrThreshold, mode, rank }: { pick: PropPick; hrThresho
           )
         )}
       </div>
-      {pick.p_model != null ? <EdgeRow pick={pick} /> : <ModelRow pick={pick} mode={mode} />}
+      {pick.support != null || pick.p_model != null ? <EdgeRow pick={pick} /> : <ModelRow pick={pick} mode={mode} />}
     </div>
   );
 }
@@ -1018,8 +1138,9 @@ function ScorecardPanel({ card }: { card: Scorecard }) {
         </div>
         <div className="text-sm text-[var(--text-muted)]">
           Each check answers one question — did the prop go over? — fitted on earlier nights and scored on later ones, beside the
-          price. A check may move a pick only after it beats the price on {card.bar.pass_min_nights} nights and{" "}
-          {card.bar.pass_min_rows.toLocaleString()} props; until then it is shown, not used.
+          price. A check may move a pick&apos;s probability only after it beats the price on {card.bar.pass_min_nights} nights and{" "}
+          {card.bar.pass_min_rows.toLocaleString()} props; until then the checklist only helps choose among fairly priced props, and a check
+          that points the wrong way stops counting.
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           {families.map((fam) => (
@@ -1290,6 +1411,14 @@ const SYSTEM_STEPS = [
 ];
 
 /** The edge model (round 18): a projection turned into a probability, priced against the market. */
+const SYSTEM_STEPS_MARKET = [
+  { n: "01", title: "START FROM THE PRICE", body: "Every sportsbook's two-way price on the regular line, vig taken out, and the median across books: the market's own fair probability. No projection moves it." },
+  { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side. A pick needs it to be at least the fair price — the board never pays more than fair." },
+  { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
+  { n: "04", title: "SCORE EVERY CHECK", body: "Each night every check is tested against the price on every graded prop. A check moves a probability only after it beats the price on 25 nights; one that points the wrong way stops counting." },
+  { n: "05", title: "CAP & CLOSE", body: "__PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
+];
+
 const SYSTEM_STEPS_EDGE = [
   { n: "01", title: "PROJECT", body: "Two seasons of game logs, this season weighted by form, blended into tonight's mean and spread. Assists come from passing: passes made × shots they set up × the share that go in." },
   { n: "02", title: "ADJUST", body: "Defense vs. position, pace, shot zones allowed and playtypes, starters out — and for passers, the opponent's shooting defense and ball movement allowed." },
@@ -1481,9 +1610,12 @@ export default function Home() {
     caps && caps.dropped > 0
       ? `${caps.kept} of ${caps.kept + caps.dropped} A-grade plays shown${maxPerGame != null ? ` (${maxPerGame} per game)` : ""}`
       : null;
-  const systemSteps = (edgeBoard ? SYSTEM_STEPS_EDGE : SYSTEM_STEPS).map((s) => ({
+  const marketBoard = data.model_version === "market-2";
+  const systemSteps = (marketBoard ? SYSTEM_STEPS_MARKET : edgeBoard ? SYSTEM_STEPS_EDGE : SYSTEM_STEPS).map((s) => ({
     ...s,
     body: s.body
+      .replace("__UNDER__", String(data.thresholds?.under_min_support ?? 1))
+      .replace("__OVER__", String(data.thresholds?.over_min_support ?? 2))
       .replace("__HR__", String(Math.round(hrThreshold * 100)))
       .replace("__EDGE__", ((data.thresholds?.min_edge ?? 0.03) * 100).toFixed(0))
       .replace("__STRONG__", ((data.thresholds?.strong_edge ?? 0.06) * 100).toFixed(0))
@@ -1648,7 +1780,7 @@ export default function Home() {
             {boardState === "last-season" &&
               `${currentSeason} picks post the morning of each game day. Last season's record is archived below.`}
           </div>
-          {boardState !== "last-season" && <CalibrationWarning rec={rec} />}
+          {boardState !== "last-season" && <CalibrationWarning rec={rec} market={data.model_version === "market-2"} />}
           <div className="flex items-center gap-4 mt-2">
             <a
               href="#board"

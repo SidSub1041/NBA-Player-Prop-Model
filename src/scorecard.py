@@ -67,6 +67,7 @@ from datetime import date as _date, datetime, timezone
 
 import numpy as np
 
+from src.checklist import BARS as CHECK_BARS, LABELS as CHECK_LABELS
 from src.config import SEASON, season_for_date
 from src.lines import on_main_line
 from src.projection import implied_prob, market_prob, p_sides
@@ -262,16 +263,58 @@ def _actuals(logs_dir: str, season: str) -> dict:
     return out
 
 
-def build_rows(logs_dir: str | None = None, season: str | None = None) -> list[dict]:
+def _row(raw: dict, d: str, actual, rest) -> dict | None:
     """
-    One row per labeled prop of the season, oldest night first: the board's
-    prop on its regular line, the de-vigged market probability of the over,
-    whether it went over, and every pre-tip number the board recorded, each
-    pointed toward the over. Pushes, props without a result and props priced
-    on one side only are left out.
+    One prop as a scorecard row, or None when it cannot be one (not a stat the
+    board grades, no regular line, a one-sided price). `actual` is the stat
+    total (None for a prop that has not been played: the row then has no
+    result and is only ever READ by the history signals).
     """
-    logs_dir, season = logs_dir or LOGS_DIR, season or SEASON
-    actual = _actuals(logs_dir, season)
+    stat = raw.get("stat")
+    if stat not in SINGLES and stat not in COMBOS:
+        return None
+    side = str(raw.get("edge", "")).lower()
+    shopped = bool(raw.get("line_shopped"))
+    p = on_main_line(raw)
+    line = _num(p.get("line"))
+    if line is None:
+        return None
+    if implied_prob(p.get("over_odds")) is None or implied_prob(p.get("under_odds")) is None:
+        return None        # one side unpriced: there is no two-way market to take the vig out of
+    mp = market_prob(p.get("over_odds"), p.get("under_odds"))
+    sign = 1.0 if side == "over" else -1.0 if side == "under" else None
+    mu, sd = _num(p.get("proj_mu")), _num(p.get("proj_sd"))
+    p_model = p_sides(stat, mu, sd, line)[0] if mu is not None and sd else None
+    over_hit = None if actual is None else (1 if actual > line else 0)
+    toward = lambda v: None if v is None or sign is None else v * sign      # noqa: E731 — board numbers signed toward the pick
+    hr = None if shopped or p.get("hitrate_source") != "gamelog_vs_line" else _num(raw.get("hitrate"))
+    # round 23 boards: the checklist's readings (already toward the over) and the books' median fair price
+    checks = {c.get("key"): _num(c.get("value")) for c in (raw.get("checks") or []) if isinstance(c, dict) and c.get("key")}
+    counted = [c for c in (raw.get("checks") or []) if isinstance(c, dict) and c.get("counts") and c.get("lean")]
+    fair = _num(raw.get("fair_over")) if raw.get("fair_basis") == "books" and not shopped else None
+    return {
+        "date": d, "player": p.get("player_name"), "team": p.get("team"), "opponent": p.get("opponent"),
+        "pos": _pos_group(p.get("position")), "stat": stat, "line": line,
+        "over_odds": p.get("over_odds"), "under_odds": p.get("under_odds"), "p_over": mp[0],
+        "be_over": implied_prob(p.get("over_odds")), "be_under": implied_prob(p.get("under_odds")),
+        "over_hit": over_hit,
+        # the board's own lean, for the record of what it published
+        "side": side if sign is not None else None, "published": bool(raw.get("is_valid")) and sign is not None,
+        "hit": None if sign is None or over_hit is None else (over_hit if sign > 0 else 1 - over_hit),
+        # pre-tip numbers, each pointed toward the over
+        "p_model_over": p_model, "dvp_z": _num(p.get("dvp_z")),
+        "zone_z": _zscore_sum(p.get("zone_details")), "playtype_z": _zscore_sum(p.get("playtype_details")),
+        "hitrate_over": None if hr is None else toward(hr - 0.5),
+        "games_played": _num(p.get("games_played")), "season_avg": _num(p.get("season_avg")),
+        "minutes": _num(p.get("proj_minutes")), "teammate_out": _num(p.get("teammate_out")),
+        "injury": bool(p.get("injury")), "line_rise": toward(_num(p.get("line_move"))),
+        "is_home": p.get("is_home"), "rest": rest(p.get("team"), d), "opp_rest": rest(p.get("opponent"), d),
+        "fair_over": fair, "checks": checks,
+        "chk_net": (sum(1 for c in counted if c["lean"] == "over") - sum(1 for c in counted if c["lean"] == "under")) if raw.get("checks") else None,
+    }
+
+
+def _season_boards(logs_dir: str, season: str) -> dict:
     boards = {}
     for path in sorted(glob.glob(os.path.join(logs_dir, "props_*.json"))):
         try:
@@ -282,57 +325,76 @@ def build_rows(logs_dir: str | None = None, season: str | None = None) -> list[d
         d = b.get("date")
         if d and d >= FIRST_SPORTSBOOK_BOARD and season_for_date(_date.fromisoformat(d)) == season:
             boards[d] = b
+    return boards
+
+
+def _rest_fn(boards: dict, extra: dict | None = None):
+    """rest(team, date) -> days off before that date (0 = a back-to-back), from the nights the team was on a board."""
     team_nights = defaultdict(set)
-    for d, b in boards.items():
-        for p in b.get("all_props", []) or []:
+    for d, props in list((d, b.get("all_props", []) or []) for d, b in boards.items()) + list((extra or {}).items()):
+        for p in props:
             team_nights[p.get("team")].add(d)
             team_nights[p.get("opponent")].add(d)
 
     def rest(team, d):
         prev = [x for x in team_nights.get(team, ()) if x < d]
         return (_date.fromisoformat(d) - _date.fromisoformat(max(prev))).days - 1 if prev else None
+    return rest
 
+
+def build_rows(logs_dir: str | None = None, season: str | None = None) -> list[dict]:
+    """
+    One row per labeled prop of the season, oldest night first: the board's
+    prop on its regular line, the de-vigged market probability of the over,
+    whether it went over, and every pre-tip number the board recorded, each
+    pointed toward the over. Pushes, props without a result and props priced
+    on one side only are left out.
+    """
+    logs_dir, season = logs_dir or LOGS_DIR, season or SEASON
+    actual = _actuals(logs_dir, season)
+    boards = _season_boards(logs_dir, season)
+    rest = _rest_fn(boards)
     rows = []
     for d in sorted(boards):
         for raw in boards[d].get("all_props", []) or []:
-            stat = raw.get("stat")
-            if stat not in SINGLES and stat not in COMBOS:
+            a = actual.get((d, raw.get("player_name"), raw.get("stat")))
+            if a is None:
                 continue
-            side = str(raw.get("edge", "")).lower()
-            shopped = bool(raw.get("line_shopped"))
-            p = on_main_line(raw)
-            line = _num(p.get("line"))
-            a = actual.get((d, p.get("player_name"), stat))
-            if line is None or a is None or a == line:
-                continue
-            if implied_prob(p.get("over_odds")) is None or implied_prob(p.get("under_odds")) is None:
-                continue        # one side unpriced: there is no two-way market to take the vig out of
-            mp = market_prob(p.get("over_odds"), p.get("under_odds"))
-            sign = 1.0 if side == "over" else -1.0 if side == "under" else None
-            mu, sd = _num(p.get("proj_mu")), _num(p.get("proj_sd"))
-            p_model = p_sides(stat, mu, sd, line)[0] if mu is not None and sd else None
-            over_hit = 1 if a > line else 0
-            toward = lambda v: None if v is None or sign is None else v * sign      # noqa: E731 — board numbers signed toward the pick
-            hr = None if shopped or p.get("hitrate_source") != "gamelog_vs_line" else _num(raw.get("hitrate"))
-            rows.append({
-                "date": d, "player": p.get("player_name"), "team": p.get("team"), "opponent": p.get("opponent"),
-                "pos": _pos_group(p.get("position")), "stat": stat, "line": line,
-                "over_odds": p.get("over_odds"), "under_odds": p.get("under_odds"), "p_over": mp[0],
-                "be_over": implied_prob(p.get("over_odds")), "be_under": implied_prob(p.get("under_odds")),
-                "over_hit": over_hit,
-                # the board's own lean, for the record of what it published
-                "side": side if sign is not None else None, "published": bool(raw.get("is_valid")) and sign is not None,
-                "hit": None if sign is None else (over_hit if sign > 0 else 1 - over_hit),
-                # pre-tip numbers, each pointed toward the over
-                "p_model_over": p_model, "dvp_z": _num(p.get("dvp_z")),
-                "zone_z": _zscore_sum(p.get("zone_details")), "playtype_z": _zscore_sum(p.get("playtype_details")),
-                "hitrate_over": None if hr is None else toward(hr - 0.5),
-                "games_played": _num(p.get("games_played")), "season_avg": _num(p.get("season_avg")),
-                "minutes": _num(p.get("proj_minutes")), "teammate_out": _num(p.get("teammate_out")),
-                "injury": bool(p.get("injury")), "line_rise": toward(_num(p.get("line_move"))),
-                "is_home": p.get("is_home"), "rest": rest(p.get("team"), d), "opp_rest": rest(p.get("opponent"), d),
-            })
+            row = _row(raw, d, a, rest)
+            if row is not None and a != row["line"]:
+                rows.append(row)
     return rows
+
+
+def similar_index(rows: list[dict]) -> dict:
+    """{(opponent, position group, stat): [went over, props]} over every labeled prop — tonight's "similar players" check."""
+    out: dict = defaultdict(lambda: [0, 0])
+    for r in rows:
+        cell = out[(r["opponent"], r["pos"], r["stat"])]
+        cell[0] += r["over_hit"]
+        cell[1] += 1
+    return dict(out)
+
+
+def today_values(props: list[dict], date: str, logs_dir: str | None = None, season: str | None = None) -> dict:
+    """
+    Tonight's readings of every scorecard signal, by the same code that scores
+    them: {(player, stat): {signal key: value toward the over (NaN = missing)}}.
+    `props` are tonight's board dicts. The history signals read every earlier
+    night and nothing of tonight. Used by the model only for signals that
+    have passed the bar (src/fair.adjust).
+    """
+    logs_dir, season = logs_dir or LOGS_DIR, season or SEASON
+    history = [r for r in build_rows(logs_dir, season) if r["date"] < date]
+    boards = {d: b for d, b in _season_boards(logs_dir, season).items() if d < date}
+    rest = _rest_fn(boards, {date: props})
+    tonight = [r for r in (_row(p, date, None, rest) for p in props) if r is not None]
+    rows = history + tonight
+    out: dict = {(r["player"], r["stat"]): {} for r in tonight}
+    for sig in signals(rows):
+        for r, v in zip(tonight, sig["values"][len(history):]):
+            out[(r["player"], r["stat"])][sig["key"]] = float(v)
+    return out
 
 
 # ── the signals ───────────────────────────────────────────────────────────
@@ -360,7 +422,8 @@ def _prior_rates(rows: list[dict], key, prior: float = 10.0, window_days: int | 
             if len(h) >= min_prior:
                 out[k] = (sum(x[1] for x in h) + prior * 0.5) / (len(h) + prior) - 0.5
         for k in range(i, j):
-            hist[key(rows[k])].append((d, rows[k]["over_hit"]))
+            if rows[k]["over_hit"] is not None:      # tonight's props have no result yet: read, never added
+                hist[key(rows[k])].append((d, rows[k]["over_hit"]))
         i = j
     return out
 
@@ -402,6 +465,12 @@ def signals(rows: list[dict]) -> list[dict]:
         s("similar_opp", "Similar players: every prop vs this opponent, same stat", "Similar players", _prior_rates(rows, lambda r: (r["opponent"], r["stat"])) * 10),
         s("similar_opp_pos", "Similar players: same position group vs this opponent", "Similar players", _prior_rates(rows, lambda r: (r["opponent"], r["pos"], r["stat"])) * 10),
         s("similar_league_7d", "Same position and stat league-wide, last 7 days", "Similar players", _prior_rates(rows, lambda r: (r["pos"], r["stat"]), window_days=7) * 10),
+        # boards from round 23 on: what the model publishes from
+        s("fair_gap", "The books' median fair price against the best prices' own", "The market", _logit(_col(rows, "fair_over")) - _logit(pm)),
+        s("checklist", "The checklist's net lean (checks for the over minus checks against)", "The checklist", _col(rows, "chk_net")),
+        *[s(f"chk_{key}", f"Checklist: {label}", "The checklist",
+            np.array([np.nan if (r.get("checks") or {}).get(key) is None else r["checks"][key] / CHECK_BARS[key] for r in rows], dtype=float))
+          for key, label in CHECK_LABELS.items()],
     ]
 
 

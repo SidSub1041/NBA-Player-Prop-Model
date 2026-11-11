@@ -12,7 +12,8 @@ from tabulate import tabulate
 
 from src.config import (
     CONDITION_PASS_RATE, CONDITION_PASS_RATE_POINTS, HITRATE_THRESHOLD, MAX_PER_GAME, MAX_PICKS, MAX_PRICE,
-    MIN_BOOKS, MIN_EDGE, MIN_LINE, MIN_PROJ_MINUTES, PAUSED_STATS, STRONG_EDGE, season_for_date, slate_today,
+    MIN_BOOKS, MIN_EDGE, MIN_FAIR_BOOKS, MIN_LINE, MIN_PRICE_EDGE, MIN_PROJ_MINUTES, OVER_MIN_SUPPORT, PAUSED_STATS,
+    STRONG_EDGE, STRONG_PRICE_EDGE, UNDER_MIN_SUPPORT, season_for_date, slate_today,
 )
 from src.season import stats_season, stats_season_reason
 
@@ -25,6 +26,7 @@ GRADE_RANK = {"A+": 6, "A": 5, "B+": 4, "B": 3, "C": 2, "D": 1, "F": 0}
 # The JSON key for the modelled edge is edge_value (p_model − p_market, pick
 # side): "edge" has always been the side (over/under) in every board, CSV and
 # graded file, so the number travels under the PropScore attribute's name.
+MODEL_VERSION_MARKET = "market-2"   # round 23: the books' fair price, the best price on offer, the checklist
 MODEL_VERSION_EDGE = "edge-1"       # round 18: projection vs the de-vigged market price
 MODEL_VERSION_FILTER = "filter-0"   # the legacy DvP-colour + hit-rate-gate filter
 
@@ -64,6 +66,11 @@ def _has_edge(props: list) -> bool:
     return any(_num_or_none(getattr(p, "p_model", None)) is not None for p in props)
 
 
+def _is_market(p) -> bool:
+    """Was this prop graded by the market-anchored model (round 23)?"""
+    return getattr(p, "support", None) is not None
+
+
 def _pct(v) -> str:
     v = _num_or_none(v)
     return f"{v:.0%}" if v is not None else "-"
@@ -84,7 +91,12 @@ def _table_rows(props: list, with_edge: bool) -> list:
         odds = f"{p.side_odds()} {p.side_book()}".strip() if p.line is not None else "-"
         row = [p.player_name, p.team, p.opponent, p.position, p.stat.upper(), p.edge.upper(), line_str, odds]
         if with_edge:
-            row += [_pct(getattr(p, "p_model", None)), _pct(getattr(p, "p_market", None)), _edge_pts(getattr(p, "edge_value", None))]
+            if _is_market(p):       # round 23: the fair price, the checklist's net, the price edge
+                sup = p.support or {}
+                row += [_pct((getattr(p, "fair", None) or {}).get("p")), f"{sup.get('net', 0):+d} (needs {sup.get('need', 0)})",
+                        _edge_pts(getattr(p, "edge_value", None))]
+            else:
+                row += [_pct(getattr(p, "p_model", None)), _pct(getattr(p, "p_market", None)), _edge_pts(getattr(p, "edge_value", None))]
         row += [f"{p.total_points}/{p.total_conditions}", f"{p.total_score_pct:.0%}", hr_str, p.final_grade]
         rows.append(row)
     return rows
@@ -134,7 +146,7 @@ def format_report(prop_scores: list, date: str | None = None) -> str:
 
     headers = ["Player", "Team", "Opp", "Pos", "Stat", "Edge", "Line", "Odds"]
     if with_edge:
-        headers += ["Model %", "Market %", "Edge pts"]
+        headers += (["Fair %", "Checks", "Edge pts"] if any(_is_market(p) for p in prop_scores) else ["Model %", "Market %", "Edge pts"])
     headers += ["Score", "Pct", "HR", "Grade"]
 
     # ── VALID PICKS ──────────────────────────────────────────────────
@@ -329,7 +341,21 @@ def _edge_fields(p) -> dict:
     proj = getattr(p, "projection", None) or {}
     p_model = _num_or_none(getattr(p, "p_model", None), 4)
     guards = getattr(p, "guards", None) or []
+    fair = getattr(p, "fair", None) or {}
+    market = _is_market(p)
     return {
+        # ── round 23: the market-anchored model (src/fair.py, src/checklist.py) ──
+        # p_fair: the books' fair probability of the pick side (after any passed check); fair_over: that fair price
+        # for the over as the books mean it; edge_value is then the PRICE edge, p_fair − the best price's break-even
+        "p_fair": _r4(fair.get("p")) if market else None,
+        "fair_over": _r4(fair.get("over")) if market else None,
+        "fair_books": fair.get("books") if market else None,
+        "fair_basis": fair.get("basis") if market else None,
+        "fair_low": _r4(fair.get("low")) if market else None,
+        "fair_high": _r4(fair.get("high")) if market else None,
+        "adjustments": (fair.get("adjustments") or None) if market else None,
+        "checks": (getattr(p, "checks", None) or []) if market else None,
+        "support": getattr(p, "support", None),
         "proj_mu": _num_or_none(proj.get("mu"), 2),
         "proj_sd": _num_or_none(proj.get("sd"), 2),
         "proj_minutes": _num_or_none(proj.get("minutes"), 1),
@@ -355,7 +381,7 @@ def _edge_fields(p) -> dict:
         "paused": bool(getattr(p, "paused", False)),
         "cap_note": getattr(p, "cap_note", "") or None,
         "guards": [str(g) for g in guards],
-        "model_version": MODEL_VERSION_EDGE if p_model is not None else MODEL_VERSION_FILTER,
+        "model_version": MODEL_VERSION_MARKET if market else MODEL_VERSION_EDGE if p_model is not None else MODEL_VERSION_FILTER,
         # round 19: "passing" when the assists came from passing (src/passing.py), with its pieces per game
         # round 22: where and when the game is played (home/away was never on the boards before)
         "is_home": getattr(p, "is_home", None),
@@ -499,7 +525,8 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
         "demoted_count": sum(1 for p in prop_scores if getattr(p, "learn_note", "")),
         "paused_count": len(paused),
         "capped_count": len(capped),
-        "model_version": MODEL_VERSION_EDGE if _has_edge(prop_scores) else MODEL_VERSION_FILTER,
+        "model_version": (MODEL_VERSION_MARKET if any(_is_market(p) for p in prop_scores)
+                          else MODEL_VERSION_EDGE if _has_edge(prop_scores) else MODEL_VERSION_FILTER),
         "paused_stats": sorted(PAUSED_STATS),
         "caps": caps,
         "thresholds": {
@@ -515,6 +542,12 @@ def save_json_report(prop_scores: list, date: str | None = None, run_mode: str =
             "min_proj_minutes": MIN_PROJ_MINUTES,
             "max_picks": MAX_PICKS,
             "max_per_game": MAX_PER_GAME,
+            # the market-anchored model's bars (round 23)
+            "min_price_edge": MIN_PRICE_EDGE,
+            "strong_price_edge": STRONG_PRICE_EDGE,
+            "under_min_support": UNDER_MIN_SUPPORT,
+            "over_min_support": OVER_MIN_SUPPORT,
+            "min_fair_books": MIN_FAIR_BOOKS,
         },
         "valid_picks": _ranked_dicts(valid),
         "watchlist": _ranked_dicts(watchlist),

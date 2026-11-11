@@ -74,6 +74,18 @@ export interface PropPick {
   line_shopped?: boolean;
   /** round 20: a better number one book hangs for the same side, shown under the pick (never graded) */
   alt_line?: AltLine | null;
+  /** round 23, the market-anchored model: the books' fair probability of the pick side, and what it rests on */
+  p_fair?: number | null;
+  fair_over?: number | null;
+  fair_books?: number | null;
+  fair_basis?: "books" | "best_pair" | string | null;
+  fair_low?: number | null;
+  fair_high?: number | null;
+  adjustments?: { key: string; label?: string; shift: number }[] | null;
+  /** the checklist's readings, each pointed toward the over */
+  checks?: CheckReading[] | null;
+  /** counted checks for the pick side, against it, their difference, and what the side needs */
+  support?: { for: number; against: number; net: number; need: number } | null;
   p_model?: number | null;
   /** de-vigged market probability of the pick side at the pick line (shifted when the market moved) */
   p_market?: number | null;
@@ -92,8 +104,8 @@ export interface PropPick {
   cap_note?: string | null;
   /** guards that failed: "price" | "books" | "line_size" | "minutes" | "passing" (assists without the passing tables) */
   guards?: string[];
-  /** "edge-1" (projected and priced) or "filter-0" (the legacy filter) */
-  model_version?: "edge-1" | "filter-0" | string;
+  /** "market-2" (fair price + checklist), "edge-1" (projected and priced) or "filter-0" (the legacy filter) */
+  model_version?: "market-2" | "edge-1" | "filter-0" | string;
   /* ── round 19: assists from passing (absent on boards before it) ── */
   /** "passing" when the assists were projected from passing (src/passing.py) */
   proj_source?: "passing" | string | null;
@@ -257,6 +269,12 @@ export interface PropsData {
     min_proj_minutes?: number;
     max_picks?: number;
     max_per_game?: number;
+    /** the market-anchored model's bars (round 23) */
+    min_price_edge?: number;
+    strong_price_edge?: number;
+    under_min_support?: number;
+    over_min_support?: number;
+    min_fair_books?: number;
   };
   valid_picks: PropPick[];
   watchlist: PropPick[];
@@ -268,8 +286,8 @@ export interface PropsData {
   /** valid picks the learned model cut as -EV (ACTIVE mode only) */
   demoted?: PropPick[];
   demoted_count?: number;
-  /** round 18: "edge-1" once the board is projected and priced, "filter-0" before */
-  model_version?: "edge-1" | "filter-0" | string;
+  /** "market-2" from round 23 (fair price + checklist), "edge-1" from round 18, "filter-0" before */
+  model_version?: "market-2" | "edge-1" | "filter-0" | string;
   /** stats evaluated but never published (PAUSED_STATS), e.g. ["assists"] */
   paused_stats?: string[];
   /** what the board caps did (null when they were not applied) */
@@ -286,6 +304,16 @@ export interface PropsData {
   learning?: Learning | null;
   season_record?: SeasonRecord | null;
   scorecard?: Scorecard | null;
+}
+
+/** Round 23: one check on a prop (src/checklist.py). `value` and `lean` point toward the over. */
+export interface CheckReading {
+  key: string;
+  label: string;
+  value: number | null;
+  lean: "over" | "under" | null;
+  detail: string | null;
+  counts: boolean;
 }
 
 /** Round 22: every candidate signal scored against the sportsbooks' price (src/scorecard.py). */

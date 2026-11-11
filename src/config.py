@@ -123,6 +123,18 @@ MAX_PER_PLAYER = _env_int("MAX_PER_PLAYER", 1)      # singles; one combo per pla
 # Stats shown but never published (comma list, e.g. PAUSED_STATS=assists). Empty since round 19: assists
 # are projected from passing (src/passing.py) and publish like any other stat.
 PAUSED_STATS = {s.strip() for s in os.environ.get("PAUSED_STATS", "").split(",") if s.strip()}
+# ── Round 23: the market-anchored model ───────────────────────────────────
+# The published probability is the sportsbooks' own fair price (each book's
+# two-way price with the vig taken out, the median across books), moved only
+# by a check that has passed the scorecard's bar. A pick needs the best price
+# on offer to be at least that fair price, and the checklist behind it.
+MIN_FAIR_BOOKS = _env_int("MIN_FAIR_BOOKS", 3)          # books with both sides priced at the consensus line
+MIN_PRICE_EDGE = _env_float("MIN_PRICE_EDGE", 0.0)      # fair probability − the best price's break-even: never pay more than fair
+WATCH_PRICE_EDGE = _env_float("WATCH_PRICE_EDGE", -0.01)    # within a point of fair: the watchlist
+STRONG_PRICE_EDGE = _env_float("STRONG_PRICE_EDGE", 0.02)   # A+: two points better than fair
+UNDER_MIN_SUPPORT = _env_int("UNDER_MIN_SUPPORT", 1)    # net checks (for − against) an under needs
+OVER_MIN_SUPPORT = _env_int("OVER_MIN_SUPPORT", 2)      # ... and an over: overs have been overpriced, so the checks must outweigh it
+ADJUST_SHRINK = _env_float("ADJUST_SHRINK", 0.5)        # share of a passed check's fitted weight that moves the probability
 SNAPSHOT_WINDOW_MINUTES = _env_int("SNAPSHOT_WINDOW_MINUTES", 45)   # --snapshot: re-price games tipping within this (runs every 30 min)
 CLOSE_WINDOW_MINUTES = _env_int("CLOSE_WINDOW_MINUTES", 90)         # a close counts only if the market was re-priced this close to tip
 VAR_PRIOR_K = _env_float("VAR_PRIOR_K", 8.0)        # games of 'typical spread' prior mixed into a player's sample variance

@@ -34,7 +34,7 @@ import logging
 import os
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from src.config import slate_today  # stdlib-only module, safe before logging setup
 
@@ -67,15 +67,16 @@ from src.scoring_engine import PropScore, COMBO_DEFS
 from src.output import format_report, save_report, print_report, save_json_report
 from src.config import (
     SEASON, previous_season, EDGE_STATS, PAUSED_STATS, MIN_CANDIDATE_MPG, MIN_BOOKS, MIN_LINE,
-    MIN_PROJ_MINUTES, MAX_PRICE, SEASON_TYPE, MODEL_TRUST,
+    MIN_PROJ_MINUTES, MAX_PRICE, SEASON_TYPE, MIN_PRICE_EDGE,
 )
+from src import fair as fair_model, checklist as checklist_model
 from src.season import stats_season
 from src.underdog import fetch_underdog_lines, load_cached_lines, merge_lines, norm_name, norm_name_base
 from src.lines import apply as apply_line, hold_reason, load_board_lines, lock_key, resolve
 from src.vegas_odds import VegasLines, dfs_backup_enabled
 from src.injuries import fetch_injury_report, is_player_out, injury_label
 from src.hitrate import get_player_hitrate, player_sample, register_live_ids
-from src.projection import project, edge_for, combo_projection, market_prob, market_prob_at, p_over, p_sides, implied_prob
+from src.projection import project, combo_projection, market_prob_at, p_sides, implied_prob
 from src.matchup import (
     dvp_z, zone_score, playtype_score, matchup_multiplier, teammate_outs, teammate_boost, position_of,
     roster_index, dvp_positions, dvp_blend, reset_roster_cache,
@@ -120,13 +121,11 @@ def _uses_assists(stat: str) -> bool:
 
 def _guards(prop: PropScore) -> list[str]:
     """
-    Which guards a priced prop fails: price / books / line_size / minutes /
-    passing. The books guard is about the market's depth (a pick carried from
-    a board before round 20 on a shopped number is judged by the consensus
-    it was shopped from). The
-    passing guard holds back an assists prop (or a combo with assists) whose
-    assists could not be projected from passing (src/passing.py): the
-    box-score fallback is what the assists pause was about.
+    Which guards a priced prop fails: price / books / line_size / minutes.
+    The books guard is about the market's depth: the line must come from the
+    sportsbooks, at least MIN_BOOKS of them must list the number, and the
+    fair price must rest on MIN_FAIR_BOOKS two-sided prices (a fair price
+    taken from the best pair alone is too thin to bet against).
     """
     out = []
     info = prop.line_info or {}
@@ -134,58 +133,131 @@ def _guards(prop: PropScore) -> list[str]:
     if price is not None and price < MAX_PRICE:
         out.append("price")
     depth = info.get("consensus_books") if info.get("shopped") else info.get("books")
-    if info.get("source") != "vegas" or (depth or 0) < MIN_BOOKS:
+    thin = prop.support is not None and (prop.fair or {}).get("basis") != "books"
+    if info.get("source") != "vegas" or (depth or 0) < MIN_BOOKS or thin:
         out.append("books")
     if prop.line is not None and float(prop.line) < MIN_LINE:
         out.append("line_size")
     minutes = (prop.projection or {}).get("minutes")
     if minutes is not None and minutes < MIN_PROJ_MINUTES:
         out.append("minutes")
-    if _uses_assists(prop.stat) and (prop.projection or {}).get("source") != "passing":
-        out.append("passing")
     return out
 
 
-def _decide(stat: str, proj: dict, line, over_odds, under_odds, current: dict | None) -> dict:
+def _pick_side(dec: dict, checks: list) -> str:
     """
-    The pick decision for one (line, prices).
-
-    p_model: the projection's probability of each side at this line.
-    p_market: the market's probability of each side at this line — the current
-      consensus de-vigged and, when the consensus has moved away from this
-      line, shifted to it (a line that moved down makes the under at the old
-      number likelier in the market's eyes).
-    p_hat = MODEL_TRUST × p_model + (1 − MODEL_TRUST) × p_market.
-    edge = p_hat − break-even of the side's price (what you actually pay), so
-      both a confident model and a stale number at a lagging book count, and
-      the vig is always charged.
+    The side a prop is read on: the one that clears more of the two gates
+    (the best price at least fair; the checklist behind it), then the one the
+    checklist favours, then the better price.
     """
-    cur = current or {}
-    cur_line = cur.get("line")
-    ef = edge_for(
-        stat, proj, line, over_odds, under_odds,
-        current_line=cur_line if (cur_line is not None and cur_line != line) else None,
-        current_over_odds=cur.get("over_odds"), current_under_odds=cur.get("under_odds"),
-    )
-    out = {"p_model_over": ef.get("p_model_over"), "p_model_under": ef.get("p_model_under"),
-           "p_market_over": ef.get("p_market_over"), "p_market_under": ef.get("p_market_under"),
-           "p_push": ef.get("p_push"),
-           "market_basis": ef.get("market_basis"), "side": None, "edge": None, "p_hat": None, "breakeven": None,
-           "p_model": None, "p_market": None}
     best = None
-    for side, odds in (("over", over_odds), ("under", under_odds)):
-        pm, pk = out[f"p_model_{side}"], out[f"p_market_{side}"]
-        be = implied_prob(odds)
-        if pm is None or pk is None or be is None:
+    for side in ("over", "under"):
+        e = dec.get(f"edge_{side}")
+        sup = checklist_model.support(checks, side)
+        gates = int(e is not None and e >= MIN_PRICE_EDGE) + int(sup["net"] >= sup["need"])
+        key = (gates, sup["net"] - sup["need"], e if e is not None else float("-inf"))
+        if best is None or key > best[0]:
+            best = (key, side)
+    return best[1]
+
+
+def _apply_decision(prop: PropScore, dec: dict, checks: list, model_probs: tuple) -> None:
+    """Write the market-anchored decision for prop.edge onto the prop: fair price, price edge, checklist, support."""
+    side = prop.edge
+    prop.checks = checks
+    prop.support = checklist_model.support(checks, side)
+    prop.fair = {"p": dec.get(f"p_fair_{side}"), "over": dec.get("fair_over"), "books": dec.get("fair_books"), "basis": dec.get("fair_basis"),
+                 "low": dec.get("fair_low"), "high": dec.get("fair_high"), "adjustments": dec.get("adjustments") or []}
+    prop.p_market = dec.get(f"p_market_{side}")
+    prop.edge_value = dec.get(f"edge_{side}")
+    prop.p_model = model_probs[0] if side == "over" else model_probs[1]      # the old projection's view: recorded, never used
+    prop.projection = {**(prop.projection or {}), "p_hat": dec.get(f"p_fair_{side}"), "breakeven": dec.get(f"breakeven_{side}"),
+                       "market_basis": "fair" if dec.get("fair_basis") == "books" else dec.get("fair_basis")}
+
+
+def _pos_group(position: str) -> str:
+    from src.scorecard import _pos_group as group
+    return group(position)
+
+
+def _back_to_backs(date: str) -> dict:
+    """{team: True} for the teams on yesterday's board; None when there is no board for yesterday to read."""
+    import json
+    y = (datetime.strptime(date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+    try:
+        with open(os.path.join("logs", f"props_{y}.json"), encoding="utf-8") as f:
+            props = json.load(f).get("all_props", [])
+    except (OSError, ValueError):
+        return None
+    return {t: True for p in props for t in (p.get("team"), p.get("opponent")) if t}
+
+
+def _checklist_context(date: str) -> dict:
+    """What the checklist needs once per run: the scorecard's verdicts, the season's similar-player results, yesterday's teams."""
+    ctx = {"card": None, "verdicts": {}, "similar": {}, "b2b": None}
+    try:
+        from src import scorecard
+        ctx["card"] = scorecard.load()
+        ctx["verdicts"] = {s.get("key"): s.get("verdict") for s in (ctx["card"] or {}).get("signals") or []}
+        ctx["similar"] = scorecard.similar_index([r for r in scorecard.build_rows() if r["date"] < date])
+    except Exception as e:
+        logger.warning(f"  Checklist: scorecard history unavailable ({type(e).__name__}: {e})")
+    ctx["b2b"] = _back_to_backs(date)
+    return ctx
+
+
+def _read_checks(cl: dict, *, stat, line, team, opponent, position, dvp_z, zs, ps, hr_over, minutes, n_out, passing=None) -> list:
+    """The checklist for one prop (src/checklist.read), from what the run already knows."""
+    group = _pos_group(position)
+    sim = cl["similar"].get((opponent, group, stat))
+    b2b = cl["b2b"]
+    counted = hr_over.get("hitrate", -1) is not None and hr_over.get("hitrate", -1) >= 0 and hr_over.get("source") == "gamelog_vs_line"
+    return checklist_model.read({
+        "stat": stat, "line": line, "opponent": opponent, "pos_group": group, "dvp_z": dvp_z,
+        "zone_z": zs.get("z") if zs and zs.get("n") else None, "playtype_z": ps.get("z") if ps and ps.get("n") else None,
+        "over_games": hr_over.get("games_hit") if counted else None, "games": hr_over.get("games_played") if counted else None,
+        "minutes": minutes, "similar_over": sim[0] if sim else None, "similar_n": sim[1] if sim else None,
+        "own_b2b": None if b2b is None else bool(b2b.get(team)), "opp_b2b": None if b2b is None else bool(b2b.get(opponent)),
+        "teammate_out": n_out,
+        "passing_p_over": passing[0] if passing else None, "passing_mu": passing[1] if passing else None,
+    }, cl["verdicts"])
+
+
+def _apply_passed_checks(prop_scores: list, repriced: list, cl: dict, date: str) -> int:
+    """
+    Let the checks that have PASSED the scorecard's bar move the probability.
+
+    A check's reading for tonight comes from the same code that scores it
+    (scorecard.today_values), so it needs the whole board first: this runs
+    after every prop is priced. The side a prop is read on stays as the
+    checklist chose it; its fair probability, price edge and grade are
+    re-derived. Nothing has passed yet, so today this does nothing.
+    """
+    passed = [s for s in ((cl.get("card") or {}).get("signals") or []) if s.get("passes") and s.get("key") != "price_refit"]
+    if not passed or not repriced:
+        return 0
+    try:
+        from src import scorecard
+        from src.output import _prop_to_dict
+        values = scorecard.today_values([_prop_to_dict(p) for p, _c, _pr in repriced], date)
+    except Exception as e:
+        logger.warning(f"  Passed checks not applied ({type(e).__name__}: {e})")
+        return 0
+    moved = 0
+    for prop, current, probs in repriced:
+        v = values.get((prop.player_name, prop.stat))
+        if not v or prop.line is None:
             continue
-        p_hat = MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk
-        net = p_hat - be
-        if best is None or net > best[0]:
-            best = (net, side, p_hat, be, pm, pk)
-    if best:
-        net, side, p_hat, be, pm, pk = best
-        out.update({"side": side, "edge": net, "p_hat": p_hat, "breakeven": be, "p_model": pm, "p_market": pk})
-    return out
+        info = prop.line_info or {}
+        dec = fair_model.decide(prop.line, info.get("over_odds"), info.get("under_odds"), current, p_push=probs[2], values=v, card=cl["card"])
+        if not dec.get("adjustments"):
+            continue
+        _apply_decision(prop, dec, prop.checks or [], probs)
+        prop.guards = _guards(prop)
+        prop.compute_edge_grade()
+        moved += 1
+    logger.info(f"  {len(passed)} passed check(s) ({', '.join(str(s.get('label')) for s in passed)}) moved {moved} probabilities")
+    return moved
 
 
 def _alt_line(prop: PropScore, stat: str, proj: dict, current: dict, res) -> None:
@@ -198,18 +270,18 @@ def _alt_line(prop: PropScore, stat: str, proj: dict, current: dict, res) -> Non
     whose own main line lags or leads the consensus ("lagging"), and the
     alternate ladders some books list in the main market ("alternate": the
     same player three points higher at +200, or lower at -250). Each is read
-    like the pick — the market shifted from the consensus to that number, the
-    model at that number, the price's break-even — and the best, when its
+    like the pick: the market's fair price at the regular line is carried to
+    that number (market_prob_at, with the stat's spread), and its price edge
+    is that probability minus the price's break-even. The best, when its
     edge beats the main line's by half a point of probability, is stored as
-    prop.alt_line = {"book", "line", "price", "kind", "p_model", "p_market",
-    "p_hat", "breakeven", "edge"}: shown under the pick, never published or
-    graded. Locked picks (fill mode) and non-sportsbook lines get none.
+    prop.alt_line = {"book", "line", "price", "kind", "p_market", "p_hat",
+    "breakeven", "edge"}: shown under the pick, never published or graded.
+    Locked picks (fill mode) and non-sportsbook lines get none.
     """
     if getattr(res, "locked", False) or (prop.line_info or {}).get("source") != "vegas":
         return
-    cons_line = (current or {}).get("line")
-    mkt = market_prob(current.get("over_odds"), current.get("under_odds")) if current else None
-    if cons_line is None or mkt is None or prop.line is None or prop.p_model is None or prop.edge_value is None:
+    fair_over = (prop.fair or {}).get("over")
+    if fair_over is None or (prop.fair or {}).get("basis") != "books" or prop.line is None or prop.edge_value is None:
         return
     side = prop.edge
     candidates = [(book, o, "lagging") for book, o in ((current or {}).get("offers") or {}).items()]
@@ -220,16 +292,15 @@ def _alt_line(prop: PropScore, stat: str, proj: dict, current: dict, res) -> Non
         price = o.get("over") if side == "over" else o.get("under")
         if bl is None or bl == float(prop.line) or price in (None, ""):
             continue
-        d = _decide(stat, proj, bl, o.get("over"), o.get("under"), current)
-        # the side is the main line's; read that side's numbers at this book's number
-        pm, pk = d[f"p_model_{side}"], d[f"p_market_{side}"]
         be = implied_prob(price)
-        if pm is None or pk is None or be is None:
+        if be is None:
             continue
-        p_hat = MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk
-        if best is None or p_hat - be > best["edge"]:
-            best = {"book": book, "line": bl, "price": price, "kind": kind, "p_model": pm, "p_market": pk,
-                    "p_hat": p_hat, "breakeven": be, "edge": p_hat - be}
+        _po, _pu, push = p_sides(stat, proj["mu"], proj["sd"], bl)
+        p_over = market_prob_at(stat, float(prop.line), fair_over, proj["sd"], bl, p_push=push)
+        p_side = p_over if side == "over" else (1.0 - push) - p_over
+        if best is None or p_side - be > best["edge"]:
+            best = {"book": book, "line": bl, "price": price, "kind": kind, "p_model": None, "p_market": p_side,
+                    "p_hat": p_side, "breakeven": be, "edge": p_side - be}
     if best is not None and best["edge"] >= prop.edge_value + 0.005:
         prop.alt_line = best
 
@@ -374,6 +445,10 @@ def _prop_from_board(d: dict) -> PropScore:
     p.total_points, p.total_conditions = d.get("total_points") or 0, d.get("total_conditions") or 0
     p.injury = d.get("injury")
     p.is_home, p.tip_utc = d.get("is_home"), d.get("tip_utc")
+    if d.get("support") is not None:      # a round-23 board: the fair price and the checklist ride along
+        p.checks, p.support = d.get("checks"), d.get("support")
+        p.fair = {"p": d.get("p_fair"), "over": d.get("fair_over"), "books": d.get("fair_books"), "basis": d.get("fair_basis"),
+                  "low": d.get("fair_low"), "high": d.get("fair_high"), "adjustments": d.get("adjustments") or []}
     p.zone_score = {"points": 0, "total": 0, "details": d.get("zone_details") or []}
     p.playtype_score = {"points": 0, "total": 0, "details": d.get("playtype_details") or []}
     p.final_grade = d.get("grade") or "D"
@@ -629,8 +704,10 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         logger.warning(f"  Withdrawn — ruled OUT since the board was published: {', '.join(sorted(set(withdrawn)))}")
     logger.info(f"  {len(candidates)} candidate props ({sum(skipped.values())} skipped: {skipped})")
 
-    # ── Step 5: Project, price, grade ────────────────────────────────
-    logger.info("Step 5: Projecting and pricing every candidate...")
+    # ── Step 5: Price, check, grade ──────────────────────────────────
+    logger.info("Step 5: Pricing every candidate against the market's fair price and reading the checklist...")
+    cl = _checklist_context(date)
+    repriced: list[tuple] = []        # (prop, its market entry, the projection's side probabilities) for every prop priced this run
     prop_scores: list[PropScore] = []
     projections: dict[tuple, dict] = {}
     for lk, c in candidates.items():
@@ -677,25 +754,37 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         res = resolve(name, team, stat, vegas, ud_lines, not_started, locked)
         line = res.line["line"] if res.line else None
         current = vegas.lookup(name, stat) or {}
-        ef = _decide(stat, proj, line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current) if line is not None else {}
-        side = ef.get("side") or ("over" if proj["mu"] >= (line or proj["mu"]) else "under")
+        # The market-anchored decision (round 23): the books' fair price against the best price on offer, and the
+        # checklist behind each side. The projection is still built — it gives P(push) at a whole-number line, the
+        # passing check for assists and the minutes guard — but it no longer moves the probability.
+        probs = p_sides(stat, proj["mu"], proj["sd"], line) if line is not None else (None, None, 0.0)
+        dec = fair_model.decide(line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current,
+                                p_push=probs[2], card=cl["card"]) if line is not None else {}
+        hr_over = get_player_hitrate(name, stat, line, "over", before=date)
+        checks = _read_checks(cl, stat=stat, line=line, team=team, opponent=opponent, position=position, dvp_z=z, zs=zs, ps=ps,
+                              hr_over=hr_over, minutes=(sample.get("this") or {}).get("minutes"), n_out=n_out,
+                              passing=(probs[0], proj["mu"]) if (stat == "assists" and proj.get("source") == "passing" and line is not None) else None
+                              ) if line is not None else []
+        side = _pick_side(dec, checks) if line is not None else "over"
 
         prop = PropScore(name, team, opponent, position, stat, side)
         apply_line(prop, res)
-        prop.projection = {**proj, "p_over": ef.get("p_model_over"), "p_under": ef.get("p_model_under"), "p_push": ef.get("p_push"), "adjustments": mult,
-                           "p_hat": ef.get("p_hat"), "breakeven": ef.get("breakeven"), "market_basis": ef.get("market_basis")}
-        prop.p_model, prop.p_market, prop.edge_value = ef.get("p_model"), ef.get("p_market"), ef.get("edge")
+        prop.projection = {**proj, "p_over": probs[0], "p_under": probs[1], "p_push": probs[2], "adjustments": mult}
+        prop.minutes_log = (sample.get("this") or {}).get("minutes")      # for a combo's minutes check
+        repriced.append((prop, current, probs))
         prop.dvp_z, prop.matchup_z, prop.teammate_out = z, mult.get("matchup_z"), n_out
         if zs:
             prop.zone_score = {"points": 0, "total": zs.get("n", 0), "details": zs.get("details", [])}
         if ps:
             prop.playtype_score = {"points": 0, "total": ps.get("n", 0), "details": ps.get("details", [])}
-        _alt_line(prop, stat, proj, current, res)    # a better number at one book: shown under the pick, never instead of it
+        if line is not None:
+            _apply_decision(prop, dec, checks, probs)
+            _alt_line(prop, stat, proj, current, res)    # a better number at one book: shown under the pick, never instead of it
         line = prop.line
         mv = movement(date, key, side, history=history)
         if mv:
             prop.open_line, prop.line_move = mv.get("open_line"), mv.get("move")
-        prop.hitrate_data = get_player_hitrate(name, stat, line, side, before=date)   # display + learner feature
+        prop.hitrate_data = hr_over if side == "over" else get_player_hitrate(name, stat, line, side, before=date)   # shown for the pick's side
         prop.paused = stat in PAUSED_STATS
         prop.guards = _guards(prop) if line is not None else []
         prop.compute_edge_grade()
@@ -711,6 +800,7 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
 
     _assert_stats_reachable("projections")
     _log_passing_vs_box(prop_scores)
+    _apply_passed_checks(prop_scores, repriced, cl, date)
 
     # ── Step 6: Combos — players with two A-grade singles on one side ─
     logger.info("Step 6: Building combo props...")
@@ -757,27 +847,28 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         if any(c.stat == "assists" for c in comps):
             ast = next(c for c in comps if c.stat == "assists")
             if (ast.projection or {}).get("source") == "passing":
-                proj["source"] = "passing"      # its assists part came from passing (the passing guard reads this)
+                proj["source"] = "passing"      # its assists part came from passing
         res = resolve(name, team, combo_stat, vegas, ud_lines, not_started, locked)
         line = res.line["line"] if res.line else None
         current = vegas.lookup(name, combo_stat) or {}
-        ef = _decide(combo_stat, proj, line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current) if (line is not None and proj) else {}
-        combo = PropScore(name, team, comps[0].opponent, comps[0].position, combo_stat, side)
+        probs = p_sides(combo_stat, proj["mu"], proj["sd"], line) if line is not None else (None, None, 0.0)
+        dec = fair_model.decide(line, (res.line or {}).get("over_odds"), (res.line or {}).get("under_odds"), current,
+                                p_push=probs[2], card=cl["card"]) if line is not None else {}
+        combo = PropScore(name, team, comps[0].opponent, comps[0].position, combo_stat, side)   # the combo's side is its singles' side
         apply_line(combo, res)
-        # the combo's side is the components' side; read that side's numbers
-        pm = ef.get(f"p_model_{side}"); pk = ef.get(f"p_market_{side}")
-        be = implied_prob((res.line or {}).get("over_odds") if side == "over" else (res.line or {}).get("under_odds"))
-        combo.projection = {**(proj or {}), "p_over": ef.get("p_model_over"), "p_under": ef.get("p_model_under"), "p_push": ef.get("p_push"), "breakeven": be,
-                            "p_hat": (MODEL_TRUST * pm + (1 - MODEL_TRUST) * pk) if (pm is not None and pk is not None) else None,
-                            "market_basis": ef.get("market_basis")}
-        combo.p_model, combo.p_market = pm, pk
-        combo.edge_value = (combo.projection["p_hat"] - be) if (combo.projection["p_hat"] is not None and be is not None) else None
+        combo.projection = {**proj, "p_over": probs[0], "p_under": probs[1], "p_push": probs[2]}
+        combo.dvp_z = comps[0].dvp_z
+        combo.teammate_out = comps[0].teammate_out
+        hr_over = get_player_hitrate(name, combo_stat, line, "over", before=date)
+        if line is not None:
+            checks = _read_checks(cl, stat=combo_stat, line=line, team=team, opponent=comps[0].opponent, position=comps[0].position,
+                                  dvp_z=comps[0].dvp_z, zs=None, ps=None, hr_over=hr_over,
+                                  minutes=getattr(comps[0], "minutes_log", None), n_out=comps[0].teammate_out)
+            _apply_decision(combo, dec, checks, probs)
         mv = movement(date, _hist_key(name, combo_stat, history), side, history=history)
         if mv:
             combo.open_line, combo.line_move = mv.get("open_line"), mv.get("move")
-        combo.dvp_z = comps[0].dvp_z
-        combo.teammate_out = comps[0].teammate_out
-        combo.hitrate_data = get_player_hitrate(name, combo_stat, line, side, before=date)
+        combo.hitrate_data = hr_over if side == "over" else get_player_hitrate(name, combo_stat, line, side, before=date)
         combo.paused = any(c.paused for c in comps)
         combo.guards = _guards(combo) if line is not None else []
         combo.zone_score = {"points": 0, "total": 0, "details": [f"  Combo: {cdef_label(combo_stat)} = " + " + ".join(f"{c.stat.upper()} (edge {c.edge_value:+.3f})" for c in comps)]}
@@ -799,7 +890,9 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
             for p in prop_scores:
                 pred = predict_prop(model, _prop_to_dict(p))
                 p.learned = pred or {}
-                if pred and model.get("trusted") and p.is_valid and not getattr(p, "pinned", False) and pred["ev"] < 0:
+                # The learner was trained on the old model's fields; it never gates a market-anchored pick (round 23:
+                # the scorecard is what a check answers to now). Its number is still recorded.
+                if pred and model.get("trusted") and p.is_valid and not getattr(p, "pinned", False) and p.support is None and pred["ev"] < 0:
                     p.is_valid = False
                     p.final_grade = "B+"
                     p.learn_note = (f"Model says -EV: {pred['p_hit']:.0%} to hit vs "
@@ -879,7 +972,6 @@ def main():
     args = parser.parse_args()
     date = args.date
     if args.tomorrow and not date:
-        from datetime import timedelta
         date = (datetime.strptime(slate_today(), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
     try:
         run(date=date, fast=args.fast, fill_holds=args.fill_holds, snapshot=args.snapshot)
