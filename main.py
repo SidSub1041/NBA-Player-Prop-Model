@@ -1082,10 +1082,31 @@ def cdef_label(combo_stat: str) -> str:
     return COMBO_DEFS.get(combo_stat, {}).get("label", combo_stat.upper())
 
 
+NIGHT_BEFORE_FROM_HOUR = 15      # US Eastern: from 3 PM a night-before run means tomorrow; before it, the run is late and means today
+
+
+def night_before_slate(now=None) -> str:
+    """
+    The slate the scheduled night-before run is for. It is scheduled for
+    about 9:30 PM Eastern and builds the NEXT day's board — but GitHub
+    delivers schedules late, sometimes after midnight, when the day it was
+    meant for has become today. From 3 PM Eastern it is tomorrow; earlier in
+    the day it is today.
+    """
+    from zoneinfo import ZoneInfo
+    now = now or datetime.now(ZoneInfo("America/New_York"))
+    day = now.date() + (timedelta(days=1) if now.hour >= NIGHT_BEFORE_FROM_HOUR else timedelta(0))
+    return day.isoformat()
+
+
 def main():
     parser = argparse.ArgumentParser(description="NBA Player Prop Model — scores today's player props")
     parser.add_argument("--date", type=str, default=None, help="Date to run model for (YYYY-MM-DD). Defaults to today.")
-    parser.add_argument("--tomorrow", action="store_true", help="Build tomorrow's board (the night-before run).")
+    parser.add_argument("--tomorrow", action="store_true", help="Build tomorrow's board.")
+    parser.add_argument("--night-before", action="store_true",
+                        help="The scheduled night-before run: tomorrow's board when it runs in the evening (US Eastern, from "
+                             "3 PM) and today's when it runs earlier in the day — GitHub delivers a 9:30 PM schedule after "
+                             "midnight on some days, and by then \"tomorrow\" would be a day too far.")
     parser.add_argument("--fill-holds", action="store_true",
                         help="Afternoon re-check: keep every published pick as it was (withdrawn if the player is ruled OUT), re-price "
                              "and re-grade everything else, and add new picks into the room the caps leave.")
@@ -1096,6 +1117,9 @@ def main():
     date = args.date
     if args.tomorrow and not date:
         date = (datetime.strptime(slate_today(), "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    if args.night_before and not date:
+        date = night_before_slate()
+        logger.info(f"Night-before run: building the board for {date}")
     try:
         run(date=date, fast=args.fast, fill_holds=args.fill_holds, snapshot=args.snapshot)
     except Exception as e:

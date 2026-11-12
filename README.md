@@ -8,6 +8,15 @@ An edge model for NBA player props (points, rebounds, assists and their combos):
 
 The model used to be a filter: a FantasyPros defense-vs-position colour created candidates, points props got top/bottom-10 rank conditions, and the gate was the share of **last** season's games that cleared tonight's line. Measured on the 893 props it had labeled with a line (524 this season, 369 last spring), none of that predicted anything. The published picks hit 48.0% (179 labeled, −14.0u) while the props left on the board hit 51.9%. The hit-rate gate was flat: props with a hit rate ≥ 56% hit 49.3%, props below it 51.8%, and no band above 56% beat 50%. The DvP colour was non-directional (50/50). The conditions were inert. And price was never consulted: the whole deficit sat on picks priced −121 or worse (40.8%, 71 picks, −21.7u) while picks priced better than −121 were ahead (53.3%, 107 picks, +8.7u) — a high hit rate against a line mostly flagged a line the books had already moved away from last season's numbers, and the model paid the worst price for it. Round 18 replaces the filter with a projection, a probability, the market price and closing-line value, below.
 
+## What changed in round 29 and why
+
+**The board no longer waits on GitHub's clock.** GitHub does not run scheduled workflows on time: on Nov 12 the 9:30 PM night-before run arrived at 5:08 AM, the 8:15 AM morning run at 3:49 PM, and several runs never arrived, so the site showed the previous night's board until mid-afternoon. Two things made a late run useless, and both are fixed:
+
+- The **night-before run** built "tomorrow's" board by the clock, so arriving after midnight it aimed a day too far and wrote nothing. It now builds tomorrow's board from 3 PM Eastern and **today's** when it arrives earlier in the day (`main.py --night-before`).
+- Only the morning run could build the day's board. Now **the first scheduled run of any kind to arrive after 8 AM Eastern builds it** when there is none: a snapshot run becomes a full board run, and a grading run runs the model after it has graded (a fill run already built a missing board from scratch). Manual runs are never rerouted.
+
+A late board is still a late board — for an on-time one, start a run by hand (Actions → *Run NBA Prop Model* → task `model`) or use the Mac runner below, which keeps its own clock.
+
 ## What changed in round 28 and why
 
 **More of the board, graded.** The rebuilt model's bar — the best price at least fair *and* the checklist behind the pick — leaves two to five plays a night. The board now shows every graded play down to **B**, and the grade says exactly what each one is:

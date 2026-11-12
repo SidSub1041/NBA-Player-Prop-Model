@@ -4,8 +4,13 @@ on:
   schedule:
     # Crons are UTC and do not track daylight saving: the ET labels below are
     # summer (EDT) times; from November to mid-March everything is an hour earlier.
+    # GitHub does not run these on time: on some days a scheduled run arrives
+    # hours late, and some never arrive. Nothing below depends on the clock a
+    # cron names: the night-before run builds TODAY's board when it arrives
+    # after midnight Eastern, and the first scheduled run of any kind to arrive
+    # after 8 AM Eastern builds the day's board if there is none yet.
     # Board runs:
-    #   the NIGHT BEFORE (~10:30 PM ET, --tomorrow) — tomorrow's board, if the
+    #   the NIGHT BEFORE (~10:30 PM ET, --night-before) — tomorrow's board, if the
     #       books have posted; otherwise it writes nothing and tonight's stays up
     #   the MORNING OF   (~9:15 AM ET) — re-prices everything and rebuilds the board
     #   two FILL runs    (~1 PM and ~5 PM ET, --fill-holds) — re-price every
@@ -120,8 +125,13 @@ jobs:
             TASK="model"
           fi
           MODEL_ARGS=""
-          if [ "${{ github.event.schedule }}" = "30 2 * * *" ] || [ "${{ github.event.inputs.slate }}" = "tomorrow" ]; then
+          if [ "${{ github.event.inputs.slate }}" = "tomorrow" ]; then
             MODEL_ARGS="--tomorrow"
+          fi
+          # The night-before cron: tomorrow's board when it runs in the evening (Eastern) — and TODAY's when GitHub
+          # delivers it after midnight, which it does on some days (main.py --night-before decides by the clock)
+          if [ "${{ github.event.schedule }}" = "30 2 * * *" ]; then
+            MODEL_ARGS="--night-before"
           fi
           # Afternoon crons (and the manual "fill" task) only fill holes in the board
           if [ "${{ github.event.schedule }}" = "0 17 * * *" ] || [ "${{ github.event.schedule }}" = "0 21 * * *" ] || [ "$TASK" = "fill" ]; then
@@ -134,9 +144,25 @@ jobs:
             TASK="model"
             MODEL_ARGS="--snapshot"
           fi
+          RUN_MODEL=$([ "$TASK" = "model" ] && echo true || echo false)
+          # GitHub delivers scheduled runs late — hours late on some days — and drops some. So whichever scheduled
+          # run arrives first after 8 AM Eastern builds the day's board when there is none yet: a snapshot run
+          # becomes a full run, and a grading run also runs the model after it has graded. (A fill run already
+          # builds a missing board from scratch; the night-before run is handled above.)
+          TODAY_ET="$(TZ=America/New_York date +%F)"
+          HOUR_ET="$(TZ=America/New_York date +%-H)"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ ! -f "logs/props_${TODAY_ET}.json" ] && [ "$HOUR_ET" -ge 8 ]; then
+            if [ "$MODEL_ARGS" = "--snapshot" ]; then
+              echo "No board for ${TODAY_ET} yet: this snapshot run builds it."
+              MODEL_ARGS=""
+            elif [ "$TASK" = "grade" ]; then
+              echo "No board for ${TODAY_ET} yet: the model runs after grading."
+              RUN_MODEL=true
+            fi
+          fi
           echo "Task: $TASK $MODEL_ARGS"
           echo "model_args=$MODEL_ARGS" >> "$GITHUB_OUTPUT"
-          echo "run_model=$([ "$TASK" = "model" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "run_model=$RUN_MODEL" >> "$GITHUB_OUTPUT"
           echo "run_grade=$([ "$TASK" = "grade" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "run_probe=$([ "$TASK" = "probe" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
