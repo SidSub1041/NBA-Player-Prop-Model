@@ -3,35 +3,35 @@
   "season": "2026-27",
   "stats_season": "2026-27",
   "stats_season_reason": "every team has played 11+ games",
-  "run_at": "04:27 PM ET",
-  "run_at_iso": "2026-11-15T21:27:43+00:00",
+  "run_at": "07:53 PM ET",
+  "run_at_iso": "2026-11-16T00:53:46+00:00",
   "run_mode": "fill-holds",
-  "lines_locked": 286,
-  "candidates_analyzed": 288,
+  "lines_locked": 281,
+  "candidates_analyzed": 286,
   "valid_count": 15,
-  "watchlist_count": 59,
+  "watchlist_count": 56,
   "combo_valid_count": 0,
   "combo_watchlist_count": 0,
   "on_hold_count": 0,
   "demoted_count": 0,
   "paused_count": 0,
-  "capped_count": 22,
+  "capped_count": 20,
   "model_version": "market-2",
   "paused_stats": [],
   "caps": {
     "kept": 15,
-    "dropped": 22,
+    "dropped": 20,
     "by_reason": {
       "per_player": 1,
-      "per_game": 4,
-      "board": 17
+      "per_game": 6,
+      "board": 13
     },
     "limits": {
       "max_picks": 15,
       "max_per_game": 3,
       "max_per_player": 1
     },
-    "pinned": 15
+    "pinned": 14
   },
   "thresholds": {
     "condition_pass_rate": 0.8,
@@ -54,6 +54,176 @@
     "publish_floor": "B"
   },
   "valid_picks": [
+    {
+      "player_name": "Kris Dunn",
+      "team": "LAC",
+      "opponent": "CHA",
+      "position": "SG",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.545,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 7.9,
+      "games_played": 11,
+      "games_hit": 6,
+      "line": 6.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 7,
+      "line_locked": true,
+      "over_odds": "+104",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-110",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 6.5,
+      "vegas_over_odds": "+104",
+      "vegas_under_odds": "-110",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 7,
+      "p_hit": 0.464,
+      "ev": -0.053,
+      "breakeven": 0.49,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "A",
+      "is_valid": true,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 42% of FGA \u00d7 z -0.3",
+        "In The Paint (Non-RA): 18% of FGA \u00d7 z +0.6",
+        "Mid-Range: 2% of FGA \u00d7 z -1.4",
+        "Left Corner 3: 8% of FGA \u00d7 z +0.6",
+        "Right Corner 3: 3% of FGA \u00d7 z -0.4",
+        "Above the Break 3: 28% of FGA \u00d7 z +2.2"
+      ],
+      "playtype_details": [
+        "Transition: 26% of poss \u00d7 z +0.8",
+        "PRBallHandler: 15% of poss \u00d7 z +1.5",
+        "Spotup: 30% of poss \u00d7 z +0.9"
+      ],
+      "p_fair": 0.4911,
+      "fair_over": 0.4911,
+      "fair_books": 7,
+      "fair_basis": "books",
+      "fair_low": 0.4604,
+      "fair_high": 0.5101,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.6292,
+          "lean": null,
+          "detail": "CHA allows -0.6 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": 0.5878,
+          "lean": "over",
+          "detail": "Opponent's defense where he shoots: +0.59 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": 0.7106,
+          "lean": "over",
+          "detail": "Opponent's defense how he scores: +0.71 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0161,
+          "lean": null,
+          "detail": "Over 6.5 in 6 of 11 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0522,
+          "lean": null,
+          "detail": "Over 6.5 in 20 of 47 home games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": -9.586,
+          "lean": "under",
+          "detail": "Last 3 games 20.8 minutes, 30.4 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0714,
+          "lean": "over",
+          "detail": "Guards vs CHA: over their line in 15 of 25",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 3,
+        "against": 1,
+        "net": 2,
+        "need": 2
+      },
+      "proj_mu": 7.27,
+      "proj_sd": 4.46,
+      "proj_minutes": 27.1,
+      "proj_dist": "normal",
+      "n_this": 11,
+      "n_last": 82,
+      "weight_this": 0.524,
+      "p_hat": 0.4911,
+      "breakeven_price": 0.4902,
+      "market_basis": "fair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5686,
+      "p_market": 0.4911,
+      "edge_value": 0.0009,
+      "open_line": 6.5,
+      "line_move": 0.0,
+      "dvp_z": -0.63,
+      "matchup_z": 1.3,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-15T21:40:00Z",
+      "spread": -1.0,
+      "published_at": "2026-11-16T00:53:46+00:00",
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null,
+      "rank": 1
+    },
     {
       "player_name": "Anthony Davis",
       "team": "WAS",
@@ -195,7 +365,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 1
+      "rank": 2
     },
     {
       "player_name": "Kyle Kuzma",
@@ -229,8 +399,8 @@
       "vegas_under_odds": "-105",
       "vegas_book": "Caesars",
       "vegas_books": 4,
-      "p_hit": 0.452,
-      "ev": -0.118,
+      "p_hit": 0.476,
+      "ev": -0.071,
       "breakeven": 0.512,
       "learn_note": null,
       "on_hold": false,
@@ -361,7 +531,7 @@
       "p_market": 0.5176,
       "edge_value": 0.0054,
       "open_line": 12.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 1.41,
       "matchup_z": 0.38,
       "teammate_out": 0,
@@ -376,7 +546,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 2
+      "rank": 3
     },
     {
       "player_name": "Karl-Anthony Towns",
@@ -550,7 +720,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 3
+      "rank": 4
     },
     {
       "player_name": "Ajay Mitchell",
@@ -719,12 +889,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": "2026-11-15T09:50:50+00:00",
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 4
+      "rank": 5
     },
     {
       "player_name": "Rui Hachimura",
@@ -904,7 +1074,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 5
+      "rank": 6
     },
     {
       "player_name": "Jalen Johnson",
@@ -1069,7 +1239,7 @@
         "gp_this": 10,
         "gp_last": 72
       },
-      "rank": 6
+      "rank": 7
     },
     {
       "player_name": "Jake LaRavia",
@@ -1239,7 +1409,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 7
+      "rank": 8
     },
     {
       "player_name": "OG Anunoby",
@@ -1422,7 +1592,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 8
+      "rank": 9
     },
     {
       "player_name": "Aaron Nesmith",
@@ -1593,7 +1763,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 9
+      "rank": 10
     },
     {
       "player_name": "Dyson Daniels",
@@ -1758,7 +1928,7 @@
         "gp_this": 13,
         "gp_last": 76
       },
-      "rank": 10
+      "rank": 11
     },
     {
       "player_name": "Naji Marshall",
@@ -1938,7 +2108,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 11
+      "rank": 12
     },
     {
       "player_name": "Amen Thompson",
@@ -2081,7 +2251,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 12
+      "rank": 13
     },
     {
       "player_name": "P.J. Washington",
@@ -2241,189 +2411,6 @@
       "line_move": -0.0,
       "dvp_z": -0.57,
       "matchup_z": -1.5,
-      "teammate_out": 2,
-      "paused": false,
-      "cap_note": null,
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": "2026-11-15T09:50:50+00:00",
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 13
-    },
-    {
-      "player_name": "Kyrie Irving",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "PG",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.455,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 22.7,
-      "games_played": 11,
-      "games_hit": 5,
-      "line": 20.5,
-      "line_source": "vegas",
-      "line_book": "DraftKings",
-      "line_books": 5,
-      "line_locked": true,
-      "over_odds": "+100",
-      "over_book": "FanDuel",
-      "under_odds": "-113",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 20.5,
-      "vegas_over_odds": "+100",
-      "vegas_under_odds": "-113",
-      "vegas_book": "DraftKings",
-      "vegas_books": 5,
-      "p_hit": 0.479,
-      "ev": -0.097,
-      "breakeven": 0.531,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "B",
-      "is_valid": true,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 15% of FGA \u00d7 z -1.5",
-        "In The Paint (Non-RA): 16% of FGA \u00d7 z -0.7",
-        "Mid-Range: 18% of FGA \u00d7 z +0.7",
-        "Left Corner 3: 6% of FGA \u00d7 z -0.7",
-        "Right Corner 3: 4% of FGA \u00d7 z +0.1",
-        "Above the Break 3: 42% of FGA \u00d7 z -0.6"
-      ],
-      "playtype_details": [
-        "Transition: 16% of poss \u00d7 z -1.0",
-        "Isolation: 18% of poss \u00d7 z +1.1",
-        "PRBallHandler: 24% of poss \u00d7 z -0.9",
-        "Spotup: 16% of poss \u00d7 z -1.4",
-        "Handoff: 9% of poss \u00d7 z +0.1",
-        "OffScreen: 6% of poss \u00d7 z +0.3"
-      ],
-      "p_fair": 0.5158,
-      "fair_over": 0.4842,
-      "fair_books": 5,
-      "fair_basis": "books",
-      "fair_low": 0.4677,
-      "fair_high": 0.5,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.3014,
-          "lean": "under",
-          "detail": "BOS allows -1.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -0.4793,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: -0.48 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.3887,
-          "lean": null,
-          "detail": "Opponent's defense how he scores: -0.39 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Over 20.5 in 5 of 10 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": -0.02,
-          "lean": null,
-          "detail": "Over 20.5 in 2 of 5 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 1.7024,
-          "lean": null,
-          "detail": "Last 3 games 31.3 minutes, 29.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.119,
-          "lean": "under",
-          "detail": "Guards vs BOS: over their line in 11 of 32",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Own team on a back-to-back, 2 starters out on his team",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 0,
-        "net": 2,
-        "need": 1
-      },
-      "proj_mu": 21.85,
-      "proj_sd": 8.44,
-      "proj_minutes": 31.3,
-      "proj_dist": "normal",
-      "n_this": 11,
-      "n_last": 0,
-      "weight_this": 1.0,
-      "p_hat": 0.5158,
-      "breakeven_price": 0.5305,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": {
-        "book": "Bovada",
-        "line": 17.5,
-        "price": "+170",
-        "kind": "alternate",
-        "p_model": null,
-        "p_market": 0.3761,
-        "p_hat": 0.3761,
-        "breakeven": 0.3704,
-        "edge": 0.0057
-      },
-      "p_model": 0.4364,
-      "p_market": 0.5158,
-      "edge_value": -0.0147,
-      "open_line": 20.5,
-      "line_move": 1.0,
-      "dvp_z": -1.3,
-      "matchup_z": -0.87,
       "teammate_out": 2,
       "paused": false,
       "cap_note": null,
@@ -4183,7 +4170,7 @@
       "matchup_z": null,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -4666,152 +4653,6 @@
       "rank": 13
     },
     {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "rebounds",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.667,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 2.1,
-      "games_played": 12,
-      "games_hit": 8,
-      "line": 2.5,
-      "line_source": "vegas",
-      "line_book": "BetRivers",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+148",
-      "over_book": "FanDuel",
-      "under_odds": "-159",
-      "under_book": "BetRivers",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 2.5,
-      "vegas_over_odds": "+148",
-      "vegas_under_odds": "-159",
-      "vegas_book": "BetRivers",
-      "vegas_books": 6,
-      "p_hit": 0.587,
-      "ev": -0.045,
-      "breakeven": 0.614,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "B+",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.6059,
-      "fair_over": 0.3941,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.3769,
-      "fair_high": 0.4288,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.125,
-          "lean": "under",
-          "detail": "HOU allows -1.1 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0625,
-          "lean": "under",
-          "detail": "Over 2.5 in 4 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": -0.0185,
-          "lean": null,
-          "detail": "Over 2.5 in 16 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0556,
-          "lean": null,
-          "detail": "Guards vs HOU: over their line in 11 of 26",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 2.26,
-      "proj_sd": 1.55,
-      "proj_minutes": 24.2,
-      "proj_dist": "nb",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.6059,
-      "breakeven_price": 0.6139,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.6084,
-      "p_market": 0.6059,
-      "edge_value": -0.008,
-      "open_line": 1.5,
-      "line_move": -1.0,
-      "dvp_z": -1.12,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "price",
-        "line_size"
-      ],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 14
-    },
-    {
       "player_name": "Matisse Thybulle",
       "team": "LAL",
       "opponent": "PHX",
@@ -4990,7 +4831,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 15
+      "rank": 14
     },
     {
       "player_name": "Paul George",
@@ -5164,7 +5005,7 @@
       "matchup_z": 0.09,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
@@ -5174,7 +5015,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 16
+      "rank": 15
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -5319,175 +5160,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 17
-    },
-    {
-      "player_name": "Kyrie Irving",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "PG",
-      "stat": "assists",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.727,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 4.4,
-      "games_played": 11,
-      "games_hit": 8,
-      "line": 3.5,
-      "line_source": "vegas",
-      "line_book": "DraftKings",
-      "line_books": 8,
-      "line_locked": true,
-      "over_odds": "-119",
-      "over_book": "DraftKings",
-      "under_odds": "+123",
-      "under_book": "BetRivers",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 3.5,
-      "vegas_over_odds": "-119",
-      "vegas_under_odds": "+123",
-      "vegas_book": "DraftKings",
-      "vegas_books": 8,
-      "p_hit": 0.469,
-      "ev": -0.136,
-      "breakeven": 0.543,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.5536,
-      "fair_over": 0.5536,
-      "fair_books": 8,
-      "fair_basis": "books",
-      "fair_low": 0.5081,
-      "fair_high": 0.5824,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -0.2538,
-          "lean": null,
-          "detail": "BOS allows -0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0806,
-          "lean": "over",
-          "detail": "Over 3.5 in 8 of 11 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0385,
-          "lean": null,
-          "detail": "Over 3.5 in 4 of 6 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 4.6635,
-          "lean": "over",
-          "detail": "Last 3 games 34.2 minutes, 29.5 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0676,
-          "lean": "under",
-          "detail": "Guards vs BOS: over their line in 11 of 27",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": -1.0,
-          "lean": "under",
-          "detail": "Own team on a back-to-back",
-          "counts": true
-        },
-        {
-          "key": "passing",
-          "label": "Passing projection",
-          "value": 0.0504,
-          "lean": null,
-          "detail": "Passing projects 3.9 against a line of 3.5",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 2,
-        "net": 0,
-        "need": 2
-      },
-      "proj_mu": 3.94,
-      "proj_sd": 1.87,
-      "proj_minutes": 31.3,
-      "proj_dist": "nb",
-      "n_this": 11,
-      "n_last": 0,
-      "weight_this": 1.0,
-      "p_hat": 0.5536,
-      "breakeven_price": 0.5434,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.5504,
-      "p_market": 0.5536,
-      "edge_value": 0.0102,
-      "open_line": 3.5,
-      "line_move": 0.0,
-      "dvp_z": -0.25,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "line_size",
-        "blowout"
-      ],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": null,
-      "proj_source": "passing",
-      "proj_mu_box": 4.26,
-      "passing": {
-        "passes": 38.0,
-        "pot_ast": 7.2,
-        "pa_per_pass": 0.191,
-        "conv": 0.549,
-        "conv_seen": 0.543,
-        "conv_prior": 0.551,
-        "team_shooting": 0.989,
-        "opp_shooting": 0.987,
-        "opp_share": 1.015,
-        "base": 3.98,
-        "weight_this": 1.0,
-        "gp_this": 11,
-        "gp_last": 0
-      },
-      "rank": 18
+      "rank": 16
     },
     {
       "player_name": "Kenrich Williams",
@@ -5636,7 +5309,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 1.73,
@@ -5655,7 +5328,7 @@
         "gp_this": 13,
         "gp_last": 56
       },
-      "rank": 19
+      "rank": 17
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -5822,7 +5495,7 @@
         "gp_this": 12,
         "gp_last": 72
       },
-      "rank": 20
+      "rank": 18
     },
     {
       "player_name": "CJ McCollum",
@@ -5996,7 +5669,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 21
+      "rank": 19
     },
     {
       "player_name": "Darryn Peterson",
@@ -6165,7 +5838,7 @@
         "gp_this": 13,
         "gp_last": 0
       },
-      "rank": 22
+      "rank": 20
     },
     {
       "player_name": "Kyle Kuzma",
@@ -6308,7 +5981,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 23
+      "rank": 21
     },
     {
       "player_name": "Kevin Durant",
@@ -6461,7 +6134,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 24
+      "rank": 22
     },
     {
       "player_name": "Pascal Siakam",
@@ -6629,7 +6302,7 @@
         "gp_this": 11,
         "gp_last": 62
       },
-      "rank": 25
+      "rank": 23
     },
     {
       "player_name": "Brandon Miller",
@@ -6805,7 +6478,7 @@
       "matchup_z": 0.73,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -6815,7 +6488,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 26
+      "rank": 24
     },
     {
       "player_name": "Aaron Wiggins",
@@ -6989,7 +6662,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 27
+      "rank": 25
     },
     {
       "player_name": "Aaron Wiggins",
@@ -7135,7 +6808,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 28
+      "rank": 26
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -7304,7 +6977,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 29
+      "rank": 27
     },
     {
       "player_name": "Brook Lopez",
@@ -7449,7 +7122,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 30
+      "rank": 28
     },
     {
       "player_name": "Immanuel Quickley",
@@ -7594,7 +7267,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 31
+      "rank": 29
     },
     {
       "player_name": "Paul George",
@@ -7749,7 +7422,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 32
+      "rank": 30
     },
     {
       "player_name": "Josh Hart",
@@ -7916,7 +7589,7 @@
         "gp_this": 9,
         "gp_last": 66
       },
-      "rank": 33
+      "rank": 31
     },
     {
       "player_name": "Jared McCain",
@@ -8085,12 +7758,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 34
+      "rank": 32
     },
     {
       "player_name": "Darryn Peterson",
@@ -8273,7 +7946,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 35
+      "rank": 33
     },
     {
       "player_name": "Jayson Tatum",
@@ -8419,7 +8092,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 36
+      "rank": 34
     },
     {
       "player_name": "Jayson Tatum",
@@ -8586,7 +8259,7 @@
         "gp_this": 11,
         "gp_last": 16
       },
-      "rank": 37
+      "rank": 35
     },
     {
       "player_name": "Sion James",
@@ -8744,7 +8417,7 @@
       "matchup_z": 0.65,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -8754,7 +8427,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 38
+      "rank": 36
     },
     {
       "player_name": "Immanuel Quickley",
@@ -8926,7 +8599,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 39
+      "rank": 37
     },
     {
       "player_name": "Kenrich Williams",
@@ -9092,12 +8765,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 40
+      "rank": 38
     },
     {
       "player_name": "Myles Turner",
@@ -9131,8 +8804,8 @@
       "vegas_under_odds": "-103",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.501,
-      "ev": -0.062,
+      "p_hit": 0.526,
+      "ev": -0.017,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -9254,7 +8927,7 @@
       "p_market": 0.5192,
       "edge_value": -0.0157,
       "open_line": 9.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.61,
       "matchup_z": 0.58,
       "teammate_out": 0,
@@ -9269,7 +8942,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 41
+      "rank": 39
     },
     {
       "player_name": "Kyshawn George",
@@ -9452,7 +9125,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 42
+      "rank": 40
     },
     {
       "player_name": "Keegan Murray",
@@ -9600,12 +9273,12 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 43
+      "rank": 41
     },
     {
       "player_name": "Oso Ighodaro",
@@ -9773,7 +9446,7 @@
         "gp_this": 9,
         "gp_last": 82
       },
-      "rank": 44
+      "rank": 42
     },
     {
       "player_name": "Quentin Grimes",
@@ -9954,7 +9627,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 45
+      "rank": 43
     },
     {
       "player_name": "Neemias Queta",
@@ -10127,7 +9800,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 46
+      "rank": 44
     },
     {
       "player_name": "Brandon Miller",
@@ -10295,7 +9968,7 @@
         "gp_this": 10,
         "gp_last": 65
       },
-      "rank": 47
+      "rank": 45
     },
     {
       "player_name": "Kris Dunn",
@@ -10441,7 +10114,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 48
+      "rank": 46
     },
     {
       "player_name": "Alperen Sengun",
@@ -10594,7 +10267,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 49
+      "rank": 47
     },
     {
       "player_name": "Grayson Allen",
@@ -10761,7 +10434,7 @@
         "gp_this": 12,
         "gp_last": 51
       },
-      "rank": 50
+      "rank": 48
     },
     {
       "player_name": "Aday Mara",
@@ -10938,193 +10611,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 51
-    },
-    {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.583,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 9.7,
-      "games_played": 12,
-      "games_hit": 7,
-      "line": 10.5,
-      "line_source": "vegas",
-      "line_book": "BetMGM",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-104",
-      "over_book": "DraftKings",
-      "under_odds": "-111",
-      "under_book": "BetMGM",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 10.5,
-      "vegas_over_odds": "-104",
-      "vegas_under_odds": "-111",
-      "vegas_book": "BetMGM",
-      "vegas_books": 6,
-      "p_hit": 0.429,
-      "ev": -0.185,
-      "breakeven": 0.526,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 7% of FGA \u00d7 z -0.1",
-        "In The Paint (Non-RA): 16% of FGA \u00d7 z +1.6",
-        "Mid-Range: 22% of FGA \u00d7 z +0.7",
-        "Left Corner 3: 11% of FGA \u00d7 z -1.0",
-        "Right Corner 3: 7% of FGA \u00d7 z -0.4",
-        "Above the Break 3: 37% of FGA \u00d7 z -1.1"
-      ],
-      "playtype_details": [
-        "Transition: 19% of poss \u00d7 z -1.9",
-        "PRBallHandler: 16% of poss \u00d7 z +0.7",
-        "Spotup: 31% of poss \u00d7 z -1.6",
-        "OffScreen: 10% of poss \u00d7 z -0.2"
-      ],
-      "p_fair": 0.5081,
-      "fair_over": 0.4919,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.4797,
-      "fair_high": 0.509,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": 0.3041,
-          "lean": null,
-          "detail": "HOU allows +0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -0.153,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: -0.15 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.7739,
-          "lean": "under",
-          "detail": "Opponent's defense how he scores: -0.77 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0312,
-          "lean": null,
-          "detail": "Over 10.5 in 5 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0556,
-          "lean": null,
-          "detail": "Over 10.5 in 20 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0641,
-          "lean": "under",
-          "detail": "Guards vs HOU: over their line in 12 of 29",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 10.71,
-      "proj_sd": 6.03,
-      "proj_minutes": 24.2,
-      "proj_dist": "normal",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.5081,
-      "breakeven_price": 0.5261,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": {
-        "book": "Bovada",
-        "line": 7.5,
-        "price": "+215",
-        "kind": "alternate",
-        "p_model": null,
-        "p_market": 0.3165,
-        "p_hat": 0.3165,
-        "breakeven": 0.3175,
-        "edge": -0.0009
-      },
-      "p_model": 0.4862,
-      "p_market": 0.5081,
-      "edge_value": -0.018,
-      "open_line": 9.5,
-      "line_move": -1.0,
-      "dvp_z": 0.3,
-      "matchup_z": -0.93,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": "cap: 15 on the board",
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 52
+      "rank": 49
     },
     {
       "player_name": "Domantas Sabonis",
@@ -11272,7 +10764,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 4.63,
@@ -11291,7 +10783,7 @@
         "gp_this": 11,
         "gp_last": 19
       },
-      "rank": 53
+      "rank": 50
     },
     {
       "player_name": "Scottie Barnes",
@@ -11458,7 +10950,7 @@
         "gp_this": 8,
         "gp_last": 80
       },
-      "rank": 54
+      "rank": 51
     },
     {
       "player_name": "Nickeil Alexander-Walker",
@@ -11626,7 +11118,7 @@
         "gp_this": 13,
         "gp_last": 78
       },
-      "rank": 55
+      "rank": 52
     },
     {
       "player_name": "Keldon Johnson",
@@ -11772,7 +11264,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 56
+      "rank": 53
     },
     {
       "player_name": "Brayden Burries",
@@ -11806,8 +11298,8 @@
       "vegas_under_odds": "-108",
       "vegas_book": "DraftKings",
       "vegas_books": 7,
-      "p_hit": 0.532,
-      "ev": 0.025,
+      "p_hit": 0.508,
+      "ev": -0.022,
       "breakeven": 0.519,
       "learn_note": null,
       "on_hold": false,
@@ -11937,7 +11429,7 @@
       "p_market": 0.5,
       "edge_value": -0.0192,
       "open_line": 11.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": -0.52,
       "matchup_z": -0.01,
       "teammate_out": 0,
@@ -11954,7 +11446,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 57
+      "rank": 54
     },
     {
       "player_name": "Neemias Queta",
@@ -12122,7 +11614,7 @@
         "gp_this": 12,
         "gp_last": 76
       },
-      "rank": 58
+      "rank": 55
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -12291,7 +11783,7 @@
       "matchup_z": 1.89,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -12301,7 +11793,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 59
+      "rank": 56
     }
   ],
   "valid_combos": [],
@@ -12310,175 +11802,6 @@
   "demoted": [],
   "paused": [],
   "capped": [
-    {
-      "player_name": "Kris Dunn",
-      "team": "LAC",
-      "opponent": "CHA",
-      "position": "SG",
-      "stat": "points",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.545,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 7.9,
-      "games_played": 11,
-      "games_hit": 6,
-      "line": 6.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 7,
-      "line_locked": true,
-      "over_odds": "+104",
-      "over_book": "BetOnline.ag",
-      "under_odds": "-110",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 6.5,
-      "vegas_over_odds": "+104",
-      "vegas_under_odds": "-110",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 7,
-      "p_hit": 0.464,
-      "ev": -0.053,
-      "breakeven": 0.49,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": null,
-      "grade": "A",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 42% of FGA \u00d7 z -0.3",
-        "In The Paint (Non-RA): 18% of FGA \u00d7 z +0.6",
-        "Mid-Range: 2% of FGA \u00d7 z -1.4",
-        "Left Corner 3: 8% of FGA \u00d7 z +0.6",
-        "Right Corner 3: 3% of FGA \u00d7 z -0.4",
-        "Above the Break 3: 28% of FGA \u00d7 z +2.2"
-      ],
-      "playtype_details": [
-        "Transition: 26% of poss \u00d7 z +0.8",
-        "PRBallHandler: 15% of poss \u00d7 z +1.5",
-        "Spotup: 30% of poss \u00d7 z +0.9"
-      ],
-      "p_fair": 0.4911,
-      "fair_over": 0.4911,
-      "fair_books": 7,
-      "fair_basis": "books",
-      "fair_low": 0.4604,
-      "fair_high": 0.5101,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -0.6292,
-          "lean": null,
-          "detail": "CHA allows -0.6 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": 0.5878,
-          "lean": "over",
-          "detail": "Opponent's defense where he shoots: +0.59 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": 0.7106,
-          "lean": "over",
-          "detail": "Opponent's defense how he scores: +0.71 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0161,
-          "lean": null,
-          "detail": "Over 6.5 in 6 of 11 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": -0.0522,
-          "lean": null,
-          "detail": "Over 6.5 in 20 of 47 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": -9.586,
-          "lean": "under",
-          "detail": "Last 3 games 20.8 minutes, 30.4 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": 0.0714,
-          "lean": "over",
-          "detail": "Guards vs CHA: over their line in 15 of 25",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 3,
-        "against": 1,
-        "net": 2,
-        "need": 2
-      },
-      "proj_mu": 7.27,
-      "proj_sd": 4.46,
-      "proj_minutes": 27.1,
-      "proj_dist": "normal",
-      "n_this": 11,
-      "n_last": 82,
-      "weight_this": 0.524,
-      "p_hat": 0.4911,
-      "breakeven_price": 0.4902,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.5686,
-      "p_market": 0.4911,
-      "edge_value": 0.0009,
-      "open_line": 6.5,
-      "line_move": 0.0,
-      "dvp_z": -0.63,
-      "matchup_z": 1.3,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": "cap: 15 on the board",
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-15T21:40:00Z",
-      "spread": -1.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null
-    },
     {
       "player_name": "Zach LaVine",
       "team": "SAC",
@@ -12511,8 +11834,8 @@
       "vegas_under_odds": "+105",
       "vegas_book": "Bovada",
       "vegas_books": 6,
-      "p_hit": 0.453,
-      "ev": -0.071,
+      "p_hit": 0.429,
+      "ev": -0.121,
       "breakeven": 0.488,
       "learn_note": null,
       "on_hold": false,
@@ -12645,7 +11968,7 @@
       "p_market": 0.488,
       "edge_value": 0.0002,
       "open_line": 18.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.43,
       "matchup_z": -0.93,
       "teammate_out": 0,
@@ -12655,7 +11978,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -12833,7 +12156,7 @@
       "matchup_z": 1.73,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
@@ -12876,8 +12199,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "DraftKings",
       "vegas_books": 6,
-      "p_hit": 0.519,
-      "ev": -0.009,
+      "p_hit": 0.495,
+      "ev": -0.056,
       "breakeven": 0.524,
       "learn_note": null,
       "on_hold": false,
@@ -13007,7 +12330,7 @@
       "p_market": 0.519,
       "edge_value": -0.0048,
       "open_line": 13.5,
-      "line_move": 1.0,
+      "line_move": -0.0,
       "dvp_z": -0.82,
       "matchup_z": -2.37,
       "teammate_out": 0,
@@ -13017,7 +12340,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -13172,7 +12495,7 @@
       "matchup_z": null,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -13513,7 +12836,7 @@
       "matchup_z": 0.09,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
@@ -13523,7 +12846,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 16
+      "rank": 15
     },
     {
       "player_name": "CJ McCollum",
@@ -13697,7 +13020,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 21
+      "rank": 19
     },
     {
       "player_name": "Kyle Kuzma",
@@ -13840,7 +13163,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 23
+      "rank": 21
     },
     {
       "player_name": "Kevin Durant",
@@ -13993,7 +13316,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 24
+      "rank": 22
     },
     {
       "player_name": "Brandon Miller",
@@ -14169,7 +13492,7 @@
       "matchup_z": 0.73,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -14179,7 +13502,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 26
+      "rank": 24
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -14348,7 +13671,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 29
+      "rank": 27
     },
     {
       "player_name": "Darryn Peterson",
@@ -14531,7 +13854,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 35
+      "rank": 33
     },
     {
       "player_name": "Sion James",
@@ -14689,7 +14012,7 @@
       "matchup_z": 0.65,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -14699,7 +14022,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 38
+      "rank": 36
     },
     {
       "player_name": "Immanuel Quickley",
@@ -14871,7 +14194,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 39
+      "rank": 37
     },
     {
       "player_name": "Myles Turner",
@@ -14905,8 +14228,8 @@
       "vegas_under_odds": "-103",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.501,
-      "ev": -0.062,
+      "p_hit": 0.526,
+      "ev": -0.017,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -15028,7 +14351,7 @@
       "p_market": 0.5192,
       "edge_value": -0.0157,
       "open_line": 9.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.61,
       "matchup_z": 0.58,
       "teammate_out": 0,
@@ -15043,7 +14366,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 41
+      "rank": 39
     },
     {
       "player_name": "Kyshawn George",
@@ -15226,7 +14549,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 42
+      "rank": 40
     },
     {
       "player_name": "Keegan Murray",
@@ -15374,12 +14697,12 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 43
+      "rank": 41
     },
     {
       "player_name": "Quentin Grimes",
@@ -15560,7 +14883,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 45
+      "rank": 43
     },
     {
       "player_name": "Alperen Sengun",
@@ -15713,188 +15036,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 49
-    },
-    {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.583,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 9.7,
-      "games_played": 12,
-      "games_hit": 7,
-      "line": 10.5,
-      "line_source": "vegas",
-      "line_book": "BetMGM",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-104",
-      "over_book": "DraftKings",
-      "under_odds": "-111",
-      "under_book": "BetMGM",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 10.5,
-      "vegas_over_odds": "-104",
-      "vegas_under_odds": "-111",
-      "vegas_book": "BetMGM",
-      "vegas_books": 6,
-      "p_hit": 0.429,
-      "ev": -0.185,
-      "breakeven": 0.526,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 7% of FGA \u00d7 z -0.1",
-        "In The Paint (Non-RA): 16% of FGA \u00d7 z +1.6",
-        "Mid-Range: 22% of FGA \u00d7 z +0.7",
-        "Left Corner 3: 11% of FGA \u00d7 z -1.0",
-        "Right Corner 3: 7% of FGA \u00d7 z -0.4",
-        "Above the Break 3: 37% of FGA \u00d7 z -1.1"
-      ],
-      "playtype_details": [
-        "Transition: 19% of poss \u00d7 z -1.9",
-        "PRBallHandler: 16% of poss \u00d7 z +0.7",
-        "Spotup: 31% of poss \u00d7 z -1.6",
-        "OffScreen: 10% of poss \u00d7 z -0.2"
-      ],
-      "p_fair": 0.5081,
-      "fair_over": 0.4919,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.4797,
-      "fair_high": 0.509,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": 0.3041,
-          "lean": null,
-          "detail": "HOU allows +0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -0.153,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: -0.15 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.7739,
-          "lean": "under",
-          "detail": "Opponent's defense how he scores: -0.77 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0312,
-          "lean": null,
-          "detail": "Over 10.5 in 5 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0556,
-          "lean": null,
-          "detail": "Over 10.5 in 20 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0641,
-          "lean": "under",
-          "detail": "Guards vs HOU: over their line in 12 of 29",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 10.71,
-      "proj_sd": 6.03,
-      "proj_minutes": 24.2,
-      "proj_dist": "normal",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.5081,
-      "breakeven_price": 0.5261,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": {
-        "book": "Bovada",
-        "line": 7.5,
-        "price": "+215",
-        "kind": "alternate",
-        "p_model": null,
-        "p_market": 0.3165,
-        "p_hat": 0.3165,
-        "breakeven": 0.3175,
-        "edge": -0.0009
-      },
-      "p_model": 0.4862,
-      "p_market": 0.5081,
-      "edge_value": -0.018,
-      "open_line": 9.5,
-      "line_move": -1.0,
-      "dvp_z": 0.3,
-      "matchup_z": -0.93,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": "cap: 15 on the board",
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 52
+      "rank": 47
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -16063,7 +15205,7 @@
       "matchup_z": 1.89,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -16073,7 +15215,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 59
+      "rank": 56
     }
   ],
   "all_props": [
@@ -16412,7 +15554,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 9
+      "rank": 10
     },
     {
       "player_name": "Aaron Nesmith",
@@ -16908,7 +16050,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 27
+      "rank": 25
     },
     {
       "player_name": "Aaron Wiggins",
@@ -17054,7 +16196,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 28
+      "rank": 26
     },
     {
       "player_name": "Ace Bailey",
@@ -17532,7 +16674,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 1.21,
@@ -17727,12 +16869,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 51
+      "rank": 49
     },
     {
       "player_name": "Aday Mara",
@@ -17872,7 +17014,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -18518,7 +17660,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 3.75,
@@ -18705,12 +17847,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": "2026-11-15T09:50:50+00:00",
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 4
+      "rank": 5
     },
     {
       "player_name": "Ajay Mitchell",
@@ -18850,7 +17992,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -19858,7 +19000,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 49
+      "rank": 47
     },
     {
       "player_name": "Amen Thompson",
@@ -20349,7 +19491,507 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 12
+      "rank": 13
+    },
+    {
+      "player_name": "Andrew Nembhard",
+      "team": "IND",
+      "opponent": "PHI",
+      "position": "SG",
+      "stat": "assists",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.455,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 7.6,
+      "games_played": 11,
+      "games_hit": 5,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "DraftKings",
+      "line_books": 6,
+      "line_locked": false,
+      "over_odds": "-129",
+      "over_book": "BetRivers",
+      "under_odds": "+105",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "-129",
+      "vegas_under_odds": "+105",
+      "vegas_book": "DraftKings",
+      "vegas_books": 6,
+      "p_hit": 0.441,
+      "ev": -0.096,
+      "breakeven": 0.488,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Hip",
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.4598,
+      "fair_over": 0.5402,
+      "fair_books": 6,
+      "fair_basis": "books",
+      "fair_low": 0.5238,
+      "fair_high": 0.5431,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -1.1637,
+          "lean": "under",
+          "detail": "PHI allows -1.2 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0161,
+          "lean": null,
+          "detail": "Over 7.5 in 6 of 11 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0094,
+          "lean": null,
+          "detail": "Over 7.5 in 17 of 33 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 0.9665,
+          "lean": null,
+          "detail": "Last 3 games 34.1 minutes, 33.1 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0588,
+          "lean": null,
+          "detail": "Guards vs PHI: over their line in 10 of 24",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": -0.024,
+          "lean": null,
+          "detail": "Passing projects 7.6 against a line of 7.5",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 1,
+        "against": 1,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 7.63,
+      "proj_sd": 3.35,
+      "proj_minutes": 32.5,
+      "proj_dist": "nb",
+      "n_this": 11,
+      "n_last": 57,
+      "weight_this": 0.524,
+      "p_hat": 0.4598,
+      "breakeven_price": 0.4878,
+      "market_basis": "fair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": {
+        "book": "Bovada",
+        "line": 6.5,
+        "price": "+185",
+        "kind": "alternate",
+        "p_model": null,
+        "p_market": 0.3381,
+        "p_hat": 0.3381,
+        "breakeven": 0.3509,
+        "edge": -0.0128
+      },
+      "p_model": 0.524,
+      "p_market": 0.4598,
+      "edge_value": -0.028,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -1.16,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-15T18:10:00Z",
+      "spread": 7.5,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 7.2,
+      "passing": {
+        "passes": 66.0,
+        "pot_ast": 12.8,
+        "pa_per_pass": 0.194,
+        "conv": 0.574,
+        "conv_seen": 0.623,
+        "conv_prior": 0.553,
+        "team_shooting": 0.993,
+        "opp_shooting": 0.988,
+        "opp_share": 1.011,
+        "base": 7.35,
+        "weight_this": 0.667,
+        "gp_this": 10,
+        "gp_last": 57
+      }
+    },
+    {
+      "player_name": "Andrew Nembhard",
+      "team": "IND",
+      "opponent": "PHI",
+      "position": "SG",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.364,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 16.6,
+      "games_played": 11,
+      "games_hit": 4,
+      "line": 15.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 6,
+      "line_locked": false,
+      "over_odds": "-113",
+      "over_book": "BetRivers",
+      "under_odds": "-106",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 15.5,
+      "vegas_over_odds": "-113",
+      "vegas_under_odds": "-106",
+      "vegas_book": "FanDuel",
+      "vegas_books": 6,
+      "p_hit": 0.423,
+      "ev": -0.179,
+      "breakeven": 0.515,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Hip",
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 17% of FGA \u00d7 z +0.4",
+        "In The Paint (Non-RA): 21% of FGA \u00d7 z -0.8",
+        "Mid-Range: 17% of FGA \u00d7 z -1.0",
+        "Left Corner 3: 1% of FGA \u00d7 z -1.1",
+        "Right Corner 3: 1% of FGA \u00d7 z +0.0",
+        "Above the Break 3: 42% of FGA \u00d7 z -0.7"
+      ],
+      "playtype_details": [
+        "Transition: 19% of poss \u00d7 z +1.3",
+        "Isolation: 10% of poss \u00d7 z -0.7",
+        "PRBallHandler: 40% of poss \u00d7 z -0.3",
+        "Spotup: 14% of poss \u00d7 z -1.0",
+        "Handoff: 8% of poss \u00d7 z +0.2"
+      ],
+      "p_fair": 0.4908,
+      "fair_over": 0.5092,
+      "fair_books": 6,
+      "fair_basis": "books",
+      "fair_low": 0.4931,
+      "fair_high": 0.5192,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.2021,
+          "lean": null,
+          "detail": "PHI allows -0.2 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": -0.5507,
+          "lean": "under",
+          "detail": "Opponent's defense where he shoots: -0.55 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": -0.0718,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: -0.07 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0484,
+          "lean": null,
+          "detail": "Over 15.5 in 7 of 11 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0094,
+          "lean": null,
+          "detail": "Over 15.5 in 16 of 33 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 0.9665,
+          "lean": null,
+          "detail": "Last 3 games 34.1 minutes, 33.1 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Guards vs PHI: over their line in 12 of 24",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 1,
+        "against": 1,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 16.86,
+      "proj_sd": 5.92,
+      "proj_minutes": 32.5,
+      "proj_dist": "normal",
+      "n_this": 11,
+      "n_last": 57,
+      "weight_this": 0.524,
+      "p_hat": 0.4908,
+      "breakeven_price": 0.5146,
+      "market_basis": "fair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": {
+        "book": "Bovada",
+        "line": 18.5,
+        "price": "-230",
+        "kind": "alternate",
+        "p_model": null,
+        "p_market": 0.6858,
+        "p_hat": 0.6858,
+        "breakeven": 0.697,
+        "edge": -0.0112
+      },
+      "p_model": 0.4089,
+      "p_market": 0.4908,
+      "edge_value": -0.0237,
+      "open_line": 15.5,
+      "line_move": -0.0,
+      "dvp_z": -0.2,
+      "matchup_z": -0.62,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-15T18:10:00Z",
+      "spread": 7.5,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Andrew Nembhard",
+      "team": "IND",
+      "opponent": "PHI",
+      "position": "SG",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.364,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 2.3,
+      "games_played": 11,
+      "games_hit": 4,
+      "line": 2.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 5,
+      "line_locked": false,
+      "over_odds": "-123",
+      "over_book": "BetOnline.ag",
+      "under_odds": "+108",
+      "under_book": "BetRivers",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 2.5,
+      "vegas_over_odds": "-123",
+      "vegas_under_odds": "+108",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 5,
+      "p_hit": 0.47,
+      "ev": -0.148,
+      "breakeven": 0.552,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Hip",
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5314,
+      "fair_over": 0.5314,
+      "fair_books": 5,
+      "fair_basis": "books",
+      "fair_low": 0.5197,
+      "fair_high": 0.5538,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.2284,
+          "lean": null,
+          "detail": "PHI allows +0.2 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0484,
+          "lean": null,
+          "detail": "Over 2.5 in 4 of 11 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0849,
+          "lean": "under",
+          "detail": "Over 2.5 in 12 of 33 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 0.9665,
+          "lean": null,
+          "detail": "Last 3 games 34.1 minutes, 33.1 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0882,
+          "lean": "over",
+          "detail": "Guards vs PHI: over their line in 15 of 24",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 1,
+        "net": 1,
+        "need": 2
+      },
+      "proj_mu": 2.71,
+      "proj_sd": 1.49,
+      "proj_minutes": 32.5,
+      "proj_dist": "nb",
+      "n_this": 11,
+      "n_last": 57,
+      "weight_this": 0.524,
+      "p_hat": 0.5314,
+      "breakeven_price": 0.5516,
+      "market_basis": "fair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5045,
+      "p_market": 0.5314,
+      "edge_value": -0.0201,
+      "open_line": 2.5,
+      "line_move": 0.0,
+      "dvp_z": 0.23,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-15T18:10:00Z",
+      "spread": 7.5,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
     },
     {
       "player_name": "Anfernee Simons",
@@ -21341,7 +20983,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 1
+      "rank": 2
     },
     {
       "player_name": "Brandon Miller",
@@ -21509,7 +21151,7 @@
         "gp_this": 10,
         "gp_last": 65
       },
-      "rank": 47
+      "rank": 45
     },
     {
       "player_name": "Brandon Miller",
@@ -21685,7 +21327,7 @@
       "matchup_z": 0.73,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -21695,7 +21337,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 26
+      "rank": 24
     },
     {
       "player_name": "Brandon Miller",
@@ -21881,8 +21523,8 @@
       "vegas_under_odds": "+124",
       "vegas_book": "FanDuel",
       "vegas_books": 5,
-      "p_hit": 0.459,
-      "ev": 0.029,
+      "p_hit": 0.435,
+      "ev": -0.025,
       "breakeven": 0.446,
       "learn_note": null,
       "on_hold": false,
@@ -21993,7 +21635,7 @@
       "p_market": 0.4254,
       "edge_value": -0.021,
       "open_line": 2.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.22,
       "matchup_z": null,
       "teammate_out": 0,
@@ -22058,8 +21700,8 @@
       "vegas_under_odds": "-108",
       "vegas_book": "DraftKings",
       "vegas_books": 7,
-      "p_hit": 0.532,
-      "ev": 0.025,
+      "p_hit": 0.508,
+      "ev": -0.022,
       "breakeven": 0.519,
       "learn_note": null,
       "on_hold": false,
@@ -22189,7 +21831,7 @@
       "p_market": 0.5,
       "edge_value": -0.0192,
       "open_line": 11.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": -0.52,
       "matchup_z": -0.01,
       "teammate_out": 0,
@@ -22206,7 +21848,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 57
+      "rank": 54
     },
     {
       "player_name": "Brayden Burries",
@@ -22836,7 +22478,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 30
+      "rank": 28
     },
     {
       "player_name": "Caleb Martin",
@@ -23522,7 +23164,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 21
+      "rank": 19
     },
     {
       "player_name": "CJ McCollum",
@@ -24310,7 +23952,7 @@
       "matchup_z": null,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -24675,6 +24317,323 @@
       "passing": null
     },
     {
+      "player_name": "Daniel Gafford",
+      "team": "DAL",
+      "opponent": "BOS",
+      "position": "C",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.462,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 9.2,
+      "games_played": 13,
+      "games_hit": 6,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 1,
+      "line_locked": true,
+      "over_odds": "-128",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-101",
+      "under_book": "BetOnline.ag",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "-128",
+      "vegas_under_odds": "-101",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 1,
+      "p_hit": 0.456,
+      "ev": -0.093,
+      "breakeven": 0.502,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Shoulder",
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 70% of FGA \u00d7 z -1.5",
+        "In The Paint (Non-RA): 23% of FGA \u00d7 z -0.7",
+        "Mid-Range: 4% of FGA \u00d7 z +0.7",
+        "Right Corner 3: 2% of FGA \u00d7 z +0.1",
+        "Above the Break 3: 2% of FGA \u00d7 z -0.6"
+      ],
+      "playtype_details": [
+        "PRRollMan: 25% of poss \u00d7 z -1.0",
+        "Cut: 23% of poss \u00d7 z +0.2",
+        "OffRebound: 15% of poss \u00d7 z -0.7",
+        "Misc: 15% of poss \u00d7 z -0.3"
+      ],
+      "p_fair": 0.4723,
+      "fair_over": 0.5277,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5277,
+      "fair_high": 0.5277,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -1.1164,
+          "lean": "under",
+          "detail": "BOS allows -1.1 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": -1.1561,
+          "lean": "under",
+          "detail": "Opponent's defense where he shoots: -1.16 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": -0.3658,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: -0.37 (positive = allows more)",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0152,
+          "lean": null,
+          "detail": "Over 7.5 in 7 of 13 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0185,
+          "lean": null,
+          "detail": "Over 7.5 in 18 of 34 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": -4.6249,
+          "lean": "under",
+          "detail": "Last 3 games 17.6 minutes, 22.2 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.1,
+          "lean": "under",
+          "detail": "Centers vs BOS: over their line in 3 of 10",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": -1.0,
+          "lean": "under",
+          "detail": "Own team on a back-to-back",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 5,
+        "against": 0,
+        "net": 5,
+        "need": 1
+      },
+      "proj_mu": 8.32,
+      "proj_sd": 5.53,
+      "proj_minutes": 21.1,
+      "proj_dist": "normal",
+      "n_this": 13,
+      "n_last": 55,
+      "weight_this": 0.565,
+      "p_hat": 0.4723,
+      "breakeven_price": 0.5025,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.4414,
+      "p_market": 0.4723,
+      "edge_value": -0.0302,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -1.12,
+      "matchup_z": -1.52,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books",
+        "minutes"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-15T23:10:00Z",
+      "spread": 15.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Daniel Gafford",
+      "team": "DAL",
+      "opponent": "BOS",
+      "position": "C",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.615,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.2,
+      "games_played": 13,
+      "games_hit": 8,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 1,
+      "line_locked": true,
+      "over_odds": "-119",
+      "over_book": "BetOnline.ag",
+      "under_odds": "-109",
+      "under_book": "BetOnline.ag",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "-119",
+      "vegas_under_odds": "-109",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 1,
+      "p_hit": 0.523,
+      "ev": 0.004,
+      "breakeven": 0.522,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": "GTD \u00b7 Shoulder",
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.4897,
+      "fair_over": 0.5103,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5103,
+      "fair_high": 0.5103,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -1.3458,
+          "lean": "under",
+          "detail": "BOS allows -1.3 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0455,
+          "lean": null,
+          "detail": "Over 5.5 in 5 of 13 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.037,
+          "lean": null,
+          "detail": "Over 5.5 in 15 of 34 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": -4.6249,
+          "lean": "under",
+          "detail": "Last 3 games 17.6 minutes, 22.2 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0263,
+          "lean": null,
+          "detail": "Centers vs BOS: over their line in 4 of 9",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": -1.0,
+          "lean": "under",
+          "detail": "Own team on a back-to-back",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 3,
+        "against": 0,
+        "net": 3,
+        "need": 1
+      },
+      "proj_mu": 5.19,
+      "proj_sd": 2.85,
+      "proj_minutes": 21.1,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 55,
+      "weight_this": 0.565,
+      "p_hat": 0.4897,
+      "breakeven_price": 0.5215,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5928,
+      "p_market": 0.4897,
+      "edge_value": -0.0318,
+      "open_line": 5.5,
+      "line_move": -0.0,
+      "dvp_z": -1.35,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books",
+        "minutes"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-15T23:10:00Z",
+      "spread": 15.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
       "player_name": "Darius Acuff Jr.",
       "team": "SAC",
       "opponent": "OKC",
@@ -24828,7 +24787,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 6.83,
@@ -25025,7 +24984,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -25169,7 +25128,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -25824,7 +25783,7 @@
         "gp_this": 13,
         "gp_last": 0
       },
-      "rank": 22
+      "rank": 20
     },
     {
       "player_name": "Darryn Peterson",
@@ -26007,7 +25966,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 35
+      "rank": 33
     },
     {
       "player_name": "Darryn Peterson",
@@ -26792,7 +26751,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 1.5,
@@ -26987,7 +26946,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -27131,7 +27090,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -27476,7 +27435,7 @@
       "matchup_z": 1.73,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
@@ -29751,7 +29710,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 4.63,
@@ -29770,7 +29729,7 @@
         "gp_this": 11,
         "gp_last": 19
       },
-      "rank": 53
+      "rank": 50
     },
     {
       "player_name": "Domantas Sabonis",
@@ -29804,8 +29763,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "DraftKings",
       "vegas_books": 6,
-      "p_hit": 0.519,
-      "ev": -0.009,
+      "p_hit": 0.495,
+      "ev": -0.056,
       "breakeven": 0.524,
       "learn_note": null,
       "on_hold": false,
@@ -29935,7 +29894,7 @@
       "p_market": 0.519,
       "edge_value": -0.0048,
       "open_line": 13.5,
-      "line_move": 1.0,
+      "line_move": -0.0,
       "dvp_z": -0.82,
       "matchup_z": -2.37,
       "teammate_out": 0,
@@ -29945,7 +29904,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -30099,7 +30058,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -30766,7 +30725,7 @@
         "gp_this": 13,
         "gp_last": 76
       },
-      "rank": 10
+      "rank": 11
     },
     {
       "player_name": "Dyson Daniels",
@@ -30973,8 +30932,8 @@
       "vegas_under_odds": "+114",
       "vegas_book": "DraftKings",
       "vegas_books": 5,
-      "p_hit": 0.559,
-      "ev": -0.045,
+      "p_hit": 0.583,
+      "ev": -0.004,
       "breakeven": 0.585,
       "learn_note": null,
       "on_hold": false,
@@ -31077,7 +31036,7 @@
       "p_market": 0.5541,
       "edge_value": -0.0309,
       "open_line": 6.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 1.75,
       "matchup_z": null,
       "teammate_out": 0,
@@ -31260,7 +31219,7 @@
         "gp_this": 12,
         "gp_last": 51
       },
-      "rank": 50
+      "rank": 48
     },
     {
       "player_name": "Grayson Allen",
@@ -31924,7 +31883,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 39
+      "rank": 37
     },
     {
       "player_name": "Immanuel Quickley",
@@ -32069,7 +32028,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 31
+      "rank": 29
     },
     {
       "player_name": "Isaiah Hartenstein",
@@ -32217,7 +32176,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 4.07,
@@ -32410,7 +32369,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -32552,7 +32511,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -33736,8 +33695,8 @@
       "vegas_under_odds": "+100",
       "vegas_book": "FanDuel",
       "vegas_books": 5,
-      "p_hit": 0.512,
-      "ev": -0.054,
+      "p_hit": 0.536,
+      "ev": -0.009,
       "breakeven": 0.541,
       "learn_note": null,
       "on_hold": false,
@@ -33862,7 +33821,7 @@
       "p_market": 0.527,
       "edge_value": -0.0143,
       "open_line": 14.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.1,
       "matchup_z": 0.35,
       "teammate_out": 0,
@@ -34190,7 +34149,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 7
+      "rank": 8
     },
     {
       "player_name": "Jake LaRavia",
@@ -34832,7 +34791,7 @@
         "gp_this": 12,
         "gp_last": 72
       },
-      "rank": 20
+      "rank": 18
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -35001,7 +34960,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 29
+      "rank": 27
     },
     {
       "player_name": "Ja'Kobe Walter",
@@ -35146,7 +35105,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 17
+      "rank": 16
     },
     {
       "player_name": "Jalen Brunson",
@@ -36287,7 +36246,7 @@
         "gp_this": 10,
         "gp_last": 72
       },
-      "rank": 6
+      "rank": 7
     },
     {
       "player_name": "Jalen Johnson",
@@ -36754,7 +36713,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 1.88,
@@ -36941,12 +36900,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 34
+      "rank": 32
     },
     {
       "player_name": "Jared McCain",
@@ -37087,7 +37046,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -37749,7 +37708,7 @@
         "gp_this": 11,
         "gp_last": 16
       },
-      "rank": 37
+      "rank": 35
     },
     {
       "player_name": "Jayson Tatum",
@@ -38081,7 +38040,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 36
+      "rank": 34
     },
     {
       "player_name": "Josh Hart",
@@ -38248,7 +38207,7 @@
         "gp_this": 9,
         "gp_last": 66
       },
-      "rank": 33
+      "rank": 31
     },
     {
       "player_name": "Josh Hart",
@@ -39224,7 +39183,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 3
+      "rank": 4
     },
     {
       "player_name": "Karl-Anthony Towns",
@@ -39905,8 +39864,8 @@
       "vegas_under_odds": "-110",
       "vegas_book": "Bovada",
       "vegas_books": 7,
-      "p_hit": 0.418,
-      "ev": -0.201,
+      "p_hit": 0.395,
+      "ev": -0.246,
       "breakeven": 0.524,
       "learn_note": null,
       "on_hold": false,
@@ -40035,7 +39994,7 @@
       "p_market": 0.5,
       "edge_value": -0.0238,
       "open_line": 11.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": -0.05,
       "matchup_z": -0.98,
       "teammate_out": 0,
@@ -40045,7 +40004,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -40197,12 +40156,12 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 43
+      "rank": 41
     },
     {
       "player_name": "Keldon Johnson",
@@ -40519,7 +40478,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 56
+      "rank": 53
     },
     {
       "player_name": "Kenrich Williams",
@@ -40668,7 +40627,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 1.73,
@@ -40687,7 +40646,7 @@
         "gp_this": 13,
         "gp_last": 56
       },
-      "rank": 19
+      "rank": 17
     },
     {
       "player_name": "Kenrich Williams",
@@ -40853,12 +40812,12 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 40
+      "rank": 38
     },
     {
       "player_name": "Kenrich Williams",
@@ -40998,7 +40957,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -41832,7 +41791,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 24
+      "rank": 22
     },
     {
       "player_name": "Keyonte George",
@@ -42535,7 +42494,7 @@
       "hold_reason": null,
       "injury": null,
       "grade": "A",
-      "is_valid": false,
+      "is_valid": true,
       "is_combo": false,
       "adaptive_multiplier": 1.0,
       "zone_details": [
@@ -42653,16 +42612,17 @@
       "matchup_z": 1.3,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": null,
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-15T21:40:00Z",
       "spread": -1.0,
-      "published_at": null,
+      "published_at": "2026-11-16T00:53:46+00:00",
       "proj_source": null,
       "proj_mu_box": null,
-      "passing": null
+      "passing": null,
+      "rank": 1
     },
     {
       "player_name": "Kris Dunn",
@@ -42808,7 +42768,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 48
+      "rank": 46
     },
     {
       "player_name": "Kyle Kuzma",
@@ -43008,8 +42968,8 @@
       "vegas_under_odds": "-105",
       "vegas_book": "Caesars",
       "vegas_books": 4,
-      "p_hit": 0.452,
-      "ev": -0.118,
+      "p_hit": 0.476,
+      "ev": -0.071,
       "breakeven": 0.512,
       "learn_note": null,
       "on_hold": false,
@@ -43140,7 +43100,7 @@
       "p_market": 0.5176,
       "edge_value": 0.0054,
       "open_line": 12.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 1.41,
       "matchup_z": 0.38,
       "teammate_out": 0,
@@ -43155,7 +43115,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 2
+      "rank": 3
     },
     {
       "player_name": "Kyle Kuzma",
@@ -43298,502 +43258,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 23
-    },
-    {
-      "player_name": "Kyrie Irving",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "PG",
-      "stat": "assists",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.727,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 4.4,
-      "games_played": 11,
-      "games_hit": 8,
-      "line": 3.5,
-      "line_source": "vegas",
-      "line_book": "DraftKings",
-      "line_books": 8,
-      "line_locked": true,
-      "over_odds": "-119",
-      "over_book": "DraftKings",
-      "under_odds": "+123",
-      "under_book": "BetRivers",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 3.5,
-      "vegas_over_odds": "-119",
-      "vegas_under_odds": "+123",
-      "vegas_book": "DraftKings",
-      "vegas_books": 8,
-      "p_hit": 0.469,
-      "ev": -0.136,
-      "breakeven": 0.543,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.5536,
-      "fair_over": 0.5536,
-      "fair_books": 8,
-      "fair_basis": "books",
-      "fair_low": 0.5081,
-      "fair_high": 0.5824,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -0.2538,
-          "lean": null,
-          "detail": "BOS allows -0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0806,
-          "lean": "over",
-          "detail": "Over 3.5 in 8 of 11 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0385,
-          "lean": null,
-          "detail": "Over 3.5 in 4 of 6 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 4.6635,
-          "lean": "over",
-          "detail": "Last 3 games 34.2 minutes, 29.5 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0676,
-          "lean": "under",
-          "detail": "Guards vs BOS: over their line in 11 of 27",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": -1.0,
-          "lean": "under",
-          "detail": "Own team on a back-to-back",
-          "counts": true
-        },
-        {
-          "key": "passing",
-          "label": "Passing projection",
-          "value": 0.0504,
-          "lean": null,
-          "detail": "Passing projects 3.9 against a line of 3.5",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 2,
-        "net": 0,
-        "need": 2
-      },
-      "proj_mu": 3.94,
-      "proj_sd": 1.87,
-      "proj_minutes": 31.3,
-      "proj_dist": "nb",
-      "n_this": 11,
-      "n_last": 0,
-      "weight_this": 1.0,
-      "p_hat": 0.5536,
-      "breakeven_price": 0.5434,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.5504,
-      "p_market": 0.5536,
-      "edge_value": 0.0102,
-      "open_line": 3.5,
-      "line_move": 0.0,
-      "dvp_z": -0.25,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "line_size",
-        "blowout"
-      ],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": null,
-      "proj_source": "passing",
-      "proj_mu_box": 4.26,
-      "passing": {
-        "passes": 38.0,
-        "pot_ast": 7.2,
-        "pa_per_pass": 0.191,
-        "conv": 0.549,
-        "conv_seen": 0.543,
-        "conv_prior": 0.551,
-        "team_shooting": 0.989,
-        "opp_shooting": 0.987,
-        "opp_share": 1.015,
-        "base": 3.98,
-        "weight_this": 1.0,
-        "gp_this": 11,
-        "gp_last": 0
-      },
-      "rank": 18
-    },
-    {
-      "player_name": "Kyrie Irving",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "PG",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.455,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 22.7,
-      "games_played": 11,
-      "games_hit": 5,
-      "line": 20.5,
-      "line_source": "vegas",
-      "line_book": "DraftKings",
-      "line_books": 5,
-      "line_locked": true,
-      "over_odds": "+100",
-      "over_book": "FanDuel",
-      "under_odds": "-113",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 20.5,
-      "vegas_over_odds": "+100",
-      "vegas_under_odds": "-113",
-      "vegas_book": "DraftKings",
-      "vegas_books": 5,
-      "p_hit": 0.479,
-      "ev": -0.097,
-      "breakeven": 0.531,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "B",
-      "is_valid": true,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 15% of FGA \u00d7 z -1.5",
-        "In The Paint (Non-RA): 16% of FGA \u00d7 z -0.7",
-        "Mid-Range: 18% of FGA \u00d7 z +0.7",
-        "Left Corner 3: 6% of FGA \u00d7 z -0.7",
-        "Right Corner 3: 4% of FGA \u00d7 z +0.1",
-        "Above the Break 3: 42% of FGA \u00d7 z -0.6"
-      ],
-      "playtype_details": [
-        "Transition: 16% of poss \u00d7 z -1.0",
-        "Isolation: 18% of poss \u00d7 z +1.1",
-        "PRBallHandler: 24% of poss \u00d7 z -0.9",
-        "Spotup: 16% of poss \u00d7 z -1.4",
-        "Handoff: 9% of poss \u00d7 z +0.1",
-        "OffScreen: 6% of poss \u00d7 z +0.3"
-      ],
-      "p_fair": 0.5158,
-      "fair_over": 0.4842,
-      "fair_books": 5,
-      "fair_basis": "books",
-      "fair_low": 0.4677,
-      "fair_high": 0.5,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.3014,
-          "lean": "under",
-          "detail": "BOS allows -1.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -0.4793,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: -0.48 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.3887,
-          "lean": null,
-          "detail": "Opponent's defense how he scores: -0.39 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Over 20.5 in 5 of 10 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": -0.02,
-          "lean": null,
-          "detail": "Over 20.5 in 2 of 5 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 1.7024,
-          "lean": null,
-          "detail": "Last 3 games 31.3 minutes, 29.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.119,
-          "lean": "under",
-          "detail": "Guards vs BOS: over their line in 11 of 32",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Own team on a back-to-back, 2 starters out on his team",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 0,
-        "net": 2,
-        "need": 1
-      },
-      "proj_mu": 21.85,
-      "proj_sd": 8.44,
-      "proj_minutes": 31.3,
-      "proj_dist": "normal",
-      "n_this": 11,
-      "n_last": 0,
-      "weight_this": 1.0,
-      "p_hat": 0.5158,
-      "breakeven_price": 0.5305,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": {
-        "book": "Bovada",
-        "line": 17.5,
-        "price": "+170",
-        "kind": "alternate",
-        "p_model": null,
-        "p_market": 0.3761,
-        "p_hat": 0.3761,
-        "breakeven": 0.3704,
-        "edge": 0.0057
-      },
-      "p_model": 0.4364,
-      "p_market": 0.5158,
-      "edge_value": -0.0147,
-      "open_line": 20.5,
-      "line_move": 1.0,
-      "dvp_z": -1.3,
-      "matchup_z": -0.87,
-      "teammate_out": 2,
-      "paused": false,
-      "cap_note": null,
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": "2026-11-15T09:50:50+00:00",
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 14
-    },
-    {
-      "player_name": "Kyrie Irving",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "PG",
-      "stat": "rebounds",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.545,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 3.5,
-      "games_played": 11,
-      "games_hit": 6,
-      "line": 3.5,
-      "line_source": "vegas",
-      "line_book": "FanDuel",
-      "line_books": 8,
-      "line_locked": true,
-      "over_odds": "+115",
-      "over_book": "BetMGM",
-      "under_odds": "-113",
-      "under_book": "FanDuel",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 3.5,
-      "vegas_over_odds": "+115",
-      "vegas_under_odds": "-113",
-      "vegas_book": "FanDuel",
-      "vegas_books": 8,
-      "p_hit": 0.481,
-      "ev": -0.093,
-      "breakeven": 0.531,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Knee",
-      "grade": "A",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.5365,
-      "fair_over": 0.4635,
-      "fair_books": 8,
-      "fair_basis": "books",
-      "fair_low": 0.4335,
-      "fair_high": 0.5,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": 0.313,
-          "lean": null,
-          "detail": "BOS allows +0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0161,
-          "lean": null,
-          "detail": "Over 3.5 in 5 of 11 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0385,
-          "lean": null,
-          "detail": "Over 3.5 in 4 of 6 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 4.6635,
-          "lean": "over",
-          "detail": "Last 3 games 34.2 minutes, 29.5 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.1111,
-          "lean": "under",
-          "detail": "Guards vs BOS: over their line in 9 of 26",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": -1.0,
-          "lean": "under",
-          "detail": "Own team on a back-to-back",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 3.49,
-      "proj_sd": 2.09,
-      "proj_minutes": 31.3,
-      "proj_dist": "nb",
-      "n_this": 11,
-      "n_last": 0,
-      "weight_this": 1.0,
-      "p_hat": 0.5365,
-      "breakeven_price": 0.5305,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.5517,
-      "p_market": 0.5365,
-      "edge_value": 0.006,
-      "open_line": 3.5,
-      "line_move": -0.0,
-      "dvp_z": 0.31,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "line_size"
-      ],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null
+      "rank": 21
     },
     {
       "player_name": "Kyshawn George",
@@ -44142,7 +43607,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 42
+      "rank": 40
     },
     {
       "player_name": "Kyshawn George",
@@ -45811,7 +45276,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 15
+      "rank": 14
     },
     {
       "player_name": "Matisse Thybulle",
@@ -47280,7 +46745,7 @@
       "matchup_z": 1.89,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -47290,7 +46755,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 59
+      "rank": 56
     },
     {
       "player_name": "Moussa Diabat\u00e9",
@@ -47466,8 +46931,8 @@
       "vegas_under_odds": "+140",
       "vegas_book": "FanDuel",
       "vegas_books": 4,
-      "p_hit": 0.592,
-      "ev": -0.079,
+      "p_hit": 0.616,
+      "ev": -0.042,
       "breakeven": 0.643,
       "learn_note": null,
       "on_hold": false,
@@ -47568,7 +47033,7 @@
       "p_market": 0.6041,
       "edge_value": -0.0387,
       "open_line": 2.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 1.61,
       "matchup_z": null,
       "teammate_out": 0,
@@ -47633,8 +47098,8 @@
       "vegas_under_odds": "-103",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.501,
-      "ev": -0.062,
+      "p_hit": 0.526,
+      "ev": -0.017,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -47756,7 +47221,7 @@
       "p_market": 0.5192,
       "edge_value": -0.0157,
       "open_line": 9.5,
-      "line_move": 0.0,
+      "line_move": 1.0,
       "dvp_z": 0.61,
       "matchup_z": 0.58,
       "teammate_out": 0,
@@ -47771,7 +47236,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 41
+      "rank": 39
     },
     {
       "player_name": "Myles Turner",
@@ -48262,7 +47727,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 11
+      "rank": 12
     },
     {
       "player_name": "Naji Marshall",
@@ -49079,7 +48544,7 @@
         "gp_this": 12,
         "gp_last": 76
       },
-      "rank": 58
+      "rank": 55
     },
     {
       "player_name": "Neemias Queta",
@@ -49252,7 +48717,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 46
+      "rank": 44
     },
     {
       "player_name": "Neemias Queta",
@@ -49564,7 +49029,7 @@
         "gp_this": 13,
         "gp_last": 78
       },
-      "rank": 55
+      "rank": 52
     },
     {
       "player_name": "Nickeil Alexander-Walker",
@@ -50725,7 +50190,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 8
+      "rank": 9
     },
     {
       "player_name": "OG Anunoby",
@@ -51537,7 +51002,7 @@
         "gp_this": 9,
         "gp_last": 82
       },
-      "rank": 44
+      "rank": 42
     },
     {
       "player_name": "Oso Ighodaro",
@@ -52029,7 +51494,7 @@
         "gp_this": 11,
         "gp_last": 62
       },
-      "rank": 25
+      "rank": 23
     },
     {
       "player_name": "Pascal Siakam",
@@ -52696,7 +52161,7 @@
       "matchup_z": 0.09,
       "teammate_out": 0,
       "paused": false,
-      "cap_note": "cap: 3 per game",
+      "cap_note": "cap: 15 on the board",
       "guards": [],
       "model_version": "market-2",
       "is_home": true,
@@ -52706,7 +52171,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 16
+      "rank": 15
     },
     {
       "player_name": "Paul George",
@@ -52861,7 +52326,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 32
+      "rank": 30
     },
     {
       "player_name": "Payton Pritchard",
@@ -53530,7 +52995,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 13
+      "rank": 14
     },
     {
       "player_name": "P.J. Washington",
@@ -54029,7 +53494,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 45
+      "rank": 43
     },
     {
       "player_name": "Quentin Grimes",
@@ -55523,7 +54988,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 5
+      "rank": 6
     },
     {
       "player_name": "Rui Hachimura",
@@ -55662,177 +55127,6 @@
       "is_home": true,
       "tip_utc": "2026-11-15T21:40:00Z",
       "spread": -1.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null
-    },
-    {
-      "player_name": "Ryan Rollins",
-      "team": "MIL",
-      "opponent": "ATL",
-      "position": "G",
-      "stat": "points",
-      "edge": "over",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.385,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 10.5,
-      "games_played": 13,
-      "games_hit": 5,
-      "line": 10.5,
-      "line_source": "vegas",
-      "line_book": "BetRivers",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-117",
-      "over_book": "BetRivers",
-      "under_odds": "+100",
-      "under_book": "DraftKings",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 10.5,
-      "vegas_over_odds": "-117",
-      "vegas_under_odds": "+100",
-      "vegas_book": "BetRivers",
-      "vegas_books": 6,
-      "p_hit": 0.459,
-      "ev": -0.149,
-      "breakeven": 0.539,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Illness",
-      "grade": "C",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 25% of FGA \u00d7 z +1.1",
-        "In The Paint (Non-RA): 15% of FGA \u00d7 z -1.2",
-        "Mid-Range: 13% of FGA \u00d7 z +1.5",
-        "Left Corner 3: 6% of FGA \u00d7 z -1.3",
-        "Right Corner 3: 8% of FGA \u00d7 z -0.0",
-        "Above the Break 3: 33% of FGA \u00d7 z -0.0"
-      ],
-      "playtype_details": [
-        "Transition: 18% of poss \u00d7 z -0.7",
-        "Isolation: 6% of poss \u00d7 z +0.4",
-        "PRBallHandler: 34% of poss \u00d7 z -0.0",
-        "Spotup: 22% of poss \u00d7 z +0.4",
-        "Misc: 7% of poss \u00d7 z -0.8"
-      ],
-      "p_fair": 0.5245,
-      "fair_over": 0.5245,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.502,
-      "fair_high": 0.5306,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -0.5222,
-          "lean": null,
-          "detail": "ATL allows -0.5 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": 0.2129,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: +0.21 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.0993,
-          "lean": null,
-          "detail": "Opponent's defense how he scores: -0.10 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0455,
-          "lean": null,
-          "detail": "Over 10.5 in 5 of 13 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.1615,
-          "lean": "over",
-          "detail": "Over 10.5 in 33 of 45 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 2.294,
-          "lean": null,
-          "detail": "Last 3 games 25.6 minutes, 23.3 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": 0.0357,
-          "lean": null,
-          "detail": "Guards vs ATL: over their line in 10 of 18",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 1,
-        "against": 0,
-        "net": 1,
-        "need": 2
-      },
-      "proj_mu": 13.07,
-      "proj_sd": 5.2,
-      "proj_minutes": 27.3,
-      "proj_dist": "normal",
-      "n_this": 13,
-      "n_last": 74,
-      "weight_this": 0.565,
-      "p_hat": 0.5245,
-      "breakeven_price": 0.5392,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.6897,
-      "p_market": 0.5245,
-      "edge_value": -0.0147,
-      "open_line": 10.5,
-      "line_move": 0.0,
-      "dvp_z": -0.52,
-      "matchup_z": 0.11,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T01:10:00Z",
-      "spread": 8.5,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -56659,7 +55953,7 @@
         "gp_this": 8,
         "gp_last": 80
       },
-      "rank": 54
+      "rank": 51
     },
     {
       "player_name": "Scottie Barnes",
@@ -57153,7 +56447,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 6.19,
@@ -57205,8 +56499,8 @@
       "vegas_under_odds": "-102",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 5,
-      "p_hit": 0.479,
-      "ev": -0.1,
+      "p_hit": 0.504,
+      "ev": -0.054,
       "breakeven": 0.533,
       "learn_note": null,
       "on_hold": false,
@@ -57332,7 +56626,7 @@
       "p_market": 0.5101,
       "edge_value": -0.0226,
       "open_line": 32.5,
-      "line_move": -1.0,
+      "line_move": 0.0,
       "dvp_z": 0.1,
       "matchup_z": 1.83,
       "teammate_out": 2,
@@ -57342,7 +56636,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -57487,7 +56781,7 @@
       "model_version": "market-2",
       "is_home": false,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": -10.5,
+      "spread": -11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -57649,7 +56943,7 @@
       "matchup_z": 0.65,
       "teammate_out": 1,
       "paused": false,
-      "cap_note": "cap: 15 on the board",
+      "cap_note": "cap: 3 per game",
       "guards": [],
       "model_version": "market-2",
       "is_home": false,
@@ -57659,7 +56953,7 @@
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null,
-      "rank": 38
+      "rank": 36
     },
     {
       "player_name": "Sion James",
@@ -59290,500 +58584,6 @@
       "passing": null
     },
     {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "assists",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.667,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 0.9,
-      "games_played": 12,
-      "games_hit": 8,
-      "line": 1.5,
-      "line_source": "vegas",
-      "line_book": "Fanatics",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+134",
-      "over_book": "BetOnline.ag",
-      "under_odds": "-145",
-      "under_book": "Fanatics",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 1.5,
-      "vegas_over_odds": "+134",
-      "vegas_under_odds": "-145",
-      "vegas_book": "Fanatics",
-      "vegas_books": 6,
-      "p_hit": 0.575,
-      "ev": -0.028,
-      "breakeven": 0.592,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "C",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.5618,
-      "fair_over": 0.4382,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.4018,
-      "fair_high": 0.4459,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.1267,
-          "lean": "under",
-          "detail": "HOU allows -1.1 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0625,
-          "lean": "under",
-          "detail": "Over 1.5 in 4 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0556,
-          "lean": null,
-          "detail": "Over 1.5 in 20 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.05,
-          "lean": null,
-          "detail": "Guards vs HOU: over their line in 13 of 30",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        },
-        {
-          "key": "passing",
-          "label": "Passing projection",
-          "value": -0.071,
-          "lean": "under",
-          "detail": "Passing projects 1.5 against a line of 1.5",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 3,
-        "against": 1,
-        "net": 2,
-        "need": 1
-      },
-      "proj_mu": 1.47,
-      "proj_sd": 1.18,
-      "proj_minutes": 24.2,
-      "proj_dist": "nb",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.5618,
-      "breakeven_price": 0.5918,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.571,
-      "p_market": 0.5618,
-      "edge_value": -0.03,
-      "open_line": 1.5,
-      "line_move": -0.0,
-      "dvp_z": -1.13,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "price",
-        "line_size"
-      ],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": "passing",
-      "proj_mu_box": 1.33,
-      "passing": {
-        "passes": 15.3,
-        "pot_ast": 2.9,
-        "pa_per_pass": 0.19,
-        "conv": 0.532,
-        "conv_seen": 0.333,
-        "conv_prior": 0.556,
-        "team_shooting": 0.997,
-        "opp_shooting": 0.993,
-        "opp_share": 0.964,
-        "base": 1.55,
-        "weight_this": 0.706,
-        "gp_this": 12,
-        "gp_last": 60
-      }
-    },
-    {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "points",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.583,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 9.7,
-      "games_played": 12,
-      "games_hit": 7,
-      "line": 10.5,
-      "line_source": "vegas",
-      "line_book": "BetMGM",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "-104",
-      "over_book": "DraftKings",
-      "under_odds": "-111",
-      "under_book": "BetMGM",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 10.5,
-      "vegas_over_odds": "-104",
-      "vegas_under_odds": "-111",
-      "vegas_book": "BetMGM",
-      "vegas_books": 6,
-      "p_hit": 0.429,
-      "ev": -0.185,
-      "breakeven": 0.526,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "B",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 7% of FGA \u00d7 z -0.1",
-        "In The Paint (Non-RA): 16% of FGA \u00d7 z +1.6",
-        "Mid-Range: 22% of FGA \u00d7 z +0.7",
-        "Left Corner 3: 11% of FGA \u00d7 z -1.0",
-        "Right Corner 3: 7% of FGA \u00d7 z -0.4",
-        "Above the Break 3: 37% of FGA \u00d7 z -1.1"
-      ],
-      "playtype_details": [
-        "Transition: 19% of poss \u00d7 z -1.9",
-        "PRBallHandler: 16% of poss \u00d7 z +0.7",
-        "Spotup: 31% of poss \u00d7 z -1.6",
-        "OffScreen: 10% of poss \u00d7 z -0.2"
-      ],
-      "p_fair": 0.5081,
-      "fair_over": 0.4919,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.4797,
-      "fair_high": 0.509,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": 0.3041,
-          "lean": null,
-          "detail": "HOU allows +0.3 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -0.153,
-          "lean": null,
-          "detail": "Opponent's defense where he shoots: -0.15 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.7739,
-          "lean": "under",
-          "detail": "Opponent's defense how he scores: -0.77 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0312,
-          "lean": null,
-          "detail": "Over 10.5 in 5 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0556,
-          "lean": null,
-          "detail": "Over 10.5 in 20 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0641,
-          "lean": "under",
-          "detail": "Guards vs HOU: over their line in 12 of 29",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 10.71,
-      "proj_sd": 6.03,
-      "proj_minutes": 24.2,
-      "proj_dist": "normal",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.5081,
-      "breakeven_price": 0.5261,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": {
-        "book": "Bovada",
-        "line": 7.5,
-        "price": "+215",
-        "kind": "alternate",
-        "p_model": null,
-        "p_market": 0.3165,
-        "p_hat": 0.3165,
-        "breakeven": 0.3175,
-        "edge": -0.0009
-      },
-      "p_model": 0.4862,
-      "p_market": 0.5081,
-      "edge_value": -0.018,
-      "open_line": 9.5,
-      "line_move": -1.0,
-      "dvp_z": 0.3,
-      "matchup_z": -0.93,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": "cap: 15 on the board",
-      "guards": [],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 52
-    },
-    {
-      "player_name": "Tre Johnson",
-      "team": "WAS",
-      "opponent": "HOU",
-      "position": "G",
-      "stat": "rebounds",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.667,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 2.1,
-      "games_played": 12,
-      "games_hit": 8,
-      "line": 2.5,
-      "line_source": "vegas",
-      "line_book": "BetRivers",
-      "line_books": 6,
-      "line_locked": true,
-      "over_odds": "+148",
-      "over_book": "FanDuel",
-      "under_odds": "-159",
-      "under_book": "BetRivers",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 2.5,
-      "vegas_over_odds": "+148",
-      "vegas_under_odds": "-159",
-      "vegas_book": "BetRivers",
-      "vegas_books": 6,
-      "p_hit": 0.587,
-      "ev": -0.045,
-      "breakeven": 0.614,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Back",
-      "grade": "B+",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [],
-      "playtype_details": [],
-      "p_fair": 0.6059,
-      "fair_over": 0.3941,
-      "fair_books": 6,
-      "fair_basis": "books",
-      "fair_low": 0.3769,
-      "fair_high": 0.4288,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.125,
-          "lean": "under",
-          "detail": "HOU allows -1.1 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": -0.0625,
-          "lean": "under",
-          "detail": "Over 2.5 in 4 of 12 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": -0.0185,
-          "lean": null,
-          "detail": "Over 2.5 in 16 of 34 home games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": 7.7089,
-          "lean": "over",
-          "detail": "Last 3 games 29.3 minutes, 21.6 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.0556,
-          "lean": null,
-          "detail": "Guards vs HOU: over their line in 11 of 26",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": 0.0,
-          "lean": null,
-          "detail": "Normal rest, no starters out",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 2,
-        "against": 1,
-        "net": 1,
-        "need": 1
-      },
-      "proj_mu": 2.26,
-      "proj_sd": 1.55,
-      "proj_minutes": 24.2,
-      "proj_dist": "nb",
-      "n_this": 12,
-      "n_last": 60,
-      "weight_this": 0.545,
-      "p_hat": 0.6059,
-      "breakeven_price": 0.6139,
-      "market_basis": "fair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.6084,
-      "p_market": 0.6059,
-      "edge_value": -0.008,
-      "open_line": 1.5,
-      "line_move": -1.0,
-      "dvp_z": -1.12,
-      "matchup_z": null,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "price",
-        "line_size"
-      ],
-      "model_version": "market-2",
-      "is_home": true,
-      "tip_utc": "2026-11-16T00:10:00Z",
-      "spread": 8.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null,
-      "rank": 14
-    },
-    {
       "player_name": "Tyler Herro",
       "team": "MIL",
       "opponent": "ATL",
@@ -59815,8 +58615,8 @@
       "vegas_under_odds": "+120",
       "vegas_book": "Caesars",
       "vegas_books": 6,
-      "p_hit": 0.452,
-      "ev": -0.006,
+      "p_hit": 0.428,
+      "ev": -0.059,
       "breakeven": 0.455,
       "learn_note": null,
       "on_hold": false,
@@ -59917,7 +58717,7 @@
       "p_market": 0.4369,
       "edge_value": -0.0176,
       "open_line": 4.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.76,
       "matchup_z": null,
       "teammate_out": 0,
@@ -59979,8 +58779,8 @@
       "vegas_under_odds": "-115",
       "vegas_book": "BetMGM",
       "vegas_books": 7,
-      "p_hit": 0.532,
-      "ev": -0.005,
+      "p_hit": 0.508,
+      "ev": -0.05,
       "breakeven": 0.535,
       "learn_note": null,
       "on_hold": false,
@@ -60114,7 +58914,7 @@
       "p_market": 0.512,
       "edge_value": -0.0229,
       "open_line": 21.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": -1.14,
       "matchup_z": -0.04,
       "teammate_out": 0,
@@ -62726,7 +61526,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": "passing",
       "proj_mu_box": 2.81,
@@ -62778,8 +61578,8 @@
       "vegas_under_odds": "+105",
       "vegas_book": "Bovada",
       "vegas_books": 6,
-      "p_hit": 0.453,
-      "ev": -0.071,
+      "p_hit": 0.429,
+      "ev": -0.121,
       "breakeven": 0.488,
       "learn_note": null,
       "on_hold": false,
@@ -62912,7 +61712,7 @@
       "p_market": 0.488,
       "edge_value": 0.0002,
       "open_line": 18.5,
-      "line_move": -0.0,
+      "line_move": -1.0,
       "dvp_z": 0.43,
       "matchup_z": -0.93,
       "teammate_out": 0,
@@ -62922,7 +61722,7 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -63067,324 +61867,320 @@
       "model_version": "market-2",
       "is_home": true,
       "tip_utc": "2026-11-16T02:10:00Z",
-      "spread": 10.5,
+      "spread": 11.0,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
       "passing": null
     },
     {
-      "player_name": "Daniel Gafford",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "C",
-      "stat": "points",
+      "player_name": "Luguentz Dort",
+      "team": "ATL",
+      "opponent": "MIL",
+      "position": "G",
+      "stat": "assists",
       "edge": "under",
       "total_points": 0,
       "total_conditions": 0,
       "pass_rate": 0.0,
-      "hitrate": 0.462,
+      "hitrate": 0.385,
       "hitrate_source": "gamelog_vs_line",
-      "season_avg": 9.2,
+      "season_avg": 1.8,
       "games_played": 13,
-      "games_hit": 6,
-      "line": 7.5,
+      "games_hit": 5,
+      "line": 1.5,
       "line_source": "vegas",
       "line_book": "BetOnline.ag",
       "line_books": 1,
       "line_locked": false,
-      "over_odds": "-128",
+      "over_odds": "+103",
       "over_book": "BetOnline.ag",
-      "under_odds": "-101",
+      "under_odds": "-133",
       "under_book": "BetOnline.ag",
       "ud_line": null,
       "ud_over_odds": null,
       "ud_under_odds": null,
-      "vegas_line": 7.5,
-      "vegas_over_odds": "-128",
-      "vegas_under_odds": "-101",
+      "vegas_line": 1.5,
+      "vegas_over_odds": "+103",
+      "vegas_under_odds": "-133",
       "vegas_book": "BetOnline.ag",
       "vegas_books": 1,
-      "p_hit": 0.456,
-      "ev": -0.093,
-      "breakeven": 0.502,
+      "p_hit": 0.613,
+      "ev": 0.074,
+      "breakeven": 0.571,
       "learn_note": null,
       "on_hold": false,
       "hold_reason": null,
-      "injury": "GTD \u00b7 Shoulder",
-      "grade": "C",
-      "is_valid": false,
-      "is_combo": false,
-      "adaptive_multiplier": 1.0,
-      "zone_details": [
-        "Restricted Area: 70% of FGA \u00d7 z -1.5",
-        "In The Paint (Non-RA): 23% of FGA \u00d7 z -0.7",
-        "Mid-Range: 4% of FGA \u00d7 z +0.7",
-        "Right Corner 3: 2% of FGA \u00d7 z +0.1",
-        "Above the Break 3: 2% of FGA \u00d7 z -0.6"
-      ],
-      "playtype_details": [
-        "PRRollMan: 25% of poss \u00d7 z -1.0",
-        "Cut: 23% of poss \u00d7 z +0.2",
-        "OffRebound: 15% of poss \u00d7 z -0.7",
-        "Misc: 15% of poss \u00d7 z -0.3"
-      ],
-      "p_fair": 0.4723,
-      "fair_over": 0.5277,
-      "fair_books": 1,
-      "fair_basis": "best_pair",
-      "fair_low": 0.5277,
-      "fair_high": 0.5277,
-      "adjustments": null,
-      "checks": [
-        {
-          "key": "dvp",
-          "label": "Defense vs position",
-          "value": -1.1164,
-          "lean": "under",
-          "detail": "BOS allows -1.1 standard deviations of this stat to his position",
-          "counts": true
-        },
-        {
-          "key": "zones",
-          "label": "Shooting zones",
-          "value": -1.1561,
-          "lean": "under",
-          "detail": "Opponent's defense where he shoots: -1.16 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "playtypes",
-          "label": "Play types",
-          "value": -0.3658,
-          "lean": null,
-          "detail": "Opponent's defense how he scores: -0.37 (positive = allows more)",
-          "counts": true
-        },
-        {
-          "key": "hit_rate",
-          "label": "Hit rate vs the line",
-          "value": 0.0152,
-          "lean": null,
-          "detail": "Over 7.5 in 7 of 13 games",
-          "counts": true
-        },
-        {
-          "key": "split",
-          "label": "Home/away split",
-          "value": 0.0185,
-          "lean": null,
-          "detail": "Over 7.5 in 18 of 34 road games",
-          "counts": true
-        },
-        {
-          "key": "minutes",
-          "label": "Minutes trend",
-          "value": -4.6249,
-          "lean": "under",
-          "detail": "Last 3 games 17.6 minutes, 22.2 before",
-          "counts": true
-        },
-        {
-          "key": "similar",
-          "label": "Similar players vs this opponent",
-          "value": -0.1,
-          "lean": "under",
-          "detail": "Centers vs BOS: over their line in 3 of 10",
-          "counts": true
-        },
-        {
-          "key": "situation",
-          "label": "Situation",
-          "value": -1.0,
-          "lean": "under",
-          "detail": "Own team on a back-to-back",
-          "counts": true
-        }
-      ],
-      "support": {
-        "for": 5,
-        "against": 0,
-        "net": 5,
-        "need": 1
-      },
-      "proj_mu": 8.32,
-      "proj_sd": 5.53,
-      "proj_minutes": 21.1,
-      "proj_dist": "normal",
-      "n_this": 13,
-      "n_last": 55,
-      "weight_this": 0.565,
-      "p_hat": 0.4723,
-      "breakeven_price": 0.5025,
-      "market_basis": "best_pair",
-      "consensus_line": null,
-      "consensus_books": null,
-      "line_shopped": false,
-      "alt_line": null,
-      "p_model": 0.4414,
-      "p_market": 0.4723,
-      "edge_value": -0.0302,
-      "open_line": 7.5,
-      "line_move": -0.0,
-      "dvp_z": -1.12,
-      "matchup_z": -1.52,
-      "teammate_out": 0,
-      "paused": false,
-      "cap_note": null,
-      "guards": [
-        "books",
-        "minutes"
-      ],
-      "model_version": "market-2",
-      "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
-      "published_at": null,
-      "proj_source": null,
-      "proj_mu_box": null,
-      "passing": null
-    },
-    {
-      "player_name": "Daniel Gafford",
-      "team": "DAL",
-      "opponent": "BOS",
-      "position": "C",
-      "stat": "rebounds",
-      "edge": "under",
-      "total_points": 0,
-      "total_conditions": 0,
-      "pass_rate": 0.0,
-      "hitrate": 0.615,
-      "hitrate_source": "gamelog_vs_line",
-      "season_avg": 5.2,
-      "games_played": 13,
-      "games_hit": 8,
-      "line": 5.5,
-      "line_source": "vegas",
-      "line_book": "BetOnline.ag",
-      "line_books": 1,
-      "line_locked": false,
-      "over_odds": "-119",
-      "over_book": "BetOnline.ag",
-      "under_odds": "-109",
-      "under_book": "BetOnline.ag",
-      "ud_line": null,
-      "ud_over_odds": null,
-      "ud_under_odds": null,
-      "vegas_line": 5.5,
-      "vegas_over_odds": "-119",
-      "vegas_under_odds": "-109",
-      "vegas_book": "BetOnline.ag",
-      "vegas_books": 1,
-      "p_hit": 0.523,
-      "ev": 0.004,
-      "breakeven": 0.522,
-      "learn_note": null,
-      "on_hold": false,
-      "hold_reason": null,
-      "injury": "GTD \u00b7 Shoulder",
+      "injury": null,
       "grade": "C",
       "is_valid": false,
       "is_combo": false,
       "adaptive_multiplier": 1.0,
       "zone_details": [],
       "playtype_details": [],
-      "p_fair": 0.4897,
-      "fair_over": 0.5103,
+      "p_fair": 0.5368,
+      "fair_over": 0.4632,
       "fair_books": 1,
       "fair_basis": "best_pair",
-      "fair_low": 0.5103,
-      "fair_high": 0.5103,
+      "fair_low": 0.4632,
+      "fair_high": 0.4632,
       "adjustments": null,
       "checks": [
         {
           "key": "dvp",
           "label": "Defense vs position",
-          "value": -1.3458,
-          "lean": "under",
-          "detail": "BOS allows -1.3 standard deviations of this stat to his position",
+          "value": 0.4702,
+          "lean": null,
+          "detail": "MIL allows +0.5 standard deviations of this stat to his position",
           "counts": true
         },
         {
           "key": "hit_rate",
           "label": "Hit rate vs the line",
-          "value": -0.0455,
+          "value": 0.0455,
           "lean": null,
-          "detail": "Over 5.5 in 5 of 13 games",
+          "detail": "Over 1.5 in 8 of 13 games",
           "counts": true
         },
         {
           "key": "split",
           "label": "Home/away split",
-          "value": -0.037,
-          "lean": null,
-          "detail": "Over 5.5 in 15 of 34 road games",
+          "value": -0.0833,
+          "lean": "under",
+          "detail": "Over 1.5 in 15 of 40 road games",
           "counts": true
         },
         {
           "key": "minutes",
           "label": "Minutes trend",
-          "value": -4.6249,
+          "value": -6.7023,
           "lean": "under",
-          "detail": "Last 3 games 17.6 minutes, 22.2 before",
+          "detail": "Last 3 games 19.3 minutes, 26.0 before",
           "counts": true
         },
         {
           "key": "similar",
           "label": "Similar players vs this opponent",
-          "value": -0.0263,
+          "value": -0.0278,
           "lean": null,
-          "detail": "Centers vs BOS: over their line in 4 of 9",
+          "detail": "Guards vs MIL: over their line in 12 of 26",
           "counts": true
         },
         {
           "key": "situation",
           "label": "Situation",
-          "value": -1.0,
-          "lean": "under",
-          "detail": "Own team on a back-to-back",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": -0.0645,
+          "lean": null,
+          "detail": "Passing projects 1.5 against a line of 1.5",
           "counts": true
         }
       ],
       "support": {
-        "for": 3,
-        "against": 0,
-        "net": 3,
+        "for": 2,
+        "against": 1,
+        "net": 1,
         "need": 1
       },
-      "proj_mu": 5.19,
-      "proj_sd": 2.85,
-      "proj_minutes": 21.1,
+      "proj_mu": 1.49,
+      "proj_sd": 1.19,
+      "proj_minutes": 25.4,
       "proj_dist": "nb",
       "n_this": 13,
-      "n_last": 55,
+      "n_last": 69,
       "weight_this": 0.565,
-      "p_hat": 0.4897,
-      "breakeven_price": 0.5215,
+      "p_hat": 0.5368,
+      "breakeven_price": 0.5708,
       "market_basis": "best_pair",
       "consensus_line": null,
       "consensus_books": null,
       "line_shopped": false,
       "alt_line": null,
-      "p_model": 0.5928,
-      "p_market": 0.4897,
-      "edge_value": -0.0318,
-      "open_line": 5.5,
+      "p_model": 0.5645,
+      "p_market": 0.5368,
+      "edge_value": -0.034,
+      "open_line": 1.5,
       "line_move": -0.0,
-      "dvp_z": -1.35,
+      "dvp_z": 0.47,
       "matchup_z": null,
-      "teammate_out": 0,
+      "teammate_out": 1,
       "paused": false,
       "cap_note": null,
       "guards": [
+        "price",
         "books",
-        "minutes"
+        "line_size"
       ],
       "model_version": "market-2",
       "is_home": false,
-      "tip_utc": "2026-11-15T23:10:00Z",
-      "spread": 15.0,
+      "tip_utc": "2026-11-16T01:10:00Z",
+      "spread": -8.5,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 1.68,
+      "passing": {
+        "passes": 18.8,
+        "pot_ast": 2.5,
+        "pa_per_pass": 0.131,
+        "conv": 0.563,
+        "conv_seen": 0.72,
+        "conv_prior": 0.556,
+        "team_shooting": 0.998,
+        "opp_shooting": 1.005,
+        "opp_share": 1.025,
+        "base": 1.39,
+        "weight_this": 0.722,
+        "gp_this": 13,
+        "gp_last": 69
+      }
+    },
+    {
+      "player_name": "Luguentz Dort",
+      "team": "ATL",
+      "opponent": "MIL",
+      "position": "G",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.615,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 3.1,
+      "games_played": 13,
+      "games_hit": 8,
+      "line": 2.5,
+      "line_source": "vegas",
+      "line_book": "BetOnline.ag",
+      "line_books": 3,
+      "line_locked": false,
+      "over_odds": "-143",
+      "over_book": "BetOnline.ag",
+      "under_odds": "+116",
+      "under_book": "DraftKings",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 2.5,
+      "vegas_over_odds": "-143",
+      "vegas_under_odds": "+116",
+      "vegas_book": "BetOnline.ag",
+      "vegas_books": 3,
+      "p_hit": 0.59,
+      "ev": 0.003,
+      "breakeven": 0.588,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5595,
+      "fair_over": 0.5595,
+      "fair_books": 3,
+      "fair_basis": "books",
+      "fair_low": 0.5527,
+      "fair_high": 0.5664,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.7697,
+          "lean": "over",
+          "detail": "MIL allows +0.8 standard deviations of this stat to his position",
+          "counts": true
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0455,
+          "lean": null,
+          "detail": "Over 2.5 in 8 of 13 games",
+          "counts": true
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.1333,
+          "lean": "over",
+          "detail": "Over 2.5 in 28 of 40 road games",
+          "counts": true
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": -6.7023,
+          "lean": "under",
+          "detail": "Last 3 games 19.3 minutes, 26.0 before",
+          "counts": true
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0758,
+          "lean": "over",
+          "detail": "Guards vs MIL: over their line in 14 of 23",
+          "counts": true
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true
+        }
+      ],
+      "support": {
+        "for": 4,
+        "against": 1,
+        "net": 3,
+        "need": 2
+      },
+      "proj_mu": 3.55,
+      "proj_sd": 1.83,
+      "proj_minutes": 25.4,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 69,
+      "weight_this": 0.565,
+      "p_hat": 0.5595,
+      "breakeven_price": 0.5885,
+      "market_basis": "fair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.6817,
+      "p_market": 0.5595,
+      "edge_value": -0.029,
+      "open_line": 2.5,
+      "line_move": 0.0,
+      "dvp_z": 0.77,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-16T01:10:00Z",
+      "spread": -8.5,
       "published_at": null,
       "proj_source": null,
       "proj_mu_box": null,
@@ -63392,16 +62188,16 @@
     }
   ],
   "hitrate_summary": {
-    "avg": 0.525,
-    "above_threshold": 102,
-    "below_threshold": 186,
+    "avg": 0.522,
+    "above_threshold": 99,
+    "below_threshold": 187,
     "unavailable": 0,
     "threshold": 0.56,
     "distribution": {
-      "60_plus": 89,
-      "56_to_60": 13,
-      "50_to_56": 69,
-      "below_50": 117
+      "60_plus": 87,
+      "56_to_60": 12,
+      "50_to_56": 68,
+      "below_50": 119
     }
   },
   "learning": {
