@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-11-15T16:30:21Z",
+ "generated_at": "2026-11-16T19:46:02Z",
  "season": "2026-27",
- "n_props": 5492,
- "nights": 23,
+ "n_props": 5769,
+ "nights": 24,
  "first_date": "2026-10-22",
- "last_date": "2026-11-14",
+ "last_date": "2026-11-15",
  "bar": {
   "bet_margin": 0.02,
   "pass_min_nights": 25,
@@ -12,60 +12,60 @@
  },
  "market": {
   "favourite": {
-   "n": 5381,
-   "hit": 0.5415,
+   "n": 5653,
+   "hit": 0.5411,
    "priced": 0.5342
   },
   "over_under": [
    {
     "stat": "points",
     "label": "Points",
-    "n": 1744,
-    "over_hit": 0.4667,
+    "n": 1842,
+    "over_hit": 0.4674,
     "over_priced": 0.4983,
-    "over_per_bet": -0.098,
+    "over_per_bet": -0.0966,
     "over_ci": [
-     -0.1422,
-     -0.0562
+     -0.1392,
+     -0.0566
     ],
-    "under_per_bet": 0.0224,
+    "under_per_bet": 0.0209,
     "under_ci": [
-     -0.0201,
-     0.0676
+     -0.0214,
+     0.0634
     ]
    },
    {
     "stat": "rebounds",
     "label": "Rebounds",
-    "n": 1652,
-    "over_hit": 0.4728,
-    "over_priced": 0.49,
-    "over_per_bet": -0.0732,
+    "n": 1749,
+    "over_hit": 0.4746,
+    "over_priced": 0.4901,
+    "over_per_bet": -0.0693,
     "over_ci": [
-     -0.1075,
-     -0.0369
+     -0.0987,
+     -0.0371
     ],
-    "under_per_bet": -0.0061,
+    "under_per_bet": -0.0089,
     "under_ci": [
-     -0.0399,
-     0.028
+     -0.0408,
+     0.0194
     ]
    },
    {
     "stat": "assists",
     "label": "Assists",
-    "n": 1481,
-    "over_hit": 0.4868,
-    "over_priced": 0.4915,
-    "over_per_bet": -0.0481,
+    "n": 1563,
+    "over_hit": 0.4894,
+    "over_priced": 0.4917,
+    "over_per_bet": -0.0431,
     "over_ci": [
-     -0.0917,
-     -0.0053
+     -0.0882,
+     0.0052
     ],
-    "under_per_bet": -0.0318,
+    "under_per_bet": -0.0362,
     "under_ci": [
-     -0.0732,
-     0.0078
+     -0.0805,
+     0.0035
     ]
    },
    {
@@ -76,13 +76,13 @@
     "over_priced": 0.4983,
     "over_per_bet": -0.1963,
     "over_ci": [
-     -0.3784,
-     -0.0277
+     -0.3781,
+     -0.0174
     ],
     "under_per_bet": 0.0945,
     "under_ci": [
-     -0.0726,
-     0.2788
+     -0.0842,
+     0.277
     ]
    },
    {
@@ -93,13 +93,13 @@
     "over_priced": 0.4994,
     "over_per_bet": -0.1707,
     "over_ci": [
-     -0.2742,
-     -0.0637
+     -0.2679,
+     -0.0524
     ],
     "under_per_bet": 0.0829,
     "under_ci": [
-     -0.0211,
-     0.1859
+     -0.0315,
+     0.1784
     ]
    },
    {
@@ -110,13 +110,13 @@
     "over_priced": 0.5,
     "over_per_bet": -0.0818,
     "over_ci": [
-     -0.1908,
-     0.0378
+     -0.1934,
+     0.0346
     ],
     "under_per_bet": -0.013,
     "under_ci": [
-     -0.1243,
-     0.0899
+     -0.1221,
+     0.0941
     ]
    },
    {
@@ -127,101 +127,101 @@
     "over_priced": 0.4934,
     "over_per_bet": -0.0568,
     "over_ci": [
-     -0.1948,
-     0.0899
+     -0.1873,
+     0.0763
     ],
     "under_per_bet": -0.0285,
     "under_ci": [
-     -0.1748,
-     0.1082
+     -0.1587,
+     0.1005
     ]
    }
   ],
   "all": {
-   "n": 5492,
-   "over_hit": 0.4729,
-   "over_priced": 0.4939,
-   "over_per_bet": -0.08,
+   "n": 5769,
+   "over_hit": 0.4744,
+   "over_priced": 0.494,
+   "over_per_bet": -0.0767,
    "over_ci": [
-    -0.1089,
-    -0.051
+    -0.1044,
+    -0.0466
    ],
-   "under_per_bet": 0.0004,
+   "under_per_bet": -0.0024,
    "under_ci": [
-    -0.0285,
-    0.0258
+    -0.0308,
+    0.022
    ]
   },
   "overs_trailed_nights": 16,
-  "nights": 23
+  "nights": 24
  },
  "signals": [
   {
    "key": "price_refit",
    "label": "The price re-fitted: overs against their price",
    "family": "The market",
-   "n": 5492,
-   "nights": 23,
-   "n_oos": 5049,
-   "oos_nights": 18,
-   "coef": -0.0808,
+   "n": 5769,
+   "nights": 24,
+   "n_oos": 5326,
+   "oos_nights": 19,
+   "coef": -0.075,
    "ci": [
-    -0.1407,
-    -0.0209
+    -0.1335,
+    -0.0165
    ],
-   "dll": 4e-05,
+   "dll": 0.00014,
    "dll_ci": [
-    -0.00124,
-    0.00155
+    -0.00104,
+    0.00148
    ],
-   "dll_vs_posted": 4e-05,
+   "dll_vs_posted": 0.00014,
    "bets": {
-    "n": 457,
+    "n": 467,
     "overs": 117,
-    "unders": 340,
-    "hit_rate": 0.5361,
-    "per_bet": -0.0024,
+    "unders": 350,
+    "hit_rate": 0.5353,
+    "per_bet": -0.005,
     "ci": [
-     -0.0717,
-     0.095
+     -0.0758,
+     0.0834
     ]
    },
    "verdict": "leans right",
    "passes": false,
-   "slope": 1.1856,
+   "slope": 1.1726,
    "slope_ci": [
-    0.8919,
-    1.4792
+    0.8929,
+    1.4523
    ]
   },
   {
    "key": "model_prob",
    "label": "The old projection's probability",
    "family": "The old model",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": 0.0628,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": 0.0671,
    "ci": [
-    -0.0822,
-    0.2077
+    -0.0747,
+    0.2089
    ],
-   "dll": 0.00026,
+   "dll": 0.00021,
    "dll_ci": [
-    -0.00049,
-    0.0012
+    -0.00055,
+    0.00107
    ],
-   "dll_vs_posted": 0.00034,
+   "dll_vs_posted": 0.00047,
    "bets": {
-    "n": 1124,
+    "n": 1164,
     "overs": 6,
-    "unders": 1118,
-    "hit_rate": 0.5569,
-    "per_bet": -0.0043,
+    "unders": 1158,
+    "hit_rate": 0.5567,
+    "per_bet": -0.0053,
     "ci": [
-     -0.05,
-     0.05
+     -0.0471,
+     0.0487
     ]
    },
    "verdict": "no evidence",
@@ -231,30 +231,30 @@
    "key": "dvp",
    "label": "Defense vs position",
    "family": "Defense vs position",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": -0.024,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": -0.0196,
    "ci": [
-    -0.0661,
-    0.0181
+    -0.0609,
+    0.0218
    ],
-   "dll": 0.0002,
+   "dll": 0.00021,
    "dll_ci": [
-    -0.00021,
+    -0.00017,
     0.00078
    ],
-   "dll_vs_posted": 0.00028,
+   "dll_vs_posted": 0.00047,
    "bets": {
-    "n": 1141,
+    "n": 1178,
     "overs": 4,
-    "unders": 1137,
-    "hit_rate": 0.5679,
-    "per_bet": 0.0199,
+    "unders": 1174,
+    "hit_rate": 0.5611,
+    "per_bet": 0.0073,
     "ci": [
-     -0.0085,
-     0.0589
+     -0.0368,
+     0.0483
     ]
    },
    "verdict": "no evidence",
@@ -264,30 +264,30 @@
    "key": "zone_fit",
    "label": "Shooting zones: opponent's FG% allowed where he shoots",
    "family": "Zones and playtypes",
-   "n": 1542,
-   "nights": 18,
-   "n_oos": 1144,
-   "oos_nights": 13,
-   "coef": -0.1079,
+   "n": 1640,
+   "nights": 19,
+   "n_oos": 1242,
+   "oos_nights": 14,
+   "coef": -0.0855,
    "ci": [
-    -0.2678,
-    0.052
+    -0.2428,
+    0.0718
    ],
-   "dll": 0.00014,
+   "dll": 0.0004,
    "dll_ci": [
-    -0.00208,
-    0.00217
+    -0.00183,
+    0.00227
    ],
    "dll_vs_posted": 0.00292,
    "bets": {
-    "n": 810,
+    "n": 846,
     "overs": 1,
-    "unders": 809,
-    "hit_rate": 0.5272,
-    "per_bet": 0.0119,
+    "unders": 845,
+    "hit_rate": 0.5248,
+    "per_bet": 0.007,
     "ci": [
-     -0.0342,
-     0.0674
+     -0.0361,
+     0.0602
     ]
    },
    "verdict": "no evidence",
@@ -297,30 +297,30 @@
    "key": "playtype_fit",
    "label": "Playtypes: opponent's points per possession allowed",
    "family": "Zones and playtypes",
-   "n": 1512,
-   "nights": 18,
-   "n_oos": 1117,
-   "oos_nights": 13,
-   "coef": -0.0873,
+   "n": 1609,
+   "nights": 19,
+   "n_oos": 1214,
+   "oos_nights": 14,
+   "coef": -0.0537,
    "ci": [
-    -0.2487,
-    0.0741
+    -0.2251,
+    0.1178
    ],
-   "dll": 0.00017,
+   "dll": 0.00044,
    "dll_ci": [
-    -0.00098,
-    0.00142
+    -0.00081,
+    0.00168
    ],
-   "dll_vs_posted": 0.00329,
+   "dll_vs_posted": 0.00321,
    "bets": {
-    "n": 897,
+    "n": 932,
     "overs": 0,
-    "unders": 897,
-    "hit_rate": 0.5084,
-    "per_bet": -0.0252,
+    "unders": 932,
+    "hit_rate": 0.5064,
+    "per_bet": -0.0288,
     "ci": [
-     -0.0621,
-     0.0125
+     -0.0629,
+     0.0078
     ]
    },
    "verdict": "no evidence",
@@ -330,30 +330,30 @@
    "key": "hit_rate",
    "label": "Hit rate against tonight's line",
    "family": "Hit rate",
-   "n": 4883,
-   "nights": 23,
-   "n_oos": 4440,
-   "oos_nights": 18,
-   "coef": 0.1721,
+   "n": 5160,
+   "nights": 24,
+   "n_oos": 4717,
+   "oos_nights": 19,
+   "coef": 0.149,
    "ci": [
-    -0.2237,
-    0.5678
+    -0.2352,
+    0.5333
    ],
-   "dll": 0.00079,
+   "dll": 0.00077,
    "dll_ci": [
-    -0.00069,
-    0.00228
+    -0.00062,
+    0.00222
    ],
-   "dll_vs_posted": 0.00068,
+   "dll_vs_posted": 0.00081,
    "bets": {
-    "n": 1339,
+    "n": 1358,
     "overs": 216,
-    "unders": 1123,
-    "hit_rate": 0.5385,
-    "per_bet": 0.0052,
+    "unders": 1142,
+    "hit_rate": 0.5376,
+    "per_bet": 0.0029,
     "ci": [
-     -0.0494,
-     0.062
+     -0.0548,
+     0.0577
     ]
    },
    "verdict": "no evidence",
@@ -363,30 +363,30 @@
    "key": "hit_rate_weighted",
    "label": "Hit rate, weighted by the games behind it",
    "family": "Hit rate",
-   "n": 4883,
-   "nights": 23,
-   "n_oos": 4440,
-   "oos_nights": 18,
-   "coef": 0.7951,
+   "n": 5160,
+   "nights": 24,
+   "n_oos": 4717,
+   "oos_nights": 19,
+   "coef": 0.7524,
    "ci": [
-    0.1717,
-    1.4185
+    0.1225,
+    1.3823
    ],
-   "dll": -0.00015,
+   "dll": -9e-05,
    "dll_ci": [
-    -0.00136,
-    0.001
+    -0.00124,
+    0.00108
    ],
-   "dll_vs_posted": -0.00026,
+   "dll_vs_posted": -6e-05,
    "bets": {
-    "n": 1140,
+    "n": 1164,
     "overs": 176,
-    "unders": 964,
-    "hit_rate": 0.5333,
-    "per_bet": 0.0062,
+    "unders": 988,
+    "hit_rate": 0.5326,
+    "per_bet": 0.0038,
     "ci": [
-     -0.0545,
-     0.0679
+     -0.0602,
+     0.0606
     ]
    },
    "verdict": "leans right",
@@ -396,30 +396,30 @@
    "key": "season_avg",
    "label": "Season average above or below the line",
    "family": "Hit rate",
-   "n": 5353,
-   "nights": 23,
-   "n_oos": 4910,
-   "oos_nights": 18,
-   "coef": 0.1537,
+   "n": 5630,
+   "nights": 24,
+   "n_oos": 5187,
+   "oos_nights": 19,
+   "coef": 0.1207,
    "ci": [
-    -0.1626,
-    0.47
+    -0.1955,
+    0.4369
    ],
-   "dll": 0.00045,
+   "dll": 0.00048,
    "dll_ci": [
-    -0.00061,
-    0.00139
+    -0.00038,
+    0.00135
    ],
-   "dll_vs_posted": 0.00035,
+   "dll_vs_posted": 0.00051,
    "bets": {
-    "n": 1145,
+    "n": 1162,
     "overs": 236,
-    "unders": 909,
-    "hit_rate": 0.5266,
-    "per_bet": -0.0029,
+    "unders": 926,
+    "hit_rate": 0.5241,
+    "per_bet": -0.0079,
     "ci": [
-     -0.0541,
-     0.0621
+     -0.0616,
+     0.0561
     ]
    },
    "verdict": "no evidence",
@@ -429,30 +429,30 @@
    "key": "own_streak",
    "label": "Player's own results against his lines so far",
    "family": "Hit rate",
-   "n": 3028,
-   "nights": 17,
-   "n_oos": 2805,
-   "oos_nights": 12,
-   "coef": -0.0079,
+   "n": 3294,
+   "nights": 18,
+   "n_oos": 3071,
+   "oos_nights": 13,
+   "coef": -0.0024,
    "ci": [
-    -0.1011,
-    0.0853
+    -0.0895,
+    0.0846
    ],
-   "dll": 0.00062,
+   "dll": 0.00058,
    "dll_ci": [
-    -0.00057,
-    0.00227
+    -0.00052,
+    0.00202
    ],
-   "dll_vs_posted": 0.00338,
+   "dll_vs_posted": 0.00324,
    "bets": {
-    "n": 1509,
+    "n": 1542,
     "overs": 3,
-    "unders": 1506,
-    "hit_rate": 0.5447,
-    "per_bet": 0.025,
+    "unders": 1539,
+    "hit_rate": 0.5428,
+    "per_bet": 0.0204,
     "ci": [
-     -0.0232,
-     0.0599
+     -0.0246,
+     0.0548
     ]
    },
    "verdict": "no evidence",
@@ -462,63 +462,63 @@
    "key": "minutes",
    "label": "Projected minutes",
    "family": "Minutes and usage",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": 0.0353,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": 0.028,
    "ci": [
-    -0.0319,
-    0.1024
+    -0.037,
+    0.093
    ],
-   "dll": -5e-05,
+   "dll": 1e-05,
    "dll_ci": [
-    -0.00047,
-    0.00039
+    -0.00037,
+    0.00043
    ],
-   "dll_vs_posted": 3e-05,
+   "dll_vs_posted": 0.00027,
    "bets": {
-    "n": 1145,
+    "n": 1186,
     "overs": 5,
-    "unders": 1140,
-    "hit_rate": 0.5694,
-    "per_bet": 0.0183,
+    "unders": 1181,
+    "hit_rate": 0.5658,
+    "per_bet": 0.0112,
     "ci": [
-     -0.015,
-     0.0607
+     -0.0234,
+     0.0577
     ]
    },
-   "verdict": "leans right",
+   "verdict": "no evidence",
    "passes": false
   },
   {
    "key": "teammates_out",
    "label": "Starters out on his team",
    "family": "Minutes and usage",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": 0.046,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": 0.0427,
    "ci": [
-    -0.0785,
-    0.1705
+    -0.0755,
+    0.1609
    ],
-   "dll": 0.00036,
+   "dll": 0.00035,
    "dll_ci": [
-    -0.00014,
-    0.00091
+    -9e-05,
+    0.00087
    ],
-   "dll_vs_posted": 0.00044,
+   "dll_vs_posted": 0.00061,
    "bets": {
-    "n": 1030,
+    "n": 1074,
     "overs": 5,
-    "unders": 1025,
-    "hit_rate": 0.5592,
-    "per_bet": -0.0019,
+    "unders": 1069,
+    "hit_rate": 0.5549,
+    "per_bet": -0.0099,
     "ci": [
-     -0.0511,
-     0.0554
+     -0.0586,
+     0.0435
     ]
    },
    "verdict": "no evidence",
@@ -528,30 +528,30 @@
    "key": "injury_tag",
    "label": "Injury tag (game-time decision), toward the under",
    "family": "Minutes and usage",
-   "n": 5492,
-   "nights": 23,
-   "n_oos": 5049,
-   "oos_nights": 18,
-   "coef": 0.1837,
+   "n": 5769,
+   "nights": 24,
+   "n_oos": 5326,
+   "oos_nights": 19,
+   "coef": 0.1911,
    "ci": [
-    -0.2001,
-    0.5676
+    -0.1734,
+    0.5556
    ],
-   "dll": 0.00212,
+   "dll": 0.00199,
    "dll_ci": [
-    0.00033,
-    0.00413
+    0.00025,
+    0.004
    ],
-   "dll_vs_posted": 0.00216,
+   "dll_vs_posted": 0.00213,
    "bets": {
-    "n": 663,
+    "n": 684,
     "overs": 169,
-    "unders": 494,
-    "hit_rate": 0.5294,
-    "per_bet": -0.0156,
+    "unders": 515,
+    "hit_rate": 0.5307,
+    "per_bet": -0.0126,
     "ci": [
-     -0.1078,
-     0.095
+     -0.1044,
+     0.0954
     ]
    },
    "verdict": "no evidence",
@@ -561,30 +561,30 @@
    "key": "home",
    "label": "Playing at home",
    "family": "Situation",
-   "n": 5492,
-   "nights": 23,
-   "n_oos": 5049,
-   "oos_nights": 18,
-   "coef": -0.0427,
+   "n": 5769,
+   "nights": 24,
+   "n_oos": 5326,
+   "oos_nights": 19,
+   "coef": -0.0395,
    "ci": [
-    -0.1148,
+    -0.1085,
     0.0294
    ],
-   "dll": 0.00034,
+   "dll": 0.00035,
    "dll_ci": [
-    -0.00046,
-    0.00112
+    -0.00047,
+    0.00111
    ],
-   "dll_vs_posted": 0.00038,
+   "dll_vs_posted": 0.00049,
    "bets": {
-    "n": 875,
+    "n": 909,
     "overs": 220,
-    "unders": 655,
-    "hit_rate": 0.5257,
-    "per_bet": -0.0197,
+    "unders": 689,
+    "hit_rate": 0.5215,
+    "per_bet": -0.0293,
     "ci": [
-     -0.0879,
-     0.0742
+     -0.1055,
+     0.0568
     ]
    },
    "verdict": "no evidence",
@@ -594,30 +594,30 @@
    "key": "b2b_own",
    "label": "Own team on a back-to-back, toward the under",
    "family": "Situation",
-   "n": 5328,
-   "nights": 21,
-   "n_oos": 4491,
-   "oos_nights": 16,
-   "coef": -0.0643,
+   "n": 5605,
+   "nights": 22,
+   "n_oos": 4768,
+   "oos_nights": 17,
+   "coef": -0.0478,
    "ci": [
-    -0.2459,
-    0.1173
+    -0.2285,
+    0.133
    ],
-   "dll": 0.00018,
+   "dll": 0.00021,
    "dll_ci": [
-    -0.0002,
-    0.00066
+    -0.00017,
+    0.00067
    ],
-   "dll_vs_posted": -0.00055,
+   "dll_vs_posted": -0.00035,
    "bets": {
-    "n": 611,
+    "n": 637,
     "overs": 10,
-    "unders": 601,
-    "hit_rate": 0.5696,
-    "per_bet": 0.0088,
+    "unders": 627,
+    "hit_rate": 0.562,
+    "per_bet": -0.0048,
     "ci": [
-     -0.0435,
-     0.1028
+     -0.0611,
+     0.075
     ]
    },
    "verdict": "no evidence",
@@ -627,30 +627,30 @@
    "key": "b2b_opp",
    "label": "Opponent on a back-to-back, toward the over",
    "family": "Situation",
-   "n": 5325,
-   "nights": 21,
-   "n_oos": 4491,
-   "oos_nights": 16,
-   "coef": 0.0166,
+   "n": 5602,
+   "nights": 22,
+   "n_oos": 4768,
+   "oos_nights": 17,
+   "coef": 0.0074,
    "ci": [
-    -0.1029,
-    0.1361
+    -0.1109,
+    0.1258
    ],
-   "dll": 0.00022,
+   "dll": 0.00021,
    "dll_ci": [
-    -0.00014,
-    0.00078
+    -0.00013,
+    0.00075
    ],
-   "dll_vs_posted": -0.00057,
+   "dll_vs_posted": -0.0004,
    "bets": {
-    "n": 584,
+    "n": 606,
     "overs": 11,
-    "unders": 573,
-    "hit_rate": 0.5771,
-    "per_bet": 0.0128,
+    "unders": 595,
+    "hit_rate": 0.571,
+    "per_bet": 0.0022,
     "ci": [
-     -0.0424,
-     0.0955
+     -0.0568,
+     0.0739
     ]
    },
    "verdict": "no evidence",
@@ -660,30 +660,30 @@
    "key": "line_move",
    "label": "Line rose since the open",
    "family": "The market",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": 0.1004,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": 0.0967,
    "ci": [
-    -0.0284,
-    0.2291
+    -0.0265,
+    0.2198
    ],
-   "dll": 0.00097,
+   "dll": 0.00092,
    "dll_ci": [
-    -0.00108,
-    0.00324
+    -0.00101,
+    0.00316
    ],
-   "dll_vs_posted": 0.00105,
+   "dll_vs_posted": 0.00118,
    "bets": {
-    "n": 1234,
-    "overs": 85,
-    "unders": 1149,
-    "hit_rate": 0.5527,
-    "per_bet": -0.0001,
+    "n": 1287,
+    "overs": 86,
+    "unders": 1201,
+    "hit_rate": 0.5493,
+    "per_bet": -0.006,
     "ci": [
-     -0.0451,
-     0.0709
+     -0.0482,
+     0.0579
     ]
    },
    "verdict": "no evidence",
@@ -693,30 +693,30 @@
    "key": "similar_opp",
    "label": "Similar players: every prop vs this opponent, same stat",
    "family": "Similar players",
-   "n": 4742,
-   "nights": 21,
-   "n_oos": 4178,
-   "oos_nights": 16,
-   "coef": -0.0539,
+   "n": 5019,
+   "nights": 22,
+   "n_oos": 4455,
+   "oos_nights": 17,
+   "coef": -0.0517,
    "ci": [
-    -0.1215,
-    0.0137
+    -0.1163,
+    0.0129
    ],
    "dll": -2e-05,
    "dll_ci": [
-    -0.00039,
-    0.00033
+    -0.00036,
+    0.0003
    ],
-   "dll_vs_posted": -0.00068,
+   "dll_vs_posted": -0.0005,
    "bets": {
-    "n": 760,
+    "n": 788,
     "overs": 26,
-    "unders": 734,
-    "hit_rate": 0.5803,
-    "per_bet": 0.0258,
+    "unders": 762,
+    "hit_rate": 0.5774,
+    "per_bet": 0.0216,
     "ci": [
-     -0.0197,
-     0.0927
+     -0.0235,
+     0.0825
     ]
    },
    "verdict": "no evidence",
@@ -726,30 +726,30 @@
    "key": "similar_opp_pos",
    "label": "Similar players: same position group vs this opponent",
    "family": "Similar players",
-   "n": 3984,
-   "nights": 19,
-   "n_oos": 3505,
-   "oos_nights": 14,
-   "coef": -0.0659,
+   "n": 4261,
+   "nights": 20,
+   "n_oos": 3782,
+   "oos_nights": 15,
+   "coef": -0.0521,
    "ci": [
-    -0.1476,
-    0.0158
+    -0.132,
+    0.0278
    ],
-   "dll": 0.00037,
+   "dll": 0.00045,
    "dll_ci": [
-    -0.00084,
-    0.00193
+    -0.00068,
+    0.00189
    ],
-   "dll_vs_posted": -0.00029,
+   "dll_vs_posted": 2e-05,
    "bets": {
-    "n": 1086,
+    "n": 1132,
     "overs": 23,
-    "unders": 1063,
-    "hit_rate": 0.5599,
-    "per_bet": 0.0104,
+    "unders": 1109,
+    "hit_rate": 0.553,
+    "per_bet": -0.0011,
     "ci": [
-     -0.0272,
-     0.0663
+     -0.0414,
+     0.0514
     ]
    },
    "verdict": "no evidence",
@@ -759,30 +759,30 @@
    "key": "similar_league_7d",
    "label": "Same position and stat league-wide, last 7 days",
    "family": "Similar players",
-   "n": 5303,
-   "nights": 22,
-   "n_oos": 4877,
-   "oos_nights": 17,
-   "coef": -0.0242,
+   "n": 5580,
+   "nights": 23,
+   "n_oos": 5154,
+   "oos_nights": 18,
+   "coef": -0.0187,
    "ci": [
-    -0.1649,
-    0.1165
+    -0.155,
+    0.1176
    ],
-   "dll": 0.00099,
+   "dll": 0.00094,
    "dll_ci": [
-    -2e-05,
-    0.00273
+    1e-05,
+    0.00261
    ],
-   "dll_vs_posted": 0.00056,
+   "dll_vs_posted": 0.00067,
    "bets": {
-    "n": 1143,
+    "n": 1168,
     "overs": 178,
-    "unders": 965,
-    "hit_rate": 0.5249,
-    "per_bet": -0.0419,
+    "unders": 990,
+    "hit_rate": 0.5231,
+    "per_bet": -0.0457,
     "ci": [
-     -0.0949,
-     0.0355
+     -0.1001,
+     0.0317
     ]
    },
    "verdict": "no evidence",
@@ -792,8 +792,8 @@
    "key": "blowout",
    "label": "Game spread of 12.5 or more, toward the under",
    "family": "Situation",
-   "n": 906,
-   "nights": 4,
+   "n": 1183,
+   "nights": 5,
    "verdict": "too little data",
    "passes": false
   },
@@ -801,8 +801,8 @@
    "key": "heavy_underdog",
    "label": "His team an underdog by 12.5 or more, toward the under",
    "family": "Situation",
-   "n": 906,
-   "nights": 4,
+   "n": 1183,
+   "nights": 5,
    "verdict": "too little data",
    "passes": false
   },
@@ -810,8 +810,8 @@
    "key": "heavy_favourite",
    "label": "His team favoured by 12.5 or more, toward the under",
    "family": "Situation",
-   "n": 906,
-   "nights": 4,
+   "n": 1183,
+   "nights": 5,
    "verdict": "too little data",
    "passes": false
   },
@@ -819,8 +819,8 @@
    "key": "spread_size",
    "label": "Size of the game's spread, toward the under",
    "family": "Situation",
-   "n": 906,
-   "nights": 4,
+   "n": 1183,
+   "nights": 5,
    "verdict": "too little data",
    "passes": false
   },
@@ -828,8 +828,8 @@
    "key": "fair_gap",
    "label": "The books' median fair price against the best prices' own",
    "family": "The market",
-   "n": 840,
-   "nights": 4,
+   "n": 1112,
+   "nights": 5,
    "verdict": "too little data",
    "passes": false
   },
@@ -837,30 +837,30 @@
    "key": "checklist",
    "label": "The checklist's net lean (checks for the over minus checks against)",
    "family": "The checklist",
-   "n": 5492,
-   "nights": 23,
-   "n_oos": 5049,
-   "oos_nights": 18,
-   "coef": -0.0314,
+   "n": 5769,
+   "nights": 24,
+   "n_oos": 5326,
+   "oos_nights": 19,
+   "coef": -0.0189,
    "ci": [
-    -0.0661,
-    0.0033
+    -0.0599,
+    0.0221
    ],
-   "dll": -9e-05,
+   "dll": 0.00017,
    "dll_ci": [
-    -0.00088,
-    0.00086
+    -0.00073,
+    0.00125
    ],
-   "dll_vs_posted": -5e-05,
+   "dll_vs_posted": 0.00031,
    "bets": {
-    "n": 1082,
+    "n": 1124,
     "overs": 292,
-    "unders": 790,
-    "hit_rate": 0.5342,
-    "per_bet": 0.0014,
+    "unders": 832,
+    "hit_rate": 0.5285,
+    "per_bet": -0.0097,
     "ci": [
-     -0.0366,
-     0.0481
+     -0.0531,
+     0.0363
     ]
    },
    "verdict": "no evidence",
@@ -870,30 +870,30 @@
    "key": "chk_dvp",
    "label": "Checklist: Defense vs position",
    "family": "The checklist",
-   "n": 5049,
-   "nights": 18,
-   "n_oos": 3716,
-   "oos_nights": 13,
-   "coef": -0.018,
+   "n": 5326,
+   "nights": 19,
+   "n_oos": 3993,
+   "oos_nights": 14,
+   "coef": -0.0147,
    "ci": [
-    -0.0496,
-    0.0135
+    -0.0457,
+    0.0163
    ],
-   "dll": 0.0002,
+   "dll": 0.00021,
    "dll_ci": [
-    -0.00021,
+    -0.00017,
     0.00078
    ],
-   "dll_vs_posted": 0.00028,
+   "dll_vs_posted": 0.00047,
    "bets": {
-    "n": 1140,
+    "n": 1177,
     "overs": 4,
-    "unders": 1136,
-    "hit_rate": 0.5684,
-    "per_bet": 0.0208,
+    "unders": 1173,
+    "hit_rate": 0.5616,
+    "per_bet": 0.0081,
     "ci": [
-     -0.0085,
-     0.0604
+     -0.0361,
+     0.051
     ]
    },
    "verdict": "no evidence",
@@ -903,30 +903,30 @@
    "key": "chk_zones",
    "label": "Checklist: Shooting zones",
    "family": "The checklist",
-   "n": 1542,
-   "nights": 18,
-   "n_oos": 1144,
-   "oos_nights": 13,
-   "coef": -0.0538,
+   "n": 1640,
+   "nights": 19,
+   "n_oos": 1242,
+   "oos_nights": 14,
+   "coef": -0.0428,
    "ci": [
-    -0.1335,
-    0.0259
+    -0.1211,
+    0.0356
    ],
-   "dll": 0.00014,
+   "dll": 0.00039,
    "dll_ci": [
-    -0.00209,
-    0.00217
+    -0.00183,
+    0.00226
    ],
    "dll_vs_posted": 0.00292,
    "bets": {
-    "n": 811,
+    "n": 847,
     "overs": 1,
-    "unders": 810,
-    "hit_rate": 0.5277,
-    "per_bet": 0.0129,
+    "unders": 846,
+    "hit_rate": 0.5254,
+    "per_bet": 0.008,
     "ci": [
-     -0.0327,
-     0.0685
+     -0.0352,
+     0.0614
     ]
    },
    "verdict": "no evidence",
@@ -936,30 +936,30 @@
    "key": "chk_playtypes",
    "label": "Checklist: Play types",
    "family": "The checklist",
-   "n": 1512,
-   "nights": 18,
-   "n_oos": 1117,
-   "oos_nights": 13,
-   "coef": -0.0438,
+   "n": 1609,
+   "nights": 19,
+   "n_oos": 1214,
+   "oos_nights": 14,
+   "coef": -0.0262,
    "ci": [
-    -0.1249,
-    0.0374
+    -0.1129,
+    0.0606
    ],
-   "dll": 0.00017,
+   "dll": 0.00045,
    "dll_ci": [
-    -0.00099,
-    0.00141
+    -0.00081,
+    0.00172
    ],
-   "dll_vs_posted": 0.00329,
+   "dll_vs_posted": 0.00323,
    "bets": {
-    "n": 897,
+    "n": 932,
     "overs": 0,
-    "unders": 897,
-    "hit_rate": 0.5084,
-    "per_bet": -0.0252,
+    "unders": 932,
+    "hit_rate": 0.5064,
+    "per_bet": -0.0288,
     "ci": [
-     -0.0621,
-     0.0125
+     -0.0629,
+     0.0078
     ]
    },
    "verdict": "no evidence",
@@ -969,30 +969,30 @@
    "key": "chk_hit_rate",
    "label": "Checklist: Hit rate vs the line",
    "family": "The checklist",
-   "n": 5411,
-   "nights": 23,
-   "n_oos": 4968,
-   "oos_nights": 18,
-   "coef": 0.0011,
+   "n": 5688,
+   "nights": 24,
+   "n_oos": 5245,
+   "oos_nights": 19,
+   "coef": -0.002,
    "ci": [
-    -0.0423,
-    0.0444
+    -0.0451,
+    0.041
    ],
-   "dll": 0.00043,
+   "dll": 0.00041,
    "dll_ci": [
-    1e-05,
-    0.00118
+    -0.0,
+    0.00105
    ],
-   "dll_vs_posted": 0.0003,
+   "dll_vs_posted": 0.0004,
    "bets": {
-    "n": 671,
+    "n": 683,
     "overs": 201,
-    "unders": 470,
-    "hit_rate": 0.5082,
-    "per_bet": -0.0435,
+    "unders": 482,
+    "hit_rate": 0.5066,
+    "per_bet": -0.0469,
     "ci": [
-     -0.0892,
-     0.0393
+     -0.0919,
+     0.0332
     ]
    },
    "verdict": "no evidence",
@@ -1002,30 +1002,30 @@
    "key": "chk_split",
    "label": "Checklist: Home/away split",
    "family": "The checklist",
-   "n": 5196,
-   "nights": 23,
-   "n_oos": 4759,
-   "oos_nights": 18,
-   "coef": 0.0128,
+   "n": 5470,
+   "nights": 24,
+   "n_oos": 5033,
+   "oos_nights": 19,
+   "coef": 0.0194,
    "ci": [
-    -0.0379,
-    0.0635
+    -0.0314,
+    0.0702
    ],
-   "dll": 0.00082,
+   "dll": 0.00071,
    "dll_ci": [
-    4e-05,
-    0.00163
+    -5e-05,
+    0.0016
    ],
-   "dll_vs_posted": 0.00077,
+   "dll_vs_posted": 0.00078,
    "bets": {
-    "n": 901,
+    "n": 920,
     "overs": 251,
-    "unders": 650,
-    "hit_rate": 0.5294,
-    "per_bet": -0.0053,
+    "unders": 669,
+    "hit_rate": 0.5293,
+    "per_bet": -0.0066,
     "ci": [
-     -0.0549,
-     0.052
+     -0.0586,
+     0.0438
     ]
    },
    "verdict": "no evidence",
@@ -1035,30 +1035,30 @@
    "key": "chk_minutes",
    "label": "Checklist: Minutes trend",
    "family": "The checklist",
-   "n": 4007,
-   "nights": 16,
-   "n_oos": 2874,
-   "oos_nights": 11,
-   "coef": 0.0099,
+   "n": 4284,
+   "nights": 17,
+   "n_oos": 3151,
+   "oos_nights": 12,
+   "coef": 0.0148,
    "ci": [
-    -0.0583,
-    0.078
+    -0.0496,
+    0.0792
    ],
-   "dll": 0.00083,
+   "dll": 0.00073,
    "dll_ci": [
-    0.0,
-    0.00212
+    -5e-05,
+    0.00194
    ],
-   "dll_vs_posted": 0.00165,
+   "dll_vs_posted": 0.00174,
    "bets": {
-    "n": 1095,
+    "n": 1139,
     "overs": 0,
-    "unders": 1095,
-    "hit_rate": 0.5498,
-    "per_bet": 0.0058,
+    "unders": 1139,
+    "hit_rate": 0.5461,
+    "per_bet": -0.0019,
     "ci": [
-     -0.0447,
-     0.0851
+     -0.0578,
+     0.0711
     ]
    },
    "verdict": "no evidence",
@@ -1068,30 +1068,30 @@
    "key": "chk_similar",
    "label": "Checklist: Similar players vs this opponent",
    "family": "The checklist",
-   "n": 2664,
-   "nights": 16,
-   "n_oos": 2301,
-   "oos_nights": 11,
-   "coef": -0.0292,
+   "n": 2923,
+   "nights": 17,
+   "n_oos": 2560,
+   "oos_nights": 12,
+   "coef": -0.0207,
    "ci": [
-    -0.0769,
-    0.0185
+    -0.067,
+    0.0256
    ],
-   "dll": 0.00098,
+   "dll": 0.00096,
    "dll_ci": [
-    -0.0004,
-    0.00287
+    -0.00029,
+    0.00269
    ],
-   "dll_vs_posted": 0.00421,
+   "dll_vs_posted": 0.00405,
    "bets": {
-    "n": 1021,
+    "n": 1058,
     "overs": 22,
-    "unders": 999,
-    "hit_rate": 0.5387,
-    "per_bet": -0.0049,
+    "unders": 1036,
+    "hit_rate": 0.5331,
+    "per_bet": -0.016,
     "ci": [
-     -0.0431,
-     0.0525
+     -0.0584,
+     0.0407
     ]
    },
    "verdict": "no evidence",
@@ -1101,30 +1101,30 @@
    "key": "chk_situation",
    "label": "Checklist: Situation",
    "family": "The checklist",
-   "n": 5492,
-   "nights": 23,
-   "n_oos": 5049,
-   "oos_nights": 18,
-   "coef": 0.0021,
+   "n": 5769,
+   "nights": 24,
+   "n_oos": 5326,
+   "oos_nights": 19,
+   "coef": 0.0038,
    "ci": [
-    -0.0594,
+    -0.056,
     0.0635
    ],
-   "dll": 0.00046,
+   "dll": 0.00044,
    "dll_ci": [
-    -0.00054,
+    -0.00042,
     0.00136
    ],
-   "dll_vs_posted": 0.0005,
+   "dll_vs_posted": 0.00058,
    "bets": {
-    "n": 647,
+    "n": 658,
     "overs": 131,
-    "unders": 516,
-    "hit_rate": 0.5317,
-    "per_bet": -0.01,
+    "unders": 527,
+    "hit_rate": 0.5319,
+    "per_bet": -0.0106,
     "ci": [
-     -0.0761,
-     0.0609
+     -0.0741,
+     0.0551
     ]
    },
    "verdict": "no evidence",
@@ -1134,30 +1134,30 @@
    "key": "chk_passing",
    "label": "Checklist: Passing projection",
    "family": "The checklist",
-   "n": 1223,
-   "nights": 16,
-   "n_oos": 831,
-   "oos_nights": 11,
-   "coef": 0.0534,
+   "n": 1305,
+   "nights": 17,
+   "n_oos": 913,
+   "oos_nights": 12,
+   "coef": 0.064,
    "ci": [
-    -0.0114,
-    0.1182
+    -0.001,
+    0.1291
    ],
-   "dll": -0.00012,
+   "dll": -0.00053,
    "dll_ci": [
-    -0.00185,
-    0.00139
+    -0.00235,
+    0.00113
    ],
-   "dll_vs_posted": 0.00195,
+   "dll_vs_posted": 0.00144,
    "bets": {
-    "n": 97,
-    "overs": 15,
-    "unders": 82,
-    "hit_rate": 0.4948,
-    "per_bet": -0.1497,
+    "n": 101,
+    "overs": 17,
+    "unders": 84,
+    "hit_rate": 0.495,
+    "per_bet": -0.1476,
     "ci": [
-     -0.2841,
-     0.001
+     -0.2626,
+     0.0018
     ]
    },
    "verdict": "leans right",
@@ -1166,8 +1166,8 @@
  ],
  "replayed": 4586,
  "published": {
-  "n": 398,
-  "hit": 0.4874,
-  "per_bet": -0.0529
+  "n": 413,
+  "hit": 0.4891,
+  "per_bet": -0.0488
  }
 }
