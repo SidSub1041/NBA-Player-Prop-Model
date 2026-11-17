@@ -1,0 +1,47 @@
+{
+ "weights": {
+  "points": {
+   "dvp": 0.0,
+   "zones": 0.0,
+   "playtypes": 0.06,
+   "hit_rate": 1.19,
+   "split": 0.95,
+   "minutes": 1.08,
+   "similar": 0.24,
+   "situation": 1.62
+  },
+  "rebounds": {
+   "dvp": 0.67,
+   "hit_rate": 0.67,
+   "split": 1.75,
+   "minutes": 1.1,
+   "similar": 0.3,
+   "situation": 1.55
+  },
+  "assists": {
+   "dvp": 1.98,
+   "hit_rate": 0.64,
+   "split": 0.82,
+   "minutes": 1.24,
+   "similar": 1.28,
+   "situation": 1.61,
+   "passing": 1.77
+  },
+  "all": {
+   "dvp": 0.61,
+   "zones": 0.0,
+   "playtypes": 0.06,
+   "hit_rate": 0.65,
+   "split": 1.14,
+   "minutes": 1.17,
+   "similar": 0.37,
+   "situation": 1.49,
+   "passing": 1.77
+  }
+ },
+ "rule": {
+  "weight": "1 + t/2, between 0 and 2",
+  "min_rows": 300,
+  "min_nights": 10
+ }
+}
