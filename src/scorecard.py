@@ -303,7 +303,7 @@ def _row(raw: dict, d: str, actual, rest) -> dict | None:
         "pos": _pos_group(p.get("position")), "stat": stat, "line": line,
         "over_odds": p.get("over_odds"), "under_odds": p.get("under_odds"), "p_over": mp[0],
         "be_over": implied_prob(p.get("over_odds")), "be_under": implied_prob(p.get("under_odds")),
-        "over_hit": over_hit,
+        "over_hit": over_hit, "actual": actual,
         # the board's own lean, for the record of what it published
         "side": side if sign is not None else None, "published": bool(raw.get("is_valid")) and sign is not None,
         "hit": None if sign is None or over_hit is None else (over_hit if sign > 0 else 1 - over_hit),
@@ -503,6 +503,11 @@ def _col(rows, name) -> np.ndarray:
     return np.array([np.nan if r.get(name) is None else float(r[name]) for r in rows], dtype=float)
 
 
+def _weighted_net(rows: list[dict]) -> np.ndarray:
+    from src import weights
+    return weights.walk_forward_net(rows)
+
+
 def signals(rows: list[dict]) -> list[dict]:
     """Every candidate signal as {"key", "label", "family", "values"} — values pointed toward the over, NaN = missing."""
     pm = _col(rows, "p_over")
@@ -545,6 +550,7 @@ def signals(rows: list[dict]) -> list[dict]:
         # boards from round 23 on: what the model publishes from
         s("fair_gap", "The books' median fair price against the best prices' own", "The market", _logit(_col(rows, "fair_over")) - _logit(pm)),
         s("checklist", "The checklist's net lean (checks for the over minus checks against)", "The checklist", _col(rows, "chk_net")),
+        s("checklist_weighted", "The weighted checklist (each check weighted by its record on earlier nights)", "The checklist", _weighted_net(rows)),
         *[s(f"chk_{key}", f"Checklist: {label}", "The checklist",
             np.array([np.nan if (r.get("checks") or {}).get(key) is None else r["checks"][key] / CHECK_BARS[key] for r in rows], dtype=float))
           for key, label in CHECK_LABELS.items()],
@@ -684,6 +690,11 @@ def build(logs_dir: str | None = None, season: str | None = None) -> dict:
         return out
     out["market"] = market_summary(rows)
     out["replayed"] = sum(1 for r in rows if r.get("replayed"))      # rows whose checklist was read back from the history (round 24)
+    try:        # round 31: what each check is worth for points, rebounds and assists, and the weight that follows
+        from src import weights
+        out["weights"] = weights.analyse(rows)
+    except Exception as e:
+        logger.warning(f"  Scorecard: check weights not computed ({type(e).__name__}: {e})")
     pub = [r for r in rows if r["published"]]
     if pub:
         odds = [r["over_odds"] if r["side"] == "over" else r["under_odds"] for r in pub]
@@ -718,6 +729,9 @@ def run(logs_dir: str | None = None) -> dict:
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(card, f, indent=1)
         os.replace(tmp, os.path.join(logs_dir, "scorecard.json"))
+        if card.get("weights"):          # tonight's board reads these (src/weights.load)
+            from src import weights
+            weights.save(card["weights"], logs_dir)
         if os.path.abspath(logs_dir) == os.path.abspath(LOGS_DIR) and os.path.exists(WEB_LATEST):
             with open(WEB_LATEST, encoding="utf-8") as f:
                 latest = json.load(f)

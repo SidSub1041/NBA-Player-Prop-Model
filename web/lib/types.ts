@@ -321,6 +321,37 @@ export interface CheckReading {
   lean: "over" | "under" | null;
   detail: string | null;
   counts: boolean;
+  /** round 30: the reading out of 30 toward each side — 23+ behind it, 15-22 high neutral, 8-14 low neutral, 7 or less against */
+  score?: { over: number; under: number } | null;
+  /** why the check has no reading (only when value is null) */
+  missing?: string | null;
+  /** round 31: what a lean of this check counts for on this stat (1 = as before, 0 = it has pointed the wrong way) */
+  weight?: number | null;
+}
+
+/** Round 31: what one check has been worth for one stat (src/weights.py). */
+export interface CheckWorth {
+  label: string;
+  n: number;
+  nights: number;
+  leans?: number;
+  followed?: { bets: number; won: number; priced: number; per_bet: number | null };
+  effect?: number;
+  se?: number;
+  t?: number;
+  effect_units?: number;
+  weight: number;
+  basis: string;
+}
+
+export interface WeightGroup {
+  label: string;
+  n: number;
+  nights: number;
+  over_won: number;
+  over_priced: number;
+  median_line: number | null;
+  checks: Record<string, CheckWorth>;
 }
 
 /** Round 22: every candidate signal scored against the sportsbooks' price (src/scorecard.py). */
@@ -372,6 +403,8 @@ export interface Scorecard {
   published?: { n: number; hit: number; per_bet: number | null };
   /** props whose checklist was read back from the box-score history (boards from before the checklist) */
   replayed?: number;
+  /** round 31: what each check has been worth by stat, and the weight it carries */
+  weights?: { rule?: { weight: string; min_rows: number; min_nights: number }; groups: Record<string, WeightGroup> } | null;
   signals: ScorecardSignal[];
 }
 

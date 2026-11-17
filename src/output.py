@@ -93,7 +93,7 @@ def _table_rows(props: list, with_edge: bool) -> list:
         if with_edge:
             if _is_market(p):       # round 23: the fair price, the checklist's net, the price edge
                 sup = p.support or {}
-                row += [_pct((getattr(p, "fair", None) or {}).get("p")), f"{sup.get('net', 0):+d} (needs {sup.get('need', 0)})",
+                row += [_pct((getattr(p, "fair", None) or {}).get("p")), f"{sup.get('net', 0):+g} (needs {sup.get('need', 0)})",
                         _edge_pts(getattr(p, "edge_value", None))]
             else:
                 row += [_pct(getattr(p, "p_model", None)), _pct(getattr(p, "p_market", None)), _edge_pts(getattr(p, "edge_value", None))]

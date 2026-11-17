@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import type { AltLine, CheckReading, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv, Scorecard, ScorecardSignal, ScorecardSides } from "@/lib/types";
+import type { AltLine, CheckReading, CheckWorth, PropsData, PropPick, DayResult, Learning, NightRecord, SeasonRecord, SeasonClv, Scorecard, ScorecardSignal, ScorecardSides } from "@/lib/types";
 
 const DASHBOARD_URL =
   "https://public.tableau.com/app/profile/sidharth.subramanian7031/viz/NBAPlayerPropModel/Dashboard1";
@@ -557,23 +557,92 @@ function PassingRow({ pick }: { pick: PropPick }) {
 }
 
 /** The edge model's row: model vs market at the pick's line, the line's move since it opened, failed guards. */
-/** One check as a chip: ▲ behind the pick's side, ▼ against it, — neutral or no reading. */
+/** Round 30: the four bands a check's score out of 30 falls in, toward the pick's side. */
+const CHECK_BANDS = [
+  { min: 23, range: "23–30", name: "FOR", says: "behind the pick", mark: "▲", color: "var(--over)" },
+  { min: 15, range: "15–22", name: "HIGH NEUTRAL", says: "neutral, tilted toward the pick", mark: "◆", color: "#facc15" },
+  { min: 8, range: "8–14", name: "LOW NEUTRAL", says: "neutral, tilted against the pick", mark: "◆", color: "#fb923c" },
+  { min: 1, range: "1–7", name: "AGAINST", says: "against the pick", mark: "▼", color: "#f87171" },
+];
+
+/** A check's score for the pick's side, or null when the board carries none (boards from before round 30). */
+function checkScore(check: CheckReading, side: string): number | null {
+  if (check.value == null || !check.score) return null;
+  return side === "under" ? check.score.under : check.score.over;
+}
+
+/** How a number of checks reads once checks carry weights: 3 stays 3, 2.38 becomes 2.4. */
+function fmtSupport(n: number): string {
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
+/**
+ * One check as a chip, coloured by its score out of 30 toward the pick's side: green ▲ 23+ (it counts for the pick),
+ * yellow ◆ 15–22 (neutral, tilted toward it), orange ◆ 8–14 (neutral, tilted against it), red ▼ 7 or less (it counts
+ * against). A check with no data is shown too, dashed and grey. A board from before round 30 has no scores: its chips
+ * keep the arrow of their lean and show no number.
+ */
 function CheckChip({ check, side }: { check: CheckReading; side: string }) {
-  const behind = check.lean === side;
-  const against = check.lean != null && check.lean !== side;
-  const color = !check.counts ? "var(--text-faint)" : behind ? "var(--over)" : against ? "#f87171" : "var(--text-muted)";
-  const mark = behind ? "▲" : against ? "▼" : "–";
-  const says = behind ? "behind the pick" : against ? "against the pick" : check.value == null ? "no reading" : "neutral";
+  if (check.value == null) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-dashed border-[var(--border)] text-[var(--text-faint)] whitespace-nowrap"
+        title={`${check.label}: no data${check.missing ? ` — ${check.missing}` : ""}`}
+      >
+        {check.label} <span className="font-normal">· no data</span>
+        {check.missing && <span className="sr-only"> — {check.missing}</span>}
+      </span>
+    );
+  }
+  const score = checkScore(check, side);
+  const flat = check.value === 0;                                   // a reading of exactly zero tilts neither way
+  const band =
+    score != null
+      ? flat
+        ? null
+        : CHECK_BANDS.find((b) => score >= b.min) ?? CHECK_BANDS[3]
+      : check.lean == null
+        ? null
+        : check.lean === side
+          ? CHECK_BANDS[0]
+          : CHECK_BANDS[3];
+  const says = band ? band.says : "neutral";
+  const color = !check.counts ? "var(--text-faint)" : band ? band.color : "var(--text-muted)";
+  const weight = check.weight ?? null;
+  const why = !check.counts
+    ? weight === 0
+      ? " (not counted: for this stat the check has pointed the wrong way)"
+      : " (not counted: the scorecard says this check has pointed the wrong way)"
+    : weight != null && weight !== 1
+      ? ` (a lean counts ${weight.toFixed(2)} for this stat)`
+      : "";
   return (
     <span
-      className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border border-[var(--border)] whitespace-nowrap"
-      style={{ color, textDecoration: check.counts ? "none" : "line-through" }}
-      title={`${check.label}: ${says}${check.detail ? ` — ${check.detail}` : ""}${check.counts ? "" : " (not counted: the scorecard says this check has pointed the wrong way)"}`}
+      className="inline-flex items-center gap-1 text-[11px] font-semibold tracking-wider px-1.5 py-0.5 border whitespace-nowrap"
+      style={{ color, borderColor: check.counts && band ? band.color : "var(--border)", textDecoration: check.counts ? "none" : "line-through" }}
+      title={`${check.label}: ${says}${score != null ? ` (${score} of 30)` : ""}${check.detail ? ` — ${check.detail}` : ""}${why}`}
     >
-      <span aria-hidden="true">{mark}</span>
+      <span aria-hidden="true">{band ? band.mark : "–"}</span>
       {check.label}
-      <span className="sr-only"> {says}</span>
+      {score != null && <span className="font-bold tabular-nums">{score}</span>}
+      <span className="sr-only"> {says}{why}</span>
     </span>
+  );
+}
+
+/** The key to the chips, once above the board — built from the same bands the chips use. */
+function CheckLegend() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-semibold tracking-wider text-[var(--text-faint)]">
+      <span>EACH CHECK IS SCORED OUT OF 30 TOWARD THE PICK:</span>
+      {CHECK_BANDS.map((b) => (
+        <span key={b.name} className="whitespace-nowrap" style={{ color: b.color }}>
+          {b.mark} {b.range} {b.name}
+        </span>
+      ))}
+      <span>ONLY FOR AND AGAINST COUNT</span>
+      <span>STRUCK THROUGH = NOT COUNTED FOR THIS STAT</span>
+    </div>
   );
 }
 
@@ -589,7 +658,8 @@ function MarketRows({ pick }: { pick: PropPick }) {
   const moveColor = move > 0 ? "var(--over)" : move < 0 ? "#f87171" : "var(--text-muted)";
   const guards = pick.guards ?? [];
   const supportOk = sup != null && sup.net >= sup.need;
-  const readings = checks.filter((c) => c.value != null);
+  // every check that applies to the stat is shown: the ones with a reading first, then the ones without data
+  const readings = [...checks.filter((c) => c.value != null), ...checks.filter((c) => c.value == null)];
   return (
     <div className="flex flex-col gap-2 -mt-2">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -630,7 +700,7 @@ function MarketRows({ pick }: { pick: PropPick }) {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <div className="text-[11px] font-bold tracking-widest text-[var(--text-muted)] w-20 shrink-0">CHECKS</div>
           <div className="text-sm font-bold whitespace-nowrap" style={{ color: supportOk ? "var(--over)" : "var(--text-muted)" }}>
-            {sup.for} FOR · {sup.against} AGAINST
+            {fmtSupport(sup.for)} FOR · {fmtSupport(sup.against)} AGAINST
           </div>
           <div className="text-xs text-[var(--text-faint)] whitespace-nowrap">
             {edge === "over" ? "an over" : "an under"} needs {sup.need} more for than against
@@ -640,9 +710,20 @@ function MarketRows({ pick }: { pick: PropPick }) {
             {readings.length > 0 ? (
               readings.map((c) => <CheckChip key={c.key} check={c} side={edge} />)
             ) : (
-              <span className="text-xs text-[var(--text-faint)]">no check has a reading for this prop</span>
+              <span className="text-xs text-[var(--text-faint)]">no checks on file for this prop</span>
             )}
           </div>
+          {checks.some((c) => c.value == null && c.missing) && (
+            <>
+              <div className="basis-full h-0" />
+              <div className="text-xs text-[var(--text-faint)] sm:pl-[92px]">
+                {checks
+                  .filter((c) => c.value == null && c.missing)
+                  .map((c) => `${c.label}: ${c.missing}`)
+                  .join(" · ")}
+              </div>
+            </>
+          )}
         </div>
       )}
       <PassingRow pick={pick} />
@@ -1103,6 +1184,73 @@ function SignalRow({ sig }: { sig: ScorecardSignal }) {
   );
 }
 
+/** Round 31: what each check has been worth for points, rebounds and assists, and the weight it carries on the board. */
+function WeightsPanel({ card }: { card: Scorecard }) {
+  const groups = card.weights?.groups;
+  if (!groups) return null;
+  const cols = ["points", "rebounds", "assists"].filter((g) => groups[g]);
+  if (cols.length === 0) return null;
+  const keys: string[] = [];
+  for (const g of cols) for (const k of Object.keys(groups[g].checks)) if (!keys.includes(k)) keys.push(k);
+  const cell = (c: CheckWorth | undefined) => {
+    if (!c) return <span className="text-[var(--text-faint)]">—</span>;
+    const color = c.weight >= 1.5 ? "var(--over)" : c.weight <= 0.5 ? "#f87171" : "var(--text)";
+    const f = c.followed;
+    return (
+      <div className="flex flex-col items-end">
+        <span className="font-bold tabular-nums" style={{ color }}>
+          ×{c.weight.toFixed(2)}
+        </span>
+        {f && f.bets > 0 && (
+          <span className="text-[11px] text-[var(--text-faint)] whitespace-nowrap">
+            {fmtPct(f.won)} won · {fmtPct(f.priced)} priced
+          </span>
+        )}
+      </div>
+    );
+  };
+  return (
+    <div className="bg-[var(--card)] border border-[var(--border)] p-6 flex flex-col gap-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <div className="font-display text-2xl tracking-wide">WHAT EACH CHECK IS WORTH</div>
+        <div className="text-[12px] font-semibold tracking-wider text-[var(--text-muted)]">REFITTED EVERY NIGHT</div>
+      </div>
+      <div className="text-sm text-[var(--text-muted)]">
+        For each stat, how far players finished from their line when the check leaned, with the price taken into account. A check with no
+        evidence either way counts ×1.00; one that has moved the result its way counts up to ×2.00; one that has pointed the wrong way counts
+        down to ×0.00 and is struck through on the cards. Under each weight: how often the check&apos;s own lean won, and how often the price
+        said it would.
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-[11px] font-bold tracking-widest text-[var(--text-muted)]">
+              <th className="text-left font-bold py-1 pr-4">CHECK</th>
+              {cols.map((g) => (
+                <th key={g} className="text-right font-bold py-1 pl-4 whitespace-nowrap">
+                  {groups[g].label.toUpperCase()} <span className="font-normal text-[var(--text-faint)]">{groups[g].n.toLocaleString()}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {keys.map((k) => (
+              <tr key={k} className="border-t border-[var(--border)] align-top">
+                <td className="py-2 pr-4 text-[var(--text)]">{cols.map((g) => groups[g].checks[k]?.label).find(Boolean) ?? k}</td>
+                {cols.map((g) => (
+                  <td key={g} className="py-2 pl-4 text-right">
+                    {cell(groups[g].checks[k])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function ScorecardPanel({ card }: { card: Scorecard }) {
   const m = card.market;
   if (!m || !m.all) return null;
@@ -1426,7 +1574,7 @@ const SYSTEM_STEPS = [
 const SYSTEM_STEPS_MARKET = [
   { n: "01", title: "START FROM THE PRICE", body: "Every sportsbook's two-way price on the regular line, vig taken out, and the median across books: the market's own fair probability. No projection moves it." },
   { n: "02", title: "FIND THE BEST PRICE", body: "The best price any book offers for each side, against that fair price. At least fair is an A; within half a point an A−, a point a B+, two points a B. Nothing further from fair is shown." },
-  { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line overall and at home or on the road, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
+  { n: "03", title: "RUN THE CHECKLIST", body: "Defense vs. position, shot zones and playtypes, hit rate against the line overall and at home or on the road, minutes trend, similar players against this opponent, rest and starters out — and passing for assists. Each is scored out of 30 toward the pick: 23 or more counts for it, 7 or less against it, and 8 to 22 is neutral. What a lean counts for is the check's own weight for the stat, refitted every night from results. An under needs __UNDER__ more for than against; an over __OVER__, because overs have been overpriced." },
   { n: "04", title: "SCORE EVERY CHECK", body: "Each night every check is tested against the price on every graded prop. A check moves a probability only after it beats the price on 25 nights; one that points the wrong way stops counting." },
   { n: "05", title: "CAP & CLOSE", body: "No overs in a game with a spread of __BLOWOUT__ or more: starters sit in a blowout. __PICKS__ plays, __PER_GAME__ per game, one per player. Every pick is graded on its regular line and scored against the closing line." },
 ];
@@ -1922,6 +2070,11 @@ export default function Home() {
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {marketBoard && boardPicks.some((p) => (p.checks ?? []).some((c) => c.score != null)) && (
+              <div className="lg:col-span-2">
+                <CheckLegend />
+              </div>
+            )}
             {boardPicks.map((p, i) => {
               const seg = rec?.segments?.[`grade:${p.grade}`];
               return (
@@ -1990,6 +2143,7 @@ export default function Home() {
         <div id="scorecard" className="flex flex-col gap-7 px-6 lg:px-16 pt-16 pb-6">
           <SectionHead title="THE SCORECARD" tag="EVERY CHECK. AGAINST THE PRICE." />
           <ScorecardPanel card={data.scorecard} />
+          <WeightsPanel card={data.scorecard} />
         </div>
       )}
 

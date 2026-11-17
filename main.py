@@ -250,7 +250,12 @@ def _back_to_backs(date: str) -> dict:
 def _checklist_context(date: str) -> dict:
     """What the checklist needs once per run: the scorecard's verdicts, the season's similar-player results, the box-score
     history (hit rates, home/away splits, minutes, who played yesterday) and, as a fallback for that last one, yesterday's board."""
-    ctx = {"card": None, "verdicts": {}, "similar": {}, "b2b": None, "history": None, "date": date}
+    ctx = {"card": None, "verdicts": {}, "similar": {}, "b2b": None, "history": None, "date": date, "weights": {}}
+    try:
+        from src import weights as check_weights
+        ctx["weights"] = check_weights.load()          # what each check counts for, by stat (round 31); {} = every check counts 1
+    except Exception as e:
+        logger.warning(f"  Checklist: check weights unavailable ({type(e).__name__}: {e})")
     try:
         from src import boxlog
         ctx["history"] = boxlog.History() or None      # logs/box: every player's games, as of any date (round 24)
@@ -265,6 +270,11 @@ def _checklist_context(date: str) -> dict:
         logger.warning(f"  Checklist: scorecard history unavailable ({type(e).__name__}: {e})")
     ctx["b2b"] = _back_to_backs(date)
     return ctx
+
+
+def _weights_for(cl: dict, stat: str) -> dict:
+    from src import weights as check_weights
+    return check_weights.for_stat(cl.get("weights"), stat)
 
 
 def _read_checks(cl: dict, *, name=None, stat, line, team, opponent, position, dvp_z, zs, ps, hr_over, minutes, n_out, is_home=None, passing=None) -> list:
@@ -303,7 +313,7 @@ def _read_checks(cl: dict, *, name=None, stat, line, team, opponent, position, d
         "minutes": own["minutes"], "similar_over": sim[0] if sim else None, "similar_n": sim[1] if sim else None,
         "own_b2b": own_b2b, "opp_b2b": opp_b2b, "teammate_out": n_out,
         "passing_p_over": passing[0] if passing else None, "passing_mu": passing[1] if passing else None,
-    }, cl["verdicts"])
+    }, cl["verdicts"], _weights_for(cl, stat))
 
 
 def _apply_passed_checks(prop_scores: list, repriced: list, cl: dict, date: str) -> int:
@@ -984,8 +994,12 @@ def run(date: str | None = None, fast: bool = False, fill_holds: bool = False, s
         combo.teammate_out = comps[0].teammate_out
         hr_over = get_player_hitrate(name, combo_stat, line, "over", before=date)
         if line is not None:
+            pts = next((c for c in comps if c.stat == "points"), None)      # a combo with points reads the points prop's zone / play-type fit
+            fit = {c.get("key"): c.get("value") for c in (getattr(pts, "checks", None) or [])} if pts is not None else {}
             checks = _read_checks(cl, name=name, stat=combo_stat, line=line, team=team, opponent=comps[0].opponent, position=comps[0].position,
-                                  dvp_z=comps[0].dvp_z, zs=None, ps=None, hr_over=hr_over,
+                                  dvp_z=comps[0].dvp_z,
+                                  zs={"z": fit["zones"], "n": 1} if fit.get("zones") is not None else None,
+                                  ps={"z": fit["playtypes"], "n": 1} if fit.get("playtypes") is not None else None, hr_over=hr_over,
                                   minutes=getattr(comps[0], "minutes_log", None), n_out=comps[0].teammate_out, is_home=comps[0].is_home)
             _apply_decision(combo, dec, checks, probs)
         mv = movement(date, _hist_key(name, combo_stat, history), side, history=history)

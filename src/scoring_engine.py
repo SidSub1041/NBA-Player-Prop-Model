@@ -171,7 +171,7 @@ class PropScore:
         hard = [g for g in self.guards if g in ("books", "minutes", "passing", "blowout")]
         soft = [g for g in self.guards if g in ("price", "line_size")]
         if self.support is not None:
-            net, need = int(self.support.get("net", 0)), int(self.support.get("need", 1))
+            net, need = float(self.support.get("net", 0)), float(self.support.get("need", 1))      # weights (round 31), not counts
             price_ok, support_ok = e >= MIN_PRICE_EDGE, net >= need
             if price_ok and support_ok:
                 self.final_grade = "A+" if (e >= STRONG_PRICE_EDGE and net >= need + 1) else "A"
