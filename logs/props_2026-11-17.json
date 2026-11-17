@@ -1,0 +1,4444 @@
+{
+  "date": "2026-11-17",
+  "season": "2026-27",
+  "stats_season": "2026-27",
+  "stats_season_reason": "every team has played 11+ games",
+  "run_at": "09:37 PM ET",
+  "run_at_iso": "2026-11-17T02:37:06+00:00",
+  "run_mode": "full",
+  "lines_locked": 0,
+  "candidates_analyzed": 15,
+  "valid_count": 0,
+  "watchlist_count": 0,
+  "combo_valid_count": 0,
+  "combo_watchlist_count": 0,
+  "on_hold_count": 0,
+  "demoted_count": 0,
+  "paused_count": 0,
+  "capped_count": 0,
+  "model_version": "market-2",
+  "paused_stats": [],
+  "caps": {
+    "kept": 0,
+    "dropped": 0,
+    "by_reason": {
+      "per_player": 0,
+      "per_game": 0,
+      "board": 0
+    },
+    "limits": {
+      "max_picks": 15,
+      "max_per_game": 3,
+      "max_per_player": 1
+    },
+    "pinned": 0
+  },
+  "thresholds": {
+    "condition_pass_rate": 0.8,
+    "condition_pass_rate_points": 0.6,
+    "hitrate": 0.56,
+    "min_edge": 0.03,
+    "strong_edge": 0.06,
+    "max_price": -121,
+    "min_books": 3,
+    "min_line": 4.0,
+    "min_proj_minutes": 24.0,
+    "max_picks": 15,
+    "max_per_game": 3,
+    "min_price_edge": 0.0,
+    "strong_price_edge": 0.02,
+    "under_min_support": 1,
+    "over_min_support": 2,
+    "min_fair_books": 3,
+    "blowout_spread": 12.5,
+    "publish_floor": "B"
+  },
+  "valid_picks": [],
+  "watchlist": [],
+  "valid_combos": [],
+  "watchlist_combos": [],
+  "on_hold": [],
+  "demoted": [],
+  "paused": [],
+  "capped": [],
+  "all_props": [
+    {
+      "player_name": "OG Anunoby",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "SF",
+      "stat": "assists",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.692,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 2.2,
+      "games_played": 13,
+      "games_hit": 9,
+      "line": 1.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-162",
+      "over_book": "FanDuel",
+      "under_odds": "+122",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 1.5,
+      "vegas_over_odds": "-162",
+      "vegas_under_odds": "+122",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.619,
+      "ev": 0.001,
+      "breakeven": 0.618,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5785,
+      "fair_over": 0.5785,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5785,
+      "fair_high": 0.5785,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.3554,
+          "lean": null,
+          "detail": "TOR allows -0.4 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 11,
+            "under": 18
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0758,
+          "lean": "over",
+          "detail": "Over 1.5 in 9 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.069,
+          "lean": "over",
+          "detail": "Over 1.5 in 23 of 38 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 7
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 4.6729,
+          "lean": "over",
+          "detail": "Last 3 games 37.3 minutes, 32.6 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 4
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0185,
+          "lean": null,
+          "detail": "Forwards vs TOR: over their line in 8 of 17",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 12,
+            "under": 17
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": 0.1368,
+          "lean": "over",
+          "detail": "Passing projects 2.3 against a line of 1.5",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 29,
+            "under": 2
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 4,
+        "against": 0,
+        "net": 4,
+        "need": 2
+      },
+      "proj_mu": 2.29,
+      "proj_sd": 1.68,
+      "proj_minutes": 33.6,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 67,
+      "weight_this": 0.565,
+      "p_hat": 0.5785,
+      "breakeven_price": 0.6183,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.6368,
+      "p_market": 0.5785,
+      "edge_value": -0.0398,
+      "open_line": 1.5,
+      "line_move": 0.0,
+      "dvp_z": -0.36,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 1.97,
+      "passing": {
+        "passes": 30.4,
+        "pot_ast": 4.4,
+        "pa_per_pass": 0.144,
+        "conv": 0.546,
+        "conv_seen": 0.489,
+        "conv_prior": 0.556,
+        "team_shooting": 0.997,
+        "opp_shooting": 0.996,
+        "opp_share": 0.985,
+        "base": 2.38,
+        "weight_this": 0.722,
+        "gp_this": 13,
+        "gp_last": 67
+      }
+    },
+    {
+      "player_name": "Jalen Brunson",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "PG",
+      "stat": "assists",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.385,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.9,
+      "games_played": 13,
+      "games_hit": 5,
+      "line": 6.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-114",
+      "over_book": "FanDuel",
+      "under_odds": "-114",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 6.5,
+      "vegas_over_odds": "-114",
+      "vegas_under_odds": "-114",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.521,
+      "ev": -0.022,
+      "breakeven": 0.533,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5,
+      "fair_over": 0.5,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5,
+      "fair_high": 0.5,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.3595,
+          "lean": null,
+          "detail": "TOR allows +0.4 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 18,
+            "under": 11
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0455,
+          "lean": null,
+          "detail": "Over 6.5 in 5 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 9,
+            "under": 21
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0469,
+          "lean": null,
+          "detail": "Over 6.5 in 25 of 44 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 3.7619,
+          "lean": "over",
+          "detail": "Last 3 games 37.2 minutes, 33.5 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0405,
+          "lean": null,
+          "detail": "Guards vs TOR: over their line in 15 of 27",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 20,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": -0.0369,
+          "lean": null,
+          "detail": "Passing projects 6.5 against a line of 6.5",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 11,
+            "under": 19
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 1,
+        "against": 0,
+        "net": 1,
+        "need": 2
+      },
+      "proj_mu": 6.51,
+      "proj_sd": 2.94,
+      "proj_minutes": 34.7,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 74,
+      "weight_this": 0.565,
+      "p_hat": 0.5,
+      "breakeven_price": 0.5327,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.4631,
+      "p_market": 0.5,
+      "edge_value": -0.0327,
+      "open_line": 6.5,
+      "line_move": 0.0,
+      "dvp_z": 0.36,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 6.51,
+      "passing": {
+        "passes": 66.2,
+        "pot_ast": 12.3,
+        "pa_per_pass": 0.186,
+        "conv": 0.551,
+        "conv_seen": 0.484,
+        "conv_prior": 0.556,
+        "team_shooting": 0.997,
+        "opp_shooting": 0.996,
+        "opp_share": 0.985,
+        "base": 6.77,
+        "weight_this": 0.722,
+        "gp_this": 13,
+        "gp_last": 74
+      }
+    },
+    {
+      "player_name": "RJ Barrett",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "assists",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.615,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 4.2,
+      "games_played": 13,
+      "games_hit": 8,
+      "line": 3.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-146",
+      "over_book": "FanDuel",
+      "under_odds": "+110",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "-146",
+      "vegas_under_odds": "+110",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.596,
+      "ev": 0.003,
+      "breakeven": 0.593,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5548,
+      "fair_over": 0.5548,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5548,
+      "fair_high": 0.5548,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.0599,
+          "lean": null,
+          "detail": "NYK allows -0.1 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 14,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0455,
+          "lean": null,
+          "detail": "Over 3.5 in 8 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Over 3.5 in 17 of 34 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 1.7972,
+          "lean": null,
+          "detail": "Last 3 games 35.1 minutes, 33.3 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 19,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0172,
+          "lean": null,
+          "detail": "Forwards vs NYK: over their line in 10 of 19",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": 0.0883,
+          "lean": "over",
+          "detail": "Passing projects 4.1 against a line of 3.5",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 0,
+        "net": 2,
+        "need": 2
+      },
+      "proj_mu": 4.14,
+      "proj_sd": 1.68,
+      "proj_minutes": 32.5,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 57,
+      "weight_this": 0.565,
+      "p_hat": 0.5548,
+      "breakeven_price": 0.5935,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5883,
+      "p_market": 0.5548,
+      "edge_value": -0.0387,
+      "open_line": 3.5,
+      "line_move": 0.0,
+      "dvp_z": -0.06,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 3.93,
+      "passing": {
+        "passes": 40.2,
+        "pot_ast": 7.8,
+        "pa_per_pass": 0.193,
+        "conv": 0.534,
+        "conv_seen": 0.477,
+        "conv_prior": 0.556,
+        "team_shooting": 0.997,
+        "opp_shooting": 0.986,
+        "opp_share": 1.002,
+        "base": 4.15,
+        "weight_this": 0.722,
+        "gp_this": 13,
+        "gp_last": 57
+      }
+    },
+    {
+      "player_name": "Karl-Anthony Towns",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "C",
+      "stat": "assists",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.615,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 3.6,
+      "games_played": 13,
+      "games_hit": 8,
+      "line": 3.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "+118",
+      "over_book": "FanDuel",
+      "under_odds": "-158",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 3.5,
+      "vegas_over_odds": "+118",
+      "vegas_under_odds": "-158",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.659,
+      "ev": 0.076,
+      "breakeven": 0.612,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5717,
+      "fair_over": 0.4283,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4283,
+      "fair_high": 0.4283,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.847,
+          "lean": "under",
+          "detail": "TOR allows -0.8 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 23
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0455,
+          "lean": null,
+          "detail": "Over 3.5 in 5 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 9,
+            "under": 21
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.1462,
+          "lean": "under",
+          "detail": "Over 3.5 in 13 of 45 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 1,
+            "under": 30
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 5.8961,
+          "lean": "over",
+          "detail": "Last 3 games 37.0 minutes, 31.1 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 29,
+            "under": 2
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.119,
+          "lean": "under",
+          "detail": "Centers vs TOR: over their line in 3 of 11",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 2,
+            "under": 29
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": -0.13,
+          "lean": "under",
+          "detail": "Passing projects 3.1 against a line of 3.5",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 2,
+            "under": 28
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 4,
+        "against": 1,
+        "net": 3,
+        "need": 1
+      },
+      "proj_mu": 3.08,
+      "proj_sd": 1.8,
+      "proj_minutes": 32.1,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 75,
+      "weight_this": 0.565,
+      "p_hat": 0.5717,
+      "breakeven_price": 0.6124,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.63,
+      "p_market": 0.5717,
+      "edge_value": -0.0407,
+      "open_line": 3.5,
+      "line_move": -0.0,
+      "dvp_z": -0.85,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 3.11,
+      "passing": {
+        "passes": 35.2,
+        "pot_ast": 5.3,
+        "pa_per_pass": 0.152,
+        "conv": 0.599,
+        "conv_seen": 0.655,
+        "conv_prior": 0.556,
+        "team_shooting": 0.997,
+        "opp_shooting": 0.996,
+        "opp_share": 0.985,
+        "base": 3.2,
+        "weight_this": 0.722,
+        "gp_this": 13,
+        "gp_last": 75
+      }
+    },
+    {
+      "player_name": "Scottie Barnes",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SG",
+      "stat": "assists",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.667,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.0,
+      "games_played": 9,
+      "games_hit": 6,
+      "line": 4.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-160",
+      "over_book": "FanDuel",
+      "under_odds": "+120",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 4.5,
+      "vegas_over_odds": "-160",
+      "vegas_under_odds": "+120",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.64,
+      "ev": 0.039,
+      "breakeven": 0.615,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5752,
+      "fair_over": 0.5752,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5752,
+      "fair_high": 0.5752,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -2.7285,
+          "lean": "under",
+          "detail": "NYK allows -2.7 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 1,
+            "under": 30
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0517,
+          "lean": null,
+          "detail": "Over 4.5 in 6 of 9 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 8
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.1,
+          "lean": "over",
+          "detail": "Over 4.5 in 29 of 45 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 27,
+            "under": 3
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 2.4922,
+          "lean": null,
+          "detail": "Last 3 games 35.3 minutes, 32.8 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.1111,
+          "lean": "under",
+          "detail": "Guards vs NYK: over their line in 9 of 26",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 2,
+            "under": 28
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        },
+        {
+          "key": "passing",
+          "label": "Passing projection",
+          "value": 0.0711,
+          "lean": "over",
+          "detail": "Passing projects 5.1 against a line of 4.5",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 3,
+        "against": 2,
+        "net": 1,
+        "need": 2
+      },
+      "proj_mu": 5.12,
+      "proj_sd": 2.37,
+      "proj_minutes": 33.8,
+      "proj_dist": "nb",
+      "n_this": 9,
+      "n_last": 80,
+      "weight_this": 0.474,
+      "p_hat": 0.5752,
+      "breakeven_price": 0.6154,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5711,
+      "p_market": 0.5752,
+      "edge_value": -0.0402,
+      "open_line": 4.5,
+      "line_move": 0.0,
+      "dvp_z": -2.73,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": "passing",
+      "proj_mu_box": 4.74,
+      "passing": {
+        "passes": 45.9,
+        "pot_ast": 8.7,
+        "pa_per_pass": 0.19,
+        "conv": 0.589,
+        "conv_seen": 0.595,
+        "conv_prior": 0.556,
+        "team_shooting": 0.997,
+        "opp_shooting": 0.986,
+        "opp_share": 1.002,
+        "base": 5.13,
+        "weight_this": 0.643,
+        "gp_this": 9,
+        "gp_last": 80
+      }
+    },
+    {
+      "player_name": "OG Anunoby",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "SF",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.538,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 16.4,
+      "games_played": 13,
+      "games_hit": 7,
+      "line": 16.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-125",
+      "over_book": "FanDuel",
+      "under_odds": "-106",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 16.5,
+      "vegas_over_odds": "-125",
+      "vegas_under_odds": "-106",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.529,
+      "ev": -0.048,
+      "breakeven": 0.556,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 34% of FGA \u00d7 z +0.6",
+        "In The Paint (Non-RA): 4% of FGA \u00d7 z +0.0",
+        "Mid-Range: 5% of FGA \u00d7 z -1.1",
+        "Left Corner 3: 14% of FGA \u00d7 z +0.8",
+        "Right Corner 3: 9% of FGA \u00d7 z +2.1",
+        "Above the Break 3: 32% of FGA \u00d7 z -0.0"
+      ],
+      "playtype_details": [
+        "Transition: 20% of poss \u00d7 z -1.8",
+        "PRBallHandler: 6% of poss \u00d7 z +0.4",
+        "PRRollMan: 7% of poss \u00d7 z -0.6",
+        "Spotup: 31% of poss \u00d7 z +1.4",
+        "Handoff: 5% of poss \u00d7 z -1.7",
+        "Cut: 7% of poss \u00d7 z +2.7",
+        "OffScreen: 10% of poss \u00d7 z -0.1",
+        "OffRebound: 5% of poss \u00d7 z +0.7"
+      ],
+      "p_fair": 0.5192,
+      "fair_over": 0.5192,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5192,
+      "fair_high": 0.5192,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.6101,
+          "lean": null,
+          "detail": "TOR allows +0.6 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": 0.4418,
+          "lean": null,
+          "detail": "Opponent's defense where he shoots: +0.44 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 22,
+            "under": 8
+          },
+          "missing": null
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": 0.2055,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: +0.21 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 18,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0152,
+          "lean": null,
+          "detail": "Over 16.5 in 7 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 13
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Over 16.5 in 19 of 38 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 4.6729,
+          "lean": "over",
+          "detail": "Last 3 games 37.3 minutes, 32.6 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 4
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.1333,
+          "lean": "over",
+          "detail": "Forwards vs TOR: over their line in 14 of 20",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 30,
+            "under": 1
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 0,
+        "net": 2,
+        "need": 2
+      },
+      "proj_mu": 16.96,
+      "proj_sd": 5.99,
+      "proj_minutes": 33.6,
+      "proj_dist": "normal",
+      "n_this": 13,
+      "n_last": 67,
+      "weight_this": 0.565,
+      "p_hat": 0.5192,
+      "breakeven_price": 0.5556,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5304,
+      "p_market": 0.5192,
+      "edge_value": -0.0364,
+      "open_line": 16.5,
+      "line_move": 0.0,
+      "dvp_z": 0.61,
+      "matchup_z": 0.65,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "RJ Barrett",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.308,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 20.8,
+      "games_played": 13,
+      "games_hit": 4,
+      "line": 19.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-108",
+      "over_book": "FanDuel",
+      "under_odds": "-122",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 19.5,
+      "vegas_over_odds": "-108",
+      "vegas_under_odds": "-122",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.534,
+      "ev": -0.029,
+      "breakeven": 0.55,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 39% of FGA \u00d7 z -0.6",
+        "In The Paint (Non-RA): 23% of FGA \u00d7 z -1.9",
+        "Mid-Range: 9% of FGA \u00d7 z +0.0",
+        "Left Corner 3: 0% of FGA \u00d7 z -0.7",
+        "Right Corner 3: 3% of FGA \u00d7 z +0.7",
+        "Above the Break 3: 26% of FGA \u00d7 z -0.6"
+      ],
+      "playtype_details": [
+        "Transition: 18% of poss \u00d7 z -0.9",
+        "Isolation: 4% of poss \u00d7 z -1.2",
+        "PRBallHandler: 27% of poss \u00d7 z -0.5",
+        "Postup: 6% of poss \u00d7 z +0.2",
+        "Spotup: 17% of poss \u00d7 z -0.2",
+        "Handoff: 8% of poss \u00d7 z -0.0",
+        "Cut: 7% of poss \u00d7 z -1.0",
+        "OffScreen: 5% of poss \u00d7 z -1.1",
+        "OffRebound: 4% of poss \u00d7 z -1.4"
+      ],
+      "p_fair": 0.5142,
+      "fair_over": 0.4858,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4858,
+      "fair_high": 0.4858,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.5117,
+          "lean": null,
+          "detail": "NYK allows +0.5 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 20,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": -0.8199,
+          "lean": "under",
+          "detail": "Opponent's defense where he shoots: -0.82 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 4,
+            "under": 27
+          },
+          "missing": null
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": -0.5524,
+          "lean": "under",
+          "detail": "Opponent's defense how he scores: -0.55 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 23
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0758,
+          "lean": "over",
+          "detail": "Over 19.5 in 9 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0185,
+          "lean": null,
+          "detail": "Over 19.5 in 18 of 34 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 1.7972,
+          "lean": null,
+          "detail": "Last 3 games 35.1 minutes, 33.3 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 19,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0152,
+          "lean": null,
+          "detail": "Forwards vs NYK: over their line in 11 of 23",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 13,
+            "under": 17
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 2,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 20.27,
+      "proj_sd": 6.24,
+      "proj_minutes": 32.5,
+      "proj_dist": "normal",
+      "n_this": 13,
+      "n_last": 57,
+      "weight_this": 0.565,
+      "p_hat": 0.5142,
+      "breakeven_price": 0.5495,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.4508,
+      "p_market": 0.5142,
+      "edge_value": -0.0354,
+      "open_line": 19.5,
+      "line_move": -0.0,
+      "dvp_z": 0.51,
+      "matchup_z": -1.37,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Karl-Anthony Towns",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "C",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.692,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 21.6,
+      "games_played": 13,
+      "games_hit": 9,
+      "line": 20.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-122",
+      "over_book": "FanDuel",
+      "under_odds": "-108",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 20.5,
+      "vegas_over_odds": "-122",
+      "vegas_under_odds": "-108",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.526,
+      "ev": -0.043,
+      "breakeven": 0.55,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 46% of FGA \u00d7 z +0.6",
+        "In The Paint (Non-RA): 10% of FGA \u00d7 z +0.0",
+        "Mid-Range: 8% of FGA \u00d7 z -1.1",
+        "Left Corner 3: 2% of FGA \u00d7 z +0.8",
+        "Above the Break 3: 34% of FGA \u00d7 z -0.0"
+      ],
+      "playtype_details": [
+        "Transition: 13% of poss \u00d7 z -1.8",
+        "Isolation: 8% of poss \u00d7 z -0.2",
+        "PRRollMan: 21% of poss \u00d7 z -0.6",
+        "Postup: 7% of poss \u00d7 z +0.1",
+        "Spotup: 18% of poss \u00d7 z +1.4",
+        "Cut: 7% of poss \u00d7 z +2.7",
+        "OffRebound: 10% of poss \u00d7 z +0.7",
+        "Misc: 11% of poss \u00d7 z +0.4"
+      ],
+      "p_fair": 0.5142,
+      "fair_over": 0.5142,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5142,
+      "fair_high": 0.5142,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.2603,
+          "lean": null,
+          "detail": "TOR allows +0.3 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": 0.1861,
+          "lean": null,
+          "detail": "Opponent's defense where he shoots: +0.19 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": 0.1906,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: +0.19 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 18,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0758,
+          "lean": "over",
+          "detail": "Over 20.5 in 9 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0077,
+          "lean": null,
+          "detail": "Over 20.5 in 22 of 45 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 14,
+            "under": 16
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 5.8961,
+          "lean": "over",
+          "detail": "Last 3 games 37.0 minutes, 31.1 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 29,
+            "under": 2
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0455,
+          "lean": null,
+          "detail": "Centers vs TOR: over their line in 7 of 12",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 0,
+        "net": 2,
+        "need": 2
+      },
+      "proj_mu": 21.21,
+      "proj_sd": 6.29,
+      "proj_minutes": 32.1,
+      "proj_dist": "normal",
+      "n_this": 13,
+      "n_last": 75,
+      "weight_this": 0.565,
+      "p_hat": 0.5142,
+      "breakeven_price": 0.5495,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5446,
+      "p_market": 0.5142,
+      "edge_value": -0.0354,
+      "open_line": 20.5,
+      "line_move": 0.0,
+      "dvp_z": 0.26,
+      "matchup_z": 0.38,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Jalen Brunson",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "PG",
+      "stat": "points",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.538,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 26.7,
+      "games_played": 13,
+      "games_hit": 7,
+      "line": 25.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-122",
+      "over_book": "FanDuel",
+      "under_odds": "-108",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 25.5,
+      "vegas_over_odds": "-122",
+      "vegas_under_odds": "-108",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.521,
+      "ev": -0.052,
+      "breakeven": 0.55,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 18% of FGA \u00d7 z +0.6",
+        "In The Paint (Non-RA): 21% of FGA \u00d7 z +0.0",
+        "Mid-Range: 26% of FGA \u00d7 z -1.1",
+        "Left Corner 3: 2% of FGA \u00d7 z +0.8",
+        "Right Corner 3: 1% of FGA \u00d7 z +2.1",
+        "Above the Break 3: 31% of FGA \u00d7 z -0.0"
+      ],
+      "playtype_details": [
+        "Transition: 14% of poss \u00d7 z -1.8",
+        "Isolation: 18% of poss \u00d7 z -0.2",
+        "PRBallHandler: 30% of poss \u00d7 z +0.4",
+        "Spotup: 12% of poss \u00d7 z +1.4",
+        "Handoff: 7% of poss \u00d7 z -1.7",
+        "Cut: 4% of poss \u00d7 z +2.7",
+        "OffScreen: 6% of poss \u00d7 z -0.1",
+        "Misc: 4% of poss \u00d7 z +0.4"
+      ],
+      "p_fair": 0.5142,
+      "fair_over": 0.5142,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5142,
+      "fair_high": 0.5142,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.4724,
+          "lean": null,
+          "detail": "TOR allows -0.5 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 10,
+            "under": 20
+          },
+          "missing": null
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": -0.1406,
+          "lean": null,
+          "detail": "Opponent's defense where he shoots: -0.14 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 13,
+            "under": 17
+          },
+          "missing": null
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": -0.0185,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: -0.02 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 14,
+            "under": 15
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0152,
+          "lean": null,
+          "detail": "Over 25.5 in 7 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 13
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0938,
+          "lean": "over",
+          "detail": "Over 25.5 in 28 of 44 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 4
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 3.7619,
+          "lean": "over",
+          "detail": "Last 3 games 37.2 minutes, 33.5 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0128,
+          "lean": null,
+          "detail": "Guards vs TOR: over their line in 14 of 29",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 13,
+            "under": 16
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 0,
+        "net": 2,
+        "need": 2
+      },
+      "proj_mu": 25.27,
+      "proj_sd": 6.76,
+      "proj_minutes": 34.7,
+      "proj_dist": "normal",
+      "n_this": 13,
+      "n_last": 74,
+      "weight_this": 0.565,
+      "p_hat": 0.5142,
+      "breakeven_price": 0.5495,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.4866,
+      "p_market": 0.5142,
+      "edge_value": -0.0354,
+      "open_line": 25.5,
+      "line_move": 0.0,
+      "dvp_z": -0.47,
+      "matchup_z": -0.16,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Scottie Barnes",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SG",
+      "stat": "points",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.222,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 24.2,
+      "games_played": 9,
+      "games_hit": 2,
+      "line": 20.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-114",
+      "over_book": "FanDuel",
+      "under_odds": "-114",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 20.5,
+      "vegas_over_odds": "-114",
+      "vegas_under_odds": "-114",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.528,
+      "ev": -0.009,
+      "breakeven": 0.533,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [
+        "Restricted Area: 28% of FGA \u00d7 z -0.6",
+        "In The Paint (Non-RA): 23% of FGA \u00d7 z -1.9",
+        "Mid-Range: 31% of FGA \u00d7 z +0.0",
+        "Left Corner 3: 4% of FGA \u00d7 z -0.7",
+        "Right Corner 3: 3% of FGA \u00d7 z +0.7",
+        "Above the Break 3: 12% of FGA \u00d7 z -0.6"
+      ],
+      "playtype_details": [
+        "Transition: 17% of poss \u00d7 z -0.9",
+        "Isolation: 10% of poss \u00d7 z -1.2",
+        "PRBallHandler: 15% of poss \u00d7 z -0.5",
+        "PRRollMan: 6% of poss \u00d7 z -0.2",
+        "Postup: 9% of poss \u00d7 z +0.2",
+        "Spotup: 14% of poss \u00d7 z -0.2",
+        "Cut: 8% of poss \u00d7 z -1.0",
+        "OffScreen: 4% of poss \u00d7 z -1.1",
+        "OffRebound: 7% of poss \u00d7 z -1.4",
+        "Misc: 7% of poss \u00d7 z +2.0"
+      ],
+      "p_fair": 0.5,
+      "fair_over": 0.5,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5,
+      "fair_high": 0.5,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.6291,
+          "lean": null,
+          "detail": "NYK allows -0.6 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 9,
+            "under": 21
+          },
+          "missing": null
+        },
+        {
+          "key": "zones",
+          "label": "Shooting zones",
+          "value": -0.6975,
+          "lean": "under",
+          "detail": "Opponent's defense where he shoots: -0.70 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 5,
+            "under": 25
+          },
+          "missing": null
+        },
+        {
+          "key": "playtypes",
+          "label": "Play types",
+          "value": -0.4553,
+          "lean": null,
+          "detail": "Opponent's defense how he scores: -0.46 (positive = allows more)",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 8,
+            "under": 22
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0862,
+          "lean": "over",
+          "detail": "Over 20.5 in 7 of 9 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 5
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0692,
+          "lean": "under",
+          "detail": "Over 20.5 in 18 of 45 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 24
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 2.4922,
+          "lean": null,
+          "detail": "Last 3 games 35.3 minutes, 32.8 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.025,
+          "lean": null,
+          "detail": "Guards vs NYK: over their line in 16 of 30",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 18,
+            "under": 12
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 2,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 20.17,
+      "proj_sd": 8.29,
+      "proj_minutes": 33.8,
+      "proj_dist": "normal",
+      "n_this": 9,
+      "n_last": 80,
+      "weight_this": 0.474,
+      "p_hat": 0.5,
+      "breakeven_price": 0.5327,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5158,
+      "p_market": 0.5,
+      "edge_value": -0.0327,
+      "open_line": 20.5,
+      "line_move": -0.0,
+      "dvp_z": -0.63,
+      "matchup_z": -1.15,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "OG Anunoby",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "SF",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.538,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 5.4,
+      "games_played": 13,
+      "games_hit": 7,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "+110",
+      "over_book": "FanDuel",
+      "under_odds": "-146",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "+110",
+      "vegas_under_odds": "-146",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.63,
+      "ev": 0.062,
+      "breakeven": 0.593,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5548,
+      "fair_over": 0.4452,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4452,
+      "fair_high": 0.4452,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -0.8614,
+          "lean": "under",
+          "detail": "TOR allows -0.9 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 24
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0152,
+          "lean": null,
+          "detail": "Over 5.5 in 6 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 13,
+            "under": 17
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0345,
+          "lean": null,
+          "detail": "Over 5.5 in 21 of 38 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 19,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 4.6729,
+          "lean": "over",
+          "detail": "Last 3 games 37.3 minutes, 32.6 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 4
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0517,
+          "lean": null,
+          "detail": "Forwards vs TOR: over their line in 8 of 19",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 8,
+            "under": 21
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 1,
+        "against": 1,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 4.85,
+      "proj_sd": 2.5,
+      "proj_minutes": 33.6,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 67,
+      "weight_this": 0.565,
+      "p_hat": 0.5548,
+      "breakeven_price": 0.5935,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.6403,
+      "p_market": 0.5548,
+      "edge_value": -0.0387,
+      "open_line": 5.5,
+      "line_move": -0.0,
+      "dvp_z": -0.86,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Jalen Brunson",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "PG",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.462,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 2.8,
+      "games_played": 13,
+      "games_hit": 6,
+      "line": 2.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-144",
+      "over_book": "FanDuel",
+      "under_odds": "+108",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 2.5,
+      "vegas_over_odds": "-144",
+      "vegas_under_odds": "+108",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.58,
+      "ev": -0.018,
+      "breakeven": 0.59,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5511,
+      "fair_over": 0.5511,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.5511,
+      "fair_high": 0.5511,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.1429,
+          "lean": null,
+          "detail": "TOR allows +0.1 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 16,
+            "under": 13
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0152,
+          "lean": null,
+          "detail": "Over 2.5 in 6 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 13,
+            "under": 17
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.1406,
+          "lean": "over",
+          "detail": "Over 2.5 in 31 of 44 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 30,
+            "under": 1
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 3.7619,
+          "lean": "over",
+          "detail": "Last 3 games 37.2 minutes, 33.5 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.1111,
+          "lean": "under",
+          "detail": "Guards vs TOR: over their line in 9 of 26",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 2,
+            "under": 28
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 1,
+        "net": 1,
+        "need": 2
+      },
+      "proj_mu": 2.94,
+      "proj_sd": 1.81,
+      "proj_minutes": 34.7,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 74,
+      "weight_this": 0.565,
+      "p_hat": 0.5511,
+      "breakeven_price": 0.5902,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5518,
+      "p_market": 0.5511,
+      "edge_value": -0.0391,
+      "open_line": 2.5,
+      "line_move": 0.0,
+      "dvp_z": 0.14,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books",
+        "line_size"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Karl-Anthony Towns",
+      "team": "NYK",
+      "opponent": "TOR",
+      "position": "C",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.615,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 13.9,
+      "games_played": 13,
+      "games_hit": 8,
+      "line": 12.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "-112",
+      "over_book": "FanDuel",
+      "under_odds": "-118",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 12.5,
+      "vegas_over_odds": "-112",
+      "vegas_under_odds": "-118",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.513,
+      "ev": -0.029,
+      "breakeven": 0.528,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.4939,
+      "fair_over": 0.4939,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4939,
+      "fair_high": 0.4939,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.5129,
+          "lean": null,
+          "detail": "TOR allows +0.5 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 20,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0455,
+          "lean": null,
+          "detail": "Over 12.5 in 8 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0692,
+          "lean": "under",
+          "detail": "Over 12.5 in 18 of 45 road games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 24
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 5.8961,
+          "lean": "over",
+          "detail": "Last 3 games 37.0 minutes, 31.1 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 29,
+            "under": 2
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.0909,
+          "lean": "over",
+          "detail": "Centers vs TOR: over their line in 8 of 12",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 26,
+            "under": 4
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 0.0,
+          "lean": null,
+          "detail": "Normal rest, no starters out",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 15,
+            "under": 15
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 1,
+        "net": 1,
+        "need": 2
+      },
+      "proj_mu": 13.25,
+      "proj_sd": 3.42,
+      "proj_minutes": 32.1,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 75,
+      "weight_this": 0.565,
+      "p_hat": 0.4939,
+      "breakeven_price": 0.5283,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.5606,
+      "p_market": 0.4939,
+      "edge_value": -0.0344,
+      "open_line": 12.5,
+      "line_move": 0.0,
+      "dvp_z": 0.51,
+      "matchup_z": null,
+      "teammate_out": 0,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": false,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": -3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "RJ Barrett",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SF",
+      "stat": "rebounds",
+      "edge": "over",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.538,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 6.5,
+      "games_played": 13,
+      "games_hit": 7,
+      "line": 5.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "+100",
+      "over_book": "FanDuel",
+      "under_odds": "-132",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 5.5,
+      "vegas_over_odds": "+100",
+      "vegas_under_odds": "-132",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.477,
+      "ev": -0.045,
+      "breakeven": 0.5,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.4677,
+      "fair_over": 0.4677,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4677,
+      "fair_high": 0.4677,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": 0.8185,
+          "lean": "over",
+          "detail": "NYK allows +0.8 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": 0.0152,
+          "lean": null,
+          "detail": "Over 5.5 in 7 of 13 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 17,
+            "under": 13
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": 0.0741,
+          "lean": "over",
+          "detail": "Over 5.5 in 21 of 34 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 24,
+            "under": 6
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 1.7972,
+          "lean": null,
+          "detail": "Last 3 games 35.1 minutes, 33.3 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 19,
+            "under": 10
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": -0.0333,
+          "lean": null,
+          "detail": "Forwards vs NYK: over their line in 9 of 20",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 11,
+            "under": 19
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 3,
+        "against": 0,
+        "net": 3,
+        "need": 2
+      },
+      "proj_mu": 6.54,
+      "proj_sd": 3.0,
+      "proj_minutes": 32.5,
+      "proj_dist": "nb",
+      "n_this": 13,
+      "n_last": 57,
+      "weight_this": 0.565,
+      "p_hat": 0.4677,
+      "breakeven_price": 0.5,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.6021,
+      "p_market": 0.4677,
+      "edge_value": -0.0323,
+      "open_line": 5.5,
+      "line_move": 0.0,
+      "dvp_z": 0.82,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    },
+    {
+      "player_name": "Scottie Barnes",
+      "team": "TOR",
+      "opponent": "NYK",
+      "position": "SG",
+      "stat": "rebounds",
+      "edge": "under",
+      "total_points": 0,
+      "total_conditions": 0,
+      "pass_rate": 0.0,
+      "hitrate": 0.667,
+      "hitrate_source": "gamelog_vs_line",
+      "season_avg": 7.8,
+      "games_played": 9,
+      "games_hit": 6,
+      "line": 7.5,
+      "line_source": "vegas",
+      "line_book": "FanDuel",
+      "line_books": 1,
+      "line_locked": false,
+      "over_odds": "+118",
+      "over_book": "FanDuel",
+      "under_odds": "-158",
+      "under_book": "FanDuel",
+      "ud_line": null,
+      "ud_over_odds": null,
+      "ud_under_odds": null,
+      "vegas_line": 7.5,
+      "vegas_over_odds": "+118",
+      "vegas_under_odds": "-158",
+      "vegas_book": "FanDuel",
+      "vegas_books": 1,
+      "p_hit": 0.663,
+      "ev": 0.083,
+      "breakeven": 0.612,
+      "learn_note": null,
+      "on_hold": false,
+      "hold_reason": null,
+      "injury": null,
+      "grade": "C",
+      "is_valid": false,
+      "is_combo": false,
+      "adaptive_multiplier": 1.0,
+      "zone_details": [],
+      "playtype_details": [],
+      "p_fair": 0.5717,
+      "fair_over": 0.4283,
+      "fair_books": 1,
+      "fair_basis": "best_pair",
+      "fair_low": 0.4283,
+      "fair_high": 0.4283,
+      "adjustments": null,
+      "checks": [
+        {
+          "key": "dvp",
+          "label": "Defense vs position",
+          "value": -2.5309,
+          "lean": "under",
+          "detail": "NYK allows -2.5 standard deviations of this stat to his position",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 1,
+            "under": 30
+          },
+          "missing": null
+        },
+        {
+          "key": "hit_rate",
+          "label": "Hit rate vs the line",
+          "value": -0.0517,
+          "lean": null,
+          "detail": "Over 7.5 in 3 of 9 games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 8,
+            "under": 21
+          },
+          "missing": null
+        },
+        {
+          "key": "split",
+          "label": "Home/away split",
+          "value": -0.0692,
+          "lean": "under",
+          "detail": "Over 7.5 in 18 of 45 home games",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 7,
+            "under": 24
+          },
+          "missing": null
+        },
+        {
+          "key": "minutes",
+          "label": "Minutes trend",
+          "value": 2.4922,
+          "lean": null,
+          "detail": "Last 3 games 35.3 minutes, 32.8 before",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 21,
+            "under": 9
+          },
+          "missing": null
+        },
+        {
+          "key": "similar",
+          "label": "Similar players vs this opponent",
+          "value": 0.1053,
+          "lean": "over",
+          "detail": "Guards vs NYK: over their line in 18 of 28",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 28,
+            "under": 3
+          },
+          "missing": null
+        },
+        {
+          "key": "situation",
+          "label": "Situation",
+          "value": 1.0,
+          "lean": "over",
+          "detail": "1 starter out on his team",
+          "counts": true,
+          "weight": 1.0,
+          "score": {
+            "over": 23,
+            "under": 7
+          },
+          "missing": null
+        }
+      ],
+      "support": {
+        "for": 2,
+        "against": 2,
+        "net": 0,
+        "need": 1
+      },
+      "proj_mu": 6.59,
+      "proj_sd": 3.47,
+      "proj_minutes": 33.8,
+      "proj_dist": "nb",
+      "n_this": 9,
+      "n_last": 80,
+      "weight_this": 0.474,
+      "p_hat": 0.5717,
+      "breakeven_price": 0.6124,
+      "market_basis": "best_pair",
+      "consensus_line": null,
+      "consensus_books": null,
+      "line_shopped": false,
+      "alt_line": null,
+      "p_model": 0.6488,
+      "p_market": 0.5717,
+      "edge_value": -0.0407,
+      "open_line": 7.5,
+      "line_move": -0.0,
+      "dvp_z": -2.53,
+      "matchup_z": null,
+      "teammate_out": 1,
+      "paused": false,
+      "cap_note": null,
+      "guards": [
+        "price",
+        "books"
+      ],
+      "model_version": "market-2",
+      "is_home": true,
+      "tip_utc": "2026-11-18T00:40:00Z",
+      "spread": 3.0,
+      "published_at": null,
+      "proj_source": null,
+      "proj_mu_box": null,
+      "passing": null
+    }
+  ],
+  "hitrate_summary": {
+    "avg": 0.539,
+    "above_threshold": 7,
+    "below_threshold": 8,
+    "unavailable": 0,
+    "threshold": 0.56,
+    "distribution": {
+      "60_plus": 7,
+      "56_to_60": 0,
+      "50_to_56": 4,
+      "below_50": 4
+    }
+  },
+  "learning": {
+    "mode": "shadow",
+    "trusted": false,
+    "trained_at": "2026-11-16T19:45:59Z",
+    "n_rows": 6234,
+    "n_days": 53,
+    "cv": {
+      "scored_rows": 6143,
+      "scored_nights": 50,
+      "logloss": 0.6977,
+      "baseline_logloss": 0.6873,
+      "baseline": "market price",
+      "logloss_vs_average": 0.6932,
+      "logloss_vs_market": 0.6873,
+      "gain": -0.0152,
+      "gain_lower_bound": -0.0146,
+      "effective_rows": 5843.1,
+      "effective_nights": 17.9,
+      "calibration": [
+        {
+          "band": "0%\u201345%",
+          "n": 1428,
+          "predicted": 0.394,
+          "actual": 0.464
+        },
+        {
+          "band": "45%\u201350%",
+          "n": 1240,
+          "predicted": 0.476,
+          "actual": 0.517
+        },
+        {
+          "band": "50%\u201355%",
+          "n": 1301,
+          "predicted": 0.524,
+          "actual": 0.504
+        },
+        {
+          "band": "55%\u201360%",
+          "n": 1040,
+          "predicted": 0.574,
+          "actual": 0.531
+        },
+        {
+          "band": "60%\u2013100%",
+          "n": 1134,
+          "predicted": 0.655,
+          "actual": 0.572
+        }
+      ],
+      "gate_check": {
+        "published_scored": 520,
+        "kept": 201,
+        "demoted": 319,
+        "units_kept": -9.61,
+        "units_demoted": -0.08,
+        "passed": true,
+        "verdict": "cutting -EV picks would have saved units"
+      }
+    },
+    "criteria": {
+      "effective_rows": true,
+      "effective_nights": true,
+      "gain": false,
+      "significant": false,
+      "pick_gate": true
+    },
+    "pass_streak": 0,
+    "factors": [
+      {
+        "feature": "log_minutes",
+        "label": "projected minutes",
+        "weight": -0.192,
+        "effect": "more misses"
+      },
+      {
+        "feature": "implied",
+        "label": "the price's implied probability",
+        "weight": 0.131,
+        "effect": "more hits"
+      },
+      {
+        "feature": "p_market",
+        "label": "the de-vigged market probability of the pick",
+        "weight": 0.078,
+        "effect": "more hits"
+      },
+      {
+        "feature": "is_over",
+        "label": "overs (vs unders)",
+        "weight": -0.058,
+        "effect": "more misses"
+      },
+      {
+        "feature": "log_gp",
+        "label": "games in the hit-rate sample",
+        "weight": 0.058,
+        "effect": "more hits"
+      },
+      {
+        "feature": "line_move",
+        "label": "line movement toward the pick",
+        "weight": 0.047,
+        "effect": "more hits"
+      }
+    ],
+    "segments": {
+      "stat": {
+        "assists": {
+          "hits": 832,
+          "misses": 750,
+          "rate": 0.526,
+          "n": 1582,
+          "ci": [
+            0.501,
+            0.55
+          ]
+        },
+        "points": {
+          "hits": 926,
+          "misses": 942,
+          "rate": 0.496,
+          "n": 1868,
+          "ci": [
+            0.473,
+            0.518
+          ]
+        },
+        "pra": {
+          "hits": 41,
+          "misses": 41,
+          "rate": 0.5,
+          "n": 82,
+          "ci": [
+            0.394,
+            0.606
+          ]
+        },
+        "pts+ast": {
+          "hits": 92,
+          "misses": 79,
+          "rate": 0.538,
+          "n": 171,
+          "ci": [
+            0.463,
+            0.611
+          ]
+        },
+        "pts+reb": {
+          "hits": 112,
+          "misses": 118,
+          "rate": 0.487,
+          "n": 230,
+          "ci": [
+            0.423,
+            0.551
+          ]
+        },
+        "reb+ast": {
+          "hits": 79,
+          "misses": 76,
+          "rate": 0.51,
+          "n": 155,
+          "ci": [
+            0.432,
+            0.587
+          ]
+        },
+        "rebounds": {
+          "hits": 927,
+          "misses": 850,
+          "rate": 0.522,
+          "n": 1777,
+          "ci": [
+            0.498,
+            0.545
+          ]
+        }
+      },
+      "edge": {
+        "over": {
+          "hits": 1476,
+          "misses": 1554,
+          "rate": 0.487,
+          "n": 3030,
+          "ci": [
+            0.469,
+            0.505
+          ]
+        },
+        "under": {
+          "hits": 1533,
+          "misses": 1302,
+          "rate": 0.541,
+          "n": 2835,
+          "ci": [
+            0.522,
+            0.559
+          ]
+        }
+      },
+      "price band": {
+        "better than \u2212121": {
+          "hits": 2160,
+          "misses": 2240,
+          "rate": 0.491,
+          "n": 4400,
+          "ci": [
+            0.476,
+            0.506
+          ]
+        },
+        "no price": {
+          "hits": 5,
+          "misses": 8,
+          "rate": 0.385,
+          "n": 13,
+          "ci": [
+            0.177,
+            0.645
+          ]
+        },
+        "\u2212121 or worse": {
+          "hits": 844,
+          "misses": 608,
+          "rate": 0.581,
+          "n": 1452,
+          "ci": [
+            0.556,
+            0.606
+          ]
+        }
+      },
+      "books": {
+        "1\u20132 books": {
+          "hits": 300,
+          "misses": 269,
+          "rate": 0.527,
+          "n": 569,
+          "ci": [
+            0.486,
+            0.568
+          ]
+        },
+        "3\u20135 books": {
+          "hits": 1123,
+          "misses": 1057,
+          "rate": 0.515,
+          "n": 2180,
+          "ci": [
+            0.494,
+            0.536
+          ]
+        },
+        "6+ books": {
+          "hits": 1586,
+          "misses": 1530,
+          "rate": 0.509,
+          "n": 3116,
+          "ci": [
+            0.491,
+            0.527
+          ]
+        }
+      },
+      "edge band": {
+        "0\u20131.5 pts": {
+          "hits": 373,
+          "misses": 366,
+          "rate": 0.505,
+          "n": 739,
+          "ci": [
+            0.469,
+            0.541
+          ]
+        },
+        "1.5\u20133 pts": {
+          "hits": 310,
+          "misses": 291,
+          "rate": 0.516,
+          "n": 601,
+          "ci": [
+            0.476,
+            0.556
+          ]
+        },
+        "3\u20136 pts": {
+          "hits": 447,
+          "misses": 491,
+          "rate": 0.477,
+          "n": 938,
+          "ci": [
+            0.445,
+            0.509
+          ]
+        },
+        "no edge": {
+          "hits": 265,
+          "misses": 259,
+          "rate": 0.506,
+          "n": 524,
+          "ci": [
+            0.463,
+            0.548
+          ]
+        },
+        "\u22640 pts": {
+          "hits": 1083,
+          "misses": 934,
+          "rate": 0.537,
+          "n": 2017,
+          "ci": [
+            0.515,
+            0.559
+          ]
+        },
+        "\u22656 pts": {
+          "hits": 531,
+          "misses": 515,
+          "rate": 0.508,
+          "n": 1046,
+          "ci": [
+            0.477,
+            0.538
+          ]
+        }
+      },
+      "line size": {
+        ">3.5": {
+          "hits": 2115,
+          "misses": 2047,
+          "rate": 0.508,
+          "n": 4162,
+          "ci": [
+            0.493,
+            0.523
+          ]
+        },
+        "\u22643.5": {
+          "hits": 894,
+          "misses": 809,
+          "rate": 0.525,
+          "n": 1703,
+          "ci": [
+            0.501,
+            0.549
+          ]
+        }
+      },
+      "line source": {
+        "Underdog": {
+          "hits": 46,
+          "misses": 46,
+          "rate": 0.5,
+          "n": 92,
+          "ci": [
+            0.4,
+            0.6
+          ]
+        },
+        "sportsbooks": {
+          "hits": 2963,
+          "misses": 2810,
+          "rate": 0.513,
+          "n": 5773,
+          "ci": [
+            0.5,
+            0.526
+          ]
+        }
+      },
+      "hit rate vs line": {
+        "50\u201356%": {
+          "hits": 502,
+          "misses": 498,
+          "rate": 0.502,
+          "n": 1000,
+          "ci": [
+            0.471,
+            0.533
+          ]
+        },
+        "<50%": {
+          "hits": 846,
+          "misses": 869,
+          "rate": 0.493,
+          "n": 1715,
+          "ci": [
+            0.47,
+            0.517
+          ]
+        },
+        "no line-based hit rate": {
+          "hits": 335,
+          "misses": 351,
+          "rate": 0.488,
+          "n": 686,
+          "ci": [
+            0.451,
+            0.526
+          ]
+        },
+        "\u226556%": {
+          "hits": 1326,
+          "misses": 1138,
+          "rate": 0.538,
+          "n": 2464,
+          "ci": [
+            0.518,
+            0.558
+          ]
+        }
+      },
+      "season average vs line": {
+        "average against the pick": {
+          "hits": 1088,
+          "misses": 1077,
+          "rate": 0.503,
+          "n": 2165,
+          "ci": [
+            0.481,
+            0.524
+          ]
+        },
+        "average favors the pick": {
+          "hits": 1851,
+          "misses": 1710,
+          "rate": 0.52,
+          "n": 3561,
+          "ci": [
+            0.503,
+            0.536
+          ]
+        },
+        "n/a": {
+          "hits": 70,
+          "misses": 69,
+          "rate": 0.504,
+          "n": 139,
+          "ci": [
+            0.422,
+            0.585
+          ]
+        }
+      }
+    },
+    "note": "shadow mode: beats the market price by -1.5% on unseen nights (needs 1%)",
+    "base_rate": 0.513,
+    "postmortem": {
+      "date": "2026-11-15",
+      "published": {
+        "total_picks": 15,
+        "hits": 8,
+        "misses": 7,
+        "voided": 0,
+        "units": 0.872
+      },
+      "all_props": {
+        "hits": 158,
+        "misses": 119,
+        "rate": 0.57,
+        "n": 277,
+        "ci": [
+          0.512,
+          0.627
+        ]
+      },
+      "scope": "segments cover every prop with a line that night, not only the published picks",
+      "went_right": [
+        {
+          "segment": "books: 1\u20132 books",
+          "hits": 4,
+          "misses": 1,
+          "rate": 0.8,
+          "n": 5,
+          "ci": [
+            0.376,
+            0.964
+          ]
+        },
+        {
+          "segment": "stat: points",
+          "hits": 60,
+          "misses": 38,
+          "rate": 0.612,
+          "n": 98,
+          "ci": [
+            0.513,
+            0.703
+          ]
+        },
+        {
+          "segment": "season average vs line: average against the pick",
+          "hits": 84,
+          "misses": 58,
+          "rate": 0.592,
+          "n": 142,
+          "ci": [
+            0.509,
+            0.669
+          ]
+        }
+      ],
+      "went_wrong": [],
+      "biggest_misses": [
+        {
+          "player": "Jake LaRavia",
+          "stat": "points",
+          "edge": "under",
+          "line": 6.5,
+          "actual": 12.0
+        },
+        {
+          "player": "Ajay Mitchell",
+          "stat": "points",
+          "edge": "over",
+          "line": 17.5,
+          "actual": 14.0
+        },
+        {
+          "player": "Anthony Davis",
+          "stat": "rebounds",
+          "edge": "over",
+          "line": 10.5,
+          "actual": 8.0
+        },
+        {
+          "player": "Jalen Johnson",
+          "stat": "assists",
+          "edge": "over",
+          "line": 7.5,
+          "actual": 5.0
+        },
+        {
+          "player": "Naji Marshall",
+          "stat": "points",
+          "edge": "under",
+          "line": 10.5,
+          "actual": 13.0
+        }
+      ],
+      "near_misses": 1,
+      "picks_cut_by_model": 0,
+      "published_segments": {
+        "stat": {
+          "assists": {
+            "hits": 2,
+            "misses": 1,
+            "rate": 0.667,
+            "n": 3,
+            "ci": [
+              0.208,
+              0.939
+            ]
+          },
+          "points": {
+            "hits": 6,
+            "misses": 4,
+            "rate": 0.6,
+            "n": 10,
+            "ci": [
+              0.313,
+              0.832
+            ]
+          },
+          "rebounds": {
+            "hits": 0,
+            "misses": 2,
+            "rate": 0.0,
+            "n": 2,
+            "ci": [
+              0.0,
+              0.658
+            ]
+          }
+        },
+        "edge": {
+          "over": {
+            "hits": 4,
+            "misses": 5,
+            "rate": 0.444,
+            "n": 9,
+            "ci": [
+              0.189,
+              0.733
+            ]
+          },
+          "under": {
+            "hits": 4,
+            "misses": 2,
+            "rate": 0.667,
+            "n": 6,
+            "ci": [
+              0.3,
+              0.903
+            ]
+          }
+        },
+        "price band": {
+          "better than \u2212121": {
+            "hits": 8,
+            "misses": 7,
+            "rate": 0.533,
+            "n": 15,
+            "ci": [
+              0.301,
+              0.752
+            ]
+          }
+        },
+        "books": {
+          "3\u20135 books": {
+            "hits": 4,
+            "misses": 4,
+            "rate": 0.5,
+            "n": 8,
+            "ci": [
+              0.215,
+              0.785
+            ]
+          },
+          "6+ books": {
+            "hits": 4,
+            "misses": 3,
+            "rate": 0.571,
+            "n": 7,
+            "ci": [
+              0.25,
+              0.842
+            ]
+          }
+        },
+        "edge band": {
+          "0\u20131.5 pts": {
+            "hits": 3,
+            "misses": 1,
+            "rate": 0.75,
+            "n": 4,
+            "ci": [
+              0.301,
+              0.954
+            ]
+          },
+          "\u22640 pts": {
+            "hits": 5,
+            "misses": 6,
+            "rate": 0.455,
+            "n": 11,
+            "ci": [
+              0.213,
+              0.72
+            ]
+          }
+        },
+        "line size": {
+          ">3.5": {
+            "hits": 8,
+            "misses": 7,
+            "rate": 0.533,
+            "n": 15,
+            "ci": [
+              0.301,
+              0.752
+            ]
+          }
+        },
+        "line source": {
+          "sportsbooks": {
+            "hits": 8,
+            "misses": 7,
+            "rate": 0.533,
+            "n": 15,
+            "ci": [
+              0.301,
+              0.752
+            ]
+          }
+        },
+        "hit rate vs line": {
+          "50\u201356%": {
+            "hits": 3,
+            "misses": 4,
+            "rate": 0.429,
+            "n": 7,
+            "ci": [
+              0.158,
+              0.75
+            ]
+          },
+          "<50%": {
+            "hits": 1,
+            "misses": 3,
+            "rate": 0.25,
+            "n": 4,
+            "ci": [
+              0.046,
+              0.699
+            ]
+          },
+          "\u226556%": {
+            "hits": 4,
+            "misses": 0,
+            "rate": 1.0,
+            "n": 4,
+            "ci": [
+              0.51,
+              1.0
+            ]
+          }
+        },
+        "season average vs line": {
+          "average against the pick": {
+            "hits": 4,
+            "misses": 5,
+            "rate": 0.444,
+            "n": 9,
+            "ci": [
+              0.189,
+              0.733
+            ]
+          },
+          "average favors the pick": {
+            "hits": 4,
+            "misses": 2,
+            "rate": 0.667,
+            "n": 6,
+            "ci": [
+              0.3,
+              0.903
+            ]
+          }
+        }
+      },
+      "live_model": {
+        "n": 277,
+        "avg_p_on_hits": 0.518,
+        "avg_p_on_misses": 0.518
+      }
+    }
+  },
+  "season_record": {
+    "season": "2026-27",
+    "nights": 26,
+    "hits": 223,
+    "misses": 237,
+    "units": -24.63,
+    "rate": 0.485,
+    "record": "223\u2013237",
+    "voided": 6,
+    "breakeven": 0.524,
+    "min_sample": 8,
+    "segments": {
+      "grade:A": {
+        "label": "Grade A",
+        "hits": 47,
+        "misses": 60,
+        "units": -13.03,
+        "n": 107,
+        "rate": 0.439,
+        "record": "47\u201360"
+      },
+      "side:under": {
+        "label": "Unders",
+        "hits": 93,
+        "misses": 97,
+        "units": -10.57,
+        "n": 190,
+        "rate": 0.489,
+        "record": "93\u201397"
+      },
+      "kind:single": {
+        "label": "Single stats",
+        "hits": 177,
+        "misses": 188,
+        "units": -19.17,
+        "n": 365,
+        "rate": 0.485,
+        "record": "177\u2013188"
+      },
+      "stat:rebounds": {
+        "label": "Rebounds",
+        "hits": 48,
+        "misses": 58,
+        "units": -11.87,
+        "n": 106,
+        "rate": 0.453,
+        "record": "48\u201358"
+      },
+      "grade:A+": {
+        "label": "Grade A+",
+        "hits": 145,
+        "misses": 149,
+        "units": -14.38,
+        "n": 294,
+        "rate": 0.493,
+        "record": "145\u2013149"
+      },
+      "stat:assists": {
+        "label": "Assists",
+        "hits": 53,
+        "misses": 52,
+        "units": -1.14,
+        "n": 105,
+        "rate": 0.505,
+        "record": "53\u201352"
+      },
+      "kind:combo": {
+        "label": "Combos",
+        "hits": 46,
+        "misses": 49,
+        "units": -5.46,
+        "n": 95,
+        "rate": 0.484,
+        "record": "46\u201349"
+      },
+      "stat:pts+reb": {
+        "label": "PTS+REB",
+        "hits": 14,
+        "misses": 15,
+        "units": -1.65,
+        "n": 29,
+        "rate": 0.483,
+        "record": "14\u201315"
+      },
+      "stat:reb+ast": {
+        "label": "REB+AST",
+        "hits": 15,
+        "misses": 17,
+        "units": -2.56,
+        "n": 32,
+        "rate": 0.469,
+        "record": "15\u201317"
+      },
+      "side:over": {
+        "label": "Overs",
+        "hits": 130,
+        "misses": 140,
+        "units": -14.06,
+        "n": 270,
+        "rate": 0.481,
+        "record": "130\u2013140"
+      },
+      "stat:points": {
+        "label": "Points",
+        "hits": 76,
+        "misses": 78,
+        "units": -6.16,
+        "n": 154,
+        "rate": 0.494,
+        "record": "76\u201378"
+      },
+      "stat:pts+ast": {
+        "label": "PTS+AST",
+        "hits": 10,
+        "misses": 13,
+        "units": -3.63,
+        "n": 23,
+        "rate": 0.435,
+        "record": "10\u201313"
+      },
+      "stat:pra": {
+        "label": "PRA",
+        "hits": 7,
+        "misses": 4,
+        "units": 2.38,
+        "n": 11,
+        "rate": 0.636,
+        "record": "7\u20134"
+      },
+      "grade:A-": {
+        "label": "Grade A-",
+        "hits": 5,
+        "misses": 3,
+        "units": 2.23,
+        "n": 8,
+        "rate": 0.625,
+        "record": "5\u20133"
+      },
+      "grade:B+": {
+        "label": "Grade B+",
+        "hits": 11,
+        "misses": 9,
+        "units": 1.85,
+        "n": 20,
+        "rate": 0.55,
+        "record": "11\u20139"
+      },
+      "grade:B": {
+        "label": "Grade B",
+        "hits": 15,
+        "misses": 16,
+        "units": -1.31,
+        "n": 31,
+        "rate": 0.484,
+        "record": "15\u201316"
+      }
+    },
+    "highlights": [
+      {
+        "label": "PRA",
+        "hits": 7,
+        "misses": 4,
+        "units": 2.38,
+        "n": 11,
+        "rate": 0.636,
+        "record": "7\u20134"
+      },
+      {
+        "label": "Grade A-",
+        "hits": 5,
+        "misses": 3,
+        "units": 2.23,
+        "n": 8,
+        "rate": 0.625,
+        "record": "5\u20133"
+      },
+      {
+        "label": "Grade B+",
+        "hits": 11,
+        "misses": 9,
+        "units": 1.85,
+        "n": 20,
+        "rate": 0.55,
+        "record": "11\u20139"
+      }
+    ],
+    "best_night": {
+      "date": "2026-11-08",
+      "hits": 11,
+      "misses": 4,
+      "units": 7.25,
+      "rate": 0.733,
+      "record": "11\u20134"
+    },
+    "last_night": {
+      "date": "2026-11-15",
+      "hits": 8,
+      "misses": 7,
+      "units": 0.87,
+      "rate": 0.533,
+      "record": "8\u20137"
+    },
+    "streak": 1,
+    "clv": {
+      "n": 156,
+      "avg_line": 0.051,
+      "beat_close": 0.205,
+      "avg_prob": 0.0065
+    }
+  },
+  "model_results": [
+    {
+      "date": "2026-04-08",
+      "total_picks": 7,
+      "hits": 5,
+      "misses": 2,
+      "voided": 1,
+      "units": 2.852
+    },
+    {
+      "date": "2026-04-09",
+      "total_picks": 4,
+      "hits": 2,
+      "misses": 2,
+      "voided": 3,
+      "units": -0.408
+    },
+    {
+      "date": "2026-04-12",
+      "total_picks": 8,
+      "hits": 3,
+      "misses": 5,
+      "voided": 3,
+      "units": -2.212
+    },
+    {
+      "date": "2026-04-15",
+      "total_picks": 0,
+      "hits": 0,
+      "misses": 0,
+      "voided": 0,
+      "units": 0.0
+    },
+    {
+      "date": "2026-04-22",
+      "total_picks": 1,
+      "hits": 0,
+      "misses": 1,
+      "voided": 0,
+      "units": -1.0
+    },
+    {
+      "date": "2026-05-08",
+      "total_picks": 5,
+      "hits": 2,
+      "misses": 3,
+      "voided": 0,
+      "units": -1.057
+    },
+    {
+      "date": "2026-05-26",
+      "total_picks": 1,
+      "hits": 1,
+      "misses": 0,
+      "voided": 0,
+      "units": 0.629
+    },
+    {
+      "date": "2026-06-05",
+      "total_picks": 2,
+      "hits": 2,
+      "misses": 0,
+      "voided": 0,
+      "units": 1.368
+    },
+    {
+      "date": "2026-10-20",
+      "season": "2026-27",
+      "total_picks": 12,
+      "hits": 8,
+      "misses": 4,
+      "voided": 0,
+      "units": 4.0
+    },
+    {
+      "date": "2026-10-21",
+      "season": "2026-27",
+      "total_picks": 34,
+      "hits": 13,
+      "misses": 21,
+      "voided": 2,
+      "units": -7.453
+    },
+    {
+      "date": "2026-10-22",
+      "season": "2026-27",
+      "total_picks": 5,
+      "hits": 2,
+      "misses": 3,
+      "voided": 0,
+      "units": -0.57
+    },
+    {
+      "date": "2026-10-23",
+      "season": "2026-27",
+      "total_picks": 53,
+      "hits": 28,
+      "misses": 25,
+      "voided": 0,
+      "units": -0.704
+    },
+    {
+      "date": "2026-10-24",
+      "season": "2026-27",
+      "total_picks": 32,
+      "hits": 18,
+      "misses": 14,
+      "voided": 0,
+      "units": 3.737
+    },
+    {
+      "date": "2026-10-25",
+      "season": "2026-27",
+      "total_picks": 30,
+      "hits": 14,
+      "misses": 16,
+      "voided": 1,
+      "units": -3.746
+    },
+    {
+      "date": "2026-10-26",
+      "season": "2026-27",
+      "total_picks": 38,
+      "hits": 14,
+      "misses": 24,
+      "voided": 0,
+      "units": -12.279
+    },
+    {
+      "date": "2026-10-27",
+      "season": "2026-27",
+      "total_picks": 12,
+      "hits": 3,
+      "misses": 9,
+      "voided": 0,
+      "units": -6.283,
+      "clv_avg_line": 0.083,
+      "clv_beat": 0.083
+    },
+    {
+      "date": "2026-10-28",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 5,
+      "misses": 10,
+      "voided": 0,
+      "units": -5.444,
+      "clv_avg_line": 0.133,
+      "clv_beat": 0.2
+    },
+    {
+      "date": "2026-10-29",
+      "season": "2026-27",
+      "total_picks": 9,
+      "hits": 4,
+      "misses": 5,
+      "voided": 0,
+      "units": -1.211,
+      "clv_avg_line": 0.444,
+      "clv_beat": 0.222
+    },
+    {
+      "date": "2026-10-30",
+      "season": "2026-27",
+      "total_picks": 13,
+      "hits": 5,
+      "misses": 8,
+      "voided": 2,
+      "units": -3.105,
+      "clv_avg_line": 0.462,
+      "clv_beat": 0.462
+    },
+    {
+      "date": "2026-10-31",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 8,
+      "misses": 7,
+      "voided": 0,
+      "units": 0.702,
+      "clv_avg_line": 0.467,
+      "clv_beat": 0.467
+    },
+    {
+      "date": "2026-11-01",
+      "season": "2026-27",
+      "total_picks": 12,
+      "hits": 6,
+      "misses": 6,
+      "voided": 0,
+      "units": -0.309,
+      "clv_avg_line": 0.0,
+      "clv_beat": 0.0
+    },
+    {
+      "date": "2026-11-02",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 9,
+      "misses": 6,
+      "voided": 0,
+      "units": 3.4,
+      "clv_avg_line": -0.5,
+      "clv_beat": 0.0
+    },
+    {
+      "date": "2026-11-04",
+      "season": "2026-27",
+      "total_picks": 14,
+      "hits": 9,
+      "misses": 5,
+      "voided": 1,
+      "units": 3.396,
+      "clv_avg_line": 0.333,
+      "clv_beat": 0.333
+    },
+    {
+      "date": "2026-11-05",
+      "season": "2026-27",
+      "total_picks": 6,
+      "hits": 2,
+      "misses": 4,
+      "voided": 0,
+      "units": -1.941,
+      "clv_avg_line": 0.0,
+      "clv_beat": 0.333
+    },
+    {
+      "date": "2026-11-06",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 5,
+      "misses": 10,
+      "voided": 0,
+      "units": -5.227,
+      "clv_avg_line": -0.889,
+      "clv_beat": 0.0
+    },
+    {
+      "date": "2026-11-07",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 4,
+      "misses": 11,
+      "voided": 0,
+      "units": -7.728,
+      "clv_avg_line": 0.5,
+      "clv_beat": 0.5
+    },
+    {
+      "date": "2026-11-08",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 11,
+      "misses": 4,
+      "voided": 0,
+      "units": 7.248,
+      "clv_avg_line": 0.0,
+      "clv_beat": 0.0
+    },
+    {
+      "date": "2026-11-09",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 9,
+      "misses": 6,
+      "voided": 0,
+      "units": 2.168,
+      "clv_avg_line": 0.071,
+      "clv_beat": 0.071
+    },
+    {
+      "date": "2026-11-10",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 10,
+      "misses": 5,
+      "voided": 0,
+      "units": 4.922,
+      "clv_avg_line": -0.25,
+      "clv_beat": 0.125
+    },
+    {
+      "date": "2026-11-11",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 8,
+      "misses": 7,
+      "voided": 0,
+      "units": 1.085,
+      "clv_avg_line": 0.2,
+      "clv_beat": 0.2
+    },
+    {
+      "date": "2026-11-12",
+      "season": "2026-27",
+      "total_picks": 12,
+      "hits": 7,
+      "misses": 5,
+      "voided": 0,
+      "units": 1.831,
+      "clv_avg_line": 0.0,
+      "clv_beat": 0.0
+    },
+    {
+      "date": "2026-11-13",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 9,
+      "misses": 6,
+      "voided": 0,
+      "units": 3.262,
+      "clv_avg_line": 0.667,
+      "clv_beat": 0.667
+    },
+    {
+      "date": "2026-11-14",
+      "season": "2026-27",
+      "total_picks": 13,
+      "hits": 4,
+      "misses": 9,
+      "voided": 0,
+      "units": -5.253,
+      "clv_avg_line": -0.692,
+      "clv_beat": 0.077
+    },
+    {
+      "date": "2026-11-15",
+      "season": "2026-27",
+      "total_picks": 15,
+      "hits": 8,
+      "misses": 7,
+      "voided": 0,
+      "units": 0.872,
+      "clv_avg_line": 0.0,
+      "clv_beat": 0.0
+    }
+  ]
+}
