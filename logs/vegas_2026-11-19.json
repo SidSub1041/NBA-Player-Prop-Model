@@ -1,0 +1,96 @@
+{
+ "date": "2026-11-19",
+ "events": {
+  "20fa5e2d73cec494c113790161a89aec": {
+   "away": "LAC",
+   "commence_time": "2026-11-20T01:10:00Z",
+   "home": "SAS",
+   "markets": {
+    "player_assists": "2026-11-19T02:36:54Z",
+    "player_points": "2026-11-19T02:36:54Z",
+    "player_rebounds": "2026-11-19T02:36:54Z"
+   },
+   "teams": [
+    "LAC",
+    "SAS"
+   ]
+  }
+ },
+ "lines": {
+  "darius garland|assists": {
+   "alts": [],
+   "books": 1,
+   "event_id": "20fa5e2d73cec494c113790161a89aec",
+   "fetched_at": "2026-11-19T02:36:54Z",
+   "line": 7.5,
+   "offers": {
+    "Fanatics": {
+     "line": 7.5,
+     "over": "+100",
+     "under": "-130"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "+100",
+   "player": "Darius Garland",
+   "stat": "assists",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-130"
+  },
+  "julian champagnie|points": {
+   "alts": [],
+   "books": 1,
+   "event_id": "20fa5e2d73cec494c113790161a89aec",
+   "fetched_at": "2026-11-19T02:36:54Z",
+   "line": 10.5,
+   "offers": {
+    "Fanatics": {
+     "line": 10.5,
+     "over": "-125",
+     "under": "-105"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-125",
+   "player": "Julian Champagnie",
+   "stat": "points",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-105"
+  },
+  "victor wembanyama|rebounds": {
+   "alts": [],
+   "books": 1,
+   "event_id": "20fa5e2d73cec494c113790161a89aec",
+   "fetched_at": "2026-11-19T02:36:54Z",
+   "line": 12.5,
+   "offers": {
+    "Fanatics": {
+     "line": 12.5,
+     "over": "-105",
+     "under": "-125"
+    }
+   },
+   "over_book": "Fanatics",
+   "over_odds": "-105",
+   "player": "Victor Wembanyama",
+   "stat": "rebounds",
+   "tier": "books",
+   "under_book": "Fanatics",
+   "under_odds": "-125"
+  }
+ },
+ "spreads": {
+  "20fa5e2d73cec494c113790161a89aec": {
+   "away": "LAC",
+   "books": 8,
+   "commence_time": "2026-11-20T01:10:00Z",
+   "fetched_at": "2026-11-19T02:36:55Z",
+   "high": -16.0,
+   "home": "SAS",
+   "home_spread": -16.25,
+   "low": -16.5
+  }
+ }
+}
