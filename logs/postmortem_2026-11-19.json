@@ -1,0 +1,99 @@
+{
+ "date": "2026-11-19",
+ "published": {
+  "total_picks": 4,
+  "hits": 4,
+  "misses": 0,
+  "voided": 0,
+  "units": 4.219
+ },
+ "all_props": {
+  "hits": 65,
+  "misses": 61,
+  "rate": 0.516,
+  "n": 126,
+  "ci": [
+   0.429,
+   0.601
+  ]
+ },
+ "scope": "segments cover every prop with a line that night, not only the published picks",
+ "went_right": [
+  {
+   "segment": "edge band: 0\u20131.5 pts",
+   "hits": 8,
+   "misses": 5,
+   "rate": 0.615,
+   "n": 13,
+   "ci": [
+    0.355,
+    0.823
+   ]
+  },
+  {
+   "segment": "hit rate vs line: <50%",
+   "hits": 33,
+   "misses": 24,
+   "rate": 0.579,
+   "n": 57,
+   "ci": [
+    0.45,
+    0.698
+   ]
+  },
+  {
+   "segment": "books: 6+ books",
+   "hits": 43,
+   "misses": 32,
+   "rate": 0.573,
+   "n": 75,
+   "ci": [
+    0.461,
+    0.679
+   ]
+  }
+ ],
+ "went_wrong": [
+  {
+   "segment": "books: 1\u20132 books",
+   "hits": 2,
+   "misses": 7,
+   "rate": 0.222,
+   "n": 9,
+   "ci": [
+    0.063,
+    0.547
+   ]
+  },
+  {
+   "segment": "hit rate vs line: 50\u201356%",
+   "hits": 7,
+   "misses": 9,
+   "rate": 0.438,
+   "n": 16,
+   "ci": [
+    0.231,
+    0.668
+   ]
+  },
+  {
+   "segment": "hit rate vs line: \u226556%",
+   "hits": 25,
+   "misses": 28,
+   "rate": 0.472,
+   "n": 53,
+   "ci": [
+    0.344,
+    0.603
+   ]
+  }
+ ],
+ "biggest_misses": [],
+ "near_misses": 0,
+ "picks_cut_by_model": 0,
+ "live_model": {
+  "n": 126,
+  "avg_p_on_hits": 0.519,
+  "avg_p_on_misses": 0.511
+ }
+}
