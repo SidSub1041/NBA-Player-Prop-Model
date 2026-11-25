@@ -1,0 +1,317 @@
+{
+ "date": "2026-11-24",
+ "published": {
+  "total_picks": 8,
+  "hits": 4,
+  "misses": 4,
+  "voided": 0,
+  "units": -0.313
+ },
+ "all_props": {
+  "hits": 44,
+  "misses": 62,
+  "rate": 0.415,
+  "n": 106,
+  "ci": [
+   0.326,
+   0.51
+  ]
+ },
+ "scope": "segments cover every prop with a line that night, not only the published picks",
+ "went_right": [
+  {
+   "segment": "books: 1\u20132 books",
+   "hits": 5,
+   "misses": 2,
+   "rate": 0.714,
+   "n": 7,
+   "ci": [
+    0.359,
+    0.918
+   ]
+  },
+  {
+   "segment": "edge band: 0\u20131.5 pts",
+   "hits": 4,
+   "misses": 2,
+   "rate": 0.667,
+   "n": 6,
+   "ci": [
+    0.3,
+    0.903
+   ]
+  }
+ ],
+ "went_wrong": [
+  {
+   "segment": "season average vs line: average against the pick",
+   "hits": 15,
+   "misses": 33,
+   "rate": 0.312,
+   "n": 48,
+   "ci": [
+    0.199,
+    0.453
+   ]
+  },
+  {
+   "segment": "stat: points",
+   "hits": 12,
+   "misses": 24,
+   "rate": 0.333,
+   "n": 36,
+   "ci": [
+    0.202,
+    0.497
+   ]
+  },
+  {
+   "segment": "books: 3\u20135 books",
+   "hits": 7,
+   "misses": 13,
+   "rate": 0.35,
+   "n": 20,
+   "ci": [
+    0.181,
+    0.567
+   ]
+  }
+ ],
+ "biggest_misses": [
+  {
+   "player": "Aaron Gordon",
+   "stat": "points",
+   "edge": "over",
+   "line": 13.5,
+   "actual": 1.0
+  },
+  {
+   "player": "Ausar Thompson",
+   "stat": "rebounds",
+   "edge": "under",
+   "line": 7.5,
+   "actual": 10.0
+  },
+  {
+   "player": "Trae Young",
+   "stat": "points",
+   "edge": "under",
+   "line": 15.5,
+   "actual": 17.0
+  },
+  {
+   "player": "P.J. Washington",
+   "stat": "rebounds",
+   "edge": "under",
+   "line": 5.5,
+   "actual": 6.0
+  }
+ ],
+ "near_misses": 1,
+ "picks_cut_by_model": 0,
+ "published_segments": {
+  "stat": {
+   "assists": {
+    "hits": 2,
+    "misses": 0,
+    "rate": 1.0,
+    "n": 2,
+    "ci": [
+     0.342,
+     1.0
+    ]
+   },
+   "points": {
+    "hits": 1,
+    "misses": 2,
+    "rate": 0.333,
+    "n": 3,
+    "ci": [
+     0.061,
+     0.792
+    ]
+   },
+   "rebounds": {
+    "hits": 1,
+    "misses": 2,
+    "rate": 0.333,
+    "n": 3,
+    "ci": [
+     0.061,
+     0.792
+    ]
+   }
+  },
+  "edge": {
+   "over": {
+    "hits": 3,
+    "misses": 1,
+    "rate": 0.75,
+    "n": 4,
+    "ci": [
+     0.301,
+     0.954
+    ]
+   },
+   "under": {
+    "hits": 1,
+    "misses": 3,
+    "rate": 0.25,
+    "n": 4,
+    "ci": [
+     0.046,
+     0.699
+    ]
+   }
+  },
+  "price band": {
+   "better than \u2212121": {
+    "hits": 4,
+    "misses": 4,
+    "rate": 0.5,
+    "n": 8,
+    "ci": [
+     0.215,
+     0.785
+    ]
+   }
+  },
+  "books": {
+   "6+ books": {
+    "hits": 4,
+    "misses": 4,
+    "rate": 0.5,
+    "n": 8,
+    "ci": [
+     0.215,
+     0.785
+    ]
+   }
+  },
+  "edge band": {
+   "0\u20131.5 pts": {
+    "hits": 1,
+    "misses": 1,
+    "rate": 0.5,
+    "n": 2,
+    "ci": [
+     0.095,
+     0.905
+    ]
+   },
+   "1.5\u20133 pts": {
+    "hits": 1,
+    "misses": 1,
+    "rate": 0.5,
+    "n": 2,
+    "ci": [
+     0.095,
+     0.905
+    ]
+   },
+   "\u22640 pts": {
+    "hits": 2,
+    "misses": 2,
+    "rate": 0.5,
+    "n": 4,
+    "ci": [
+     0.15,
+     0.85
+    ]
+   }
+  },
+  "line size": {
+   ">3.5": {
+    "hits": 3,
+    "misses": 4,
+    "rate": 0.429,
+    "n": 7,
+    "ci": [
+     0.158,
+     0.75
+    ]
+   },
+   "\u22643.5": {
+    "hits": 1,
+    "misses": 0,
+    "rate": 1.0,
+    "n": 1,
+    "ci": [
+     0.207,
+     1.0
+    ]
+   }
+  },
+  "line source": {
+   "sportsbooks": {
+    "hits": 4,
+    "misses": 4,
+    "rate": 0.5,
+    "n": 8,
+    "ci": [
+     0.215,
+     0.785
+    ]
+   }
+  },
+  "hit rate vs line": {
+   "50\u201356%": {
+    "hits": 0,
+    "misses": 1,
+    "rate": 0.0,
+    "n": 1,
+    "ci": [
+     0.0,
+     0.793
+    ]
+   },
+   "<50%": {
+    "hits": 1,
+    "misses": 3,
+    "rate": 0.25,
+    "n": 4,
+    "ci": [
+     0.046,
+     0.699
+    ]
+   },
+   "\u226556%": {
+    "hits": 3,
+    "misses": 0,
+    "rate": 1.0,
+    "n": 3,
+    "ci": [
+     0.438,
+     1.0
+    ]
+   }
+  },
+  "season average vs line": {
+   "average against the pick": {
+    "hits": 0,
+    "misses": 4,
+    "rate": 0.0,
+    "n": 4,
+    "ci": [
+     0.0,
+     0.49
+    ]
+   },
+   "average favors the pick": {
+    "hits": 4,
+    "misses": 0,
+    "rate": 1.0,
+    "n": 4,
+    "ci": [
+     0.51,
+     1.0
+    ]
+   }
+  }
+ },
+ "live_model": {
+  "n": 106,
+  "avg_p_on_hits": 0.518,
+  "avg_p_on_misses": 0.517
+ }
+}
